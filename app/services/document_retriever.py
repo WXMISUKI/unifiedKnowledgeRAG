@@ -51,6 +51,17 @@ DOCUMENTS = [
         citation="refund_policy_2026#address-change",
     ),
     DocumentChunk(
+        source_id="refund_policy_docs",
+        document_id="refund_policy_2026",
+        title="退款申诉复核",
+        text=(
+            "退款申诉复核场景中，如果客户已经补充上传付款凭证、客服沟通截图、商品问题照片和物流签收记录，"
+            "售后专员不得直接关闭工单，应先在申诉备注中逐项核对证据完整性，再提交二线审核；"
+            "二线审核需要在两个工作日内给出维持原判、补充举证或重新退款的结论，并把结论写入申诉处理记录，便于后续客服解释。"
+        ),
+        citation="refund_policy_2026#appeal-review",
+    ),
+    DocumentChunk(
         source_id="logistics_faq",
         document_id="logistics_faq_2026",
         title="物流常见问题",
@@ -77,6 +88,17 @@ DOCUMENTS = [
         title="地址修改拦截",
         text="用户要求修改收货地址时，如果订单已经出库，应先联系承运商拦截，无法拦截时需要提示用户关注派送失败退回。",
         citation="logistics_faq_2026#address-intercept",
+    ),
+    DocumentChunk(
+        source_id="logistics_faq",
+        document_id="logistics_faq_2026",
+        title="批量物流异常",
+        text=(
+            "批量物流异常处理中，如果同一承运商在一个小时内出现五单以上轨迹停滞、派送失败或网点滞留，"
+            "客服主管应先汇总受影响订单、承运商名称、最近一次轨迹时间和客户承诺时效，再创建批量异常工单；"
+            "工单需要同步物流运营团队判断是否触发承运商升级沟通，同时通知售后团队准备补发、退款或安抚方案，避免单个客服重复联系造成口径不一致。"
+        ),
+        citation="logistics_faq_2026#batch-exception",
     ),
 ]
 

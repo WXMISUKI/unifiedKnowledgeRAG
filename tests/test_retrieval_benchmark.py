@@ -7,22 +7,30 @@ from app.services.retrieval_benchmark import (
     benchmark_report_to_dict,
     candidate_evaluation_to_dict,
     default_embedding_candidates,
+    default_chunking_strategy_candidates,
     embedding_candidate_result_to_dict,
     EmbeddingCandidate,
+    export_chunking_strategy_evaluation,
     export_chinese_seed_evidence_bundle,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
+    export_qdrant_threshold_recommendation,
     evaluate_retrieval_candidates,
     evaluate_embedding_candidates,
     export_benchmark_report_json,
     export_benchmark_report_markdown,
     load_benchmark_cases,
+    render_chunking_strategy_evaluation_markdown,
     render_embedding_candidate_markdown,
     render_benchmark_report_markdown,
+    render_qdrant_threshold_recommendation_markdown,
     render_qdrant_threshold_sweep_evidence_markdown,
     fixture_chinese_seed_retrieval_candidate,
     RetrievalCandidate,
     run_retrieval_benchmark,
+    ThresholdRecommendationGates,
+    chunking_strategy_evaluation_to_dict,
+    qdrant_threshold_recommendation_to_dict,
     qdrant_threshold_sweep_evidence_to_dict,
 )
 
@@ -47,6 +55,8 @@ def test_loads_retrieval_benchmark_cases():
         "logistics-same-city-timeout",
         "logistics-lost-package-cross-team",
         "logistics-address-intercept",
+        "refund-appeal-second-review",
+        "logistics-batch-exception-escalation",
         "empty-membership-points",
         "empty-invoice-tax-policy",
         "empty-membership-tier-recovery",
@@ -64,7 +74,7 @@ def test_fixture_backend_benchmark_reports_success_metrics():
     report = run_retrieval_benchmark(cases, Settings(rag_retrieval_backend="fixture"))
 
     assert report.summary.backend == "fixture"
-    assert report.summary.total_cases == 19
+    assert report.summary.total_cases == 21
     assert report.summary.hit_rate == 1.0
     assert report.summary.citation_match_rate == 1.0
     assert report.summary.empty_handling_rate == 1.0
@@ -98,6 +108,7 @@ def test_benchmark_cases_cover_required_categories():
         "sla",
         "cross-source",
         "multi-intent",
+        "long-section",
         "empty",
     }
     assert {case.difficulty for case in cases} >= {"easy", "medium", "hard"}
@@ -111,6 +122,7 @@ def test_benchmark_report_includes_category_summaries():
     assert summaries["policy"]["total_cases"] == 1
     assert summaries["paraphrase"]["total_cases"] == 2
     assert summaries["operational-escalation"]["total_cases"] == 2
+    assert summaries["long-section"]["total_cases"] == 2
     assert summaries["empty"]["total_cases"] == 7
     assert summaries["empty"]["empty_handling_rate"] == 1.0
 
@@ -262,6 +274,16 @@ def test_default_embedding_candidates_cover_chinese_public_and_private_paths():
     assert by_id["bge-m3-local-candidate"].private_network_supported is True
 
 
+def test_default_chunking_strategy_candidates_include_baseline_and_planned():
+    candidates = default_chunking_strategy_candidates()
+    by_id = {candidate.id: candidate for candidate in candidates}
+
+    assert by_id["markdown-paragraph-v1"].implementation_status == "implemented"
+    assert by_id["markdown-section-v1"].implementation_status == "planned"
+    assert by_id["token-window-v1"].implementation_status == "planned"
+    assert "long paragraphs" in by_id["token-window-v1"].expected_fit
+
+
 def test_embedding_candidate_evaluation_remains_review_only():
     evaluations = evaluate_embedding_candidates()
 
@@ -362,7 +384,7 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     assert [item.candidate.id for item in bundle.retrieval_evaluations] == [
         "fixture-chinese-seed-baseline"
     ]
-    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 19
+    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 21
     assert bundle.retrieval_evaluations[0].report.summary.hit_rate == 1.0
     assert {item.result.candidate.id for item in bundle.embedding_evaluations} >= {
         "mock-hash-v1",
@@ -389,11 +411,60 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     assert retrieval_payload["candidate"]["metadata"]["quality_claim"] == (
         "contract-baseline-only"
     )
-    assert retrieval_payload["report"]["summary"]["total_cases"] == 19
+    assert retrieval_payload["report"]["summary"]["total_cases"] == 21
 
     embedding_payload = json.loads(embedding_json.read_text(encoding="utf-8"))
     assert embedding_payload["candidate"]["id"] == "bge-m3-local-candidate"
     assert embedding_payload["readiness_status"] == "review_required"
+
+
+def test_exports_chunking_strategy_evaluation(tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款。\n\n"
+        "退款处理需要保留订单编号。\n\n"
+        "定制商品不支持无理由退款。\n\n"
+        "五千元以上退款需要主管复核。\n\n"
+        "未发货地址变更应先暂停发货。\n\n"
+        "退款申诉复核场景中，应提交二线审核。",
+        encoding="utf-8",
+    )
+    (source_dir / "logistics_faq.md").write_text(
+        "# 物流常见问题\n\n"
+        "物流轨迹超过二十四小时未更新时，应先联系承运商。\n\n"
+        "同城配送超过两小时未送达时，客服应核实骑手位置。\n\n"
+        "承运商确认包裹丢失后，客服应创建物流异常工单。\n\n"
+        "订单已经出库后要改地址，应先联系承运商拦截。\n\n"
+        "批量物流异常处理中，应创建批量异常工单。",
+        encoding="utf-8",
+    )
+
+    evaluation = export_chunking_strategy_evaluation(
+        output_dir=tmp_path / "chunking",
+        settings=Settings(rag_source_dir=source_dir),
+    )
+
+    assert evaluation.json_path == tmp_path / "chunking" / "chunking-strategy-candidates.json"
+    assert evaluation.markdown_path == tmp_path / "chunking" / "chunking-strategy-candidates.md"
+
+    by_id = {result.candidate.id: result for result in evaluation.results}
+    assert by_id["markdown-paragraph-v1"].total_chunks == 11
+    assert by_id["markdown-paragraph-v1"].citation_stability == "stable"
+    assert by_id["markdown-paragraph-v1"].long_section_support == "covered"
+    assert by_id["markdown-section-v1"].total_chunks is None
+    assert by_id["markdown-section-v1"].citation_stability == "planned"
+    assert by_id["token-window-v1"].long_section_support == "planned"
+
+    payload = json.loads(evaluation.json_path.read_text(encoding="utf-8"))
+    markdown = evaluation.markdown_path.read_text(encoding="utf-8")
+
+    assert payload == chunking_strategy_evaluation_to_dict(evaluation)
+    assert "# Chunking Strategy Candidate Evaluation" in markdown
+    assert "| markdown-paragraph-v1 | implemented | 11 | stable | covered |" in markdown
+    assert "Candidate is not runnable yet" in markdown
+    assert render_chunking_strategy_evaluation_markdown(evaluation) == markdown
 
 
 def test_export_qdrant_bge_smoke_evidence_uses_single_client(monkeypatch, tmp_path):
@@ -599,3 +670,124 @@ def test_qdrant_bge_threshold_sweep_rejects_invalid_thresholds(tmp_path):
             assert expected_message in str(error)
         else:
             raise AssertionError("Expected invalid threshold sweep to be rejected")
+
+
+def test_qdrant_threshold_recommendation_selects_lowest_passing_threshold(tmp_path):
+    sweep_path = tmp_path / "qdrant-bge-m3-threshold-sweep.json"
+    sweep_path.write_text(
+        json.dumps(
+            {
+                "summary": [
+                    {
+                        "threshold": 0.3,
+                        "total_cases": 19,
+                        "hit_rate": 0.6316,
+                        "citation_match_rate": 0.6316,
+                        "empty_handling_rate": 0.0,
+                    },
+                    {
+                        "threshold": 0.7,
+                        "total_cases": 19,
+                        "hit_rate": 1.0,
+                        "citation_match_rate": 1.0,
+                        "empty_handling_rate": 1.0,
+                    },
+                    {
+                        "threshold": 0.8,
+                        "total_cases": 19,
+                        "hit_rate": 1.0,
+                        "citation_match_rate": 1.0,
+                        "empty_handling_rate": 1.0,
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    recommendation = export_qdrant_threshold_recommendation(
+        sweep_path=sweep_path,
+        output_dir=tmp_path,
+    )
+
+    assert recommendation.selected_threshold == 0.7
+    assert recommendation.selected_metrics == {
+        "total_cases": 19,
+        "hit_rate": 1.0,
+        "citation_match_rate": 1.0,
+        "empty_handling_rate": 1.0,
+    }
+    assert recommendation.approval_status == "local_seed_recommendation"
+    assert recommendation.json_path == tmp_path / "qdrant-bge-m3-threshold-recommendation.json"
+    assert recommendation.markdown_path == tmp_path / "qdrant-bge-m3-threshold-recommendation.md"
+
+    payload = json.loads(recommendation.json_path.read_text(encoding="utf-8"))
+    markdown = recommendation.markdown_path.read_text(encoding="utf-8")
+
+    assert payload == qdrant_threshold_recommendation_to_dict(recommendation)
+    assert "# Qdrant BGE-M3 Threshold Recommendation" in markdown
+    assert "| 0.7000 | local_seed_recommendation |" in markdown
+    assert "does not change the runtime RAG_SCORE_THRESHOLD default" in markdown
+    assert render_qdrant_threshold_recommendation_markdown(recommendation) == markdown
+
+
+def test_qdrant_threshold_recommendation_can_use_relaxed_gates(tmp_path):
+    sweep_path = tmp_path / "qdrant-bge-m3-threshold-sweep.json"
+    sweep_path.write_text(
+        json.dumps(
+            {
+                "summary": [
+                    {
+                        "threshold": 0.5,
+                        "total_cases": 19,
+                        "hit_rate": 0.7368,
+                        "citation_match_rate": 0.7368,
+                        "empty_handling_rate": 0.2857,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    recommendation = export_qdrant_threshold_recommendation(
+        sweep_path=sweep_path,
+        output_dir=tmp_path,
+        gates=ThresholdRecommendationGates(
+            min_hit_rate=0.7,
+            min_citation_match_rate=0.7,
+            min_empty_handling_rate=0.2,
+        ),
+    )
+
+    assert recommendation.selected_threshold == 0.5
+
+
+def test_qdrant_threshold_recommendation_rejects_when_no_threshold_passes(tmp_path):
+    sweep_path = tmp_path / "qdrant-bge-m3-threshold-sweep.json"
+    sweep_path.write_text(
+        json.dumps(
+            {
+                "summary": [
+                    {
+                        "threshold": 0.5,
+                        "total_cases": 19,
+                        "hit_rate": 0.7368,
+                        "citation_match_rate": 0.7368,
+                        "empty_handling_rate": 0.2857,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    try:
+        export_qdrant_threshold_recommendation(
+            sweep_path=sweep_path,
+            output_dir=tmp_path,
+        )
+    except ValueError as error:
+        assert "No threshold satisfies" in str(error)
+    else:
+        raise AssertionError("Expected recommendation to fail when gates are unmet")

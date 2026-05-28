@@ -1,0 +1,76 @@
+{
+  "results": [
+    {
+      "candidate": {
+        "id": "markdown-paragraph-v1",
+        "description": "Current local markdown paragraph baseline used by Qdrant ingestion.",
+        "implementation_status": "implemented",
+        "expected_fit": "simple markdown, short procedures, deterministic local evidence",
+        "tradeoffs": [
+          "Stable and easy to audit.",
+          "Can be too coarse when one paragraph contains several details.",
+          "Does not model PDF/Word structure or token overlap."
+        ]
+      },
+      "source_ids": [
+        "refund_policy_docs",
+        "logistics_faq"
+      ],
+      "total_chunks": 11,
+      "citation_stability": "stable",
+      "long_section_support": "covered",
+      "decision_notes": [
+        "This is the current runtime Qdrant markdown ingestion baseline.",
+        "Use retrieval benchmark evidence before deciding whether to replace it."
+      ]
+    },
+    {
+      "candidate": {
+        "id": "markdown-section-v1",
+        "description": "Planned section-aware markdown chunking using headings and paragraphs.",
+        "implementation_status": "planned",
+        "expected_fit": "manuals, policy sections, documents with useful headings",
+        "tradeoffs": [
+          "May improve citation context for long sections.",
+          "Needs heading-aware citation and section boundary rules.",
+          "Still does not solve scanned documents or tables."
+        ]
+      },
+      "source_ids": [
+        "refund_policy_docs",
+        "logistics_faq"
+      ],
+      "total_chunks": null,
+      "citation_stability": "planned",
+      "long_section_support": "planned",
+      "decision_notes": [
+        "Candidate is not runnable yet; no retrieval metrics are claimed.",
+        "Implement runnable benchmark evidence before production promotion."
+      ]
+    },
+    {
+      "candidate": {
+        "id": "token-window-v1",
+        "description": "Planned token-window chunking with overlap for long dense content.",
+        "implementation_status": "planned",
+        "expected_fit": "long paragraphs, pasted policy text, PDF/Word extracted body text",
+        "tradeoffs": [
+          "May improve recall inside long dense sections.",
+          "Can duplicate evidence and complicate citation stability.",
+          "Requires tokenizer-aware sizing and overlap decisions."
+        ]
+      },
+      "source_ids": [
+        "refund_policy_docs",
+        "logistics_faq"
+      ],
+      "total_chunks": null,
+      "citation_stability": "planned",
+      "long_section_support": "planned",
+      "decision_notes": [
+        "Candidate is not runnable yet; no retrieval metrics are claimed.",
+        "Implement runnable benchmark evidence before production promotion."
+      ]
+    }
+  ]
+}

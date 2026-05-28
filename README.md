@@ -623,6 +623,69 @@ docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-sweep.m
 
 扩展后，`0.5` 的 empty handling 从原先 0.6667 下降到 0.2857，说明较低阈值会把大量相近但不相关的政策片段误召回。`0.7` 在当前 seed 上仍保持全过，但这只说明它是下一轮默认阈值候选；生产默认阈值仍需要加入客户真实语料、长文档 chunking、更多空问法和必要的人工复核后再确认。
 
+第二十九阶段 OpenSpec change `record-qdrant-threshold-recommendation` 将 threshold sweep 转成独立推荐证据。它读取已有 sweep JSON，按显式质量门槛选择最低通过阈值，不重新跑模型，也不修改运行时默认值：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --output-dir docs/benchmark/chinese-seed/retrieval-candidates `
+  --recommend-threshold-from-sweep docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-sweep.json
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-recommendation.json
+docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-recommendation.md
+```
+
+当前推荐证据选择：
+
+```text
+selected_threshold: 0.7
+approval_status: local_seed_recommendation
+gates: hit_rate >= 1.0, citation_match_rate >= 1.0, empty_handling_rate >= 1.0
+```
+
+这仍是本地 seed recommendation，不是生产 approval。若后续新增客户真实语料、改 chunking、启用 reranker 或 hybrid retrieval，需要重新导出 sweep 和 recommendation。
+
+第三十阶段 OpenSpec change `expand-long-document-chunking-cases` 增加长段落检索压力样本。当前 markdown baseline 仍是 `markdown-paragraph-v1`，但新增了更接近企业制度/流程文档的长段落：
+
+- `refund_policy_2026#appeal-review`：退款申诉复核、补充举证、二线审核时限和处理记录。
+- `logistics_faq_2026#batch-exception`：批量物流异常、订单汇总、物流运营团队同步和售后预案。
+
+中文 seed benchmark 现在为 21 条，其中 long-section cases 2 条、expected-empty cases 7 条。重新导出的 Qdrant+BGE-M3 threshold sweep 显示：
+
+| Threshold | Hit Rate | Citation Match Rate | Empty Handling Rate |
+| ---: | ---: | ---: | ---: |
+| 0.3000 | 0.6667 | 0.6667 | 0.0000 |
+| 0.5000 | 0.7619 | 0.7619 | 0.2857 |
+| 0.7000 | 1.0000 | 1.0000 | 1.0000 |
+
+这说明 `0.7` 在当前长段落 seed 上仍未压掉真实召回，但还不能代表 PDF/Word、跨标题层级、超长章节、多粒度摘要 chunk 或客户真实语料。
+
+第三十一阶段 OpenSpec change `evaluate-structure-aware-chunking` 增加 chunking strategy candidate evidence。当前只做本地评估证据，不切换运行时 ingestion：
+
+```powershell
+conda run -n GRAPHRAG python -c "from pathlib import Path; from app.services.retrieval_benchmark import export_chunking_strategy_evaluation; export_chunking_strategy_evaluation(Path('docs/benchmark/chinese-seed/chunking-candidates'))"
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/chunking-candidates/chunking-strategy-candidates.json
+docs/benchmark/chinese-seed/chunking-candidates/chunking-strategy-candidates.md
+```
+
+当前候选状态：
+
+| Candidate | Status | Notes |
+| --- | --- | --- |
+| `markdown-paragraph-v1` | implemented | 当前 Qdrant ingestion baseline，11 个本地 source chunks，citation stable，覆盖 long-section seed |
+| `markdown-section-v1` | planned | 适合标题层级清晰的手册/制度文档，尚无运行时检索指标 |
+| `token-window-v1` | planned | 适合长段落、PDF/Word 抽取正文和 overlap 场景，尚无运行时检索指标 |
+
+后续如果要真正替换 chunking，需要先把 planned candidate 做成 runnable adapter，再用同一组 benchmark 和 Qdrant+BGE evidence 对比，而不是直接改生产 ingestion。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

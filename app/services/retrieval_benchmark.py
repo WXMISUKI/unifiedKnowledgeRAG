@@ -11,6 +11,7 @@ from app.models.contracts import IndexStatusResponse
 from app.services.embedding_adapters import create_embedding_adapter
 from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.qdrant_vector_store import (
+    QDRANT_CHUNKING_STRATEGY,
     create_qdrant_client,
     embed_qdrant_chunks,
     ensure_qdrant_collection,
@@ -134,6 +135,51 @@ class QdrantThresholdSweepEvidenceReport:
     thresholds: list[float]
     reports: list[QdrantSmokeEvidenceReport]
     metadata: dict[str, str | list[str] | dict[str, str]]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class ThresholdRecommendationGates:
+    min_hit_rate: float = 1.0
+    min_citation_match_rate: float = 1.0
+    min_empty_handling_rate: float = 1.0
+
+
+@dataclass(frozen=True)
+class QdrantThresholdRecommendation:
+    selected_threshold: float
+    gates: ThresholdRecommendationGates
+    selected_metrics: dict[str, float | int]
+    sweep_path: str
+    approval_status: str
+    caveats: list[str]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class ChunkingStrategyCandidate:
+    id: str
+    description: str
+    implementation_status: str
+    expected_fit: str
+    tradeoffs: list[str]
+
+
+@dataclass(frozen=True)
+class ChunkingStrategyResult:
+    candidate: ChunkingStrategyCandidate
+    source_ids: list[str]
+    total_chunks: int | None
+    citation_stability: str
+    long_section_support: str
+    decision_notes: list[str]
+
+
+@dataclass(frozen=True)
+class ChunkingStrategyEvaluation:
+    results: list[ChunkingStrategyResult]
     json_path: Path | None = None
     markdown_path: Path | None = None
 
@@ -499,6 +545,144 @@ def export_qdrant_bge_threshold_sweep_evidence(
     )
 
 
+def export_qdrant_threshold_recommendation(
+    sweep_path: Path,
+    output_dir: Path | None = None,
+    gates: ThresholdRecommendationGates | None = None,
+) -> QdrantThresholdRecommendation:
+    gates = gates or ThresholdRecommendationGates()
+    recommendation = recommend_qdrant_threshold_from_sweep(sweep_path, gates)
+    output_dir = output_dir or sweep_path.parent
+    json_path = export_qdrant_threshold_recommendation_json(
+        recommendation,
+        output_dir / "qdrant-bge-m3-threshold-recommendation.json",
+    )
+    markdown_path = export_qdrant_threshold_recommendation_markdown(
+        recommendation,
+        output_dir / "qdrant-bge-m3-threshold-recommendation.md",
+    )
+    return QdrantThresholdRecommendation(
+        selected_threshold=recommendation.selected_threshold,
+        gates=recommendation.gates,
+        selected_metrics=recommendation.selected_metrics,
+        sweep_path=recommendation.sweep_path,
+        approval_status=recommendation.approval_status,
+        caveats=recommendation.caveats,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def recommend_qdrant_threshold_from_sweep(
+    sweep_path: Path,
+    gates: ThresholdRecommendationGates | None = None,
+) -> QdrantThresholdRecommendation:
+    gates = gates or ThresholdRecommendationGates()
+    _validate_recommendation_gates(gates)
+    payload = json.loads(sweep_path.read_text(encoding="utf-8"))
+    rows = sorted(payload.get("summary", []), key=lambda row: row["threshold"])
+    for row in rows:
+        if _threshold_row_passes_gates(row, gates):
+            return QdrantThresholdRecommendation(
+                selected_threshold=float(row["threshold"]),
+                gates=gates,
+                selected_metrics={
+                    "total_cases": int(row["total_cases"]),
+                    "hit_rate": float(row["hit_rate"]),
+                    "citation_match_rate": float(row["citation_match_rate"]),
+                    "empty_handling_rate": float(row["empty_handling_rate"]),
+                },
+                sweep_path=str(sweep_path),
+                approval_status="local_seed_recommendation",
+                caveats=[
+                    "This recommendation is based on local Chinese seed evidence only.",
+                    "It does not change the runtime RAG_SCORE_THRESHOLD default.",
+                    "Regenerate the recommendation after adding customer-specific cases or changing chunking.",
+                ],
+            )
+    raise ValueError("No threshold satisfies the configured recommendation gates.")
+
+
+def default_chunking_strategy_candidates() -> list[ChunkingStrategyCandidate]:
+    return [
+        ChunkingStrategyCandidate(
+            id="markdown-paragraph-v1",
+            description="Current local markdown paragraph baseline used by Qdrant ingestion.",
+            implementation_status="implemented",
+            expected_fit="simple markdown, short procedures, deterministic local evidence",
+            tradeoffs=[
+                "Stable and easy to audit.",
+                "Can be too coarse when one paragraph contains several details.",
+                "Does not model PDF/Word structure or token overlap.",
+            ],
+        ),
+        ChunkingStrategyCandidate(
+            id="markdown-section-v1",
+            description="Planned section-aware markdown chunking using headings and paragraphs.",
+            implementation_status="planned",
+            expected_fit="manuals, policy sections, documents with useful headings",
+            tradeoffs=[
+                "May improve citation context for long sections.",
+                "Needs heading-aware citation and section boundary rules.",
+                "Still does not solve scanned documents or tables.",
+            ],
+        ),
+        ChunkingStrategyCandidate(
+            id="token-window-v1",
+            description="Planned token-window chunking with overlap for long dense content.",
+            implementation_status="planned",
+            expected_fit="long paragraphs, pasted policy text, PDF/Word extracted body text",
+            tradeoffs=[
+                "May improve recall inside long dense sections.",
+                "Can duplicate evidence and complicate citation stability.",
+                "Requires tokenizer-aware sizing and overlap decisions.",
+            ],
+        ),
+    ]
+
+
+def evaluate_chunking_strategy_candidates(
+    source_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    candidates: list[ChunkingStrategyCandidate] | None = None,
+) -> ChunkingStrategyEvaluation:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    candidates = candidates or default_chunking_strategy_candidates()
+    _validate_candidate_ids(candidates, "chunking strategy candidate")
+    results = [
+        _evaluate_chunking_candidate(candidate, source_ids, settings)
+        for candidate in candidates
+    ]
+    return ChunkingStrategyEvaluation(results=results)
+
+
+def export_chunking_strategy_evaluation(
+    output_dir: Path,
+    source_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    candidates: list[ChunkingStrategyCandidate] | None = None,
+) -> ChunkingStrategyEvaluation:
+    evaluation = evaluate_chunking_strategy_candidates(
+        source_ids=source_ids,
+        settings=settings,
+        candidates=candidates,
+    )
+    json_path = export_chunking_strategy_evaluation_json(
+        evaluation,
+        output_dir / "chunking-strategy-candidates.json",
+    )
+    markdown_path = export_chunking_strategy_evaluation_markdown(
+        evaluation,
+        output_dir / "chunking-strategy-candidates.md",
+    )
+    return ChunkingStrategyEvaluation(
+        results=evaluation.results,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
 def benchmark_report_to_dict(report: RetrievalBenchmarkReport) -> dict:
     return {
         "summary": asdict(report.summary),
@@ -550,6 +734,37 @@ def qdrant_threshold_sweep_evidence_to_dict(
             }
             for threshold, smoke_report in zip(report.thresholds, report.reports)
         ],
+    }
+
+
+def qdrant_threshold_recommendation_to_dict(
+    recommendation: QdrantThresholdRecommendation,
+) -> dict:
+    return {
+        "selected_threshold": recommendation.selected_threshold,
+        "gates": asdict(recommendation.gates),
+        "selected_metrics": recommendation.selected_metrics,
+        "sweep_path": recommendation.sweep_path,
+        "approval_status": recommendation.approval_status,
+        "caveats": recommendation.caveats,
+    }
+
+
+def chunking_strategy_evaluation_to_dict(
+    evaluation: ChunkingStrategyEvaluation,
+) -> dict:
+    return {
+        "results": [
+            {
+                "candidate": asdict(result.candidate),
+                "source_ids": result.source_ids,
+                "total_chunks": result.total_chunks,
+                "citation_stability": result.citation_stability,
+                "long_section_support": result.long_section_support,
+                "decision_notes": result.decision_notes,
+            }
+            for result in evaluation.results
+        ]
     }
 
 
@@ -626,6 +841,38 @@ def export_qdrant_threshold_sweep_evidence_json(
     path.write_text(
         json.dumps(
             qdrant_threshold_sweep_evidence_to_dict(report),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_qdrant_threshold_recommendation_json(
+    recommendation: QdrantThresholdRecommendation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            qdrant_threshold_recommendation_to_dict(recommendation),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_chunking_strategy_evaluation_json(
+    evaluation: ChunkingStrategyEvaluation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            chunking_strategy_evaluation_to_dict(evaluation),
             ensure_ascii=False,
             indent=2,
         ),
@@ -804,6 +1051,81 @@ def render_qdrant_threshold_sweep_evidence_markdown(
     return "\n".join(lines)
 
 
+def render_qdrant_threshold_recommendation_markdown(
+    recommendation: QdrantThresholdRecommendation,
+) -> str:
+    metrics = recommendation.selected_metrics
+    lines = [
+        "# Qdrant BGE-M3 Threshold Recommendation",
+        "",
+        "## Recommendation",
+        "",
+        "| Selected Threshold | Approval Status | Source Sweep |",
+        "| ---: | --- | --- |",
+        (
+            f"| {recommendation.selected_threshold:.4f} | "
+            f"{recommendation.approval_status} | {recommendation.sweep_path} |"
+        ),
+        "",
+        "## Gates",
+        "",
+        "| Min Hit Rate | Min Citation Match Rate | Min Empty Handling Rate |",
+        "| ---: | ---: | ---: |",
+        (
+            f"| {recommendation.gates.min_hit_rate:.4f} | "
+            f"{recommendation.gates.min_citation_match_rate:.4f} | "
+            f"{recommendation.gates.min_empty_handling_rate:.4f} |"
+        ),
+        "",
+        "## Selected Metrics",
+        "",
+        "| Total Cases | Hit Rate | Citation Match Rate | Empty Handling Rate |",
+        "| ---: | ---: | ---: | ---: |",
+        (
+            f"| {metrics['total_cases']} | {metrics['hit_rate']:.4f} | "
+            f"{metrics['citation_match_rate']:.4f} | "
+            f"{metrics['empty_handling_rate']:.4f} |"
+        ),
+        "",
+        "## Caveats",
+        "",
+    ]
+    lines.extend(f"- {caveat}" for caveat in recommendation.caveats)
+    lines.append("")
+    return "\n".join(lines)
+
+
+def render_chunking_strategy_evaluation_markdown(
+    evaluation: ChunkingStrategyEvaluation,
+) -> str:
+    lines = [
+        "# Chunking Strategy Candidate Evaluation",
+        "",
+        "| Candidate | Status | Total Chunks | Citation Stability | Long-Section Support |",
+        "| --- | --- | ---: | --- | --- |",
+    ]
+    for result in evaluation.results:
+        total_chunks = "" if result.total_chunks is None else str(result.total_chunks)
+        lines.append(
+            f"| {result.candidate.id} | {result.candidate.implementation_status} | "
+            f"{total_chunks} | {result.citation_stability} | "
+            f"{result.long_section_support} |"
+        )
+    lines.extend(["", "## Candidate Notes", ""])
+    for result in evaluation.results:
+        lines.extend([
+            f"### {result.candidate.id}",
+            "",
+            f"- Description: {result.candidate.description}",
+            f"- Expected fit: {result.candidate.expected_fit}",
+            f"- Source ids: {', '.join(result.source_ids)}",
+        ])
+        lines.extend(f"- Trade-off: {tradeoff}" for tradeoff in result.candidate.tradeoffs)
+        lines.extend(f"- Decision note: {note}" for note in result.decision_notes)
+        lines.append("")
+    return "\n".join(lines)
+
+
 def render_embedding_candidate_markdown(result: EmbeddingCandidateResult) -> str:
     candidate = result.candidate
     lines = [
@@ -888,6 +1210,30 @@ def export_qdrant_threshold_sweep_evidence_markdown(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         render_qdrant_threshold_sweep_evidence_markdown(report),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_qdrant_threshold_recommendation_markdown(
+    recommendation: QdrantThresholdRecommendation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_qdrant_threshold_recommendation_markdown(recommendation),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_chunking_strategy_evaluation_markdown(
+    evaluation: ChunkingStrategyEvaluation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_chunking_strategy_evaluation_markdown(evaluation),
         encoding="utf-8",
     )
     return path
@@ -1044,6 +1390,74 @@ def _validate_thresholds(thresholds: list[float]) -> list[float]:
     if invalid:
         raise ValueError("Threshold values must be between 0.0 and 1.0.")
     return sorted(normalized)
+
+
+def _validate_recommendation_gates(gates: ThresholdRecommendationGates) -> None:
+    values = [
+        gates.min_hit_rate,
+        gates.min_citation_match_rate,
+        gates.min_empty_handling_rate,
+    ]
+    if any(value < 0.0 or value > 1.0 for value in values):
+        raise ValueError("Recommendation gates must be between 0.0 and 1.0.")
+
+
+def _threshold_row_passes_gates(
+    row: dict,
+    gates: ThresholdRecommendationGates,
+) -> bool:
+    return (
+        float(row["hit_rate"]) >= gates.min_hit_rate
+        and float(row["citation_match_rate"]) >= gates.min_citation_match_rate
+        and float(row["empty_handling_rate"]) >= gates.min_empty_handling_rate
+    )
+
+
+def _evaluate_chunking_candidate(
+    candidate: ChunkingStrategyCandidate,
+    source_ids: list[str],
+    settings: Settings,
+) -> ChunkingStrategyResult:
+    if candidate.implementation_status != "implemented":
+        return ChunkingStrategyResult(
+            candidate=candidate,
+            source_ids=source_ids,
+            total_chunks=None,
+            citation_stability="planned",
+            long_section_support="planned",
+            decision_notes=[
+                "Candidate is not runnable yet; no retrieval metrics are claimed.",
+                "Implement runnable benchmark evidence before production promotion.",
+            ],
+        )
+
+    if candidate.id != QDRANT_CHUNKING_STRATEGY:
+        raise ValueError(f"Implemented chunking candidate is not wired: {candidate.id}")
+
+    chunks = [
+        chunk
+        for source_id in source_ids
+        for chunk in load_qdrant_source_chunks(source_id, settings)
+    ]
+    citations_are_stable = all("#chunk-" not in chunk.citation for chunk in chunks)
+    long_section_citations = {
+        "refund_policy_2026#appeal-review",
+        "logistics_faq_2026#batch-exception",
+    }
+    has_long_section_support = long_section_citations.issubset(
+        {chunk.citation for chunk in chunks}
+    )
+    return ChunkingStrategyResult(
+        candidate=candidate,
+        source_ids=source_ids,
+        total_chunks=len(chunks),
+        citation_stability="stable" if citations_are_stable else "mixed",
+        long_section_support="covered" if has_long_section_support else "not-covered",
+        decision_notes=[
+            "This is the current runtime Qdrant markdown ingestion baseline.",
+            "Use retrieval benchmark evidence before deciding whether to replace it.",
+        ],
+    )
 
 
 def _evaluate_embedding_candidate(

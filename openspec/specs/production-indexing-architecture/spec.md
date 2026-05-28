@@ -6,21 +6,21 @@ Defines decision gates and evaluation requirements for production-grade indexing
 ## Requirements
 ### Requirement: Production indexing choices are decision-gated
 
-The system SHALL require an explicit architecture decision record and retrieval benchmark evidence before adding production embedding, vector store, queue worker, reranker, or graph storage dependencies.
+The system SHALL require an explicit architecture decision record and retrieval benchmark evidence before adding production embedding, vector store, queue worker, reranker, graph storage, or production chunking dependencies.
 
 #### Scenario: Production dependency is proposed
 
-- **WHEN** a change proposes a production embedding model, vector database, queue worker, reranker, or graph store
+- **WHEN** a change proposes a production embedding model, vector database, queue worker, reranker, graph store, or production chunking implementation
 - **THEN** the change references the production indexing architecture decision record and states whether the relevant decision is approved
 
 #### Scenario: Decision is not approved
 
 - **WHEN** a production infrastructure decision remains open
-- **THEN** implementation changes avoid adding that production dependency and remain at provider-neutral contract or local-adapter level
+- **THEN** implementation changes avoid adding that production dependency and remain at provider-neutral contract, local-adapter, or local-evaluation level
 
 #### Scenario: Retrieval infrastructure is proposed
 
-- **WHEN** a change proposes production embedding, vector database, or reranker implementation
+- **WHEN** a change proposes production embedding, vector database, reranker, hybrid retrieval, or chunking implementation
 - **THEN** the change references retrieval candidate evaluation evidence, preferably exported JSON or Markdown reports, or explicitly states why candidate evidence is not yet available
 
 #### Scenario: Qdrant is evaluated as primary vector-store candidate
@@ -47,6 +47,11 @@ The system SHALL require an explicit architecture decision record and retrieval 
 
 - **WHEN** Qdrant source ingestion uses local markdown chunking
 - **THEN** the chunking strategy is documented as an evaluation baseline and not a final enterprise parser decision
+
+#### Scenario: Chunking strategy remains evaluation-only
+
+- **WHEN** a chunking strategy candidate is documented before production approval
+- **THEN** runtime ingestion defaults remain unchanged until runnable benchmark evidence and an explicit decision approve the strategy
 
 ### Requirement: Production indexing candidates are evaluated consistently
 

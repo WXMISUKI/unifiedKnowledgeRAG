@@ -1,0 +1,29 @@
+## MODIFIED Requirements
+
+### Requirement: Chinese benchmark cases cover enterprise support workflows
+The system SHALL include Chinese-heavy benchmark cases that exercise representative enterprise support retrieval patterns before real embedding model approval.
+
+#### Scenario: Enterprise workflow categories are present
+
+- **WHEN** local benchmark cases are loaded
+- **THEN** the set includes exception-policy, operational-escalation, SLA, cross-source, paraphrase, evidence, long-section, and empty retrieval categories
+
+#### Scenario: Benchmark cases remain citation-bearing
+
+- **WHEN** a non-empty Chinese benchmark case is defined
+- **THEN** it includes an expected source id and expected citation tied to a local fixture source
+
+#### Scenario: Empty cases remain business-like
+
+- **WHEN** an empty benchmark case is defined
+- **THEN** it represents a plausible enterprise question that is intentionally unsupported by the local fixture sources
+
+#### Scenario: Empty cases cover unsupported business domains
+
+- **WHEN** local benchmark cases are loaded
+- **THEN** expected-empty cases cover multiple unsupported business domains so threshold evidence can expose false-positive retrieval risk
+
+#### Scenario: Long-section cases cover dense procedure details
+
+- **WHEN** local benchmark cases are loaded
+- **THEN** long-section cases ask about details embedded inside longer policy or procedure paragraphs

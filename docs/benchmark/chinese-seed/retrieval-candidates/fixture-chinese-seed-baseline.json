@@ -13,7 +13,7 @@
   "report": {
     "summary": {
       "backend": "fixture",
-      "total_cases": 19,
+      "total_cases": 21,
       "hit_rate": 1.0,
       "citation_match_rate": 1.0,
       "empty_handling_rate": 1.0,
@@ -44,6 +44,12 @@
         },
         "faq": {
           "total_cases": 1,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 0.0
+        },
+        "long-section": {
+          "total_cases": 2,
           "hit_rate": 1.0,
           "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
@@ -94,7 +100,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.25,
+        "latency_ms": 0.284,
         "returned_citations": [
           "refund_policy_2026#section-3",
           "refund_policy_2026#address-change"
@@ -111,10 +117,10 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.12,
+        "latency_ms": 0.144,
         "returned_citations": [
           "logistics_faq_2026#delay",
-          "logistics_faq_2026#same-city-timeout"
+          "logistics_faq_2026#batch-exception"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -128,7 +134,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.141,
+        "latency_ms": 0.122,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -139,7 +145,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.099,
+        "latency_ms": 0.143,
         "returned_citations": [
           "refund_policy_2026#section-3",
           "refund_policy_2026#section-5"
@@ -156,10 +162,10 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.13,
+        "latency_ms": 0.123,
         "returned_citations": [
           "refund_policy_2026#section-5",
-          "refund_policy_2026#section-3"
+          "refund_policy_2026#appeal-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -173,7 +179,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.085,
+        "latency_ms": 0.123,
         "returned_citations": [
           "logistics_faq_2026#delay",
           "logistics_faq_2026#lost-package"
@@ -190,16 +196,16 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.16,
+        "latency_ms": 0.237,
         "returned_citations": [
           "refund_policy_2026#section-5",
-          "refund_policy_2026#section-3",
-          "refund_policy_2026#high-value-review"
+          "refund_policy_2026#appeal-review",
+          "logistics_faq_2026#batch-exception"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
           "refund_policy_docs",
-          "refund_policy_docs"
+          "logistics_faq"
         ]
       },
       {
@@ -209,10 +215,10 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.095,
+        "latency_ms": 0.124,
         "returned_citations": [
           "refund_policy_2026#exception",
-          "refund_policy_2026#section-3"
+          "refund_policy_2026#appeal-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -226,10 +232,10 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.082,
+        "latency_ms": 0.119,
         "returned_citations": [
           "refund_policy_2026#high-value-review",
-          "refund_policy_2026#section-3"
+          "refund_policy_2026#appeal-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -243,7 +249,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.165,
+        "latency_ms": 0.24,
         "returned_citations": [
           "refund_policy_2026#address-change",
           "logistics_faq_2026#lost-package",
@@ -262,10 +268,10 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.079,
+        "latency_ms": 0.12,
         "returned_citations": [
           "logistics_faq_2026#same-city-timeout",
-          "logistics_faq_2026#delay"
+          "logistics_faq_2026#batch-exception"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -279,11 +285,11 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.146,
+        "latency_ms": 0.229,
         "returned_citations": [
           "logistics_faq_2026#lost-package",
-          "logistics_faq_2026#delay",
-          "logistics_faq_2026#address-intercept"
+          "logistics_faq_2026#batch-exception",
+          "logistics_faq_2026#delay"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -298,12 +304,50 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.077,
+        "latency_ms": 0.126,
         "returned_citations": [
           "logistics_faq_2026#address-intercept",
           "logistics_faq_2026#delay"
         ],
         "returned_source_ids": [
+          "logistics_faq",
+          "logistics_faq"
+        ]
+      },
+      {
+        "id": "refund-appeal-second-review",
+        "category": "long-section",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 0.13,
+        "returned_citations": [
+          "refund_policy_2026#appeal-review",
+          "refund_policy_2026#section-5",
+          "refund_policy_2026#section-3"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs",
+          "refund_policy_docs",
+          "refund_policy_docs"
+        ]
+      },
+      {
+        "id": "logistics-batch-exception-escalation",
+        "category": "long-section",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 0.125,
+        "returned_citations": [
+          "logistics_faq_2026#batch-exception",
+          "logistics_faq_2026#lost-package",
+          "logistics_faq_2026#delay"
+        ],
+        "returned_source_ids": [
+          "logistics_faq",
           "logistics_faq",
           "logistics_faq"
         ]
@@ -315,7 +359,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.131,
+        "latency_ms": 0.213,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -326,7 +370,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.132,
+        "latency_ms": 0.213,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -337,7 +381,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.127,
+        "latency_ms": 0.208,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -348,7 +392,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.127,
+        "latency_ms": 0.212,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -359,7 +403,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.13,
+        "latency_ms": 0.208,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -370,7 +414,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.126,
+        "latency_ms": 0.207,
         "returned_citations": [],
         "returned_source_ids": []
       }

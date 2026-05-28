@@ -10,6 +10,8 @@ from app.config import get_settings
 from app.services.retrieval_benchmark import (
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
+    export_qdrant_threshold_recommendation,
+    ThresholdRecommendationGates,
 )
 
 
@@ -43,6 +45,20 @@ def main() -> None:
         )
         print(f"Qdrant BGE-M3 threshold sweep evidence ready: {report.json_path}")
         print(f"Qdrant BGE-M3 threshold sweep evidence ready: {report.markdown_path}")
+        return
+
+    if args.recommend_threshold_from_sweep is not None:
+        report = export_qdrant_threshold_recommendation(
+            sweep_path=args.recommend_threshold_from_sweep,
+            output_dir=args.output_dir,
+            gates=ThresholdRecommendationGates(
+                min_hit_rate=args.min_hit_rate,
+                min_citation_match_rate=args.min_citation_match_rate,
+                min_empty_handling_rate=args.min_empty_handling_rate,
+            ),
+        )
+        print(f"Qdrant BGE-M3 threshold recommendation ready: {report.json_path}")
+        print(f"Qdrant BGE-M3 threshold recommendation ready: {report.markdown_path}")
         return
 
     report = export_qdrant_bge_smoke_evidence(
@@ -99,6 +115,15 @@ def _parse_args() -> argparse.Namespace:
             "Can be supplied multiple times."
         ),
     )
+    parser.add_argument(
+        "--recommend-threshold-from-sweep",
+        type=Path,
+        default=None,
+        help="Read an existing threshold sweep JSON report and export a recommendation.",
+    )
+    parser.add_argument("--min-hit-rate", type=float, default=1.0)
+    parser.add_argument("--min-citation-match-rate", type=float, default=1.0)
+    parser.add_argument("--min-empty-handling-rate", type=float, default=1.0)
     parser.add_argument("--embedding-provider", default="bge_m3_local")
     parser.add_argument("--embedding-model", default="BAAI/bge-m3")
     parser.add_argument("--embedding-model-path", type=Path, default=Path("models/bge-m3"))

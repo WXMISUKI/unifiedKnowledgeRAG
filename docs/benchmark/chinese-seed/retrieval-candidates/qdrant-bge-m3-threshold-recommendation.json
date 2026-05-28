@@ -1,0 +1,21 @@
+{
+  "selected_threshold": 0.7,
+  "gates": {
+    "min_hit_rate": 1.0,
+    "min_citation_match_rate": 1.0,
+    "min_empty_handling_rate": 1.0
+  },
+  "selected_metrics": {
+    "total_cases": 21,
+    "hit_rate": 1.0,
+    "citation_match_rate": 1.0,
+    "empty_handling_rate": 1.0
+  },
+  "sweep_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-threshold-sweep.json",
+  "approval_status": "local_seed_recommendation",
+  "caveats": [
+    "This recommendation is based on local Chinese seed evidence only.",
+    "It does not change the runtime RAG_SCORE_THRESHOLD default.",
+    "Regenerate the recommendation after adding customer-specific cases or changing chunking."
+  ]
+}

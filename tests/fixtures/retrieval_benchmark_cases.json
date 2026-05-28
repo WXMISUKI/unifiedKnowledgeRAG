@@ -143,6 +143,28 @@
     "expect_empty": false
   },
   {
+    "id": "refund-appeal-second-review",
+    "category": "long-section",
+    "difficulty": "hard",
+    "query": "客户补充付款凭证和沟通截图后，退款申诉要直接关闭还是提交二线审核？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 3,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#appeal-review",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-batch-exception-escalation",
+    "category": "long-section",
+    "difficulty": "hard",
+    "query": "同一承运商一小时内多单轨迹停滞时，客服主管要汇总什么并同步哪个团队？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#batch-exception",
+    "expect_empty": false
+  },
+  {
     "id": "empty-membership-points",
     "category": "empty",
     "difficulty": "medium",

@@ -30,7 +30,7 @@ The system SHALL include Chinese-heavy benchmark cases that exercise representat
 #### Scenario: Enterprise workflow categories are present
 
 - **WHEN** local benchmark cases are loaded
-- **THEN** the set includes exception-policy, operational-escalation, SLA, cross-source, paraphrase, evidence, and empty retrieval categories
+- **THEN** the set includes exception-policy, operational-escalation, SLA, cross-source, paraphrase, evidence, long-section, and empty retrieval categories
 
 #### Scenario: Benchmark cases remain citation-bearing
 
@@ -46,6 +46,11 @@ The system SHALL include Chinese-heavy benchmark cases that exercise representat
 
 - **WHEN** local benchmark cases are loaded
 - **THEN** expected-empty cases cover multiple unsupported business domains so threshold evidence can expose false-positive retrieval risk
+
+#### Scenario: Long-section cases cover dense procedure details
+
+- **WHEN** local benchmark cases are loaded
+- **THEN** long-section cases ask about details embedded inside longer policy or procedure paragraphs
 
 ### Requirement: Retrieval benchmark reports comparable metrics
 
@@ -241,3 +246,51 @@ The system SHALL provide a local helper that runs Qdrant+BGE smoke evidence acro
 
 - **WHEN** a threshold sweep is requested with duplicate or out-of-range thresholds
 - **THEN** the request is rejected before running Qdrant ingestion or retrieval
+
+### Requirement: Qdrant threshold recommendation evidence can be exported locally
+
+The system SHALL derive a local Qdrant+BGE threshold recommendation from threshold sweep evidence without changing runtime defaults.
+
+#### Scenario: Threshold recommendation is exported
+
+- **WHEN** a threshold sweep report and quality gates are provided
+- **THEN** the system writes JSON and Markdown recommendation files with the selected threshold, gates, source sweep path, metrics, and caveats
+
+#### Scenario: Lowest passing threshold is selected
+
+- **WHEN** multiple threshold sweep rows satisfy the configured quality gates
+- **THEN** the recommendation selects the lowest passing threshold
+
+#### Scenario: No threshold satisfies the gates
+
+- **WHEN** no threshold sweep row satisfies the configured quality gates
+- **THEN** recommendation generation fails with a clear error and does not write a misleading recommendation
+
+#### Scenario: Recommendation does not change defaults
+
+- **WHEN** threshold recommendation evidence is exported
+- **THEN** the runtime `RAG_SCORE_THRESHOLD` default remains unchanged and the recommendation is marked as local seed evidence only
+
+### Requirement: Chunking strategy candidates can be evaluated locally
+
+The system SHALL export local evidence for chunking strategy candidates without changing runtime ingestion behavior.
+
+#### Scenario: Chunking candidate evidence is exported
+
+- **WHEN** chunking strategy evaluation is run with source ids and an output directory
+- **THEN** the system writes JSON and Markdown evidence with one result per candidate strategy
+
+#### Scenario: Implemented strategy reports source metrics
+
+- **WHEN** an implemented chunking strategy is evaluated
+- **THEN** the evidence includes source ids, chunk counts, citation stability, chunking strategy id, and implementation status
+
+#### Scenario: Planned strategy remains non-runnable
+
+- **WHEN** a planned but unimplemented chunking strategy is evaluated
+- **THEN** the evidence marks it as planned and does not claim retrieval metrics
+
+#### Scenario: Evaluation does not change ingestion defaults
+
+- **WHEN** chunking strategy evidence is exported
+- **THEN** runtime Qdrant ingestion continues using the configured baseline strategy

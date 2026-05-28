@@ -257,6 +257,11 @@ The system SHALL convert configured local source documents into Qdrant evidence 
 - **WHEN** Qdrant ingestion chunks a source or paragraph without a source-specific business anchor
 - **THEN** the chunk citation falls back to `document_id#chunk-N`
 
+#### Scenario: Long-section source paragraph has stable citation
+
+- **WHEN** Qdrant ingestion chunks an added long-section benchmark paragraph
+- **THEN** the chunk citation uses a stable business anchor for the long-section case
+
 #### Scenario: Chunk metadata is preserved
 
 - **WHEN** chunks are embedded and upserted to Qdrant

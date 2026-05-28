@@ -119,7 +119,8 @@ def test_markdown_source_to_qdrant_chunks_uses_known_business_citations(tmp_path
         "物流轨迹超过二十四小时未更新时，应先联系承运商确认揽收和中转状态。\n\n"
         "同城即时配送超过两小时未送达时，客服应优先核实骑手位置和收件人联系方式。\n\n"
         "承运商确认包裹丢失后，客服应创建物流异常工单，并同步售后团队评估补发或退款。\n\n"
-        "用户要求修改收货地址时，如果订单已经出库，应先联系承运商拦截。",
+        "用户要求修改收货地址时，如果订单已经出库，应先联系承运商拦截。\n\n"
+        "批量物流异常处理中，如果同一承运商在一个小时内出现五单以上轨迹停滞。",
         encoding="utf-8",
     )
 
@@ -134,6 +135,7 @@ def test_markdown_source_to_qdrant_chunks_uses_known_business_citations(tmp_path
         "logistics_faq_2026#same-city-timeout",
         "logistics_faq_2026#lost-package",
         "logistics_faq_2026#address-intercept",
+        "logistics_faq_2026#batch-exception",
     ]
 
 

@@ -14,7 +14,7 @@
     }
   },
   "metadata": {
-    "created_at": "2026-05-28T13:19:58.202222+00:00",
+    "created_at": "2026-05-28T13:42:22.232243+00:00",
     "qdrant_url": ":memory:",
     "qdrant_collection": "knowledge_chunks",
     "qdrant_vector_name": "text-dense",
@@ -56,7 +56,7 @@
         }
       },
       "metadata": {
-        "created_at": "2026-05-28T13:19:38.920047+00:00",
+        "created_at": "2026-05-28T13:41:51.597634+00:00",
         "qdrant_url": ":memory:",
         "qdrant_collection": "knowledge_chunks",
         "qdrant_vector_name": "text-dense",
@@ -73,22 +73,22 @@
       },
       "indexed_sources": {
         "refund_policy_docs": {
-          "job_id": "smoke_4820b1c33b0447ab82f84a5e7084fe12",
-          "chunk_count": 5,
+          "job_id": "smoke_d2c83222bef8404bb3e177422b2ed7f8",
+          "chunk_count": 6,
           "status": "ready"
         },
         "logistics_faq": {
-          "job_id": "smoke_8530d3331fac465291bc19a77f94ec5e",
-          "chunk_count": 4,
+          "job_id": "smoke_d5fa6cd0669d4e88ab803905cd1130df",
+          "chunk_count": 5,
           "status": "ready"
         }
       },
       "report": {
         "summary": {
           "backend": "qdrant",
-          "total_cases": 19,
-          "hit_rate": 0.6316,
-          "citation_match_rate": 0.6316,
+          "total_cases": 21,
+          "hit_rate": 0.6667,
+          "citation_match_rate": 0.6667,
           "empty_handling_rate": 0.0,
           "category_summaries": {
             "cross-source": {
@@ -121,6 +121,12 @@
               "citation_match_rate": 1.0,
               "empty_handling_rate": 0.0
             },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
             "multi-intent": {
               "total_cases": 1,
               "hit_rate": 1.0,
@@ -167,7 +173,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 286.335,
+            "latency_ms": 301.194,
             "returned_citations": [
               "refund_policy_2026#section-3",
               "refund_policy_2026#address-change"
@@ -184,7 +190,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 279.473,
+            "latency_ms": 307.418,
             "returned_citations": [
               "logistics_faq_2026#delay",
               "logistics_faq_2026#same-city-timeout"
@@ -201,7 +207,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 256.384,
+            "latency_ms": 277.118,
             "returned_citations": [
               "refund_policy_2026#exception",
               "refund_policy_2026#address-change",
@@ -220,7 +226,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 290.493,
+            "latency_ms": 330.728,
             "returned_citations": [
               "refund_policy_2026#section-3",
               "refund_policy_2026#address-change"
@@ -237,7 +243,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 292.676,
+            "latency_ms": 327.678,
             "returned_citations": [
               "refund_policy_2026#section-5",
               "refund_policy_2026#high-value-review"
@@ -254,7 +260,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 291.205,
+            "latency_ms": 323.283,
             "returned_citations": [
               "logistics_faq_2026#delay",
               "logistics_faq_2026#same-city-timeout"
@@ -271,11 +277,11 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 312.761,
+            "latency_ms": 345.544,
             "returned_citations": [
               "refund_policy_2026#section-5",
               "refund_policy_2026#address-change",
-              "refund_policy_2026#high-value-review"
+              "refund_policy_2026#appeal-review"
             ],
             "returned_source_ids": [
               "refund_policy_docs",
@@ -290,7 +296,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 284.362,
+            "latency_ms": 324.106,
             "returned_citations": [
               "refund_policy_2026#exception",
               "refund_policy_2026#high-value-review"
@@ -307,7 +313,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 298.995,
+            "latency_ms": 339.136,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#section-5"
@@ -324,7 +330,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 329.0,
+            "latency_ms": 370.277,
             "returned_citations": [
               "refund_policy_2026#address-change",
               "logistics_faq_2026#address-intercept",
@@ -343,7 +349,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 313.223,
+            "latency_ms": 344.073,
             "returned_citations": [
               "logistics_faq_2026#same-city-timeout",
               "logistics_faq_2026#delay"
@@ -360,11 +366,11 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 330.421,
+            "latency_ms": 348.469,
             "returned_citations": [
               "logistics_faq_2026#lost-package",
-              "logistics_faq_2026#delay",
-              "logistics_faq_2026#same-city-timeout"
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
             ],
             "returned_source_ids": [
               "logistics_faq",
@@ -379,12 +385,50 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 306.697,
+            "latency_ms": 345.764,
             "returned_citations": [
               "logistics_faq_2026#address-intercept",
               "logistics_faq_2026#delay"
             ],
             "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 355.685,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#address-change",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 361.205,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#same-city-timeout"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
               "logistics_faq",
               "logistics_faq"
             ]
@@ -396,7 +440,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 277.251,
+            "latency_ms": 306.239,
             "returned_citations": [
               "refund_policy_2026#address-change",
               "logistics_faq_2026#address-intercept",
@@ -415,11 +459,11 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 292.035,
+            "latency_ms": 325.36,
             "returned_citations": [
               "refund_policy_2026#section-5",
-              "refund_policy_2026#high-value-review",
-              "logistics_faq_2026#lost-package"
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
             ],
             "returned_source_ids": [
               "refund_policy_docs",
@@ -434,7 +478,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 271.074,
+            "latency_ms": 323.493,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#address-change",
@@ -453,7 +497,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 288.617,
+            "latency_ms": 331.438,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#address-change",
@@ -472,7 +516,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 276.498,
+            "latency_ms": 313.368,
             "returned_citations": [
               "logistics_faq_2026#address-intercept",
               "logistics_faq_2026#delay",
@@ -491,7 +535,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 276.54,
+            "latency_ms": 314.151,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#section-5",
@@ -522,7 +566,7 @@
         }
       },
       "metadata": {
-        "created_at": "2026-05-28T13:19:48.309121+00:00",
+        "created_at": "2026-05-28T13:42:06.621422+00:00",
         "qdrant_url": ":memory:",
         "qdrant_collection": "knowledge_chunks",
         "qdrant_vector_name": "text-dense",
@@ -539,22 +583,22 @@
       },
       "indexed_sources": {
         "refund_policy_docs": {
-          "job_id": "smoke_5a4067f976df4013b296032de97b0185",
-          "chunk_count": 5,
+          "job_id": "smoke_cd7411121c8d42328453881be50e477c",
+          "chunk_count": 6,
           "status": "ready"
         },
         "logistics_faq": {
-          "job_id": "smoke_940d7777d4c74fdc854c3c1d9536f1fa",
-          "chunk_count": 4,
+          "job_id": "smoke_124ee61299f0431ab006b7bd69e777d8",
+          "chunk_count": 5,
           "status": "ready"
         }
       },
       "report": {
         "summary": {
           "backend": "qdrant",
-          "total_cases": 19,
-          "hit_rate": 0.7368,
-          "citation_match_rate": 0.7368,
+          "total_cases": 21,
+          "hit_rate": 0.7619,
+          "citation_match_rate": 0.7619,
           "empty_handling_rate": 0.2857,
           "category_summaries": {
             "cross-source": {
@@ -587,6 +631,12 @@
               "citation_match_rate": 1.0,
               "empty_handling_rate": 0.0
             },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
             "multi-intent": {
               "total_cases": 1,
               "hit_rate": 1.0,
@@ -633,7 +683,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 270.826,
+            "latency_ms": 314.541,
             "returned_citations": [
               "refund_policy_2026#section-3",
               "refund_policy_2026#address-change"
@@ -650,7 +700,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 282.642,
+            "latency_ms": 318.165,
             "returned_citations": [
               "logistics_faq_2026#delay",
               "logistics_faq_2026#same-city-timeout"
@@ -667,7 +717,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 244.642,
+            "latency_ms": 277.291,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -678,7 +728,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 298.026,
+            "latency_ms": 332.279,
             "returned_citations": [
               "refund_policy_2026#section-3",
               "refund_policy_2026#address-change"
@@ -695,7 +745,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 290.418,
+            "latency_ms": 331.41,
             "returned_citations": [
               "refund_policy_2026#section-5",
               "refund_policy_2026#high-value-review"
@@ -712,7 +762,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 292.061,
+            "latency_ms": 327.59,
             "returned_citations": [
               "logistics_faq_2026#delay",
               "logistics_faq_2026#same-city-timeout"
@@ -729,11 +779,11 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 306.614,
+            "latency_ms": 336.264,
             "returned_citations": [
               "refund_policy_2026#section-5",
               "refund_policy_2026#address-change",
-              "refund_policy_2026#high-value-review"
+              "refund_policy_2026#appeal-review"
             ],
             "returned_source_ids": [
               "refund_policy_docs",
@@ -748,7 +798,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 287.524,
+            "latency_ms": 329.771,
             "returned_citations": [
               "refund_policy_2026#exception",
               "refund_policy_2026#high-value-review"
@@ -765,7 +815,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 306.984,
+            "latency_ms": 350.59,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#section-5"
@@ -782,7 +832,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 351.611,
+            "latency_ms": 365.01,
             "returned_citations": [
               "refund_policy_2026#address-change",
               "logistics_faq_2026#address-intercept",
@@ -801,7 +851,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 315.141,
+            "latency_ms": 345.656,
             "returned_citations": [
               "logistics_faq_2026#same-city-timeout",
               "logistics_faq_2026#delay"
@@ -818,11 +868,11 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 313.45,
+            "latency_ms": 347.892,
             "returned_citations": [
               "logistics_faq_2026#lost-package",
-              "logistics_faq_2026#delay",
-              "logistics_faq_2026#same-city-timeout"
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
             ],
             "returned_source_ids": [
               "logistics_faq",
@@ -837,12 +887,50 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 305.069,
+            "latency_ms": 344.349,
             "returned_citations": [
               "logistics_faq_2026#address-intercept",
               "logistics_faq_2026#delay"
             ],
             "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 356.148,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#address-change",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 363.835,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#same-city-timeout"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
               "logistics_faq",
               "logistics_faq"
             ]
@@ -854,7 +942,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 276.955,
+            "latency_ms": 311.428,
             "returned_citations": [
               "refund_policy_2026#address-change",
               "logistics_faq_2026#address-intercept",
@@ -873,7 +961,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 291.497,
+            "latency_ms": 327.587,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -884,7 +972,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 268.256,
+            "latency_ms": 301.019,
             "returned_citations": [
               "refund_policy_2026#high-value-review"
             ],
@@ -899,7 +987,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 290.98,
+            "latency_ms": 321.352,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#address-change",
@@ -918,7 +1006,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 274.493,
+            "latency_ms": 312.368,
             "returned_citations": [
               "logistics_faq_2026#address-intercept",
               "logistics_faq_2026#delay",
@@ -937,7 +1025,7 @@
             "hit_at_k": false,
             "citation_match": false,
             "empty_query_handling": false,
-            "latency_ms": 279.839,
+            "latency_ms": 312.19,
             "returned_citations": [
               "refund_policy_2026#high-value-review",
               "refund_policy_2026#section-5",
@@ -968,7 +1056,7 @@
         }
       },
       "metadata": {
-        "created_at": "2026-05-28T13:19:57.668988+00:00",
+        "created_at": "2026-05-28T13:42:21.625800+00:00",
         "qdrant_url": ":memory:",
         "qdrant_collection": "knowledge_chunks",
         "qdrant_vector_name": "text-dense",
@@ -985,20 +1073,20 @@
       },
       "indexed_sources": {
         "refund_policy_docs": {
-          "job_id": "smoke_8125a7a3b21d412db905f78de4eae78a",
-          "chunk_count": 5,
+          "job_id": "smoke_0fcd228bbedd42318fbcec08f5dbb6d9",
+          "chunk_count": 6,
           "status": "ready"
         },
         "logistics_faq": {
-          "job_id": "smoke_31b3e08d789c4cc394c205c4fd3ca46c",
-          "chunk_count": 4,
+          "job_id": "smoke_f7ccb37928ef4ff1a48f403f20d550bd",
+          "chunk_count": 5,
           "status": "ready"
         }
       },
       "report": {
         "summary": {
           "backend": "qdrant",
-          "total_cases": 19,
+          "total_cases": 21,
           "hit_rate": 1.0,
           "citation_match_rate": 1.0,
           "empty_handling_rate": 1.0,
@@ -1033,6 +1121,12 @@
               "citation_match_rate": 1.0,
               "empty_handling_rate": 0.0
             },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
             "multi-intent": {
               "total_cases": 1,
               "hit_rate": 1.0,
@@ -1079,7 +1173,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 266.564,
+            "latency_ms": 309.476,
             "returned_citations": [
               "refund_policy_2026#section-3",
               "refund_policy_2026#address-change"
@@ -1096,7 +1190,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 275.613,
+            "latency_ms": 317.636,
             "returned_citations": [
               "logistics_faq_2026#delay"
             ],
@@ -1111,7 +1205,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 244.516,
+            "latency_ms": 286.314,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -1122,7 +1216,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 301.275,
+            "latency_ms": 337.033,
             "returned_citations": [
               "refund_policy_2026#section-3",
               "refund_policy_2026#address-change"
@@ -1139,7 +1233,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 290.215,
+            "latency_ms": 333.294,
             "returned_citations": [
               "refund_policy_2026#section-5",
               "refund_policy_2026#high-value-review"
@@ -1156,7 +1250,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 281.363,
+            "latency_ms": 332.928,
             "returned_citations": [
               "logistics_faq_2026#delay",
               "logistics_faq_2026#same-city-timeout"
@@ -1173,7 +1267,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 299.264,
+            "latency_ms": 347.422,
             "returned_citations": [
               "refund_policy_2026#section-5",
               "refund_policy_2026#address-change"
@@ -1190,7 +1284,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 290.797,
+            "latency_ms": 325.132,
             "returned_citations": [
               "refund_policy_2026#exception"
             ],
@@ -1205,7 +1299,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 293.39,
+            "latency_ms": 361.478,
             "returned_citations": [
               "refund_policy_2026#high-value-review"
             ],
@@ -1220,7 +1314,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 325.335,
+            "latency_ms": 367.937,
             "returned_citations": [
               "refund_policy_2026#address-change",
               "logistics_faq_2026#address-intercept",
@@ -1239,7 +1333,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 294.797,
+            "latency_ms": 333.941,
             "returned_citations": [
               "logistics_faq_2026#same-city-timeout",
               "logistics_faq_2026#delay"
@@ -1256,7 +1350,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 336.63,
+            "latency_ms": 348.48,
             "returned_citations": [
               "logistics_faq_2026#lost-package"
             ],
@@ -1271,9 +1365,43 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": null,
-            "latency_ms": 313.416,
+            "latency_ms": 343.74,
             "returned_citations": [
               "logistics_faq_2026#address-intercept"
+            ],
+            "returned_source_ids": [
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 359.039,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#address-change",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 361.173,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception"
             ],
             "returned_source_ids": [
               "logistics_faq"
@@ -1286,7 +1414,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 276.53,
+            "latency_ms": 309.224,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -1297,7 +1425,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 297.692,
+            "latency_ms": 324.65,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -1308,7 +1436,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 268.729,
+            "latency_ms": 299.402,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -1319,7 +1447,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 293.87,
+            "latency_ms": 323.08,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -1330,7 +1458,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 274.718,
+            "latency_ms": 312.105,
             "returned_citations": [],
             "returned_source_ids": []
           },
@@ -1341,7 +1469,7 @@
             "hit_at_k": true,
             "citation_match": true,
             "empty_query_handling": true,
-            "latency_ms": 276.139,
+            "latency_ms": 314.926,
             "returned_citations": [],
             "returned_source_ids": []
           }
@@ -1352,21 +1480,21 @@
   "summary": [
     {
       "threshold": 0.3,
-      "total_cases": 19,
-      "hit_rate": 0.6316,
-      "citation_match_rate": 0.6316,
+      "total_cases": 21,
+      "hit_rate": 0.6667,
+      "citation_match_rate": 0.6667,
       "empty_handling_rate": 0.0
     },
     {
       "threshold": 0.5,
-      "total_cases": 19,
-      "hit_rate": 0.7368,
-      "citation_match_rate": 0.7368,
+      "total_cases": 21,
+      "hit_rate": 0.7619,
+      "citation_match_rate": 0.7619,
       "empty_handling_rate": 0.2857
     },
     {
       "threshold": 0.7,
-      "total_cases": 19,
+      "total_cases": 21,
       "hit_rate": 1.0,
       "citation_match_rate": 1.0,
       "empty_handling_rate": 1.0
