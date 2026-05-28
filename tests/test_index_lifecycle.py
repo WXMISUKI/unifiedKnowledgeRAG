@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
+from datetime import UTC, datetime, timedelta
 
 from app.main import create_app
 from app.config import Settings
+from app.models.contracts import IndexLifecycleJob
 from app.services.index_lifecycle import clear_local_jobs_for_tests, get_index_status
 from app.services.index_lifecycle_store import IndexLifecycleStore
 
@@ -189,6 +191,8 @@ def test_ingestion_jobs_can_be_listed_and_filtered(monkeypatch, tmp_path):
     assert second["job_id"] in {job["job_id"] for job in all_jobs}
     assert {job["source_id"] for job in refund_jobs} == {"refund_policy_docs"}
     assert {job["status"] for job in completed_jobs} == {"completed"}
+    assert len(all_jobs) == 2
+    assert all(job["status"] == "completed" for job in all_jobs)
 
 
 def test_ingestion_job_detail_and_missing_error(monkeypatch, tmp_path):
@@ -246,3 +250,219 @@ def test_non_failed_ingestion_job_retry_is_rejected(monkeypatch, tmp_path):
     assert completed["status"] == "completed"
     assert retry["ok"] is False
     assert retry["error"]["code"] == "JOB_RETRY_NOT_ALLOWED"
+
+
+def test_ingestion_job_list_is_paginated(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    (source_dir / "logistics_faq.md").write_text("logistics docs", encoding="utf-8")
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    client.post("/api/ingestion/jobs", json={"source_id": "refund_policy_docs"})
+    client.post("/api/ingestion/jobs", json={"source_id": "logistics_faq"})
+
+    first_page = client.get("/api/ingestion/jobs?limit=1&offset=0").json()
+    second_page = client.get("/api/ingestion/jobs?limit=1&offset=1").json()
+
+    assert first_page["ok"] is True
+    assert first_page["total"] == 2
+    assert first_page["limit"] == 1
+    assert first_page["offset"] == 0
+    assert first_page["has_more"] is True
+    assert len(first_page["jobs"]) == 1
+    assert second_page["total"] == 2
+    assert second_page["offset"] == 1
+    assert second_page["has_more"] is False
+    assert len(second_page["jobs"]) == 1
+
+
+def test_ingestion_job_filtered_total_uses_latest_logical_jobs(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    client.post("/api/ingestion/jobs", json={"source_id": "refund_policy_docs"})
+
+    completed = client.get("/api/ingestion/jobs?status=completed").json()
+    running = client.get("/api/ingestion/jobs?status=running").json()
+
+    assert completed["total"] == 1
+    assert len(completed["jobs"]) == 1
+    assert completed["jobs"][0]["status"] == "completed"
+    assert running["total"] == 0
+    assert running["jobs"] == []
+
+
+def test_ingestion_job_retention_compacts_latest_logical_jobs(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    (source_dir / "logistics_faq.md").write_text("logistics docs", encoding="utf-8")
+    index_dir = tmp_path / "index"
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(index_dir))
+    client = TestClient(create_app())
+
+    first = client.post("/api/ingestion/jobs", json={"source_id": "refund_policy_docs"}).json()["job"]
+    second = client.post("/api/ingestion/jobs", json={"source_id": "logistics_faq"}).json()["job"]
+
+    response = client.post(
+        "/api/ingestion/jobs/retention/compact",
+        json={"keep_latest": 1},
+    )
+    jobs = client.get("/api/ingestion/jobs").json()
+    lines = (index_dir / "jobs.jsonl").read_text(encoding="utf-8").splitlines()
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"] == {
+        "before_count": 2,
+        "after_count": 1,
+        "removed_count": 1,
+        "keep_latest": 1,
+    }
+    assert jobs["total"] == 1
+    assert jobs["jobs"][0]["job_id"] in {first["job_id"], second["job_id"]}
+    assert len(lines) == 1
+
+
+def test_running_ingestion_job_can_be_canceled(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    index_dir = tmp_path / "index"
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(index_dir))
+    settings = Settings(
+        rag_retrieval_backend="llamaindex",
+        rag_source_dir=source_dir,
+        rag_index_dir=index_dir,
+    )
+    IndexLifecycleStore(settings).append_job(IndexLifecycleJob(
+        job_id="idx_running_cancel",
+        source_id="refund_policy_docs",
+        status="running",
+        requested_at=datetime.now(UTC).isoformat(),
+    ))
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/ingestion/jobs/idx_running_cancel/cancel",
+        json={"reason": "operator stop"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["job"]["status"] == "canceled"
+    assert body["job"]["error"]["code"] == "JOB_CANCELED"
+    status = client.get("/api/indexes/refund_policy_docs/status").json()
+    assert status["status"] == "canceled"
+    assert status["latest_job_id"] == "idx_running_cancel"
+
+
+def test_terminal_ingestion_job_cancel_is_rejected(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    completed = client.post("/api/ingestion/jobs", json={"source_id": "refund_policy_docs"}).json()["job"]
+    response = client.post(
+        f"/api/ingestion/jobs/{completed['job_id']}/cancel",
+        json={"reason": "too late"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["error"]["code"] == "JOB_CANCEL_NOT_ALLOWED"
+
+
+def test_stale_running_jobs_are_recovered_as_failed(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    index_dir = tmp_path / "index"
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(index_dir))
+    settings = Settings(
+        rag_retrieval_backend="llamaindex",
+        rag_source_dir=source_dir,
+        rag_index_dir=index_dir,
+    )
+    store = IndexLifecycleStore(settings)
+    store.append_job(IndexLifecycleJob(
+        job_id="idx_old_running",
+        source_id="refund_policy_docs",
+        status="running",
+        requested_at=(datetime.now(UTC) - timedelta(hours=2)).isoformat(),
+    ))
+    store.append_job(IndexLifecycleJob(
+        job_id="idx_fresh_running",
+        source_id="logistics_faq",
+        status="running",
+        requested_at=datetime.now(UTC).isoformat(),
+    ))
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/ingestion/jobs/recovery/stale-running",
+        json={"max_age_seconds": 3600},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["recovered_count"] == 1
+    assert body["result"]["recovered_job_ids"] == ["idx_old_running"]
+    old_job = client.get("/api/ingestion/jobs/idx_old_running").json()["job"]
+    fresh_job = client.get("/api/ingestion/jobs/idx_fresh_running").json()["job"]
+    assert old_job["status"] == "failed"
+    assert old_job["error"]["code"] == "STALE_RUNNING_JOB"
+    assert fresh_job["status"] == "running"
+
+
+def test_stale_recovered_job_can_be_retried(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    index_dir = tmp_path / "index"
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(index_dir))
+    settings = Settings(
+        rag_retrieval_backend="llamaindex",
+        rag_source_dir=source_dir,
+        rag_index_dir=index_dir,
+    )
+    IndexLifecycleStore(settings).append_job(IndexLifecycleJob(
+        job_id="idx_retry_after_stale",
+        source_id="refund_policy_docs",
+        status="running",
+        requested_at=(datetime.now(UTC) - timedelta(hours=2)).isoformat(),
+    ))
+    client = TestClient(create_app())
+
+    client.post(
+        "/api/ingestion/jobs/recovery/stale-running",
+        json={"max_age_seconds": 3600},
+    )
+    retry = client.post("/api/ingestion/jobs/idx_retry_after_stale/retry").json()
+
+    assert retry["ok"] is True
+    assert retry["job"]["source_id"] == "refund_policy_docs"
+    assert retry["job"]["status"] == "completed"

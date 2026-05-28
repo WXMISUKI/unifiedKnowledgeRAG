@@ -105,6 +105,9 @@ Invoke-RestMethod http://127.0.0.1:8020/api/ingestion/jobs
 # 按 source 或状态过滤
 Invoke-RestMethod "http://127.0.0.1:8020/api/ingestion/jobs?source_id=refund_policy_docs&status=completed"
 
+# 分页查看 job，返回 total / limit / offset / has_more
+Invoke-RestMethod "http://127.0.0.1:8020/api/ingestion/jobs?limit=20&offset=0"
+
 # 查看单个 job
 Invoke-RestMethod http://127.0.0.1:8020/api/ingestion/jobs/<job_id>
 
@@ -114,7 +117,40 @@ Invoke-RestMethod `
   -Uri http://127.0.0.1:8020/api/ingestion/jobs/<job_id>/retry
 ```
 
-当前只允许重试 `failed` job；`completed`、`running` 等非失败状态会返回结构化 `JOB_RETRY_NOT_ALLOWED`。分页、保留策略、取消任务、异步 worker 和鉴权策略仍留给后续 change。
+当前只允许重试 `failed` job；`completed`、`running` 等非失败状态会返回结构化 `JOB_RETRY_NOT_ALLOWED`。取消任务、异步 worker 和鉴权策略仍留给后续 change。
+
+第六阶段 OpenSpec change `add-index-job-pagination-retention` 增加分页和本地 compaction：
+
+```powershell
+# 保留最新 100 个 logical jobs，并重写 jobs.jsonl
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs/retention/compact `
+  -ContentType "application/json" `
+  -Body '{"keep_latest":100}'
+```
+
+Job list 展示的是按 `job_id` 去重后的最新 logical job 状态，而不是 `jobs.jsonl` 中的每条 raw event。Compaction 只保留最新 N 个 logical jobs；cursor pagination、定时保留策略、归档导出和鉴权策略仍留给后续 change。
+
+第七阶段 OpenSpec change `add-index-job-cancellation-recovery` 增加显式取消和 stale-running 恢复：
+
+```powershell
+# 取消 running job，会追加 canceled 终态记录
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs/<job_id>/cancel `
+  -ContentType "application/json" `
+  -Body '{"reason":"operator stop"}'
+
+# 将超过阈值仍为 running 的 job 标记为 failed，之后可走 retry
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs/recovery/stale-running `
+  -ContentType "application/json" `
+  -Body '{"max_age_seconds":3600}'
+```
+
+取消只允许作用于 `running` job，非 running 状态会返回结构化 `JOB_CANCEL_NOT_ALLOWED`。Stale recovery 不会后台自动执行，必须由调用方显式触发；它会把超时 running job 标记为带 `STALE_RUNNING_JOB` 错误的 `failed` 状态，以便后续通过 retry 创建新 job。当前仍不提供异步 worker 中断信号、分布式 lease、定时扫描或鉴权策略。
 
 ## 设计文档
 

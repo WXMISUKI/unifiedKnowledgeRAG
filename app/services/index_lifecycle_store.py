@@ -1,4 +1,5 @@
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 from app.config import Settings
@@ -31,8 +32,33 @@ class IndexLifecycleStore:
         self,
         source_id: str | None = None,
         status: str | None = None,
+        limit: int = 50,
+        offset: int = 0,
     ) -> list[IndexLifecycleJob]:
-        jobs = self.read_jobs()
+        jobs = self.list_latest_jobs(source_id=source_id, status=status)
+        return jobs[offset:offset + limit]
+
+    def count_jobs(
+        self,
+        source_id: str | None = None,
+        status: str | None = None,
+    ) -> int:
+        return len(self.list_latest_jobs(source_id=source_id, status=status))
+
+    def list_latest_jobs(
+        self,
+        source_id: str | None = None,
+        status: str | None = None,
+    ) -> list[IndexLifecycleJob]:
+        latest_by_id: dict[str, IndexLifecycleJob] = {}
+        for job in self.read_jobs():
+            latest_by_id[job.job_id] = job
+
+        jobs = sorted(
+            latest_by_id.values(),
+            key=lambda job: job.requested_at,
+            reverse=True,
+        )
         if source_id is not None:
             jobs = [job for job in jobs if job.source_id == source_id]
         if status is not None:
@@ -49,11 +75,27 @@ class IndexLifecycleStore:
         return next(
             (
                 job
-                for job in reversed(self.read_jobs())
+                for job in self.list_latest_jobs()
                 if job.source_id == source_id
             ),
             None,
         )
+
+    def compact_jobs(self, keep_latest: int) -> tuple[int, int, int]:
+        before_count = len(self.list_latest_jobs())
+        kept_jobs = self.list_latest_jobs()[:keep_latest]
+        self._atomic_write_jsonl(self.jobs_path, kept_jobs)
+        after_count = len(kept_jobs)
+        return before_count, after_count, max(before_count - after_count, 0)
+
+    def stale_running_jobs(self, max_age_seconds: int, now: datetime | None = None) -> list[IndexLifecycleJob]:
+        now = now or datetime.now(UTC)
+        stale_jobs: list[IndexLifecycleJob] = []
+        for job in self.list_latest_jobs(status="running"):
+            requested_at = _parse_timestamp(job.requested_at)
+            if (now - requested_at).total_seconds() >= max_age_seconds:
+                stale_jobs.append(job)
+        return stale_jobs
 
     def write_source_status(self, status: IndexStatusResponse) -> None:
         sources = self.read_source_statuses()
@@ -90,3 +132,19 @@ class IndexLifecycleStore:
             encoding="utf-8",
         )
         tmp_path.replace(path)
+
+    def _atomic_write_jsonl(self, path: Path, jobs: list[IndexLifecycleJob]) -> None:
+        self.root.mkdir(parents=True, exist_ok=True)
+        tmp_path = path.with_suffix(f"{path.suffix}.tmp")
+        tmp_path.write_text(
+            "".join(f"{job.model_dump_json(exclude_none=True)}\n" for job in jobs),
+            encoding="utf-8",
+        )
+        tmp_path.replace(path)
+
+
+def _parse_timestamp(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)

@@ -53,22 +53,27 @@ The system SHALL preserve failed ingestion details as structured lifecycle statu
 
 ### Requirement: Ingestion jobs are queryable
 
-The system SHALL expose persisted ingestion job history through provider APIs.
+The system SHALL expose persisted ingestion job history through provider APIs as a paginated logical job view.
 
 #### Scenario: Jobs are listed
 
 - **WHEN** a caller requests `GET /api/ingestion/jobs`
-- **THEN** the response includes persisted ingestion jobs ordered by request time
+- **THEN** the response includes the latest persisted state for each ingestion job ordered by newest request time
 
 #### Scenario: Jobs are filtered by source and status
 
 - **WHEN** a caller requests `GET /api/ingestion/jobs` with `source_id` or `status` query parameters
-- **THEN** the response includes only jobs matching the supplied filters
+- **THEN** the response includes only logical jobs matching the supplied filters
+
+#### Scenario: Jobs are paginated
+
+- **WHEN** a caller requests `GET /api/ingestion/jobs` with `limit` and `offset`
+- **THEN** the response includes `jobs`, `total`, `limit`, `offset`, and `has_more`
 
 #### Scenario: Job detail is returned
 
 - **WHEN** a caller requests `GET /api/ingestion/jobs/{job_id}` for a persisted job
-- **THEN** the response includes the matching job record
+- **THEN** the response includes the matching latest job record
 
 #### Scenario: Missing job detail is structured
 
@@ -88,3 +93,50 @@ The system SHALL allow a failed ingestion job to be retried by creating a new in
 
 - **WHEN** a caller requests `POST /api/ingestion/jobs/{job_id}/retry` for a job that is not failed
 - **THEN** the response uses a structured provider error code that states retry is not allowed
+
+### Requirement: Ingestion job history can be compacted locally
+
+The system SHALL expose an explicit local compaction operation that retains the newest logical ingestion jobs.
+
+#### Scenario: Job history is compacted
+
+- **WHEN** a caller requests `POST /api/ingestion/jobs/retention/compact` with `keep_latest`
+- **THEN** the provider rewrites the local job store to retain only the newest `keep_latest` logical jobs
+
+#### Scenario: Compaction reports retention metadata
+
+- **WHEN** compaction completes
+- **THEN** the response includes `before_count`, `after_count`, and `removed_count`
+
+### Requirement: Running ingestion jobs can be canceled
+
+The system SHALL expose an explicit cancellation operation for running ingestion jobs.
+
+#### Scenario: Running job is canceled
+
+- **WHEN** a caller requests `POST /api/ingestion/jobs/{job_id}/cancel` for a running job
+- **THEN** the provider appends a terminal `canceled` job record with a machine-readable reason
+
+#### Scenario: Terminal job cancellation is rejected
+
+- **WHEN** a caller requests cancellation for a job that is not running
+- **THEN** the response uses a structured provider error code that states cancellation is not allowed
+
+### Requirement: Stale running ingestion jobs can be recovered
+
+The system SHALL expose explicit stale-running recovery for ingestion jobs that exceed a caller-supplied age threshold.
+
+#### Scenario: Stale running jobs are marked failed
+
+- **WHEN** a caller requests `POST /api/ingestion/jobs/recovery/stale-running` with `max_age_seconds`
+- **THEN** running jobs older than the threshold are appended as `failed` with a machine-readable stale-running error
+
+#### Scenario: Stale recovery reports affected jobs
+
+- **WHEN** stale-running recovery completes
+- **THEN** the response includes the recovered job ids and `recovered_count`
+
+#### Scenario: Fresh running jobs are not recovered
+
+- **WHEN** a running job is newer than `max_age_seconds`
+- **THEN** stale-running recovery leaves the job in `running` state

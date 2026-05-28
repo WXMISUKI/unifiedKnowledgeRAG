@@ -110,12 +110,53 @@ class IngestionJobResponse(BaseModel):
 class IngestionJobListResponse(BaseModel):
     ok: bool
     jobs: list[IndexLifecycleJob] = Field(default_factory=list)
+    total: int = 0
+    limit: int = 50
+    offset: int = 0
+    has_more: bool = False
     error: ProviderError | None = None
 
 
 class IngestionJobDetailResponse(BaseModel):
     ok: bool
     job: IndexLifecycleJob | None = None
+    error: ProviderError | None = None
+
+
+class IngestionJobRetentionRequest(BaseModel):
+    keep_latest: int = Field(default=100, ge=1, le=10000)
+
+
+class IngestionJobRetentionResult(BaseModel):
+    before_count: int
+    after_count: int
+    removed_count: int
+    keep_latest: int
+
+
+class IngestionJobRetentionResponse(BaseModel):
+    ok: bool
+    result: IngestionJobRetentionResult | None = None
+    error: ProviderError | None = None
+
+
+class IngestionJobCancelRequest(BaseModel):
+    reason: str = Field(default="Canceled by operator.", min_length=1)
+
+
+class IngestionJobRecoveryRequest(BaseModel):
+    max_age_seconds: int = Field(default=3600, ge=0, le=604800)
+
+
+class IngestionJobRecoveryResult(BaseModel):
+    recovered_count: int
+    recovered_job_ids: list[str] = Field(default_factory=list)
+    max_age_seconds: int
+
+
+class IngestionJobRecoveryResponse(BaseModel):
+    ok: bool
+    result: IngestionJobRecoveryResult | None = None
     error: ProviderError | None = None
 
 
