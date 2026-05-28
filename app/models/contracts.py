@@ -107,6 +107,18 @@ class IngestionJobResponse(BaseModel):
     error: ProviderError | None = None
 
 
+class IngestionJobListResponse(BaseModel):
+    ok: bool
+    jobs: list[IndexLifecycleJob] = Field(default_factory=list)
+    error: ProviderError | None = None
+
+
+class IngestionJobDetailResponse(BaseModel):
+    ok: bool
+    job: IndexLifecycleJob | None = None
+    error: ProviderError | None = None
+
+
 class IndexStatusResponse(BaseModel):
     source_id: str
     status: str

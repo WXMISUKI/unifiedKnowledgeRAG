@@ -2,7 +2,8 @@ from pathlib import Path
 from datetime import UTC, datetime
 
 from app.config import Settings
-from app.models.contracts import EvidenceDocument
+from app.models.contracts import EvidenceDocument, IndexStatusResponse
+from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.source_catalog import get_knowledge_base, knowledge_base_exists
 
 
@@ -69,15 +70,25 @@ class LlamaIndexLocalRetriever:
         if unknown_sources:
             raise ValueError(f"Unknown knowledge base id(s): {', '.join(unknown_sources)}")
 
+        missing_documents = [
+            source_id
+            for source_id in knowledge_base_ids
+            if not self._source_path(source_id).exists()
+        ]
+        if missing_documents:
+            raise FileNotFoundError(
+                f"Source document not found for knowledge base id(s): {', '.join(missing_documents)}"
+            )
+
         self._load_or_build_index(knowledge_base_ids)
         for source_id in knowledge_base_ids:
-            self._write_status_marker(
+            IndexLifecycleStore(self.settings).write_source_status(IndexStatusResponse(
                 source_id=source_id,
                 status="ready",
-                reason=None,
-                latest_job_id=latest_job_id,
+                backend=self.backend_name,
                 indexed_at=datetime.now(UTC).isoformat(),
-            )
+                latest_job_id=latest_job_id,
+            ))
 
     def _load_or_build_index(self, knowledge_base_ids: list[str]):
         self._configure_llamaindex()
@@ -117,34 +128,6 @@ class LlamaIndexLocalRetriever:
 
     def _source_path(self, source_id: str) -> Path:
         return self.settings.rag_source_dir / f"{source_id}.md"
-
-    def _write_status_marker(
-        self,
-        source_id: str,
-        status: str,
-        reason: str | None,
-        latest_job_id: str,
-        indexed_at: str | None,
-    ) -> None:
-        marker = self.settings.rag_index_dir / f"{source_id}.index.json"
-        marker.parent.mkdir(parents=True, exist_ok=True)
-        marker.write_text(
-            (
-                "{\n"
-                f'  "source_id": "{source_id}",\n'
-                f'  "status": "{status}",\n'
-                f'  "reason": {self._json_string(reason)},\n'
-                f'  "latest_job_id": "{latest_job_id}",\n'
-                f'  "indexed_at": {self._json_string(indexed_at)}\n'
-                "}\n"
-            ),
-            encoding="utf-8",
-        )
-
-    def _json_string(self, value: str | None) -> str:
-        if value is None:
-            return "null"
-        return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
     def _node_to_document(self, node) -> EvidenceDocument:
         metadata = node.node.metadata

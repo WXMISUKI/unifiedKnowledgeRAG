@@ -1,17 +1,15 @@
-import json
 import uuid
 from datetime import UTC, datetime
-from pathlib import Path
 
 from app.config import Settings, get_settings
 from app.models.contracts import IndexLifecycleJob, IndexStatusResponse, ProviderError
+from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.source_catalog import knowledge_base_exists
-
-_JOBS: dict[str, IndexLifecycleJob] = {}
 
 
 def create_ingestion_job(source_id: str, settings: Settings | None = None) -> tuple[bool, IndexLifecycleJob | None, ProviderError | None]:
     settings = settings or get_settings()
+    store = IndexLifecycleStore(settings)
     if not knowledge_base_exists(source_id):
         return False, None, ProviderError(
             code="UNKNOWN_KNOWLEDGE_BASE",
@@ -25,7 +23,7 @@ def create_ingestion_job(source_id: str, settings: Settings | None = None) -> tu
         status="running",
         requested_at=requested_at,
     )
-    _JOBS[job.job_id] = job
+    store.append_job(job)
 
     try:
         _build_source_index(source_id, settings, job.job_id)
@@ -38,26 +36,66 @@ def create_ingestion_job(source_id: str, settings: Settings | None = None) -> tu
                 "error": ProviderError(code="INDEX_BUILD_FAILED", message=str(exc)),
             }
         )
-        _JOBS[job.job_id] = failed_job
-        _write_status_marker(
-            settings=settings,
+        store.append_job(failed_job)
+        store.write_source_status(IndexStatusResponse(
             source_id=source_id,
             status="failed",
-            reason=str(exc),
-            latest_job_id=job.job_id,
+            backend=settings.rag_retrieval_backend.lower(),
             indexed_at=None,
-        )
+            latest_job_id=job.job_id,
+            reason=str(exc),
+        ))
         return True, failed_job, None
 
     completed_at = _now()
     completed_job = job.model_copy(update={"status": "completed", "completed_at": completed_at})
-    _JOBS[job.job_id] = completed_job
+    store.append_job(completed_job)
     return True, completed_job, None
+
+
+def list_ingestion_jobs(
+    source_id: str | None = None,
+    status: str | None = None,
+    settings: Settings | None = None,
+) -> list[IndexLifecycleJob]:
+    settings = settings or get_settings()
+    return IndexLifecycleStore(settings).list_jobs(source_id=source_id, status=status)
+
+
+def get_ingestion_job(
+    job_id: str,
+    settings: Settings | None = None,
+) -> tuple[bool, IndexLifecycleJob | None, ProviderError | None]:
+    settings = settings or get_settings()
+    job = IndexLifecycleStore(settings).get_job(job_id)
+    if job is None:
+        return False, None, ProviderError(
+            code="JOB_NOT_FOUND",
+            message=f"Unknown ingestion job id: {job_id}",
+        )
+    return True, job, None
+
+
+def retry_ingestion_job(
+    job_id: str,
+    settings: Settings | None = None,
+) -> tuple[bool, IndexLifecycleJob | None, ProviderError | None]:
+    settings = settings or get_settings()
+    ok, job, error = get_ingestion_job(job_id, settings)
+    if not ok or job is None:
+        return False, None, error
+    if job.status != "failed":
+        return False, None, ProviderError(
+            code="JOB_RETRY_NOT_ALLOWED",
+            message=f"Only failed ingestion jobs can be retried: {job_id}",
+        )
+    return create_ingestion_job(job.source_id, settings)
 
 
 def get_index_status(source_id: str, settings: Settings | None = None) -> IndexStatusResponse:
     settings = settings or get_settings()
     backend = settings.rag_retrieval_backend.lower()
+    store = IndexLifecycleStore(settings)
 
     if not knowledge_base_exists(source_id):
         return IndexStatusResponse(
@@ -78,8 +116,8 @@ def get_index_status(source_id: str, settings: Settings | None = None) -> IndexS
             reason="Fixture backend does not require an explicit persisted index.",
         )
 
-    marker = _marker_path(settings, source_id)
-    if not marker.exists():
+    status = store.read_source_status(source_id)
+    if status is None:
         return IndexStatusResponse(
             source_id=source_id,
             status="not_indexed",
@@ -87,15 +125,7 @@ def get_index_status(source_id: str, settings: Settings | None = None) -> IndexS
             reason="No explicit source index marker found.",
         )
 
-    payload = json.loads(marker.read_text(encoding="utf-8"))
-    return IndexStatusResponse(
-        source_id=source_id,
-        status=payload["status"],
-        backend=backend,
-        indexed_at=payload.get("indexed_at"),
-        latest_job_id=payload.get("latest_job_id"),
-        reason=payload.get("reason"),
-    )
+    return status
 
 
 def not_ready_sources(source_ids: list[str], settings: Settings | None = None) -> list[str]:
@@ -107,8 +137,9 @@ def not_ready_sources(source_ids: list[str], settings: Settings | None = None) -
     ]
 
 
-def clear_local_jobs_for_tests() -> None:
-    _JOBS.clear()
+def clear_local_jobs_for_tests(settings: Settings | None = None) -> None:
+    settings = settings or get_settings()
+    IndexLifecycleStore(settings).clear_for_tests()
 
 
 def _build_source_index(source_id: str, settings: Settings, job_id: str) -> None:
@@ -121,36 +152,6 @@ def _build_source_index(source_id: str, settings: Settings, job_id: str) -> None
     from app.services.llamaindex_retriever import LlamaIndexLocalRetriever
 
     LlamaIndexLocalRetriever(settings).build_index([source_id], latest_job_id=job_id)
-
-
-def _write_status_marker(
-    settings: Settings,
-    source_id: str,
-    status: str,
-    reason: str | None,
-    latest_job_id: str,
-    indexed_at: str | None,
-) -> None:
-    marker = _marker_path(settings, source_id)
-    marker.parent.mkdir(parents=True, exist_ok=True)
-    marker.write_text(
-        json.dumps(
-            {
-                "source_id": source_id,
-                "status": status,
-                "reason": reason,
-                "latest_job_id": latest_job_id,
-                "indexed_at": indexed_at,
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
-
-
-def _marker_path(settings: Settings, source_id: str) -> Path:
-    return settings.rag_index_dir / f"{source_id}.index.json"
 
 
 def _now() -> str:

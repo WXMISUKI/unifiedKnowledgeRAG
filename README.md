@@ -89,7 +89,32 @@ Invoke-RestMethod http://127.0.0.1:8020/api/indexes/refund_policy_docs/status
 $env:RAG_RETRIEVAL_BACKEND="fixture"
 ```
 
-当前 job record 仅保存在进程内，source index marker 保存在 `RAG_INDEX_DIR`。生产队列、持久化 job store、外部向量库、reranker 和增量索引仍属于后续 change。
+第四阶段 OpenSpec change `persist-index-lifecycle-store` 将本地生命周期状态升级为轻量持久化文件：
+
+- `RAG_INDEX_DIR/jobs.jsonl`：append-only ingestion job 记录。
+- `RAG_INDEX_DIR/sources.json`：当前 source index lifecycle 状态，是本地 provider 的 canonical source status manifest。
+
+这层仍然是 local-file adapter，不提供多进程写锁、队列调度、数据库迁移或远程对象存储。生产队列、持久化数据库、外部向量库、reranker 和增量索引仍属于后续 change。
+
+第五阶段 OpenSpec change `add-index-job-operations` 增加本地 job 运维面：
+
+```powershell
+# 查看所有 ingestion jobs
+Invoke-RestMethod http://127.0.0.1:8020/api/ingestion/jobs
+
+# 按 source 或状态过滤
+Invoke-RestMethod "http://127.0.0.1:8020/api/ingestion/jobs?source_id=refund_policy_docs&status=completed"
+
+# 查看单个 job
+Invoke-RestMethod http://127.0.0.1:8020/api/ingestion/jobs/<job_id>
+
+# 重试 failed job，会创建一个新的 job 记录
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs/<job_id>/retry
+```
+
+当前只允许重试 `failed` job；`completed`、`running` 等非失败状态会返回结构化 `JOB_RETRY_NOT_ALLOWED`。分页、保留策略、取消任务、异步 worker 和鉴权策略仍留给后续 change。
 
 ## 设计文档
 
