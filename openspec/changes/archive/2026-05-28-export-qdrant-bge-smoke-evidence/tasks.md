@@ -8,4 +8,4 @@
 
 - [x] 2.1 Add focused tests for smoke export metadata, ingestion, and result reporting.
 - [x] 2.2 Update README with the local Qdrant + BGE-M3 smoke command.
-- [ ] 2.3 Run OpenSpec and pytest verification, attempt local smoke export when dependencies/artifacts are available, then archive the change.
+- [x] 2.3 Run OpenSpec and pytest verification, attempt local smoke export when dependencies/artifacts are available, then archive the change.

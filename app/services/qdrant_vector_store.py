@@ -195,6 +195,27 @@ def _to_qdrant_point_struct(point: dict[str, Any]):
     )
 
 
+def _to_qdrant_filter(payload_filter: dict[str, Any]):
+    must = payload_filter.get("must", [])
+    if not must:
+        return None
+
+    from qdrant_client import models
+
+    conditions = []
+    for condition in must:
+        key = condition["key"]
+        match = condition["match"]
+        if "value" in match:
+            qdrant_match = models.MatchValue(value=match["value"])
+        elif "any" in match:
+            qdrant_match = models.MatchAny(any=match["any"])
+        else:
+            raise ValueError(f"Unsupported Qdrant match condition: {match}")
+        conditions.append(models.FieldCondition(key=key, match=qdrant_match))
+    return models.Filter(must=conditions)
+
+
 def embed_qdrant_chunks(
     chunks: list[VectorEvidenceChunk],
     embedding_adapter: EmbeddingAdapter,
@@ -240,7 +261,7 @@ def query_qdrant_documents(
         collection_name=settings.qdrant_collection,
         query=query_vector,
         using=settings.qdrant_vector_name,
-        query_filter=payload_filter,
+        query_filter=_to_qdrant_filter(payload_filter),
         limit=top_k,
         with_payload=True,
     )

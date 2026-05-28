@@ -1,7 +1,12 @@
 import argparse
+import sys
 from pathlib import Path
 
-from app.config import Settings, get_settings
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from app.config import get_settings
 from app.services.retrieval_benchmark import export_qdrant_bge_smoke_evidence
 
 

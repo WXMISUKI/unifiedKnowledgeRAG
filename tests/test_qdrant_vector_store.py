@@ -342,7 +342,7 @@ def test_query_qdrant_documents_maps_valid_hits_and_skips_malformed_hits():
     assert client.queries[0]["query"] == [0.1, 0.2, 0.3]
     assert client.queries[0]["using"] == "text-dense"
     assert client.queries[0]["limit"] == 3
-    assert client.queries[0]["query_filter"] == {
+    assert client.queries[0]["query_filter"].model_dump(exclude_none=True) == {
         "must": [
             {"key": "tenant_id", "match": {"value": "tenant-a"}},
             {"key": "source_id", "match": {"any": ["refund_policy_docs"]}},
@@ -383,7 +383,7 @@ def test_query_qdrant_documents_for_text_embeds_query_before_vector_search():
 
     assert len(documents) == 1
     assert client.queries[0]["query"] == adapter.embed_text("客户三天未发货能否退款？")
-    assert client.queries[0]["query_filter"] == {
+    assert client.queries[0]["query_filter"].model_dump(exclude_none=True) == {
         "must": [
             {"key": "tenant_id", "match": {"value": "tenant-a"}},
             {"key": "source_id", "match": {"any": ["refund_policy_docs"]}},
