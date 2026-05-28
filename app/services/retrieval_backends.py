@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from app.config import Settings
 from app.models.contracts import EvidenceDocument
 from app.services import document_retriever
+from app.services.source_catalog import knowledge_base_exists
 
 
 class DocumentRetriever(ABC):
@@ -22,6 +23,13 @@ class DocumentRetriever(ABC):
 
     def readiness(self) -> tuple[str, str | None]:
         return "ready", None
+
+    def unknown_sources(self, knowledge_base_ids: list[str]) -> list[str]:
+        return [
+            source_id
+            for source_id in knowledge_base_ids
+            if not knowledge_base_exists(source_id)
+        ]
 
     def not_ready_sources(self, knowledge_base_ids: list[str]) -> list[str]:
         return []
@@ -123,14 +131,9 @@ class QdrantDocumentRetriever(DocumentRetriever):
         return "ready", None
 
     def not_ready_sources(self, knowledge_base_ids: list[str]) -> list[str]:
-        from app.services.qdrant_vector_store import unknown_qdrant_sources
+        from app.services.index_lifecycle import not_ready_sources
 
-        unknown_sources = set(unknown_qdrant_sources(knowledge_base_ids))
-        return [
-            source_id
-            for source_id in knowledge_base_ids
-            if source_id not in unknown_sources
-        ]
+        return not_ready_sources(knowledge_base_ids, self.settings)
 
 
 def create_document_retriever(settings: Settings) -> DocumentRetriever:

@@ -493,6 +493,48 @@ $env:EMBEDDING_LOCAL_FILES_ONLY="true"
 $env:EMBEDDING_VECTOR_SIZE="1024"
 ```
 
+第二十三阶段 OpenSpec change `guard-rag-retrieval-index-readiness` 加强了检索入口的生命周期防线。`POST /api/rag/retrieve` 现在会先校验 source 是否存在、source index 是否 ready，再执行具体 backend 检索；对于 Qdrant，这可以避免未索引时提前触发向量库查询或 embedding 调用。
+
+本地 Qdrant + BGE-M3 验证顺序建议固定为：
+
+```powershell
+$env:RAG_RETRIEVAL_BACKEND="qdrant"
+$env:RAG_SOURCE_DIR="app/data/sources"
+$env:RAG_INDEX_DIR="app/data/indexes/qdrant"
+$env:QDRANT_URL=":memory:"
+$env:QDRANT_COLLECTION="knowledge_chunks"
+$env:QDRANT_VECTOR_NAME="text-dense"
+$env:QDRANT_VECTOR_SIZE="1024"
+$env:EMBEDDING_PROVIDER="bge_m3_local"
+$env:EMBEDDING_MODEL_PATH="models/bge-m3"
+$env:EMBEDDING_LOCAL_FILES_ONLY="true"
+$env:EMBEDDING_VECTOR_SIZE="1024"
+```
+
+先建立 source index：
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs `
+  -ContentType "application/json" `
+  -Body '{"source_id":"refund_policy_docs"}'
+```
+
+确认 ready 后再检索：
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8020/api/indexes/refund_policy_docs/status
+
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/rag/retrieve `
+  -ContentType "application/json" `
+  -Body '{"query":"客户三天未发货能否退款？","knowledge_base_ids":["refund_policy_docs"],"top_k":3}'
+```
+
+如果 status 不是 `ready`，检索会返回结构化 `INDEX_NOT_READY`，不会先触发 Qdrant retrieval。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

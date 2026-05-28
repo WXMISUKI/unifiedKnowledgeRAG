@@ -178,3 +178,17 @@ The system SHALL expose an explicit local operation that processes the next queu
 
 - **WHEN** a change proposes a background worker, external queue, lease service, or distributed scheduler
 - **THEN** the change references the production indexing architecture decision record and states the approved queue/worker boundary
+
+### Requirement: Retrieval readiness uses persisted source lifecycle state
+
+The system SHALL use persisted source lifecycle status as the canonical source readiness gate before production retrieval backends execute source-scoped retrieval.
+
+#### Scenario: Qdrant source is ready after ingestion
+
+- **WHEN** Qdrant ingestion has persisted `status=ready` for a source
+- **THEN** Qdrant retrieval readiness treats that source as ready
+
+#### Scenario: Qdrant source without ready marker is blocked
+
+- **WHEN** a Qdrant retrieval request references a known source without persisted `status=ready`
+- **THEN** the provider reports that source as not ready before executing Qdrant retrieval

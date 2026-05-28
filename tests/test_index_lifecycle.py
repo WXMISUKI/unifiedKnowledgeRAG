@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 
 from app.main import create_app
 from app.config import Settings
-from app.models.contracts import IndexLifecycleJob
+from app.models.contracts import EvidenceDocument, IndexLifecycleJob, IndexStatusResponse
 from app.services.index_lifecycle import clear_local_jobs_for_tests, get_index_status
 from app.services.index_lifecycle_store import IndexLifecycleStore
 
@@ -108,6 +108,108 @@ def test_retrieval_returns_index_not_ready_for_llamaindex(monkeypatch, tmp_path)
     body = response.json()
     assert body["ok"] is False
     assert body["error"]["code"] == "INDEX_NOT_READY"
+
+
+def test_retrieval_returns_index_not_ready_before_qdrant_query(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n客户三天未发货可以申请退款。",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "qdrant")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    monkeypatch.setenv("EMBEDDING_VECTOR_SIZE", "3")
+
+    def fail_if_called(**kwargs):
+        raise AssertionError("Qdrant retrieval should not run before index readiness passes")
+
+    monkeypatch.setattr(
+        "app.services.qdrant_vector_store.query_qdrant_documents_for_text",
+        fail_if_called,
+    )
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/rag/retrieve",
+        json={
+            "query": "三天未发货",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 1,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INDEX_NOT_READY"
+
+
+def test_retrieval_calls_qdrant_after_source_index_is_ready(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n客户三天未发货可以申请退款。",
+        encoding="utf-8",
+    )
+    index_dir = tmp_path / "index"
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "qdrant")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(index_dir))
+    monkeypatch.setenv("EMBEDDING_VECTOR_SIZE", "3")
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=index_dir,
+        embedding_vector_size=3,
+    )
+    IndexLifecycleStore(settings).write_source_status(IndexStatusResponse(
+        source_id="refund_policy_docs",
+        status="ready",
+        backend="qdrant",
+        indexed_at="2026-05-28T00:00:00+00:00",
+        latest_job_id="idx_qdrant_ready",
+    ))
+    calls = []
+
+    def fake_query(**kwargs):
+        calls.append(kwargs)
+        return [
+            EvidenceDocument(
+                source_id="refund_policy_docs",
+                document_id="refund_policy_2026",
+                title="售后退款规则",
+                snippet="客户三天未发货可以申请退款。",
+                score=0.91,
+                citation="refund_policy_2026#chunk-1",
+            )
+        ]
+
+    monkeypatch.setattr(
+        "app.services.qdrant_vector_store.create_qdrant_client",
+        lambda settings: object(),
+    )
+    monkeypatch.setattr(
+        "app.services.qdrant_vector_store.query_qdrant_documents_for_text",
+        fake_query,
+    )
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/rag/retrieve",
+        json={
+            "query": "三天未发货",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 1,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["documents"][0]["citation"] == "refund_policy_2026#chunk-1"
+    assert calls[0]["source_ids"] == ["refund_policy_docs"]
 
 
 def test_catalog_reports_index_lifecycle_metadata(monkeypatch):

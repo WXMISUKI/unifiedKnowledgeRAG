@@ -1,4 +1,5 @@
 from app.config import Settings
+from app.models.contracts import IndexStatusResponse
 from app.services.qdrant_vector_store import (
     VectorEvidenceChunk,
     build_qdrant_source_index,
@@ -12,6 +13,7 @@ from app.services.qdrant_vector_store import (
     upsert_qdrant_chunks,
 )
 from app.services.index_lifecycle import get_index_status
+from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.retrieval_backends import create_document_retriever
 from app.services.retrieval_benchmark import qdrant_retrieval_candidate
 
@@ -178,6 +180,27 @@ def test_qdrant_retriever_is_opt_in_and_reports_not_ready_sources(monkeypatch):
     assert unknown_sources == []
     assert documents == []
     assert retriever.not_ready_sources(["refund_policy_docs"]) == ["refund_policy_docs"]
+
+
+def test_qdrant_retriever_reads_persisted_source_readiness(tmp_path):
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_index_dir=tmp_path / "index",
+    )
+    IndexLifecycleStore(settings).write_source_status(IndexStatusResponse(
+        source_id="refund_policy_docs",
+        status="ready",
+        backend="qdrant",
+        indexed_at="2026-05-28T00:00:00+00:00",
+        latest_job_id="idx_ready",
+    ))
+
+    retriever = create_document_retriever(settings)
+
+    assert retriever.not_ready_sources(["refund_policy_docs"]) == []
+    assert retriever.not_ready_sources(["refund_policy_docs", "logistics_faq"]) == [
+        "logistics_faq"
+    ]
 
 
 def test_create_qdrant_client_supports_local_memory_mode():

@@ -22,11 +22,7 @@ def sources() -> CatalogResponse:
 @router.post("/retrieve", response_model=RagRetrieveResponse)
 def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
     retriever = create_document_retriever(get_settings())
-    unknown_sources, documents = retriever.retrieve(
-        query=request.query,
-        knowledge_base_ids=request.knowledge_base_ids,
-        top_k=request.top_k,
-    )
+    unknown_sources = retriever.unknown_sources(request.knowledge_base_ids)
     if unknown_sources:
         return RagRetrieveResponse(
             ok=False,
@@ -42,6 +38,19 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             error=ProviderError(
                 code="INDEX_NOT_READY",
                 message=f"Source index is not ready: {', '.join(not_ready_sources)}",
+            ),
+        )
+    unknown_sources, documents = retriever.retrieve(
+        query=request.query,
+        knowledge_base_ids=request.knowledge_base_ids,
+        top_k=request.top_k,
+    )
+    if unknown_sources:
+        return RagRetrieveResponse(
+            ok=False,
+            error=ProviderError(
+                code="UNKNOWN_KNOWLEDGE_BASE",
+                message=f"Unknown knowledge base id(s): {', '.join(unknown_sources)}",
             ),
         )
 
