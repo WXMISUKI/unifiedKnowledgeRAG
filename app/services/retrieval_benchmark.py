@@ -128,6 +128,16 @@ class QdrantSmokeEvidenceReport:
     markdown_path: Path | None = None
 
 
+@dataclass(frozen=True)
+class QdrantThresholdSweepEvidenceReport:
+    candidate: RetrievalCandidate
+    thresholds: list[float]
+    reports: list[QdrantSmokeEvidenceReport]
+    metadata: dict[str, str | list[str] | dict[str, str]]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
 def load_benchmark_cases(path: Path) -> list[RetrievalBenchmarkCase]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     return [RetrievalBenchmarkCase(**item) for item in payload]
@@ -381,6 +391,7 @@ def export_qdrant_bge_smoke_evidence(
     source_ids: list[str] | None = None,
     case_ids: list[str] | None = None,
     settings: Settings | None = None,
+    write_files: bool = True,
 ) -> QdrantSmokeEvidenceReport:
     settings = settings or get_settings()
     source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
@@ -416,19 +427,73 @@ def export_qdrant_bge_smoke_evidence(
         metadata=_qdrant_smoke_metadata(settings, source_ids),
         indexed_sources=indexed_sources,
     )
-    json_path = export_qdrant_smoke_evidence_json(
-        smoke_report,
-        output_dir / "qdrant-bge-m3-smoke.json",
-    )
-    markdown_path = export_qdrant_smoke_evidence_markdown(
-        smoke_report,
-        output_dir / "qdrant-bge-m3-smoke.md",
-    )
+    json_path = None
+    markdown_path = None
+    if write_files:
+        json_path = export_qdrant_smoke_evidence_json(
+            smoke_report,
+            output_dir / "qdrant-bge-m3-smoke.json",
+        )
+        markdown_path = export_qdrant_smoke_evidence_markdown(
+            smoke_report,
+            output_dir / "qdrant-bge-m3-smoke.md",
+        )
     return QdrantSmokeEvidenceReport(
         candidate=smoke_report.candidate,
         report=smoke_report.report,
         metadata=smoke_report.metadata,
         indexed_sources=smoke_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_threshold_sweep_evidence(
+    output_dir: Path,
+    thresholds: list[float],
+    cases_path: Path = Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+) -> QdrantThresholdSweepEvidenceReport:
+    settings = settings or get_settings()
+    validated_thresholds = _validate_thresholds(thresholds)
+    reports = [
+        export_qdrant_bge_smoke_evidence(
+            output_dir=output_dir,
+            cases_path=cases_path,
+            source_ids=source_ids,
+            case_ids=case_ids,
+            settings=settings.model_copy(
+                update={"rag_score_threshold": threshold}
+            ),
+            write_files=False,
+        )
+        for threshold in validated_thresholds
+    ]
+    sweep_report = QdrantThresholdSweepEvidenceReport(
+        candidate=qdrant_bge_smoke_candidate(settings),
+        thresholds=validated_thresholds,
+        reports=reports,
+        metadata=_qdrant_threshold_sweep_metadata(
+            settings=settings,
+            source_ids=source_ids or ["refund_policy_docs", "logistics_faq"],
+            thresholds=validated_thresholds,
+        ),
+    )
+    json_path = export_qdrant_threshold_sweep_evidence_json(
+        sweep_report,
+        output_dir / "qdrant-bge-m3-threshold-sweep.json",
+    )
+    markdown_path = export_qdrant_threshold_sweep_evidence_markdown(
+        sweep_report,
+        output_dir / "qdrant-bge-m3-threshold-sweep.md",
+    )
+    return QdrantThresholdSweepEvidenceReport(
+        candidate=sweep_report.candidate,
+        thresholds=sweep_report.thresholds,
+        reports=sweep_report.reports,
+        metadata=sweep_report.metadata,
         json_path=json_path,
         markdown_path=markdown_path,
     )
@@ -457,6 +522,34 @@ def qdrant_smoke_evidence_to_dict(report: QdrantSmokeEvidenceReport) -> dict:
         "metadata": report.metadata,
         "indexed_sources": report.indexed_sources,
         "report": benchmark_report_to_dict(report.report),
+    }
+
+
+def qdrant_threshold_sweep_evidence_to_dict(
+    report: QdrantThresholdSweepEvidenceReport,
+) -> dict:
+    return {
+        "candidate": asdict(report.candidate),
+        "metadata": report.metadata,
+        "thresholds": report.thresholds,
+        "reports": [
+            qdrant_smoke_evidence_to_dict(smoke_report)
+            for smoke_report in report.reports
+        ],
+        "summary": [
+            {
+                "threshold": threshold,
+                "total_cases": smoke_report.report.summary.total_cases,
+                "hit_rate": smoke_report.report.summary.hit_rate,
+                "citation_match_rate": (
+                    smoke_report.report.summary.citation_match_rate
+                ),
+                "empty_handling_rate": (
+                    smoke_report.report.summary.empty_handling_rate
+                ),
+            }
+            for threshold, smoke_report in zip(report.thresholds, report.reports)
+        ],
     }
 
 
@@ -517,6 +610,22 @@ def export_qdrant_smoke_evidence_json(
     path.write_text(
         json.dumps(
             qdrant_smoke_evidence_to_dict(report),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_qdrant_threshold_sweep_evidence_json(
+    report: QdrantThresholdSweepEvidenceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            qdrant_threshold_sweep_evidence_to_dict(report),
             ensure_ascii=False,
             indent=2,
         ),
@@ -634,6 +743,67 @@ def render_qdrant_smoke_evidence_markdown(report: QdrantSmokeEvidenceReport) -> 
     return "\n".join(lines)
 
 
+def render_qdrant_threshold_sweep_evidence_markdown(
+    report: QdrantThresholdSweepEvidenceReport,
+) -> str:
+    lines = [
+        "# Qdrant BGE-M3 Threshold Sweep Evidence",
+        "",
+        "## Candidate",
+        "",
+        "| ID | Backend | Description |",
+        "| --- | --- | --- |",
+        (
+            f"| {report.candidate.id} | {report.candidate.backend} | "
+            f"{report.candidate.description} |"
+        ),
+        "",
+        "## Metadata",
+        "",
+        "| Key | Value |",
+        "| --- | --- |",
+    ]
+    for key, value in sorted(report.metadata.items()):
+        lines.append(f"| {key} | {_markdown_value(value)} |")
+
+    lines.extend([
+        "",
+        "## Threshold Summary",
+        "",
+        "| Threshold | Total Cases | Hit Rate | Citation Match Rate | Empty Handling Rate |",
+        "| ---: | ---: | ---: | ---: | ---: |",
+    ])
+    for threshold, smoke_report in zip(report.thresholds, report.reports):
+        summary = smoke_report.report.summary
+        lines.append(
+            f"| {threshold:.4f} | {summary.total_cases} | {summary.hit_rate:.4f} | "
+            f"{summary.citation_match_rate:.4f} | {summary.empty_handling_rate:.4f} |"
+        )
+
+    lines.extend(["", "## Case Results By Threshold", ""])
+    for threshold, smoke_report in zip(report.thresholds, report.reports):
+        lines.extend([
+            f"### Threshold {threshold:.4f}",
+            "",
+            "| Case | Category | Difficulty | Hit@K | Citation Match | Empty Handling | Returned Citations |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
+        ])
+        for case in smoke_report.report.cases:
+            empty = (
+                ""
+                if case.empty_query_handling is None
+                else str(case.empty_query_handling).lower()
+            )
+            lines.append(
+                f"| {case.id} | {case.category} | {case.difficulty} | "
+                f"{str(case.hit_at_k).lower()} | "
+                f"{str(case.citation_match).lower()} | {empty} | "
+                f"{', '.join(case.returned_citations)} |"
+            )
+        lines.append("")
+    return "\n".join(lines)
+
+
 def render_embedding_candidate_markdown(result: EmbeddingCandidateResult) -> str:
     candidate = result.candidate
     lines = [
@@ -708,6 +878,18 @@ def export_qdrant_smoke_evidence_markdown(
 ) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_qdrant_smoke_evidence_markdown(report), encoding="utf-8")
+    return path
+
+
+def export_qdrant_threshold_sweep_evidence_markdown(
+    report: QdrantThresholdSweepEvidenceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_qdrant_threshold_sweep_evidence_markdown(report),
+        encoding="utf-8",
+    )
     return path
 
 
@@ -811,6 +993,18 @@ def _qdrant_smoke_metadata(
     }
 
 
+def _qdrant_threshold_sweep_metadata(
+    settings: Settings,
+    source_ids: list[str],
+    thresholds: list[float],
+) -> dict[str, str | list[str] | dict[str, str]]:
+    metadata = _qdrant_smoke_metadata(settings, source_ids)
+    metadata["created_at"] = datetime.now(UTC).isoformat()
+    metadata["thresholds"] = [str(threshold) for threshold in thresholds]
+    metadata["rag_score_threshold"] = "sweep"
+    return metadata
+
+
 def _markdown_value(value) -> str:
     if isinstance(value, list):
         return ", ".join(str(item) for item in value)
@@ -834,6 +1028,22 @@ def _validate_candidate_ids(candidates, label: str) -> None:
         if candidate.id in seen:
             raise ValueError(f"Duplicate {label} id: {candidate.id}")
         seen.add(candidate.id)
+
+
+def _validate_thresholds(thresholds: list[float]) -> list[float]:
+    if not thresholds:
+        raise ValueError("At least one threshold is required.")
+    normalized = [round(float(threshold), 4) for threshold in thresholds]
+    if len(set(normalized)) != len(normalized):
+        raise ValueError("Duplicate threshold values are not allowed.")
+    invalid = [
+        threshold
+        for threshold in normalized
+        if threshold < 0.0 or threshold > 1.0
+    ]
+    if invalid:
+        raise ValueError("Threshold values must be between 0.0 and 1.0.")
+    return sorted(normalized)
 
 
 def _evaluate_embedding_candidate(

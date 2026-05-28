@@ -7,7 +7,10 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.config import get_settings
-from app.services.retrieval_benchmark import export_qdrant_bge_smoke_evidence
+from app.services.retrieval_benchmark import (
+    export_qdrant_bge_smoke_evidence,
+    export_qdrant_bge_threshold_sweep_evidence,
+)
 
 
 def main() -> None:
@@ -29,6 +32,19 @@ def main() -> None:
     if args.rag_score_threshold is not None:
         update["rag_score_threshold"] = args.rag_score_threshold
     settings = get_settings().model_copy(update=update)
+    if args.threshold_sweep:
+        report = export_qdrant_bge_threshold_sweep_evidence(
+            output_dir=args.output_dir,
+            thresholds=args.threshold_sweep,
+            cases_path=args.cases_path,
+            source_ids=args.source_id,
+            case_ids=args.case_id,
+            settings=settings,
+        )
+        print(f"Qdrant BGE-M3 threshold sweep evidence ready: {report.json_path}")
+        print(f"Qdrant BGE-M3 threshold sweep evidence ready: {report.markdown_path}")
+        return
+
     report = export_qdrant_bge_smoke_evidence(
         output_dir=args.output_dir,
         cases_path=args.cases_path,
@@ -73,6 +89,16 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--qdrant-vector-name", default="text-dense")
     parser.add_argument("--qdrant-vector-size", type=int, default=1024)
     parser.add_argument("--rag-score-threshold", type=float, default=None)
+    parser.add_argument(
+        "--threshold-sweep",
+        action="append",
+        type=float,
+        default=None,
+        help=(
+            "Run threshold sweep evidence for this threshold. "
+            "Can be supplied multiple times."
+        ),
+    )
     parser.add_argument("--embedding-provider", default="bge_m3_local")
     parser.add_argument("--embedding-model", default="BAAI/bge-m3")
     parser.add_argument("--embedding-model-path", type=Path, default=Path("models/bge-m3"))

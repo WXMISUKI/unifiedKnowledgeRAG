@@ -590,6 +590,37 @@ logistics_faq:
 
 未知 source 或未映射段落仍回退到 `document_id#chunk-N`。这不是最终企业文档解析器；后续 PDF/Word/表格、标题层级、显式 anchor、chunk overlap 和多粒度索引仍需要单独设计。
 
+第二十七阶段 OpenSpec change `add-qdrant-threshold-sweep-evidence` 增加 Qdrant+BGE-M3 阈值扫描证据导出。它会用同一组 source 和中文 seed cases 比较多个 `RAG_SCORE_THRESHOLD`，帮助判断“调阈值是否足够”，还是需要继续引入 empty-intent 检测、reranker 或 hybrid retrieval：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --output-dir docs/benchmark/chinese-seed/retrieval-candidates `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --threshold-sweep 0.3 `
+  --threshold-sweep 0.5 `
+  --threshold-sweep 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-sweep.json
+docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-sweep.md
+```
+
+当前本地 seed evidence 显示：
+
+| Threshold | Hit Rate | Citation Match Rate | Empty Handling Rate |
+| ---: | ---: | ---: | ---: |
+| 0.3000 | 0.8000 | 0.8000 | 0.0000 |
+| 0.5000 | 0.9333 | 0.9333 | 0.6667 |
+| 0.7000 | 1.0000 | 1.0000 | 1.0000 |
+
+这只说明在当前小型中文 seed fixture 上，`0.7` 比 `0.5` 更适合；生产默认阈值仍需要加入客户真实语料、更多空问法、长文档 chunking 后再确认。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

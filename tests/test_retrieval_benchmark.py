@@ -11,6 +11,7 @@ from app.services.retrieval_benchmark import (
     EmbeddingCandidate,
     export_chinese_seed_evidence_bundle,
     export_qdrant_bge_smoke_evidence,
+    export_qdrant_bge_threshold_sweep_evidence,
     evaluate_retrieval_candidates,
     evaluate_embedding_candidates,
     export_benchmark_report_json,
@@ -18,9 +19,11 @@ from app.services.retrieval_benchmark import (
     load_benchmark_cases,
     render_embedding_candidate_markdown,
     render_benchmark_report_markdown,
+    render_qdrant_threshold_sweep_evidence_markdown,
     fixture_chinese_seed_retrieval_candidate,
     RetrievalCandidate,
     run_retrieval_benchmark,
+    qdrant_threshold_sweep_evidence_to_dict,
 )
 
 
@@ -470,3 +473,125 @@ def test_export_qdrant_bge_smoke_evidence_uses_single_client(monkeypatch, tmp_pa
     assert report.report.summary.hit_rate == 1.0
     assert report.metadata["rag_score_threshold"] == "0.37"
     assert "qdrant-bge-m3-smoke" in report.markdown_path.read_text(encoding="utf-8")
+
+
+def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n客户三天未发货可以申请退款。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "refund-basic",
+    "category": "policy",
+    "difficulty": "easy",
+    "query": "客户三天未发货能否退款？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#chunk-1",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    clients = []
+
+    def fake_create_client(settings):
+        client = FakeQdrantClient(
+            collection_exists=False,
+            hits=[
+                {
+                    "score": 0.91,
+                    "payload": {
+                        "source_id": "refund_policy_docs",
+                        "document_id": "refund_policy_2026",
+                        "title": "售后退款规则",
+                        "text": "客户三天未发货可以申请退款。",
+                        "citation": "refund_policy_2026#chunk-1",
+                    },
+                }
+            ],
+        )
+        clients.append(client)
+        return client
+
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        fake_create_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_threshold_sweep_evidence(
+        output_dir=tmp_path / "evidence",
+        thresholds=[0.5, 0.1],
+        cases_path=cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert len(clients) == 2
+    assert report.thresholds == [0.1, 0.5]
+    assert [item.metadata["rag_score_threshold"] for item in report.reports] == [
+        "0.1",
+        "0.5",
+    ]
+    assert [item.json_path for item in report.reports] == [None, None]
+    assert [item.markdown_path for item in report.reports] == [None, None]
+    assert all(item.report.summary.hit_rate == 1.0 for item in report.reports)
+    assert report.json_path == tmp_path / "evidence" / "qdrant-bge-m3-threshold-sweep.json"
+    assert report.markdown_path == tmp_path / "evidence" / "qdrant-bge-m3-threshold-sweep.md"
+
+    payload = json.loads(report.json_path.read_text(encoding="utf-8"))
+    markdown = report.markdown_path.read_text(encoding="utf-8")
+
+    assert payload == qdrant_threshold_sweep_evidence_to_dict(report)
+    assert payload["summary"][0]["threshold"] == 0.1
+    assert payload["summary"][1]["threshold"] == 0.5
+    assert "# Qdrant BGE-M3 Threshold Sweep Evidence" in markdown
+    assert "| 0.1000 | 1 | 1.0000 | 1.0000 | 0.0000 |" in markdown
+    assert render_qdrant_threshold_sweep_evidence_markdown(report) == markdown
+
+
+def test_qdrant_bge_threshold_sweep_rejects_invalid_thresholds(tmp_path):
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=tmp_path / "sources",
+        rag_index_dir=tmp_path / "index",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    for thresholds, expected_message in [
+        ([], "At least one threshold"),
+        ([0.2, 0.2], "Duplicate threshold"),
+        ([-0.1], "between 0.0 and 1.0"),
+        ([1.1], "between 0.0 and 1.0"),
+    ]:
+        try:
+            export_qdrant_bge_threshold_sweep_evidence(
+                output_dir=tmp_path / "evidence",
+                thresholds=thresholds,
+                settings=settings,
+            )
+        except ValueError as error:
+            assert expected_message in str(error)
+        else:
+            raise AssertionError("Expected invalid threshold sweep to be rejected")
