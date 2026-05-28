@@ -49,6 +49,10 @@ def test_loads_retrieval_benchmark_cases():
         "logistics-address-intercept",
         "empty-membership-points",
         "empty-invoice-tax-policy",
+        "empty-membership-tier-recovery",
+        "empty-coupon-approval",
+        "empty-password-reset-email",
+        "empty-finance-reconciliation",
     ]
     assert cases[0].expected_citation == "refund_policy_2026#section-3"
     assert cases[-1].expect_empty is True
@@ -60,7 +64,7 @@ def test_fixture_backend_benchmark_reports_success_metrics():
     report = run_retrieval_benchmark(cases, Settings(rag_retrieval_backend="fixture"))
 
     assert report.summary.backend == "fixture"
-    assert report.summary.total_cases == 15
+    assert report.summary.total_cases == 19
     assert report.summary.hit_rate == 1.0
     assert report.summary.citation_match_rate == 1.0
     assert report.summary.empty_handling_rate == 1.0
@@ -107,7 +111,7 @@ def test_benchmark_report_includes_category_summaries():
     assert summaries["policy"]["total_cases"] == 1
     assert summaries["paraphrase"]["total_cases"] == 2
     assert summaries["operational-escalation"]["total_cases"] == 2
-    assert summaries["empty"]["total_cases"] == 3
+    assert summaries["empty"]["total_cases"] == 7
     assert summaries["empty"]["empty_handling_rate"] == 1.0
 
 
@@ -122,7 +126,7 @@ def test_exports_benchmark_report_json(tmp_path):
     assert exported_path == output_path
     assert payload == benchmark_report_to_dict(report)
     assert payload["summary"]["backend"] == "fixture"
-    assert payload["summary"]["category_summaries"]["empty"]["total_cases"] == 3
+    assert payload["summary"]["category_summaries"]["empty"]["total_cases"] == 7
     assert payload["cases"][0]["returned_citations"]
 
 
@@ -358,7 +362,7 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     assert [item.candidate.id for item in bundle.retrieval_evaluations] == [
         "fixture-chinese-seed-baseline"
     ]
-    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 15
+    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 19
     assert bundle.retrieval_evaluations[0].report.summary.hit_rate == 1.0
     assert {item.result.candidate.id for item in bundle.embedding_evaluations} >= {
         "mock-hash-v1",
@@ -385,7 +389,7 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     assert retrieval_payload["candidate"]["metadata"]["quality_claim"] == (
         "contract-baseline-only"
     )
-    assert retrieval_payload["report"]["summary"]["total_cases"] == 15
+    assert retrieval_payload["report"]["summary"]["total_cases"] == 19
 
     embedding_payload = json.loads(embedding_json.read_text(encoding="utf-8"))
     assert embedding_payload["candidate"]["id"] == "bge-m3-local-candidate"

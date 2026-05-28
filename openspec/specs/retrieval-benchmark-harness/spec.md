@@ -42,6 +42,11 @@ The system SHALL include Chinese-heavy benchmark cases that exercise representat
 - **WHEN** an empty benchmark case is defined
 - **THEN** it represents a plausible enterprise question that is intentionally unsupported by the local fixture sources
 
+#### Scenario: Empty cases cover unsupported business domains
+
+- **WHEN** local benchmark cases are loaded
+- **THEN** expected-empty cases cover multiple unsupported business domains so threshold evidence can expose false-positive retrieval risk
+
 ### Requirement: Retrieval benchmark reports comparable metrics
 
 The system SHALL run benchmark cases against a selected retrieval backend and return structured aggregate and category-level metrics that can be exported as local evidence.

@@ -10,7 +10,7 @@
 
 | Key | Value |
 | --- | --- |
-| created_at | 2026-05-28T13:12:58.774878+00:00 |
+| created_at | 2026-05-28T13:19:58.202222+00:00 |
 | embedding_local_files_only | true |
 | embedding_model | BAAI/bge-m3 |
 | embedding_model_path | models\bge-m3 |
@@ -27,9 +27,9 @@
 
 | Threshold | Total Cases | Hit Rate | Citation Match Rate | Empty Handling Rate |
 | ---: | ---: | ---: | ---: | ---: |
-| 0.3000 | 15 | 0.8000 | 0.8000 | 0.0000 |
-| 0.5000 | 15 | 0.9333 | 0.9333 | 0.6667 |
-| 0.7000 | 15 | 1.0000 | 1.0000 | 1.0000 |
+| 0.3000 | 19 | 0.6316 | 0.6316 | 0.0000 |
+| 0.5000 | 19 | 0.7368 | 0.7368 | 0.2857 |
+| 0.7000 | 19 | 1.0000 | 1.0000 | 1.0000 |
 
 ## Case Results By Threshold
 
@@ -52,6 +52,10 @@
 | logistics-address-intercept | operational-escalation | medium | true | true |  | logistics_faq_2026#address-intercept, logistics_faq_2026#delay |
 | empty-membership-points | empty | medium | false | false | false | refund_policy_2026#address-change, logistics_faq_2026#address-intercept, refund_policy_2026#high-value-review |
 | empty-invoice-tax-policy | empty | hard | false | false | false | refund_policy_2026#section-5, refund_policy_2026#high-value-review, logistics_faq_2026#lost-package |
+| empty-membership-tier-recovery | empty | medium | false | false | false | refund_policy_2026#high-value-review, refund_policy_2026#address-change, refund_policy_2026#section-5 |
+| empty-coupon-approval | empty | medium | false | false | false | refund_policy_2026#high-value-review, refund_policy_2026#address-change, refund_policy_2026#section-5 |
+| empty-password-reset-email | empty | medium | false | false | false | logistics_faq_2026#address-intercept, logistics_faq_2026#delay, refund_policy_2026#address-change |
+| empty-finance-reconciliation | empty | hard | false | false | false | refund_policy_2026#high-value-review, refund_policy_2026#section-5, refund_policy_2026#address-change |
 
 ### Threshold 0.5000
 
@@ -72,6 +76,10 @@
 | logistics-address-intercept | operational-escalation | medium | true | true |  | logistics_faq_2026#address-intercept, logistics_faq_2026#delay |
 | empty-membership-points | empty | medium | false | false | false | refund_policy_2026#address-change, logistics_faq_2026#address-intercept, refund_policy_2026#high-value-review |
 | empty-invoice-tax-policy | empty | hard | true | true | true |  |
+| empty-membership-tier-recovery | empty | medium | false | false | false | refund_policy_2026#high-value-review |
+| empty-coupon-approval | empty | medium | false | false | false | refund_policy_2026#high-value-review, refund_policy_2026#address-change, refund_policy_2026#section-5 |
+| empty-password-reset-email | empty | medium | false | false | false | logistics_faq_2026#address-intercept, logistics_faq_2026#delay, refund_policy_2026#address-change |
+| empty-finance-reconciliation | empty | hard | false | false | false | refund_policy_2026#high-value-review, refund_policy_2026#section-5, refund_policy_2026#address-change |
 
 ### Threshold 0.7000
 
@@ -92,3 +100,7 @@
 | logistics-address-intercept | operational-escalation | medium | true | true |  | logistics_faq_2026#address-intercept |
 | empty-membership-points | empty | medium | true | true | true |  |
 | empty-invoice-tax-policy | empty | hard | true | true | true |  |
+| empty-membership-tier-recovery | empty | medium | true | true | true |  |
+| empty-coupon-approval | empty | medium | true | true | true |  |
+| empty-password-reset-email | empty | medium | true | true | true |  |
+| empty-finance-reconciliation | empty | hard | true | true | true |  |

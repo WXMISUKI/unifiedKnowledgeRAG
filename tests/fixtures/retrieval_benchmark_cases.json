@@ -163,5 +163,49 @@
     "expected_source_id": null,
     "expected_citation": null,
     "expect_empty": true
+  },
+  {
+    "id": "empty-membership-tier-recovery",
+    "category": "empty",
+    "difficulty": "medium",
+    "query": "会员等级降级后权益如何恢复？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "empty-coupon-approval",
+    "category": "empty",
+    "difficulty": "medium",
+    "query": "优惠券核销码过期后由谁审批？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "empty-password-reset-email",
+    "category": "empty",
+    "difficulty": "medium",
+    "query": "密码重置邮件收不到的规则是什么？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "empty-finance-reconciliation",
+    "category": "empty",
+    "difficulty": "hard",
+    "query": "财务回款对账差异归属哪个流程？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
   }
 ]

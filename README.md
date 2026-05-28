@@ -615,11 +615,13 @@ docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-threshold-sweep.m
 
 | Threshold | Hit Rate | Citation Match Rate | Empty Handling Rate |
 | ---: | ---: | ---: | ---: |
-| 0.3000 | 0.8000 | 0.8000 | 0.0000 |
-| 0.5000 | 0.9333 | 0.9333 | 0.6667 |
+| 0.3000 | 0.6316 | 0.6316 | 0.0000 |
+| 0.5000 | 0.7368 | 0.7368 | 0.2857 |
 | 0.7000 | 1.0000 | 1.0000 | 1.0000 |
 
-这只说明在当前小型中文 seed fixture 上，`0.7` 比 `0.5` 更适合；生产默认阈值仍需要加入客户真实语料、更多空问法、长文档 chunking 后再确认。
+第二十八阶段 OpenSpec change `expand-empty-retrieval-stress-cases` 将中文 seed benchmark 从 15 条扩展到 19 条，其中 expected-empty cases 从 3 条扩展到 7 条，覆盖会员等级、优惠券、密码重置、财务对账等当前知识源不支持但企业客服中常见的问题域。
+
+扩展后，`0.5` 的 empty handling 从原先 0.6667 下降到 0.2857，说明较低阈值会把大量相近但不相关的政策片段误召回。`0.7` 在当前 seed 上仍保持全过，但这只说明它是下一轮默认阈值候选；生产默认阈值仍需要加入客户真实语料、长文档 chunking、更多空问法和必要的人工复核后再确认。
 
 ## 设计文档
 
