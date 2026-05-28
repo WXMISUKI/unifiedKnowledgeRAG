@@ -129,6 +129,10 @@ Production indexing introduces decisions that affect cost, latency, recall, data
 - Dense + sparse hybrid retrieval for exact term and semantic recall.
 - Reranker after vector/hybrid candidate generation.
 
+### Research Reference
+
+Mature Agentic RAG and GraphRAG patterns are summarized in [Agentic RAG Pattern Research](../research/agentic_rag_patterns.md). Future changes that add query rewriting, evidence grading, hybrid retrieval, reranking, or GraphRAG storage should reference that note or provide fresher benchmark evidence.
+
 ### Evaluation Criteria
 
 - Citation stability.
@@ -184,6 +188,8 @@ Before implementing production infrastructure, review these choices in order:
 5. Queue/worker operational model.
 6. Chunking and retrieval benchmark plan.
 7. GraphRAG storage priority and first graph use case.
+
+The current near-term recommendation is to improve chunking evidence first, then evaluate query rewrite and evidence grading as service-level candidates. Hybrid retrieval, reranking, and GraphRAG storage should remain separate gates.
 
 ## Current Recommendation
 

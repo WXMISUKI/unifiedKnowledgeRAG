@@ -717,8 +717,16 @@ docs/benchmark/chinese-seed/chunking-candidates/qdrant-bge-m3-chunking-compariso
 
 结论：`markdown-section-v1` 虽然显著减少 chunk 数，但当前会损失细粒度 citation match 和部分命中；因此默认 Qdrant ingestion 继续保留 `markdown-paragraph-v1`。下一步更适合推进 `token-window-v1` 或“section + paragraph 多粒度索引”候选，而不是直接切换到纯 section chunking。
 
+第三十四阶段 OpenSpec change `research-agentic-rag-patterns` 增加成熟 Agentic RAG / GraphRAG 模式研究文档：[Agentic RAG Pattern Research](docs/research/agentic_rag_patterns.md)。它对 LlamaIndex、LangGraph、OpenAI Retrieval、Microsoft GraphRAG 和 Qdrant hybrid/rerank 的设计模式做了项目内映射，结论是：
+
+- 短期继续优先完善企业级文档 chunking，尤其是 `token-window-v1`。
+- Query rewrite 和 evidence grading 适合作为后续 service-level candidate。
+- Hybrid retrieval、reranker、GraphRAG storage 都需要独立 benchmark gate，不应一次性引入。
+- MyPrivateAgent 继续做 agent control plane，`unifiedKnowledgeRAG` 继续做 knowledge data plane。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)
 - [外部 Knowledge Provider / RAG 项目开发规范](docs/external_rag_provider_development.md)
 - [Production Indexing Architecture Decision](docs/architecture/production_indexing_architecture.md)
+- [Agentic RAG Pattern Research](docs/research/agentic_rag_patterns.md)
