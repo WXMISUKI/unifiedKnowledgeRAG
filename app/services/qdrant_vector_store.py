@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from uuid import NAMESPACE_URL, uuid5
 
 from app.config import Settings
 from app.models.contracts import EvidenceDocument, IndexStatusResponse
@@ -40,8 +41,9 @@ def chunk_to_qdrant_point(
         "citation": chunk.citation,
     }
     payload.update(chunk.metadata)
+    payload["point_id"] = chunk.point_id
     return {
-        "id": chunk.point_id,
+        "id": _qdrant_point_id(chunk.point_id),
         "vector": {settings.qdrant_vector_name: chunk.vector},
         "payload": payload,
     }
@@ -172,7 +174,7 @@ def upsert_qdrant_chunks(
     chunks: list[VectorEvidenceChunk],
     settings: Settings,
 ) -> int:
-    points = [chunk_to_qdrant_point(chunk, settings) for chunk in chunks]
+    points = [_to_qdrant_point_struct(chunk_to_qdrant_point(chunk, settings)) for chunk in chunks]
     if not points:
         return 0
     client.upsert(
@@ -181,6 +183,16 @@ def upsert_qdrant_chunks(
         wait=True,
     )
     return len(points)
+
+
+def _to_qdrant_point_struct(point: dict[str, Any]):
+    from qdrant_client import models
+
+    return models.PointStruct(
+        id=point["id"],
+        vector=point["vector"],
+        payload=point["payload"],
+    )
 
 
 def embed_qdrant_chunks(
@@ -285,6 +297,10 @@ def _hit_value(hit, key: str):
     if isinstance(hit, dict):
         return hit.get(key)
     return getattr(hit, key, None)
+
+
+def _qdrant_point_id(stable_id: str) -> str:
+    return str(uuid5(NAMESPACE_URL, f"unifiedKnowledgeRAG:qdrant:{stable_id}"))
 
 
 def _document_id_for(source_id: str) -> str:

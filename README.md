@@ -535,6 +535,26 @@ Invoke-RestMethod `
 
 如果 status 不是 `ready`，检索会返回结构化 `INDEX_NOT_READY`，不会先触发 Qdrant retrieval。
 
+第二十四阶段 OpenSpec change `export-qdrant-bge-smoke-evidence` 增加本地 smoke evidence 导出。它会在一次进程内使用同一个 Qdrant client 完成 source ingestion、query retrieval 和 JSON/Markdown 报告导出，适合验证 `QDRANT_URL=":memory:"`、本地 BGE-M3 模型和中文 seed cases 是否能跑通：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --output-dir docs/benchmark/chinese-seed/retrieval-candidates `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-smoke.json
+docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-smoke.md
+```
+
+这个报告是“集成 smoke evidence”，不是生产验收。若命中率或 citation match 低，优先把它视为 chunking、top-k、reranker、hybrid retrieval 或 benchmark expected citation 需要继续设计的证据。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

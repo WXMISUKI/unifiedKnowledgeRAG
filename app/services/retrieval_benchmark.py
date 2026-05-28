@@ -1,10 +1,23 @@
 import json
 import re
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
+from uuid import uuid4
 
 from app.config import Settings, get_settings
+from app.models.contracts import IndexStatusResponse
+from app.services.embedding_adapters import create_embedding_adapter
+from app.services.index_lifecycle_store import IndexLifecycleStore
+from app.services.qdrant_vector_store import (
+    create_qdrant_client,
+    embed_qdrant_chunks,
+    ensure_qdrant_collection,
+    load_qdrant_source_chunks,
+    query_qdrant_documents_for_text,
+    upsert_qdrant_chunks,
+)
 from app.services.retrieval_backends import create_document_retriever
 
 
@@ -105,6 +118,16 @@ class ChineseSeedEvidenceBundle:
     output_dir: Path
 
 
+@dataclass(frozen=True)
+class QdrantSmokeEvidenceReport:
+    candidate: RetrievalCandidate
+    report: RetrievalBenchmarkReport
+    metadata: dict[str, str | list[str] | dict[str, str]]
+    indexed_sources: dict[str, dict[str, str | int]]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
 def load_benchmark_cases(path: Path) -> list[RetrievalBenchmarkCase]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     return [RetrievalBenchmarkCase(**item) for item in payload]
@@ -176,6 +199,31 @@ def qdrant_retrieval_candidate(settings: Settings | None = None) -> RetrievalCan
             "embedding": "undecided",
             "reranker": "undecided",
             "deployment_path": "local-public-test-or-private-network",
+        },
+    )
+
+
+def qdrant_bge_smoke_candidate(settings: Settings | None = None) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-smoke",
+        backend="qdrant",
+        description=(
+            "Local Qdrant ingestion/retrieval smoke path using the configured "
+            "embedding adapter, intended for BGE-M3 local evidence."
+        ),
+        metadata={
+            "vector_store": "qdrant",
+            "collection": settings.qdrant_collection,
+            "vector_name": settings.qdrant_vector_name,
+            "embedding_provider": settings.embedding_provider,
+            "embedding_model": settings.embedding_model,
+            "embedding_model_path": (
+                str(settings.embedding_model_path)
+                if settings.embedding_model_path is not None
+                else ""
+            ),
+            "deployment_path": "local-smoke-or-private-network",
         },
     )
 
@@ -327,6 +375,65 @@ def export_chinese_seed_evidence_bundle(
     )
 
 
+def export_qdrant_bge_smoke_evidence(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+) -> QdrantSmokeEvidenceReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    cases = load_benchmark_cases(cases_path)
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    client = create_qdrant_client(settings)
+    embedding_adapter = create_embedding_adapter(settings)
+    indexed_sources = _index_qdrant_smoke_sources(
+        client=client,
+        settings=settings,
+        source_ids=source_ids,
+        embedding_adapter=embedding_adapter,
+    )
+    case_results = [
+        _run_qdrant_smoke_case(
+            client=client,
+            settings=settings,
+            embedding_adapter=embedding_adapter,
+            case=case,
+        )
+        for case in cases
+    ]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize("qdrant", case_results),
+        cases=case_results,
+    )
+    smoke_report = QdrantSmokeEvidenceReport(
+        candidate=qdrant_bge_smoke_candidate(settings),
+        report=report,
+        metadata=_qdrant_smoke_metadata(settings, source_ids),
+        indexed_sources=indexed_sources,
+    )
+    json_path = export_qdrant_smoke_evidence_json(
+        smoke_report,
+        output_dir / "qdrant-bge-m3-smoke.json",
+    )
+    markdown_path = export_qdrant_smoke_evidence_markdown(
+        smoke_report,
+        output_dir / "qdrant-bge-m3-smoke.md",
+    )
+    return QdrantSmokeEvidenceReport(
+        candidate=smoke_report.candidate,
+        report=smoke_report.report,
+        metadata=smoke_report.metadata,
+        indexed_sources=smoke_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
 def benchmark_report_to_dict(report: RetrievalBenchmarkReport) -> dict:
     return {
         "summary": asdict(report.summary),
@@ -341,6 +448,15 @@ def candidate_evaluation_to_dict(
     return {
         "candidate": asdict(candidate),
         "report": benchmark_report_to_dict(report),
+    }
+
+
+def qdrant_smoke_evidence_to_dict(report: QdrantSmokeEvidenceReport) -> dict:
+    return {
+        "candidate": asdict(report.candidate),
+        "metadata": report.metadata,
+        "indexed_sources": report.indexed_sources,
+        "report": benchmark_report_to_dict(report.report),
     }
 
 
@@ -385,6 +501,22 @@ def export_embedding_candidate_json(
     path.write_text(
         json.dumps(
             embedding_candidate_result_to_dict(result),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_qdrant_smoke_evidence_json(
+    report: QdrantSmokeEvidenceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            qdrant_smoke_evidence_to_dict(report),
             ensure_ascii=False,
             indent=2,
         ),
@@ -464,6 +596,44 @@ def render_candidate_evaluation_markdown(
     return "\n".join(lines)
 
 
+def render_qdrant_smoke_evidence_markdown(report: QdrantSmokeEvidenceReport) -> str:
+    lines = [
+        "# Qdrant BGE-M3 Smoke Evidence",
+        "",
+        "## Candidate",
+        "",
+        "| ID | Backend | Description |",
+        "| --- | --- | --- |",
+        (
+            f"| {report.candidate.id} | {report.candidate.backend} | "
+            f"{report.candidate.description} |"
+        ),
+        "",
+        "## Metadata",
+        "",
+        "| Key | Value |",
+        "| --- | --- |",
+    ]
+    for key, value in sorted(report.metadata.items()):
+        lines.append(f"| {key} | {_markdown_value(value)} |")
+
+    lines.extend([
+        "",
+        "## Indexed Sources",
+        "",
+        "| Source | Job ID | Chunk Count | Status |",
+        "| --- | --- | ---: | --- |",
+    ])
+    for source_id, source in sorted(report.indexed_sources.items()):
+        lines.append(
+            f"| {source_id} | {source['job_id']} | "
+            f"{source['chunk_count']} | {source['status']} |"
+        )
+
+    lines.extend(["", render_benchmark_report_markdown(report.report)])
+    return "\n".join(lines)
+
+
 def render_embedding_candidate_markdown(result: EmbeddingCandidateResult) -> str:
     candidate = result.candidate
     lines = [
@@ -530,6 +700,122 @@ def export_embedding_candidate_markdown(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_embedding_candidate_markdown(result), encoding="utf-8")
     return path
+
+
+def export_qdrant_smoke_evidence_markdown(
+    report: QdrantSmokeEvidenceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_qdrant_smoke_evidence_markdown(report), encoding="utf-8")
+    return path
+
+
+def _index_qdrant_smoke_sources(
+    client,
+    settings: Settings,
+    source_ids: list[str],
+    embedding_adapter,
+) -> dict[str, dict[str, str | int]]:
+    status, reason = ensure_qdrant_collection(client, settings)
+    if status != "ready":
+        raise RuntimeError(reason or "Qdrant collection is not ready.")
+
+    store = IndexLifecycleStore(settings)
+    indexed_sources: dict[str, dict[str, str | int]] = {}
+    for source_id in source_ids:
+        job_id = f"smoke_{uuid4().hex}"
+        chunks = embed_qdrant_chunks(
+            load_qdrant_source_chunks(source_id, settings),
+            embedding_adapter,
+        )
+        chunk_count = upsert_qdrant_chunks(client, chunks, settings)
+        store.write_source_status(IndexStatusResponse(
+            source_id=source_id,
+            status="ready",
+            backend="qdrant",
+            indexed_at=datetime.now(UTC).isoformat(),
+            latest_job_id=job_id,
+            reason=f"Smoke upserted {chunk_count} Qdrant chunk(s).",
+        ))
+        indexed_sources[source_id] = {
+            "job_id": job_id,
+            "chunk_count": chunk_count,
+            "status": "ready",
+        }
+    return indexed_sources
+
+
+def _run_qdrant_smoke_case(
+    client,
+    settings: Settings,
+    embedding_adapter,
+    case: RetrievalBenchmarkCase,
+) -> RetrievalBenchmarkCaseResult:
+    started_at = perf_counter()
+    documents = query_qdrant_documents_for_text(
+        client=client,
+        query=case.query,
+        source_ids=case.knowledge_base_ids,
+        settings=settings,
+        embedding_adapter=embedding_adapter,
+        top_k=case.top_k,
+    )
+    latency_ms = (perf_counter() - started_at) * 1000
+    returned_citations = [document.citation for document in documents]
+    returned_source_ids = [document.source_id for document in documents]
+    empty_query_handling = None
+    if case.expect_empty:
+        empty_query_handling = len(documents) == 0
+    return RetrievalBenchmarkCaseResult(
+        id=case.id,
+        category=case.category,
+        difficulty=case.difficulty,
+        hit_at_k=(
+            case.expected_source_id in returned_source_ids
+            if case.expected_source_id is not None
+            else len(documents) == 0
+        ),
+        citation_match=(
+            case.expected_citation in returned_citations
+            if case.expected_citation is not None
+            else len(documents) == 0
+        ),
+        empty_query_handling=empty_query_handling,
+        latency_ms=round(latency_ms, 3),
+        returned_citations=returned_citations,
+        returned_source_ids=returned_source_ids,
+    )
+
+
+def _qdrant_smoke_metadata(
+    settings: Settings,
+    source_ids: list[str],
+) -> dict[str, str | list[str] | dict[str, str]]:
+    return {
+        "created_at": datetime.now(UTC).isoformat(),
+        "qdrant_url": settings.qdrant_url,
+        "qdrant_collection": settings.qdrant_collection,
+        "qdrant_vector_name": settings.qdrant_vector_name,
+        "qdrant_vector_size": str(settings.qdrant_vector_size),
+        "embedding_provider": settings.embedding_provider,
+        "embedding_model": settings.embedding_model,
+        "embedding_model_path": (
+            str(settings.embedding_model_path)
+            if settings.embedding_model_path is not None
+            else ""
+        ),
+        "embedding_local_files_only": str(settings.embedding_local_files_only).lower(),
+        "source_ids": source_ids,
+    }
+
+
+def _markdown_value(value) -> str:
+    if isinstance(value, list):
+        return ", ".join(str(item) for item in value)
+    if isinstance(value, dict):
+        return ", ".join(f"{key}={item}" for key, item in sorted(value.items()))
+    return str(value)
 
 
 def _validate_candidates(candidates: list[RetrievalCandidate]) -> None:

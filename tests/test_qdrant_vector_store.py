@@ -75,7 +75,8 @@ def test_qdrant_point_mapping_preserves_evidence_metadata():
 
     point = chunk_to_qdrant_point(chunk, settings)
 
-    assert point["id"] == "refund_policy_2026:section-3:0"
+    assert point["id"] != "refund_policy_2026:section-3:0"
+    assert point["payload"]["point_id"] == "refund_policy_2026:section-3:0"
     assert point["vector"] == {"body-dense": [0.1, 0.2, 0.3]}
     assert point["payload"]["tenant_id"] == "tenant-a"
     assert point["payload"]["source_id"] == "refund_policy_docs"
@@ -259,9 +260,9 @@ def test_upsert_qdrant_chunks_writes_existing_payload_contract():
     assert client.upserts[0]["collection_name"] == "enterprise_chunks"
     assert client.upserts[0]["wait"] is True
     point = client.upserts[0]["points"][0]
-    assert point["payload"]["tenant_id"] == "tenant-a"
-    assert point["payload"]["citation"] == "refund_policy_2026#section-3"
-    assert point["vector"] == {"text-dense": [0.1, 0.2, 0.3]}
+    assert point.payload["tenant_id"] == "tenant-a"
+    assert point.payload["citation"] == "refund_policy_2026#section-3"
+    assert point.vector == {"text-dense": [0.1, 0.2, 0.3]}
 
 
 def test_build_qdrant_source_index_embeds_upserts_and_marks_ready(tmp_path):
@@ -290,13 +291,13 @@ def test_build_qdrant_source_index_embeds_upserts_and_marks_ready(tmp_path):
     assert client.created_collections
     assert len(client.upserts[0]["points"]) == 2
     first_point = client.upserts[0]["points"][0]
-    assert first_point["payload"]["source_id"] == "refund_policy_docs"
-    assert first_point["payload"]["document_id"] == "refund_policy_2026"
-    assert first_point["payload"]["citation"] == "refund_policy_2026#chunk-1"
-    assert first_point["payload"]["embedding_provider"] == "mock"
-    assert first_point["payload"]["embedding_model"] == "mock-hash-v1"
-    assert first_point["payload"]["chunking_strategy"] == "markdown-paragraph-v1"
-    assert len(first_point["vector"]["text-dense"]) == 3
+    assert first_point.payload["source_id"] == "refund_policy_docs"
+    assert first_point.payload["document_id"] == "refund_policy_2026"
+    assert first_point.payload["citation"] == "refund_policy_2026#chunk-1"
+    assert first_point.payload["embedding_provider"] == "mock"
+    assert first_point.payload["embedding_model"] == "mock-hash-v1"
+    assert first_point.payload["chunking_strategy"] == "markdown-paragraph-v1"
+    assert len(first_point.vector["text-dense"]) == 3
 
     status = get_index_status("refund_policy_docs", settings)
     assert status.status == "ready"

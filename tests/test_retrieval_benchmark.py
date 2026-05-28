@@ -10,6 +10,7 @@ from app.services.retrieval_benchmark import (
     embedding_candidate_result_to_dict,
     EmbeddingCandidate,
     export_chinese_seed_evidence_bundle,
+    export_qdrant_bge_smoke_evidence,
     evaluate_retrieval_candidates,
     evaluate_embedding_candidates,
     export_benchmark_report_json,
@@ -386,3 +387,84 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     embedding_payload = json.loads(embedding_json.read_text(encoding="utf-8"))
     assert embedding_payload["candidate"]["id"] == "bge-m3-local-candidate"
     assert embedding_payload["readiness_status"] == "review_required"
+
+
+def test_export_qdrant_bge_smoke_evidence_uses_single_client(monkeypatch, tmp_path):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n客户三天未发货可以申请退款。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "refund-basic",
+    "category": "policy",
+    "difficulty": "easy",
+    "query": "客户三天未发货能否退款？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#chunk-1",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 0.91,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "客户三天未发货可以申请退款。",
+                    "citation": "refund_policy_2026#chunk-1",
+                },
+            }
+        ],
+    )
+    clients = []
+
+    def fake_create_client(settings):
+        clients.append(fake_client)
+        return fake_client
+
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        fake_create_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_smoke_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert clients == [fake_client]
+    assert fake_client.created_collections
+    assert fake_client.upserts
+    assert fake_client.queries
+    assert report.json_path.exists()
+    assert report.markdown_path.exists()
+    assert report.indexed_sources["refund_policy_docs"]["chunk_count"] == 1
+    assert report.report.summary.hit_rate == 1.0
+    assert "qdrant-bge-m3-smoke" in report.markdown_path.read_text(encoding="utf-8")

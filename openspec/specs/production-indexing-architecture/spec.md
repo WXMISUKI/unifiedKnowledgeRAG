@@ -175,3 +175,17 @@ The system SHALL keep graph storage and GraphRAG implementation choices separate
 
 - **WHEN** graph storage is considered
 - **THEN** the decision record compares ontology/versioning needs, entity/relation lifecycle, traversal query support, full-text/vector hybrid capability, evidence traceability, and operational ownership
+
+### Requirement: Qdrant and BGE-M3 smoke evidence gates promotion
+
+The system SHALL require local Qdrant + BGE-M3 smoke evidence before treating the stack as more than a candidate retrieval path.
+
+#### Scenario: Local stack is evaluated
+
+- **WHEN** the project evaluates Qdrant with local BGE-M3 for Chinese-heavy retrieval
+- **THEN** the evaluation references exported smoke evidence that includes ingestion, retrieval, metadata, and benchmark metrics
+
+#### Scenario: Smoke evidence is not production approval
+
+- **WHEN** Qdrant + BGE-M3 smoke evidence exists
+- **THEN** the project treats it as early integration evidence and not final production acceptance
