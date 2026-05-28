@@ -566,3 +566,40 @@ def test_sync_ingestion_job_remains_default(monkeypatch, tmp_path):
     body = response.json()
     assert body["ok"] is True
     assert body["job"]["status"] == "completed"
+
+
+def test_ingestion_job_indexes_qdrant_source(monkeypatch, tmp_path):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    fake_client = FakeQdrantClient(collection_exists=False)
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n客户三天未发货可以申请退款。",
+        encoding="utf-8",
+    )
+    index_dir = tmp_path / "index"
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "qdrant")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(index_dir))
+    monkeypatch.setenv("QDRANT_URL", ":memory:")
+    monkeypatch.setenv("EMBEDDING_PROVIDER", "mock")
+    monkeypatch.setenv("EMBEDDING_VECTOR_SIZE", "3")
+    monkeypatch.setattr(
+        "app.services.qdrant_vector_store.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    client = TestClient(create_app())
+
+    response = client.post("/api/ingestion/jobs", json={"source_id": "refund_policy_docs"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["job"]["status"] == "completed"
+    assert fake_client.upserts
+
+    status = client.get("/api/indexes/refund_policy_docs/status").json()
+    assert status["status"] == "ready"
+    assert status["backend"] == "qdrant"
+    assert status["latest_job_id"] == body["job"]["job_id"]

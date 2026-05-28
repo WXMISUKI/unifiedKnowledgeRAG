@@ -77,10 +77,87 @@
     "expect_empty": false
   },
   {
+    "id": "refund-customized-exception",
+    "category": "exception-policy",
+    "difficulty": "medium",
+    "query": "定制商品拆封以后还能无理由退款吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exception",
+    "expect_empty": false
+  },
+  {
+    "id": "refund-high-value-review",
+    "category": "operational-escalation",
+    "difficulty": "medium",
+    "query": "五千元以上的高价值退款需要谁复核？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#high-value-review",
+    "expect_empty": false
+  },
+  {
+    "id": "refund-address-change-before-shipping",
+    "category": "multi-intent",
+    "difficulty": "hard",
+    "query": "客户说还没发货但想改地址，客服应该先退款还是先暂停发货？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#address-change",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-same-city-timeout",
+    "category": "sla",
+    "difficulty": "medium",
+    "query": "同城配送两个小时还没送到，客服先核实什么？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#same-city-timeout",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-lost-package-cross-team",
+    "category": "cross-source",
+    "difficulty": "hard",
+    "query": "承运商确认包裹丢失后，客服要建什么工单并同步哪个团队？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#lost-package",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-address-intercept",
+    "category": "operational-escalation",
+    "difficulty": "medium",
+    "query": "订单已经出库后用户要改收货地址，应该先联系谁拦截？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#address-intercept",
+    "expect_empty": false
+  },
+  {
     "id": "empty-membership-points",
     "category": "empty",
     "difficulty": "medium",
     "query": "会员积分兑换失败以后应该怎么补偿？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "empty-invoice-tax-policy",
+    "category": "empty",
+    "difficulty": "hard",
+    "query": "企业客户要求开具跨境税务发票时需要哪些资质？",
     "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
     "top_k": 3,
     "expected_source_id": null,

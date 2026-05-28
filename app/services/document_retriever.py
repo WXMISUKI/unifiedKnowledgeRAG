@@ -30,13 +30,70 @@ DOCUMENTS = [
         citation="refund_policy_2026#section-5",
     ),
     DocumentChunk(
+        source_id="refund_policy_docs",
+        document_id="refund_policy_2026",
+        title="退款例外规则",
+        text="定制商品、已拆封影响二次销售的商品，除质量问题外不支持无理由退款。",
+        citation="refund_policy_2026#exception",
+    ),
+    DocumentChunk(
+        source_id="refund_policy_docs",
+        document_id="refund_policy_2026",
+        title="高价值退款复核",
+        text="高价值订单退款超过五千元时，需要售后主管复核并在工单中记录复核意见。",
+        citation="refund_policy_2026#high-value-review",
+    ),
+    DocumentChunk(
+        source_id="refund_policy_docs",
+        document_id="refund_policy_2026",
+        title="未发货地址变更",
+        text="如果用户同时反馈未发货和地址变更，售后专员应先暂停发货，再确认是否继续履约或退款。",
+        citation="refund_policy_2026#address-change",
+    ),
+    DocumentChunk(
         source_id="logistics_faq",
         document_id="logistics_faq_2026",
         title="物流常见问题",
         text="物流轨迹超过二十四小时未更新时，应先联系承运商确认揽收和中转状态。",
         citation="logistics_faq_2026#delay",
     ),
+    DocumentChunk(
+        source_id="logistics_faq",
+        document_id="logistics_faq_2026",
+        title="同城配送超时",
+        text="同城即时配送超过两小时未送达时，客服应优先核实骑手位置和收件人联系方式。",
+        citation="logistics_faq_2026#same-city-timeout",
+    ),
+    DocumentChunk(
+        source_id="logistics_faq",
+        document_id="logistics_faq_2026",
+        title="包裹丢失协同",
+        text="承运商确认包裹丢失后，客服应创建物流异常工单，并同步售后团队评估补发或退款。",
+        citation="logistics_faq_2026#lost-package",
+    ),
+    DocumentChunk(
+        source_id="logistics_faq",
+        document_id="logistics_faq_2026",
+        title="地址修改拦截",
+        text="用户要求修改收货地址时，如果订单已经出库，应先联系承运商拦截，无法拦截时需要提示用户关注派送失败退回。",
+        citation="logistics_faq_2026#address-intercept",
+    ),
 ]
+
+
+STOP_TOKENS = {
+    "客户",
+    "用户",
+    "要求",
+    "户要",
+    "时需",
+    "需要",
+    "应该",
+    "哪些",
+    "怎么",
+    "以后",
+    "失败",
+}
 
 
 def retrieve(
@@ -97,7 +154,7 @@ def _tokenize(value: str) -> set[str]:
     normalized = re.sub(r"\s+", "", value.lower())
     tokens = set(re.findall(r"[a-z0-9]+", value.lower()))
     tokens.update(_cjk_bigrams(normalized))
-    return tokens
+    return tokens - STOP_TOKENS
 
 
 def _cjk_bigrams(value: str) -> set[str]:

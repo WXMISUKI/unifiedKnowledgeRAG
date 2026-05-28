@@ -1,4 +1,5 @@
 import json
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from time import perf_counter
@@ -49,6 +50,54 @@ class RetrievalBenchmarkReport:
     cases: list[RetrievalBenchmarkCaseResult]
 
 
+@dataclass(frozen=True)
+class RetrievalCandidate:
+    id: str
+    backend: str
+    description: str
+    metadata: dict[str, str] | None = None
+
+
+@dataclass(frozen=True)
+class RetrievalCandidateEvaluation:
+    candidate: RetrievalCandidate
+    report: RetrievalBenchmarkReport
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class EmbeddingCandidate:
+    id: str
+    provider_family: str
+    model_name: str
+    deployment_mode: str
+    language_profile: str
+    vector_dimension: int | None
+    data_residency: str
+    operational_complexity: str
+    reranker_compatibility: str
+    approval_status: str
+    chinese_heavy_suitable: bool
+    private_network_supported: bool
+    notes: list[str]
+
+
+@dataclass(frozen=True)
+class EmbeddingCandidateResult:
+    candidate: EmbeddingCandidate
+    readiness_status: str
+    criteria_coverage: dict[str, bool]
+    decision_notes: list[str]
+
+
+@dataclass(frozen=True)
+class EmbeddingCandidateEvaluation:
+    result: EmbeddingCandidateResult
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
 def load_benchmark_cases(path: Path) -> list[RetrievalBenchmarkCase]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     return [RetrievalBenchmarkCase(**item) for item in payload]
@@ -67,11 +116,189 @@ def run_retrieval_benchmark(
     )
 
 
+def evaluate_retrieval_candidates(
+    cases: list[RetrievalBenchmarkCase],
+    candidates: list[RetrievalCandidate],
+    base_settings: Settings | None = None,
+    output_dir: Path | None = None,
+) -> list[RetrievalCandidateEvaluation]:
+    _validate_candidates(candidates)
+    base_settings = base_settings or get_settings()
+    evaluations = []
+    for candidate in candidates:
+        report = run_retrieval_benchmark(
+            cases,
+            base_settings.model_copy(
+                update={"rag_retrieval_backend": candidate.backend}
+            ),
+        )
+        json_path = None
+        markdown_path = None
+        if output_dir is not None:
+            json_path = export_candidate_evaluation_json(
+                candidate,
+                report,
+                output_dir / f"{candidate.id}.json",
+            )
+            markdown_path = export_candidate_evaluation_markdown(
+                candidate,
+                report,
+                output_dir / f"{candidate.id}.md",
+            )
+        evaluations.append(
+            RetrievalCandidateEvaluation(
+                candidate=candidate,
+                report=report,
+                json_path=json_path,
+                markdown_path=markdown_path,
+            )
+        )
+    return evaluations
+
+
+def qdrant_retrieval_candidate(settings: Settings | None = None) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    return RetrievalCandidate(
+        id="qdrant-candidate",
+        backend="qdrant",
+        description="Qdrant vector-store candidate; embedding and reranker remain undecided.",
+        metadata={
+            "vector_store": "qdrant",
+            "collection": settings.qdrant_collection,
+            "vector_name": settings.qdrant_vector_name,
+            "embedding": "undecided",
+            "reranker": "undecided",
+            "deployment_path": "local-public-test-or-private-network",
+        },
+    )
+
+
+def default_embedding_candidates() -> list[EmbeddingCandidate]:
+    return [
+        EmbeddingCandidate(
+            id="mock-hash-v1",
+            provider_family="mock",
+            model_name="mock-hash-v1",
+            deployment_mode="local-deterministic-test",
+            language_profile="contract-only",
+            vector_dimension=None,
+            data_residency="local-only",
+            operational_complexity="low",
+            reranker_compatibility="not-applicable",
+            approval_status="baseline",
+            chinese_heavy_suitable=False,
+            private_network_supported=True,
+            notes=[
+                "Deterministic contract baseline only.",
+                "Not a semantic embedding model.",
+            ],
+        ),
+        EmbeddingCandidate(
+            id="qwen-embedding-candidate",
+            provider_family="hosted",
+            model_name="qwen-embedding",
+            deployment_mode="public-hosted-or-private-compatible",
+            language_profile="chinese-heavy",
+            vector_dimension=None,
+            data_residency="depends-on-provider-and-deployment",
+            operational_complexity="medium",
+            reranker_compatibility="candidate-specific",
+            approval_status="candidate",
+            chinese_heavy_suitable=True,
+            private_network_supported=False,
+            notes=[
+                "Hosted/public route must be reviewed for data residency.",
+                "Private-network feasibility remains a later implementation decision.",
+            ],
+        ),
+        EmbeddingCandidate(
+            id="bge-m3-local-candidate",
+            provider_family="local",
+            model_name="bge-m3",
+            deployment_mode="local-or-private-network",
+            language_profile="chinese-heavy-and-multilingual",
+            vector_dimension=None,
+            data_residency="private-network-capable",
+            operational_complexity="medium-high",
+            reranker_compatibility="strong-local-reranker-ecosystem",
+            approval_status="candidate",
+            chinese_heavy_suitable=True,
+            private_network_supported=True,
+            notes=[
+                "Local route is suitable for private data constraints.",
+                "Runtime footprint and serving stack still need benchmark evidence.",
+            ],
+        ),
+        EmbeddingCandidate(
+            id="openai-embedding-candidate",
+            provider_family="hosted",
+            model_name="openai-embedding",
+            deployment_mode="public-hosted",
+            language_profile="multilingual",
+            vector_dimension=None,
+            data_residency="public-provider-dependent",
+            operational_complexity="low-medium",
+            reranker_compatibility="candidate-specific",
+            approval_status="candidate",
+            chinese_heavy_suitable=True,
+            private_network_supported=False,
+            notes=[
+                "Useful as hosted multilingual quality baseline.",
+                "Public data egress must be explicitly approved before use.",
+            ],
+        ),
+    ]
+
+
+def evaluate_embedding_candidates(
+    candidates: list[EmbeddingCandidate] | None = None,
+    output_dir: Path | None = None,
+) -> list[EmbeddingCandidateEvaluation]:
+    candidates = candidates or default_embedding_candidates()
+    _validate_candidate_ids(candidates, "embedding candidate")
+    evaluations = []
+    for candidate in candidates:
+        result = _evaluate_embedding_candidate(candidate)
+        json_path = None
+        markdown_path = None
+        if output_dir is not None:
+            json_path = export_embedding_candidate_json(
+                result,
+                output_dir / f"{candidate.id}.json",
+            )
+            markdown_path = export_embedding_candidate_markdown(
+                result,
+                output_dir / f"{candidate.id}.md",
+            )
+        evaluations.append(
+            EmbeddingCandidateEvaluation(
+                result=result,
+                json_path=json_path,
+                markdown_path=markdown_path,
+            )
+        )
+    return evaluations
+
+
 def benchmark_report_to_dict(report: RetrievalBenchmarkReport) -> dict:
     return {
         "summary": asdict(report.summary),
         "cases": [asdict(case) for case in report.cases],
     }
+
+
+def candidate_evaluation_to_dict(
+    candidate: RetrievalCandidate,
+    report: RetrievalBenchmarkReport,
+) -> dict:
+    return {
+        "candidate": asdict(candidate),
+        "report": benchmark_report_to_dict(report),
+    }
+
+
+def embedding_candidate_result_to_dict(result: EmbeddingCandidateResult) -> dict:
+    return asdict(result)
 
 
 def export_benchmark_report_json(
@@ -81,6 +308,39 @@ def export_benchmark_report_json(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(benchmark_report_to_dict(report), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_candidate_evaluation_json(
+    candidate: RetrievalCandidate,
+    report: RetrievalBenchmarkReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            candidate_evaluation_to_dict(candidate, report),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_embedding_candidate_json(
+    result: EmbeddingCandidateResult,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            embedding_candidate_result_to_dict(result),
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
     return path
@@ -129,6 +389,71 @@ def render_benchmark_report_markdown(report: RetrievalBenchmarkReport) -> str:
     return "\n".join(lines)
 
 
+def render_candidate_evaluation_markdown(
+    candidate: RetrievalCandidate,
+    report: RetrievalBenchmarkReport,
+) -> str:
+    metadata = candidate.metadata or {}
+    lines = [
+        "# Retrieval Candidate Evaluation",
+        "",
+        "## Candidate",
+        "",
+        "| ID | Backend | Description |",
+        "| --- | --- | --- |",
+        f"| {candidate.id} | {candidate.backend} | {candidate.description} |",
+    ]
+    if metadata:
+        lines.extend([
+            "",
+            "## Metadata",
+            "",
+            "| Key | Value |",
+            "| --- | --- |",
+        ])
+        for key, value in sorted(metadata.items()):
+            lines.append(f"| {key} | {value} |")
+    lines.extend(["", render_benchmark_report_markdown(report)])
+    return "\n".join(lines)
+
+
+def render_embedding_candidate_markdown(result: EmbeddingCandidateResult) -> str:
+    candidate = result.candidate
+    lines = [
+        "# Embedding Candidate Evaluation",
+        "",
+        "## Candidate",
+        "",
+        "| ID | Provider Family | Model | Deployment | Approval Status |",
+        "| --- | --- | --- | --- | --- |",
+        (
+            f"| {candidate.id} | {candidate.provider_family} | {candidate.model_name} | "
+            f"{candidate.deployment_mode} | {candidate.approval_status} |"
+        ),
+        "",
+        "## Enterprise Criteria",
+        "",
+        "| Criterion | Value | Covered |",
+        "| --- | --- | --- |",
+        f"| Language Profile | {candidate.language_profile} | {str(result.criteria_coverage['language_profile']).lower()} |",
+        f"| Chinese-heavy Suitable | {str(candidate.chinese_heavy_suitable).lower()} | {str(result.criteria_coverage['chinese_heavy_suitable']).lower()} |",
+        f"| Private Network Supported | {str(candidate.private_network_supported).lower()} | {str(result.criteria_coverage['private_network_supported']).lower()} |",
+        f"| Vector Dimension | {candidate.vector_dimension or 'unknown'} | {str(result.criteria_coverage['vector_dimension']).lower()} |",
+        f"| Data Residency | {candidate.data_residency} | {str(result.criteria_coverage['data_residency']).lower()} |",
+        f"| Operational Complexity | {candidate.operational_complexity} | {str(result.criteria_coverage['operational_complexity']).lower()} |",
+        f"| Reranker Compatibility | {candidate.reranker_compatibility} | {str(result.criteria_coverage['reranker_compatibility']).lower()} |",
+        "",
+        "## Readiness",
+        "",
+        f"- Status: {result.readiness_status}",
+    ]
+    if result.decision_notes:
+        lines.extend(["", "## Decision Notes", ""])
+        lines.extend(f"- {note}" for note in result.decision_notes)
+    lines.append("")
+    return "\n".join(lines)
+
+
 def export_benchmark_report_markdown(
     report: RetrievalBenchmarkReport,
     path: Path,
@@ -136,6 +461,82 @@ def export_benchmark_report_markdown(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_benchmark_report_markdown(report), encoding="utf-8")
     return path
+
+
+def export_candidate_evaluation_markdown(
+    candidate: RetrievalCandidate,
+    report: RetrievalBenchmarkReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_candidate_evaluation_markdown(candidate, report),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_embedding_candidate_markdown(
+    result: EmbeddingCandidateResult,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_embedding_candidate_markdown(result), encoding="utf-8")
+    return path
+
+
+def _validate_candidates(candidates: list[RetrievalCandidate]) -> None:
+    _validate_candidate_ids(candidates, "retrieval candidate")
+
+
+def _validate_candidate_ids(candidates, label: str) -> None:
+    seen = set()
+    for candidate in candidates:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9_.-]*", candidate.id):
+            raise ValueError(
+                f"Invalid {label} id: {candidate.id}. "
+                "Use lowercase letters, numbers, dots, underscores, or dashes."
+            )
+        if candidate.id in seen:
+            raise ValueError(f"Duplicate {label} id: {candidate.id}")
+        seen.add(candidate.id)
+
+
+def _evaluate_embedding_candidate(
+    candidate: EmbeddingCandidate,
+) -> EmbeddingCandidateResult:
+    criteria_coverage = {
+        "language_profile": bool(candidate.language_profile),
+        "chinese_heavy_suitable": candidate.chinese_heavy_suitable,
+        "private_network_supported": candidate.private_network_supported,
+        "vector_dimension": candidate.vector_dimension is not None,
+        "data_residency": bool(candidate.data_residency),
+        "operational_complexity": bool(candidate.operational_complexity),
+        "reranker_compatibility": bool(candidate.reranker_compatibility),
+    }
+    readiness_status = (
+        "baseline"
+        if candidate.approval_status == "baseline"
+        else "review_required"
+    )
+    decision_notes = [
+        *candidate.notes,
+        "This evaluation does not approve or invoke the embedding provider.",
+    ]
+    if not candidate.private_network_supported:
+        decision_notes.append(
+            "Public data egress must be approved before this candidate can be used."
+        )
+    if candidate.vector_dimension is None:
+        decision_notes.append(
+            "Vector dimension must be confirmed before Qdrant collection promotion."
+        )
+    return EmbeddingCandidateResult(
+        candidate=candidate,
+        readiness_status=readiness_status,
+        criteria_coverage=criteria_coverage,
+        decision_notes=decision_notes,
+    )
 
 
 def _run_case(retriever, case: RetrievalBenchmarkCase) -> RetrievalBenchmarkCaseResult:

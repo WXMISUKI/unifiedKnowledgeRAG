@@ -3,4 +3,5 @@ httpx==0.28.1
 llama-index-core==0.14.22
 pydantic==2.13.1
 pytest==9.0.2
+qdrant-client==1.17.1
 uvicorn==0.30.6

@@ -305,6 +305,11 @@ def _build_source_index(source_id: str, settings: Settings, job_id: str) -> None
     backend = settings.rag_retrieval_backend.lower()
     if backend == "fixture":
         return
+    if backend == "qdrant":
+        from app.services.qdrant_vector_store import build_qdrant_source_index
+
+        build_qdrant_source_index(source_id, settings, job_id)
+        return
     if backend != "llamaindex":
         raise ValueError(f"Unsupported RAG_RETRIEVAL_BACKEND: {settings.rag_retrieval_backend}")
 

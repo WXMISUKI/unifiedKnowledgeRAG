@@ -201,6 +201,209 @@ export_benchmark_report_markdown(report, Path("docs/benchmark/retrieval-fixture.
 
 当前仍不新增 CLI 或 HTTP API；报告导出保持本地开发/评审工具属性。
 
+第十二阶段 OpenSpec change `add-retrieval-candidate-evaluation` 增加本地候选检索 adapter 评估能力。候选评估仍是 service-only 工具，用来在真正选择 embedding 模型、向量数据库或 reranker 前，把候选方案跑在同一组 benchmark cases 上，并导出同名 JSON / Markdown 证据：
+
+```python
+from pathlib import Path
+
+from app.services.retrieval_benchmark import (
+    RetrievalCandidate,
+    evaluate_retrieval_candidates,
+    load_benchmark_cases,
+)
+
+cases = load_benchmark_cases(Path("tests/fixtures/retrieval_benchmark_cases.json"))
+candidates = [
+    RetrievalCandidate(
+        id="fixture-baseline",
+        backend="fixture",
+        description="Fixture contract baseline",
+        metadata={"embedding": "none", "vector_store": "none"},
+    )
+]
+
+evaluate_retrieval_candidates(
+    cases,
+    candidates,
+    output_dir=Path("docs/benchmark/candidates"),
+)
+```
+
+导出后会生成 `fixture-baseline.json` 和 `fixture-baseline.md`。当前候选只映射到已存在的本地 backend；生产 embedding、向量库、reranker、hybrid retrieval 候选需要先讨论确认后再新增 adapter。
+
+第十三阶段 OpenSpec change `evaluate-qdrant-vector-store-adapter` 把 Qdrant 纳入第一向量库候选，但仍保持 opt-in、evaluation-only：
+
+```powershell
+$env:RAG_RETRIEVAL_BACKEND="qdrant"
+$env:QDRANT_URL="http://localhost:6333"
+$env:QDRANT_COLLECTION="knowledge_chunks"
+$env:QDRANT_VECTOR_NAME="text-dense"
+$env:QDRANT_VECTOR_SIZE="1024"
+```
+
+当前 Qdrant backend 会在 readiness 中报告 `degraded`，表示它只是候选 adapter surface，尚未接入 live Qdrant 写入/检索。已落地的是 provider-neutral evidence chunk 到 Qdrant point/payload/filter 的映射，重点保留 `tenant_id`、`source_id`、`document_id`、`chunk_id`、`citation`、`acl_tags`、`embedding_model`、`chunking_strategy` 等企业级元数据。
+
+本机公网测试路径建议是：先用本地 Docker Qdrant + hosted embedding 跑候选验证；企业内网路径则保留同一套 Qdrant payload/filter 合同，只替换为内网 Qdrant 和本地 embedding/reranker。embedding 模型、reranker 和 live Qdrant ingestion/retrieval 会在后续 change 中继续讨论并实现。
+
+第十四阶段 OpenSpec change `add-live-qdrant-ingestion-retrieval` 增加 live Qdrant helper。它已经可以显式构造 Qdrant client、准备 collection、upsert 已有向量的 evidence chunks，并用调用方传入的 query vector 查询 Qdrant 命中结果：
+
+```python
+from app.config import Settings
+from app.services.qdrant_vector_store import (
+    VectorEvidenceChunk,
+    create_qdrant_client,
+    ensure_qdrant_collection,
+    query_qdrant_documents,
+    upsert_qdrant_chunks,
+)
+
+settings = Settings(
+    qdrant_url=":memory:",
+    qdrant_collection="knowledge_chunks",
+    qdrant_vector_size=3,
+)
+client = create_qdrant_client(settings)
+ensure_qdrant_collection(client, settings)
+
+upsert_qdrant_chunks(
+    client,
+    [
+        VectorEvidenceChunk(
+            point_id="refund_policy_2026:section-3:0",
+            source_id="refund_policy_docs",
+            document_id="refund_policy_2026",
+            chunk_id="section-3:0",
+            title="售后退款规则",
+            text="客户三天未发货可以申请退款。",
+            citation="refund_policy_2026#section-3",
+            vector=[0.1, 0.2, 0.3],
+            metadata={"tenant_id": "tenant-a", "acl_tags": ["after_sales"]},
+        )
+    ],
+    settings,
+)
+
+documents = query_qdrant_documents(
+    client,
+    query_vector=[0.1, 0.2, 0.3],
+    source_ids=["refund_policy_docs"],
+    settings=settings,
+    top_k=3,
+    tenant_id="tenant-a",
+)
+```
+
+这个 helper 不负责把 query text 转成 embedding，也不负责 rerank；embedding/reranker 仍是后续单独选型和 adapter。默认 HTTP 检索路径也没有切到 Qdrant。
+
+第十五阶段 OpenSpec change `add-embedding-adapter-interface` 增加 embedding adapter 抽象。当前默认 provider 是 deterministic mock，只用于合同测试和 Qdrant wiring，不代表真实语义检索质量：
+
+```powershell
+$env:EMBEDDING_PROVIDER="mock"
+$env:EMBEDDING_MODEL="mock-hash-v1"
+$env:EMBEDDING_VECTOR_SIZE="1024"
+```
+
+也可以在代码中显式创建 adapter，并为 Qdrant chunk 填充向量：
+
+```python
+from app.config import Settings
+from app.services.embedding_adapters import create_embedding_adapter
+from app.services.qdrant_vector_store import VectorEvidenceChunk, embed_qdrant_chunks
+
+settings = Settings(embedding_provider="mock", embedding_vector_size=3)
+adapter = create_embedding_adapter(settings)
+embedded_chunks = embed_qdrant_chunks(
+    [
+        VectorEvidenceChunk(
+            point_id="refund_policy_2026:section-3:0",
+            source_id="refund_policy_docs",
+            document_id="refund_policy_2026",
+            chunk_id="section-3:0",
+            title="售后退款规则",
+            text="客户三天未发货可以申请退款。",
+            citation="refund_policy_2026#section-3",
+            vector=[],
+            metadata={"tenant_id": "tenant-a"},
+        )
+    ],
+    adapter,
+)
+```
+
+`EMBEDDING_PROVIDER=hosted` 和 `EMBEDDING_PROVIDER=local` 目前是 fail-closed 占位，不会偷偷调用公网 API 或加载本地模型。后续选择 BGE-M3、Qwen、OpenAI、Jina 等候选时，会单独走 OpenSpec change 和 benchmark evidence。
+
+第十六阶段 OpenSpec change `add-qdrant-text-query-orchestration` 将 Qdrant text query 链路打通为显式 opt-in：
+
+```text
+query text -> embedding adapter -> Qdrant vector query -> EvidenceDocument
+```
+
+启用方式仍然是显式选择 Qdrant：
+
+```powershell
+$env:RAG_RETRIEVAL_BACKEND="qdrant"
+$env:QDRANT_URL="http://localhost:6333"
+$env:QDRANT_COLLECTION="knowledge_chunks"
+$env:EMBEDDING_PROVIDER="mock"
+```
+
+当前 `mock` embedding 只能证明链路可运行，不代表中文语义检索质量。真实使用前还需要完成：真实文档 ingestion、中文/双语 embedding 候选评估、benchmark report、必要时增加 reranker。
+
+第十七阶段 OpenSpec change `add-qdrant-source-ingestion-flow` 将本地 source docs 接入 Qdrant ingestion lifecycle。显式选择 Qdrant 后，`POST /api/ingestion/jobs` 会读取 `RAG_SOURCE_DIR/<source_id>.md`，按 markdown 段落切成 evidence chunks，通过 embedding adapter 填充 vector，再 upsert 到 Qdrant，并写入 source index ready marker：
+
+```powershell
+$env:RAG_RETRIEVAL_BACKEND="qdrant"
+$env:RAG_SOURCE_DIR="app/data/sources"
+$env:RAG_INDEX_DIR="app/data/indexes/qdrant"
+$env:QDRANT_URL=":memory:"
+$env:QDRANT_COLLECTION="knowledge_chunks"
+$env:QDRANT_VECTOR_NAME="text-dense"
+$env:QDRANT_VECTOR_SIZE="1024"
+$env:EMBEDDING_PROVIDER="mock"
+
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs `
+  -ContentType "application/json" `
+  -Body '{"source_id":"refund_policy_docs"}'
+```
+
+当前 chunking 策略是 `markdown-paragraph-v1`，只作为评估基线。企业级 PDF、Word、表格、长文档结构化切分、chunk overlap、section summary、多粒度索引仍需要后续单独设计和 benchmark 验证。
+
+第十八阶段 OpenSpec change `evaluate-chinese-embedding-candidates` 增加中文 embedding 候选评估入口。它只记录候选元数据和本地评估证据，不调用真实公网 API，也不加载本地模型：
+
+```python
+from pathlib import Path
+
+from app.services.retrieval_benchmark import evaluate_embedding_candidates
+
+evaluate_embedding_candidates(
+    output_dir=Path("docs/benchmark/embedding-candidates"),
+)
+```
+
+默认候选包括：
+
+- `mock-hash-v1`：当前 deterministic contract baseline，不代表语义质量。
+- `qwen-embedding-candidate`：中文 hosted 候选占位，需要单独确认数据出公网和私有化可行性。
+- `bge-m3-local-candidate`：本地/内网中文与多语候选占位，需要后续验证部署资源和吞吐。
+- `openai-embedding-candidate`：公网 hosted 多语 baseline，占位用于质量对比，不默认启用。
+
+导出结果会生成 `<candidate-id>.json` 和 `<candidate-id>.md`。这些报告用于后续 OpenSpec 选型讨论，不等于批准生产 embedding provider。
+
+第十九阶段 OpenSpec change `expand-chinese-retrieval-benchmark-cases` 扩展了中文企业场景 benchmark seed。当前本地 cases 从 8 条增加到 15 条，覆盖：
+
+- 基础政策问答
+- 退款例外规则
+- 高价值退款复核
+- 地址变更与未发货多意图问题
+- 同城配送 SLA
+- 包裹丢失跨团队协同
+- 地址拦截操作
+- 业务化 empty retrieval
+
+这些 cases 仍是 seed benchmark，不是最终生产验收集。它们的价值是让后续 embedding、Qdrant、reranker 或 hybrid retrieval 候选先跑在同一张中文场景清单上。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

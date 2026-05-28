@@ -81,3 +81,158 @@ The system SHALL reject retrieval requests for unknown or unavailable knowledge 
 
 - **WHEN** a caller requests `POST /api/rag/retrieve` with an unknown knowledge base id
 - **THEN** the response has `ok=false` and an `error.code` that identifies the unknown source
+
+### Requirement: Qdrant vector points preserve retrieval evidence metadata
+
+The system SHALL map indexed evidence chunks to Qdrant point payloads while preserving citation and enterprise metadata fields.
+
+#### Scenario: Evidence chunk becomes Qdrant point
+
+- **WHEN** an evidence chunk is mapped for Qdrant
+- **THEN** the point includes a stable id, named vector, source id, document id, chunk id, title, citation, and text payload
+
+#### Scenario: Enterprise metadata is preserved
+
+- **WHEN** an evidence chunk includes tenant, ACL, document version, embedding model, or chunking strategy metadata
+- **THEN** the Qdrant payload preserves those fields for later filtering and audit
+
+#### Scenario: Retrieval filter is built
+
+- **WHEN** source ids and tenant id are supplied for Qdrant retrieval
+- **THEN** the adapter builds a payload filter that includes tenant and source constraints
+
+### Requirement: Qdrant collection can be prepared explicitly
+
+The system SHALL prepare a configured Qdrant collection only through explicit Qdrant adapter calls.
+
+#### Scenario: Qdrant collection is ready
+
+- **WHEN** the configured Qdrant collection exists or can be created
+- **THEN** the Qdrant adapter reports collection readiness as `ready`
+
+#### Scenario: Qdrant collection is unavailable
+
+- **WHEN** the configured Qdrant collection cannot be reached or created
+- **THEN** the Qdrant adapter reports readiness as `degraded` with a reason
+
+### Requirement: Qdrant evidence chunks can be upserted
+
+The system SHALL upsert provider-neutral evidence chunks into Qdrant using the established point and payload contract.
+
+#### Scenario: Evidence chunks are upserted
+
+- **WHEN** evidence chunks with vectors are sent to the Qdrant adapter
+- **THEN** the adapter writes Qdrant points to the configured collection
+
+#### Scenario: Evidence payload is preserved
+
+- **WHEN** chunks are upserted
+- **THEN** source, tenant, document, chunk, citation, text, and ACL metadata remain in the payload
+
+### Requirement: Qdrant vector query maps hits to evidence documents
+
+The system SHALL query Qdrant with an already-created query vector and map valid hits to provider evidence documents.
+
+#### Scenario: Query vector returns hits
+
+- **WHEN** a Qdrant query returns hits with required evidence payload fields
+- **THEN** the adapter returns `EvidenceDocument` items with source, document, title, snippet, score, and citation
+
+#### Scenario: Query text embedding remains out of scope
+
+- **WHEN** the Qdrant adapter is called for vector query
+- **THEN** the caller supplies the query vector and the adapter does not choose or call an embedding model
+
+### Requirement: Embedding adapters expose a provider-neutral contract
+
+The system SHALL convert text into dense vectors through a provider-neutral embedding adapter interface.
+
+#### Scenario: Mock embedding is selected
+
+- **WHEN** the embedding provider is configured as `mock`
+- **THEN** the adapter returns deterministic vectors with the configured vector size
+
+#### Scenario: Hosted embedding is not implemented
+
+- **WHEN** the embedding provider is configured as `hosted` before a hosted model decision is approved
+- **THEN** the adapter reports degraded readiness and fails closed when called
+
+#### Scenario: Local embedding is not implemented
+
+- **WHEN** the embedding provider is configured as `local` before a local model decision is approved
+- **THEN** the adapter reports degraded readiness and fails closed when called
+
+### Requirement: Qdrant chunks can receive vectors from embedding adapters
+
+The system SHALL allow evidence chunks to be embedded before Qdrant upsert without changing their evidence payload metadata.
+
+#### Scenario: Evidence chunk is embedded
+
+- **WHEN** an evidence chunk text is embedded
+- **THEN** the resulting Qdrant chunk keeps source, document, chunk, citation, text, and metadata fields while replacing the vector
+
+#### Scenario: Text query orchestration remains separate
+
+- **WHEN** embedding adapter helpers are added
+- **THEN** the system does not automatically switch HTTP retrieval to Qdrant text-query mode
+
+### Requirement: Qdrant text query uses embedding adapter orchestration
+
+The system SHALL execute opt-in Qdrant text retrieval by embedding query text before vector search.
+
+#### Scenario: Query text is embedded
+
+- **WHEN** Qdrant text retrieval is requested
+- **THEN** the query text is embedded through the configured embedding adapter before Qdrant vector query
+
+#### Scenario: Qdrant hits become evidence documents
+
+- **WHEN** Qdrant vector query returns valid evidence payload hits
+- **THEN** the retrieval result contains `EvidenceDocument` items using the existing evidence mapping
+
+#### Scenario: Qdrant remains opt-in
+
+- **WHEN** Qdrant text query orchestration is available
+- **THEN** the default retrieval backend remains unchanged
+
+### Requirement: Qdrant readiness includes embedding readiness
+
+The system SHALL report Qdrant backend readiness from both Qdrant collection readiness and embedding adapter readiness.
+
+#### Scenario: Embedding adapter is degraded
+
+- **WHEN** the configured embedding adapter is not ready
+- **THEN** Qdrant backend readiness is degraded with an embedding reason
+
+#### Scenario: Qdrant collection is degraded
+
+- **WHEN** Qdrant collection readiness is degraded
+- **THEN** Qdrant backend readiness is degraded with a Qdrant reason
+
+### Requirement: Qdrant source ingestion builds evidence chunks
+
+The system SHALL convert configured local source documents into Qdrant evidence chunks during explicit Qdrant ingestion.
+
+#### Scenario: Markdown source is chunked
+
+- **WHEN** Qdrant ingestion builds an index for a configured markdown source
+- **THEN** the source content is converted into deterministic evidence chunks with stable source, document, chunk, title, text, and citation metadata
+
+#### Scenario: Chunk metadata is preserved
+
+- **WHEN** chunks are embedded and upserted to Qdrant
+- **THEN** source id, document id, chunk id, citation, embedding metadata, and chunking strategy remain in the payload
+
+### Requirement: Qdrant ingestion participates in index lifecycle
+
+The system SHALL allow the existing ingestion job lifecycle to build Qdrant indexes when Qdrant is explicitly selected.
+
+#### Scenario: Qdrant source ingestion succeeds
+
+- **WHEN** an ingestion job runs with `RAG_RETRIEVAL_BACKEND=qdrant` for a valid source
+- **THEN** the source chunks are embedded, upserted to Qdrant, and source index status is marked `ready`
+
+#### Scenario: Qdrant source document is missing
+
+- **WHEN** Qdrant ingestion runs for a source whose local document is missing
+- **THEN** the ingestion job fails with a structured index build failure
