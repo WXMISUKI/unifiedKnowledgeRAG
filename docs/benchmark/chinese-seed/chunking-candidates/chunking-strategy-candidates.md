@@ -3,7 +3,7 @@
 | Candidate | Status | Total Chunks | Citation Stability | Long-Section Support |
 | --- | --- | ---: | --- | --- |
 | markdown-paragraph-v1 | implemented | 11 | stable | covered |
-| markdown-section-v1 | planned |  | planned | planned |
+| markdown-section-v1 | runnable | 2 | stable | covered-by-section |
 | token-window-v1 | planned |  | planned | planned |
 
 ## Candidate Notes
@@ -27,8 +27,9 @@
 - Trade-off: May improve citation context for long sections.
 - Trade-off: Needs heading-aware citation and section boundary rules.
 - Trade-off: Still does not solve scanned documents or tables.
-- Decision note: Candidate is not runnable yet; no retrieval metrics are claimed.
-- Decision note: Implement runnable benchmark evidence before production promotion.
+- Decision note: Candidate can generate section chunks for local markdown sources.
+- Decision note: Runtime Qdrant ingestion still uses markdown-paragraph-v1.
+- Decision note: Retrieval metrics are not claimed until a future runnable retrieval benchmark is added.
 
 ### token-window-v1
 

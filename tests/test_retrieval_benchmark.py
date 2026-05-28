@@ -279,7 +279,7 @@ def test_default_chunking_strategy_candidates_include_baseline_and_planned():
     by_id = {candidate.id: candidate for candidate in candidates}
 
     assert by_id["markdown-paragraph-v1"].implementation_status == "implemented"
-    assert by_id["markdown-section-v1"].implementation_status == "planned"
+    assert by_id["markdown-section-v1"].implementation_status == "runnable"
     assert by_id["token-window-v1"].implementation_status == "planned"
     assert "long paragraphs" in by_id["token-window-v1"].expected_fit
 
@@ -453,8 +453,9 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
     assert by_id["markdown-paragraph-v1"].total_chunks == 11
     assert by_id["markdown-paragraph-v1"].citation_stability == "stable"
     assert by_id["markdown-paragraph-v1"].long_section_support == "covered"
-    assert by_id["markdown-section-v1"].total_chunks is None
-    assert by_id["markdown-section-v1"].citation_stability == "planned"
+    assert by_id["markdown-section-v1"].total_chunks == 2
+    assert by_id["markdown-section-v1"].citation_stability == "stable"
+    assert by_id["markdown-section-v1"].long_section_support == "covered-by-section"
     assert by_id["token-window-v1"].long_section_support == "planned"
 
     payload = json.loads(evaluation.json_path.read_text(encoding="utf-8"))
@@ -463,6 +464,7 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
     assert payload == chunking_strategy_evaluation_to_dict(evaluation)
     assert "# Chunking Strategy Candidate Evaluation" in markdown
     assert "| markdown-paragraph-v1 | implemented | 11 | stable | covered |" in markdown
+    assert "| markdown-section-v1 | runnable | 2 | stable | covered-by-section |" in markdown
     assert "Candidate is not runnable yet" in markdown
     assert render_chunking_strategy_evaluation_markdown(evaluation) == markdown
 

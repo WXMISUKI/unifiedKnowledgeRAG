@@ -12,10 +12,12 @@ from app.services.embedding_adapters import create_embedding_adapter
 from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.qdrant_vector_store import (
     QDRANT_CHUNKING_STRATEGY,
+    QDRANT_SECTION_CHUNKING_STRATEGY,
     create_qdrant_client,
     embed_qdrant_chunks,
     ensure_qdrant_collection,
     load_qdrant_source_chunks,
+    markdown_source_to_section_chunks,
     query_qdrant_documents_for_text,
     upsert_qdrant_chunks,
 )
@@ -619,7 +621,7 @@ def default_chunking_strategy_candidates() -> list[ChunkingStrategyCandidate]:
         ChunkingStrategyCandidate(
             id="markdown-section-v1",
             description="Planned section-aware markdown chunking using headings and paragraphs.",
-            implementation_status="planned",
+            implementation_status="runnable",
             expected_fit="manuals, policy sections, documents with useful headings",
             tradeoffs=[
                 "May improve citation context for long sections.",
@@ -1418,7 +1420,7 @@ def _evaluate_chunking_candidate(
     source_ids: list[str],
     settings: Settings,
 ) -> ChunkingStrategyResult:
-    if candidate.implementation_status != "implemented":
+    if candidate.implementation_status == "planned":
         return ChunkingStrategyResult(
             candidate=candidate,
             source_ids=source_ids,
@@ -1428,6 +1430,32 @@ def _evaluate_chunking_candidate(
             decision_notes=[
                 "Candidate is not runnable yet; no retrieval metrics are claimed.",
                 "Implement runnable benchmark evidence before production promotion.",
+            ],
+        )
+
+    if candidate.id == QDRANT_SECTION_CHUNKING_STRATEGY:
+        chunks = [
+            chunk
+            for source_id in source_ids
+            for chunk in _load_section_candidate_chunks(source_id, settings)
+        ]
+        citations_are_stable = all("#chunk-" not in chunk.citation for chunk in chunks)
+        has_long_section_support = all(
+            marker in " ".join(chunk.text for chunk in chunks)
+            for marker in ("退款申诉复核", "批量物流异常")
+        )
+        return ChunkingStrategyResult(
+            candidate=candidate,
+            source_ids=source_ids,
+            total_chunks=len(chunks),
+            citation_stability="stable" if citations_are_stable else "mixed",
+            long_section_support=(
+                "covered-by-section" if has_long_section_support else "not-covered"
+            ),
+            decision_notes=[
+                "Candidate can generate section chunks for local markdown sources.",
+                "Runtime Qdrant ingestion still uses markdown-paragraph-v1.",
+                "Retrieval metrics are not claimed until a future runnable retrieval benchmark is added.",
             ],
         )
 
@@ -1457,6 +1485,15 @@ def _evaluate_chunking_candidate(
             "This is the current runtime Qdrant markdown ingestion baseline.",
             "Use retrieval benchmark evidence before deciding whether to replace it.",
         ],
+    )
+
+
+def _load_section_candidate_chunks(source_id: str, settings: Settings):
+    source_path = settings.rag_source_dir / f"{source_id}.md"
+    return markdown_source_to_section_chunks(
+        source_id=source_id,
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
     )
 
 

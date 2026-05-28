@@ -681,10 +681,12 @@ docs/benchmark/chinese-seed/chunking-candidates/chunking-strategy-candidates.md
 | Candidate | Status | Notes |
 | --- | --- | --- |
 | `markdown-paragraph-v1` | implemented | 当前 Qdrant ingestion baseline，11 个本地 source chunks，citation stable，覆盖 long-section seed |
-| `markdown-section-v1` | planned | 适合标题层级清晰的手册/制度文档，尚无运行时检索指标 |
+| `markdown-section-v1` | runnable | 可生成 section chunks，当前本地 source 生成 2 个 chunks，citation stable，运行时 ingestion 仍未切换 |
 | `token-window-v1` | planned | 适合长段落、PDF/Word 抽取正文和 overlap 场景，尚无运行时检索指标 |
 
 后续如果要真正替换 chunking，需要先把 planned candidate 做成 runnable adapter，再用同一组 benchmark 和 Qdrant+BGE evidence 对比，而不是直接改生产 ingestion。
+
+第三十二阶段 OpenSpec change `add-markdown-section-chunking-candidate` 将 `markdown-section-v1` 从 planned 推进为 runnable candidate。它会按 markdown heading 聚合段落并生成 `markdown-section-v1` metadata，但 `load_qdrant_source_chunks(...)` 和运行时 Qdrant ingestion 仍使用 `markdown-paragraph-v1`。当前 evidence 只说明 section candidate 能生成稳定 chunk，还不声明检索质量优于 paragraph baseline；下一步需要把 section candidate 接入独立 Qdrant smoke，对比实际 retrieval metrics。
 
 ## 设计文档
 

@@ -10,6 +10,7 @@ from app.services.qdrant_vector_store import (
     query_qdrant_documents,
     query_qdrant_documents_for_text,
     markdown_source_to_qdrant_chunks,
+    markdown_source_to_section_chunks,
     upsert_qdrant_chunks,
 )
 from app.services.index_lifecycle import get_index_status
@@ -156,6 +157,33 @@ def test_markdown_source_to_qdrant_chunks_falls_back_for_unmapped_paragraphs(tmp
         "unknown_docs#chunk-1",
         "unknown_docs#chunk-2",
     ]
+
+
+def test_markdown_source_to_section_chunks_groups_heading_content(tmp_path):
+    source_path = tmp_path / "refund_policy_docs.md"
+    source_path.write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款。\n\n"
+        "退款处理需要保留订单编号。\n\n"
+        "## 退款申诉复核\n\n"
+        "退款申诉复核场景中，应提交二线审核。",
+        encoding="utf-8",
+    )
+
+    chunks = markdown_source_to_section_chunks(
+        source_id="refund_policy_docs",
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
+    )
+
+    assert [chunk.chunk_id for chunk in chunks] == ["section-1", "section-2"]
+    assert chunks[0].citation == "refund_policy_2026#section-candidate"
+    assert chunks[1].citation == "refund_policy_2026#section-2"
+    assert chunks[0].title == "售后退款规则"
+    assert chunks[1].title == "退款申诉复核"
+    assert chunks[0].metadata["chunking_strategy"] == "markdown-section-v1"
+    assert "客户三天未发货" in chunks[0].text
+    assert "二线审核" in chunks[1].text
 
 
 def test_qdrant_payload_filter_includes_tenant_sources_and_acl():

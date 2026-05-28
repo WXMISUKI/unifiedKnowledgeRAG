@@ -28,7 +28,7 @@
       "candidate": {
         "id": "markdown-section-v1",
         "description": "Planned section-aware markdown chunking using headings and paragraphs.",
-        "implementation_status": "planned",
+        "implementation_status": "runnable",
         "expected_fit": "manuals, policy sections, documents with useful headings",
         "tradeoffs": [
           "May improve citation context for long sections.",
@@ -40,12 +40,13 @@
         "refund_policy_docs",
         "logistics_faq"
       ],
-      "total_chunks": null,
-      "citation_stability": "planned",
-      "long_section_support": "planned",
+      "total_chunks": 2,
+      "citation_stability": "stable",
+      "long_section_support": "covered-by-section",
       "decision_notes": [
-        "Candidate is not runnable yet; no retrieval metrics are claimed.",
-        "Implement runnable benchmark evidence before production promotion."
+        "Candidate can generate section chunks for local markdown sources.",
+        "Runtime Qdrant ingestion still uses markdown-paragraph-v1.",
+        "Retrieval metrics are not claimed until a future runnable retrieval benchmark is added."
       ]
     },
     {

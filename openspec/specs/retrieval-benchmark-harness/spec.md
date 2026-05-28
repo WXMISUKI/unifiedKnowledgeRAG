@@ -285,6 +285,11 @@ The system SHALL export local evidence for chunking strategy candidates without 
 - **WHEN** an implemented chunking strategy is evaluated
 - **THEN** the evidence includes source ids, chunk counts, citation stability, chunking strategy id, and implementation status
 
+#### Scenario: Runnable section strategy reports source metrics
+
+- **WHEN** `markdown-section-v1` is evaluated
+- **THEN** the evidence reports section chunk counts, citation stability, source ids, and runnable implementation status without changing ingestion defaults
+
 #### Scenario: Planned strategy remains non-runnable
 
 - **WHEN** a planned but unimplemented chunking strategy is evaluated

@@ -12,6 +12,7 @@ from app.services.source_catalog import get_knowledge_base, knowledge_base_exist
 
 
 QDRANT_CHUNKING_STRATEGY = "markdown-paragraph-v1"
+QDRANT_SECTION_CHUNKING_STRATEGY = "markdown-section-v1"
 LOCAL_SOURCE_CITATION_ANCHORS = {
     "refund_policy_docs": {
         1: "refund_policy_2026#section-3",
@@ -27,6 +28,14 @@ LOCAL_SOURCE_CITATION_ANCHORS = {
         3: "logistics_faq_2026#lost-package",
         4: "logistics_faq_2026#address-intercept",
         5: "logistics_faq_2026#batch-exception",
+    },
+}
+LOCAL_SOURCE_SECTION_CITATION_ANCHORS = {
+    "refund_policy_docs": {
+        1: "refund_policy_2026#section-candidate",
+    },
+    "logistics_faq": {
+        1: "logistics_faq_2026#section-candidate",
     },
 }
 
@@ -155,6 +164,34 @@ def markdown_source_to_qdrant_chunks(
             },
         )
         for index, paragraph in enumerate(paragraphs, start=1)
+    ]
+
+
+def markdown_source_to_section_chunks(
+    source_id: str,
+    source_path: Path,
+    content: str,
+) -> list[VectorEvidenceChunk]:
+    document_id = _document_id_for(source_id)
+    sections = _source_sections(content)
+    return [
+        VectorEvidenceChunk(
+            point_id=f"{document_id}:section-{index}",
+            source_id=source_id,
+            document_id=document_id,
+            chunk_id=f"section-{index}",
+            title=section["title"],
+            text=section["text"],
+            citation=_section_citation_for(source_id, document_id, index),
+            vector=[],
+            metadata={
+                "tenant_id": "default",
+                "source_path": str(source_path),
+                "chunking_strategy": QDRANT_SECTION_CHUNKING_STRATEGY,
+                "section_title": section["title"],
+            },
+        )
+        for index, section in enumerate(sections, start=1)
     ]
 
 
@@ -350,6 +387,13 @@ def _citation_for(source_id: str, document_id: str, paragraph_index: int) -> str
     )
 
 
+def _section_citation_for(source_id: str, document_id: str, section_index: int) -> str:
+    return LOCAL_SOURCE_SECTION_CITATION_ANCHORS.get(source_id, {}).get(
+        section_index,
+        f"{document_id}#section-{section_index}",
+    )
+
+
 def _document_id_for(source_id: str) -> str:
     return {
         "refund_policy_docs": "refund_policy_2026",
@@ -382,3 +426,29 @@ def _source_paragraphs(content: str) -> list[str]:
     if current_lines:
         paragraphs.append(" ".join(current_lines))
     return paragraphs
+
+
+def _source_sections(content: str) -> list[dict[str, str]]:
+    sections = []
+    current_title = ""
+    current_lines = []
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line.startswith("#"):
+            if current_lines:
+                sections.append({
+                    "title": current_title,
+                    "text": " ".join(current_lines),
+                })
+                current_lines = []
+            current_title = line.lstrip("#").strip()
+            continue
+        current_lines.append(line)
+    if current_lines:
+        sections.append({
+            "title": current_title or "Untitled Section",
+            "text": " ".join(current_lines),
+        })
+    return sections
