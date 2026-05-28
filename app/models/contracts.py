@@ -90,6 +90,7 @@ class ProviderError(BaseModel):
 
 class IngestionJobRequest(BaseModel):
     source_id: str = Field(min_length=1)
+    run_mode: str = Field(default="sync", pattern="^(sync|queued)$")
 
 
 class IndexLifecycleJob(BaseModel):
@@ -157,6 +158,12 @@ class IngestionJobRecoveryResult(BaseModel):
 class IngestionJobRecoveryResponse(BaseModel):
     ok: bool
     result: IngestionJobRecoveryResult | None = None
+    error: ProviderError | None = None
+
+
+class IngestionQueueRunResponse(BaseModel):
+    ok: bool
+    job: IndexLifecycleJob | None = None
     error: ProviderError | None = None
 
 

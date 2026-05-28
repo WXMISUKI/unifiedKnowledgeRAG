@@ -152,7 +152,57 @@ Invoke-RestMethod `
 
 取消只允许作用于 `running` job，非 running 状态会返回结构化 `JOB_CANCEL_NOT_ALLOWED`。Stale recovery 不会后台自动执行，必须由调用方显式触发；它会把超时 running job 标记为带 `STALE_RUNNING_JOB` 错误的 `failed` 状态，以便后续通过 retry 创建新 job。当前仍不提供异步 worker 中断信号、分布式 lease、定时扫描或鉴权策略。
 
+第八阶段 OpenSpec change `add-queued-ingestion-runner` 增加本地显式 queued runner：
+
+```powershell
+# 创建 queued job，不立即构建索引
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs `
+  -ContentType "application/json" `
+  -Body '{"source_id":"refund_policy_docs","run_mode":"queued"}'
+
+# 显式处理下一个 queued job
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/ingestion/jobs/queue/run-next
+```
+
+未传 `run_mode` 时仍保持同步执行，避免破坏现有调用方。当前 runner 是本地显式触发，不是后台线程、外部队列或生产 worker pool；真正的异步 worker、队列基础设施、分布式 lease，以及 embedding 模型和向量数据库选择，需要后续单独讨论确认后再推进。
+
+生产级索引架构的 embedding 模型、向量数据库、队列 worker、reranker 和 GraphRAG 存储选择，统一先看 [Production Indexing Architecture Decision](docs/architecture/production_indexing_architecture.md)。这些选择会影响成本、部署、数据安全和检索质量，后续实现前需要先确认候选方案。
+
+第九阶段 OpenSpec change `add-retrieval-benchmark-harness` 增加本地检索评估基线。Benchmark cases 位于 `tests/fixtures/retrieval_benchmark_cases.json`，当前通过 `app.services.retrieval_benchmark` 直接运行，先用于测试和候选 adapter 对比，不暴露新的外部 API：
+
+```powershell
+conda run -n GRAPHRAG python -m pytest tests/test_retrieval_benchmark.py -q
+```
+
+当前指标包括 `hit_rate`、`citation_match_rate`、`empty_handling_rate`、category summary 和每个 case 的 `latency_ms`。Benchmark cases 覆盖 `policy`、`faq`、`evidence`、`paraphrase`、`multi-source`、`empty` 等类别，并标注 `difficulty`。后续讨论 embedding 模型、向量库、reranker 或 hybrid retrieval 时，应先补充真实语料 benchmark cases，再用同一 harness 对比候选方案。
+
+第十一阶段 OpenSpec change `export-retrieval-benchmark-report` 增加本地报告导出能力。可以在 Python 中调用 benchmark service，将结果保存为 JSON 或 Markdown，作为后续 OpenSpec 选型证据：
+
+```python
+from pathlib import Path
+
+from app.config import Settings
+from app.services.retrieval_benchmark import (
+    export_benchmark_report_json,
+    export_benchmark_report_markdown,
+    load_benchmark_cases,
+    run_retrieval_benchmark,
+)
+
+cases = load_benchmark_cases(Path("tests/fixtures/retrieval_benchmark_cases.json"))
+report = run_retrieval_benchmark(cases, Settings(rag_retrieval_backend="fixture"))
+export_benchmark_report_json(report, Path("docs/benchmark/retrieval-fixture.json"))
+export_benchmark_report_markdown(report, Path("docs/benchmark/retrieval-fixture.md"))
+```
+
+当前仍不新增 CLI 或 HTTP API；报告导出保持本地开发/评审工具属性。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)
 - [外部 Knowledge Provider / RAG 项目开发规范](docs/external_rag_provider_development.md)
+- [Production Indexing Architecture Decision](docs/architecture/production_indexing_architecture.md)

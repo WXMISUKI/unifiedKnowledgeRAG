@@ -1,0 +1,90 @@
+[
+  {
+    "id": "refund-delayed-shipping",
+    "category": "policy",
+    "difficulty": "easy",
+    "query": "客户三天未发货能否退款？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#section-3",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-delay",
+    "category": "faq",
+    "difficulty": "easy",
+    "query": "物流轨迹二十四小时没有更新怎么办？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#delay",
+    "expect_empty": false
+  },
+  {
+    "id": "empty-moon-warehouse",
+    "category": "empty",
+    "difficulty": "easy",
+    "query": "完全不存在的月球仓库规则",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "refund-delivery-paraphrase",
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "query": "买家等了三天还没有发出包裹，可以走售后退款吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#section-3",
+    "expect_empty": false
+  },
+  {
+    "id": "refund-evidence-records",
+    "category": "evidence",
+    "difficulty": "easy",
+    "query": "处理退款时要保留哪些凭证和记录？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#section-5",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-carrier-paraphrase",
+    "category": "paraphrase",
+    "difficulty": "medium",
+    "query": "快递信息一天都没变化，应该先找谁确认？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#delay",
+    "expect_empty": false
+  },
+  {
+    "id": "multi-source-after-sales",
+    "category": "multi-source",
+    "difficulty": "medium",
+    "query": "售后同事同时关注退款记录和物流延迟时，应该查哪些资料？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#section-5",
+    "expect_empty": false
+  },
+  {
+    "id": "empty-membership-points",
+    "category": "empty",
+    "difficulty": "medium",
+    "query": "会员积分兑换失败以后应该怎么补偿？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]

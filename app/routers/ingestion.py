@@ -13,6 +13,7 @@ from app.models.contracts import (
     IngestionJobRetentionResponse,
     IngestionJobRecoveryRequest,
     IngestionJobRecoveryResponse,
+    IngestionQueueRunResponse,
 )
 from app.services.index_lifecycle import (
     cancel_ingestion_job,
@@ -22,6 +23,7 @@ from app.services.index_lifecycle import (
     list_ingestion_jobs,
     recover_stale_running_jobs,
     retry_ingestion_job,
+    run_next_queued_ingestion_job,
 )
 
 router = APIRouter(prefix="/api/ingestion")
@@ -29,7 +31,11 @@ router = APIRouter(prefix="/api/ingestion")
 
 @router.post("/jobs", response_model=IngestionJobResponse)
 def create_job(request: IngestionJobRequest) -> IngestionJobResponse:
-    ok, job, error = create_ingestion_job(request.source_id, get_settings())
+    ok, job, error = create_ingestion_job(
+        request.source_id,
+        get_settings(),
+        run_mode=request.run_mode,
+    )
     return IngestionJobResponse(ok=ok, job=job, error=error)
 
 
@@ -67,6 +73,12 @@ def compact_jobs(request: IngestionJobRetentionRequest) -> IngestionJobRetention
 def recover_stale_running(request: IngestionJobRecoveryRequest) -> IngestionJobRecoveryResponse:
     result = recover_stale_running_jobs(request.max_age_seconds, get_settings())
     return IngestionJobRecoveryResponse(ok=True, result=result)
+
+
+@router.post("/jobs/queue/run-next", response_model=IngestionQueueRunResponse)
+def run_next_queued_job() -> IngestionQueueRunResponse:
+    ok, job, error = run_next_queued_ingestion_job(get_settings())
+    return IngestionQueueRunResponse(ok=ok, job=job, error=error)
 
 
 @router.get("/jobs/{job_id}", response_model=IngestionJobDetailResponse)

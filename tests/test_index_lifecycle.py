@@ -466,3 +466,103 @@ def test_stale_recovered_job_can_be_retried(monkeypatch, tmp_path):
     assert retry["ok"] is True
     assert retry["job"]["source_id"] == "refund_policy_docs"
     assert retry["job"]["status"] == "completed"
+
+
+def test_queued_ingestion_job_does_not_build_immediately(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/ingestion/jobs",
+        json={"source_id": "refund_policy_docs", "run_mode": "queued"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["job"]["status"] == "queued"
+    status = client.get("/api/indexes/refund_policy_docs/status").json()
+    assert status["status"] == "not_indexed"
+
+
+def test_run_next_queued_ingestion_job_completes(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    queued = client.post(
+        "/api/ingestion/jobs",
+        json={"source_id": "refund_policy_docs", "run_mode": "queued"},
+    ).json()["job"]
+    response = client.post("/api/ingestion/jobs/queue/run-next")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["job"]["job_id"] == queued["job_id"]
+    assert body["job"]["status"] == "completed"
+    status = client.get("/api/indexes/refund_policy_docs/status").json()
+    assert status["status"] == "ready"
+    assert status["latest_job_id"] == queued["job_id"]
+
+
+def test_run_next_queued_ingestion_job_failure(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    queued = client.post(
+        "/api/ingestion/jobs",
+        json={"source_id": "refund_policy_docs", "run_mode": "queued"},
+    ).json()["job"]
+    response = client.post("/api/ingestion/jobs/queue/run-next")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["job"]["job_id"] == queued["job_id"]
+    assert body["job"]["status"] == "failed"
+    assert body["job"]["error"]["code"] == "INDEX_BUILD_FAILED"
+
+
+def test_run_next_queued_ingestion_job_empty_queue(monkeypatch, tmp_path):
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(tmp_path / "sources"))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    response = client.post("/api/ingestion/jobs/queue/run-next")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INGESTION_QUEUE_EMPTY"
+
+
+def test_sync_ingestion_job_remains_default(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text("refund docs", encoding="utf-8")
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    response = client.post("/api/ingestion/jobs", json={"source_id": "refund_policy_docs"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["job"]["status"] == "completed"

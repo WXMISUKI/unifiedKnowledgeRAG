@@ -13,7 +13,11 @@ from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.source_catalog import knowledge_base_exists
 
 
-def create_ingestion_job(source_id: str, settings: Settings | None = None) -> tuple[bool, IndexLifecycleJob | None, ProviderError | None]:
+def create_ingestion_job(
+    source_id: str,
+    settings: Settings | None = None,
+    run_mode: str = "sync",
+) -> tuple[bool, IndexLifecycleJob | None, ProviderError | None]:
     settings = settings or get_settings()
     store = IndexLifecycleStore(settings)
     if not knowledge_base_exists(source_id):
@@ -23,6 +27,16 @@ def create_ingestion_job(source_id: str, settings: Settings | None = None) -> tu
         )
 
     requested_at = _now()
+    if run_mode == "queued":
+        job = IndexLifecycleJob(
+            job_id=f"idx_{uuid.uuid4().hex}",
+            source_id=source_id,
+            status="queued",
+            requested_at=requested_at,
+        )
+        store.append_job(job)
+        return True, job, None
+
     job = IndexLifecycleJob(
         job_id=f"idx_{uuid.uuid4().hex}",
         source_id=source_id,
@@ -55,6 +69,52 @@ def create_ingestion_job(source_id: str, settings: Settings | None = None) -> tu
 
     completed_at = _now()
     completed_job = job.model_copy(update={"status": "completed", "completed_at": completed_at})
+    store.append_job(completed_job)
+    return True, completed_job, None
+
+
+def run_next_queued_ingestion_job(
+    settings: Settings | None = None,
+) -> tuple[bool, IndexLifecycleJob | None, ProviderError | None]:
+    settings = settings or get_settings()
+    store = IndexLifecycleStore(settings)
+    queued_job = store.next_queued_job()
+    if queued_job is None:
+        return False, None, ProviderError(
+            code="INGESTION_QUEUE_EMPTY",
+            message="No queued ingestion job is available.",
+        )
+
+    running_job = queued_job.model_copy(update={"status": "running"})
+    store.append_job(running_job)
+
+    try:
+        _build_source_index(queued_job.source_id, settings, queued_job.job_id)
+    except Exception as exc:  # pragma: no cover - defensive failure path
+        failed_job = running_job.model_copy(
+            update={
+                "status": "failed",
+                "completed_at": _now(),
+                "error": ProviderError(code="INDEX_BUILD_FAILED", message=str(exc)),
+            }
+        )
+        store.append_job(failed_job)
+        store.write_source_status(IndexStatusResponse(
+            source_id=failed_job.source_id,
+            status="failed",
+            backend=settings.rag_retrieval_backend.lower(),
+            indexed_at=None,
+            latest_job_id=failed_job.job_id,
+            reason=str(exc),
+        ))
+        return True, failed_job, None
+
+    completed_job = running_job.model_copy(
+        update={
+            "status": "completed",
+            "completed_at": _now(),
+        }
+    )
     store.append_job(completed_job)
     return True, completed_job, None
 

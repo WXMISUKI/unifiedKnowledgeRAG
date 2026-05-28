@@ -81,6 +81,13 @@ class IndexLifecycleStore:
             None,
         )
 
+    def next_queued_job(self) -> IndexLifecycleJob | None:
+        queued_jobs = sorted(
+            self.list_latest_jobs(status="queued"),
+            key=lambda job: job.requested_at,
+        )
+        return queued_jobs[0] if queued_jobs else None
+
     def compact_jobs(self, keep_latest: int) -> tuple[int, int, int]:
         before_count = len(self.list_latest_jobs())
         kept_jobs = self.list_latest_jobs()[:keep_latest]

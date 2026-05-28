@@ -6,6 +6,8 @@
 
 更完整的 RAG / GraphRAG provider 设计见 [external_rag_graphrag_provider_design.md](./external_rag_graphrag_provider_design.md)。当前推荐：文档型 RAG 的 provider 内部优先参考 LlamaIndex；实体、关系、路径、多跳查询和图增强检索优先参考 Neo4j GraphRAG。二者都只能作为外部 provider 的内部实现依赖，不进入 MyPrivateAgent 主后端。
 
+生产级索引架构涉及 embedding 模型、向量数据库、队列 worker、reranker 和 GraphRAG 存储选择。具体选型必须先经过 [Production Indexing Architecture Decision](./architecture/production_indexing_architecture.md) 的评审，不应在代码变更中隐式引入。
+
 推荐项目命名：
 
 ```text
