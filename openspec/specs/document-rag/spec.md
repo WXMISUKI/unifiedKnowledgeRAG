@@ -236,3 +236,26 @@ The system SHALL allow the existing ingestion job lifecycle to build Qdrant inde
 
 - **WHEN** Qdrant ingestion runs for a source whose local document is missing
 - **THEN** the ingestion job fails with a structured index build failure
+
+### Requirement: Local BGE-M3 embeddings integrate with Qdrant evidence chunks
+
+The system SHALL allow Qdrant evidence chunks to be embedded with the opt-in local BGE-M3 adapter.
+
+#### Scenario: Qdrant chunks are embedded with BGE-M3
+
+- **WHEN** `EMBEDDING_PROVIDER=bge_m3_local` is selected and Qdrant chunks are embedded
+- **THEN** chunk metadata identifies the embedding provider and model used for dense vectors
+
+#### Scenario: BGE-M3 is not the default path
+
+- **WHEN** no embedding provider is configured
+- **THEN** the system continues using the deterministic mock adapter for local contract tests
+
+### Requirement: Local BGE-M3 model path supports offline retrieval evaluation
+
+The system SHALL support using a pre-downloaded BGE-M3 model directory for local Qdrant retrieval evaluation.
+
+#### Scenario: Offline model path is configured
+
+- **WHEN** `EMBEDDING_MODEL_PATH` points to a downloaded BGE-M3 directory and `EMBEDDING_LOCAL_FILES_ONLY=true`
+- **THEN** the local embedding adapter uses the local artifact path without requiring runtime model download

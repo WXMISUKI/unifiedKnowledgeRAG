@@ -9,6 +9,7 @@ from app.services.retrieval_benchmark import (
     default_embedding_candidates,
     embedding_candidate_result_to_dict,
     EmbeddingCandidate,
+    export_chinese_seed_evidence_bundle,
     evaluate_retrieval_candidates,
     evaluate_embedding_candidates,
     export_benchmark_report_json,
@@ -16,6 +17,7 @@ from app.services.retrieval_benchmark import (
     load_benchmark_cases,
     render_embedding_candidate_markdown,
     render_benchmark_report_markdown,
+    fixture_chinese_seed_retrieval_candidate,
     RetrievalCandidate,
     run_retrieval_benchmark,
 )
@@ -332,3 +334,55 @@ def test_exports_embedding_candidate_evaluation_reports(tmp_path):
     assert "| bge-m3-local-candidate | local | bge-m3 |" in markdown
     assert "This evaluation does not approve or invoke the embedding provider." in markdown
     assert render_embedding_candidate_markdown(evaluation.result) == markdown
+
+
+def test_fixture_chinese_seed_candidate_is_contract_baseline_only():
+    candidate = fixture_chinese_seed_retrieval_candidate()
+
+    assert candidate.id == "fixture-chinese-seed-baseline"
+    assert candidate.backend == "fixture"
+    assert candidate.metadata["benchmark_seed"] == "chinese-enterprise-support-v1"
+    assert candidate.metadata["quality_claim"] == "contract-baseline-only"
+
+
+def test_exports_chinese_seed_evidence_bundle(tmp_path):
+    output_dir = tmp_path / "chinese-seed"
+
+    bundle = export_chinese_seed_evidence_bundle(output_dir)
+
+    assert bundle.output_dir == output_dir
+    assert [item.candidate.id for item in bundle.retrieval_evaluations] == [
+        "fixture-chinese-seed-baseline"
+    ]
+    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 15
+    assert bundle.retrieval_evaluations[0].report.summary.hit_rate == 1.0
+    assert {item.result.candidate.id for item in bundle.embedding_evaluations} >= {
+        "mock-hash-v1",
+        "qwen-embedding-candidate",
+        "bge-m3-local-candidate",
+        "openai-embedding-candidate",
+    }
+
+    retrieval_json = (
+        output_dir / "retrieval-candidates" / "fixture-chinese-seed-baseline.json"
+    )
+    retrieval_markdown = (
+        output_dir / "retrieval-candidates" / "fixture-chinese-seed-baseline.md"
+    )
+    embedding_json = output_dir / "embedding-candidates" / "bge-m3-local-candidate.json"
+    embedding_markdown = output_dir / "embedding-candidates" / "bge-m3-local-candidate.md"
+
+    assert retrieval_json.exists()
+    assert retrieval_markdown.exists()
+    assert embedding_json.exists()
+    assert embedding_markdown.exists()
+
+    retrieval_payload = json.loads(retrieval_json.read_text(encoding="utf-8"))
+    assert retrieval_payload["candidate"]["metadata"]["quality_claim"] == (
+        "contract-baseline-only"
+    )
+    assert retrieval_payload["report"]["summary"]["total_cases"] == 15
+
+    embedding_payload = json.loads(embedding_json.read_text(encoding="utf-8"))
+    assert embedding_payload["candidate"]["id"] == "bge-m3-local-candidate"
+    assert embedding_payload["readiness_status"] == "review_required"

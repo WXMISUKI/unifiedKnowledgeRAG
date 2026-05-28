@@ -1,0 +1,36 @@
+{
+  "candidate": {
+    "id": "mock-hash-v1",
+    "provider_family": "mock",
+    "model_name": "mock-hash-v1",
+    "deployment_mode": "local-deterministic-test",
+    "language_profile": "contract-only",
+    "vector_dimension": null,
+    "data_residency": "local-only",
+    "operational_complexity": "low",
+    "reranker_compatibility": "not-applicable",
+    "approval_status": "baseline",
+    "chinese_heavy_suitable": false,
+    "private_network_supported": true,
+    "notes": [
+      "Deterministic contract baseline only.",
+      "Not a semantic embedding model."
+    ]
+  },
+  "readiness_status": "baseline",
+  "criteria_coverage": {
+    "language_profile": true,
+    "chinese_heavy_suitable": false,
+    "private_network_supported": true,
+    "vector_dimension": false,
+    "data_residency": true,
+    "operational_complexity": true,
+    "reranker_compatibility": true
+  },
+  "decision_notes": [
+    "Deterministic contract baseline only.",
+    "Not a semantic embedding model.",
+    "This evaluation does not approve or invoke the embedding provider.",
+    "Vector dimension must be confirmed before Qdrant collection promotion."
+  ]
+}

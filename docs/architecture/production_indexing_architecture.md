@@ -210,6 +210,15 @@ The current Chinese-heavy seed set has been expanded beyond exact-match policy l
 
 Passing this seed set is not final production acceptance. Before production promotion, add customer-specific documents and queries, then compare category-level misses instead of relying only on aggregate hit rate.
 
+The local Chinese seed evidence bundle can be regenerated from `app.services.retrieval_benchmark.export_chinese_seed_evidence_bundle(...)`. The checked-in baseline reports live under `docs/benchmark/chinese-seed/`:
+
+- `retrieval-candidates/fixture-chinese-seed-baseline.json`
+- `retrieval-candidates/fixture-chinese-seed-baseline.md`
+- `embedding-candidates/*.json`
+- `embedding-candidates/*.md`
+
+Future production embedding, reranker, hybrid retrieval, or vector-store promotion proposals should reference this bundle or replace it with fresher customer-specific evidence.
+
 Preferred evidence format:
 
 - JSON report for machine-readable comparison.
@@ -295,7 +304,7 @@ Embedding model selection is now represented as local candidate evidence before 
 | --- | --- | --- | --- |
 | `mock-hash-v1` | mock | local contract baseline | deterministic only; not semantic retrieval |
 | `qwen-embedding-candidate` | hosted | public-network Chinese-heavy experiment | data egress and private deployment must be reviewed |
-| `bge-m3-local-candidate` | local | private-network Chinese-heavy experiment | runtime footprint and serving stack must be benchmarked |
+| `bge-m3-local-candidate` | local | private-network Chinese-heavy experiment | dense 1024-dimensional adapter available; runtime footprint and serving stack must be benchmarked |
 | `openai-embedding-candidate` | hosted | public hosted multilingual baseline | useful for comparison only if public egress is approved |
 
 The service-level helper `evaluate_embedding_candidates(...)` exports JSON and Markdown evidence with candidate metadata, readiness notes, and enterprise criteria coverage. It does not call real embedding services.
@@ -306,6 +315,55 @@ Before implementing a real embedding adapter, we should use this evidence shape 
 2. Which local candidate is viable for private-network enterprise deployment.
 3. What vector dimension Qdrant collections should use.
 4. Whether candidate misses indicate a reranker or hybrid retrieval requirement.
+
+## BGE-M3 Local Adapter
+
+BGE-M3 is now available as an explicit local embedding adapter:
+
+- provider: `bge_m3_local`
+- model: `BAAI/bge-m3`
+- dense vector dimension: `1024`
+- runtime dependency: `FlagEmbedding`
+- default behavior: opt-in only; `mock` remains the default
+
+This adapter is the preferred first private-network candidate because it avoids paid hosted embedding calls and keeps document content local. The implementation only emits dense vectors. BGE-M3 sparse and ColBERT outputs are intentionally deferred until benchmark evidence shows dense-only retrieval is insufficient.
+
+Download and deployment options:
+
+1. Default Hugging Face download through `BAAI/bge-m3`.
+2. Operator-provided mirror via `EMBEDDING_HF_ENDPOINT`, for example `https://hf-mirror.com` when direct access is slow.
+3. Fully local/offline path via `EMBEDDING_MODEL_PATH` and `EMBEDDING_LOCAL_FILES_ONLY=true`.
+
+Mirror endpoints are configuration, not architecture defaults. Enterprise deployments should prefer controlled model artifact management and local paths.
+
+## BGE-M3 Model Artifact Cache
+
+BGE-M3 model files should be downloaded explicitly before local evaluation or private-network deployment. The canonical bootstrap command is:
+
+```powershell
+conda run -n GRAPHRAG python scripts/download_bge_m3_model.py --output-dir models/bge-m3
+```
+
+For China-friendly download acceleration, operators may provide:
+
+```powershell
+--hf-endpoint https://hf-mirror.com
+```
+
+The endpoint remains an operator choice. The project does not hard-code a mirror as the default.
+
+If a Hugging Face-compatible mirror cannot serve metadata correctly, the same script can use ModelScope:
+
+```powershell
+conda run -n GRAPHRAG python scripts/download_bge_m3_model.py --source modelscope --output-dir models/bge-m3
+```
+
+The local artifact directory is ignored by git. The download script validates required config/tokenizer/model weight files and writes `model-manifest.json` so the directory can be copied to private-network deployments and used with:
+
+```powershell
+$env:EMBEDDING_MODEL_PATH="D:\models\bge-m3"
+$env:EMBEDDING_LOCAL_FILES_ONLY="true"
+```
 
 ## Qdrant Text Query Orchestration
 

@@ -1,0 +1,37 @@
+{
+  "candidate": {
+    "id": "qwen-embedding-candidate",
+    "provider_family": "hosted",
+    "model_name": "qwen-embedding",
+    "deployment_mode": "public-hosted-or-private-compatible",
+    "language_profile": "chinese-heavy",
+    "vector_dimension": null,
+    "data_residency": "depends-on-provider-and-deployment",
+    "operational_complexity": "medium",
+    "reranker_compatibility": "candidate-specific",
+    "approval_status": "candidate",
+    "chinese_heavy_suitable": true,
+    "private_network_supported": false,
+    "notes": [
+      "Hosted/public route must be reviewed for data residency.",
+      "Private-network feasibility remains a later implementation decision."
+    ]
+  },
+  "readiness_status": "review_required",
+  "criteria_coverage": {
+    "language_profile": true,
+    "chinese_heavy_suitable": true,
+    "private_network_supported": false,
+    "vector_dimension": false,
+    "data_residency": true,
+    "operational_complexity": true,
+    "reranker_compatibility": true
+  },
+  "decision_notes": [
+    "Hosted/public route must be reviewed for data residency.",
+    "Private-network feasibility remains a later implementation decision.",
+    "This evaluation does not approve or invoke the embedding provider.",
+    "Public data egress must be approved before this candidate can be used.",
+    "Vector dimension must be confirmed before Qdrant collection promotion."
+  ]
+}

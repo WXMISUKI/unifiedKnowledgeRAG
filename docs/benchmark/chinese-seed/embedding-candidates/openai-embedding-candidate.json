@@ -1,0 +1,37 @@
+{
+  "candidate": {
+    "id": "openai-embedding-candidate",
+    "provider_family": "hosted",
+    "model_name": "openai-embedding",
+    "deployment_mode": "public-hosted",
+    "language_profile": "multilingual",
+    "vector_dimension": null,
+    "data_residency": "public-provider-dependent",
+    "operational_complexity": "low-medium",
+    "reranker_compatibility": "candidate-specific",
+    "approval_status": "candidate",
+    "chinese_heavy_suitable": true,
+    "private_network_supported": false,
+    "notes": [
+      "Useful as hosted multilingual quality baseline.",
+      "Public data egress must be explicitly approved before use."
+    ]
+  },
+  "readiness_status": "review_required",
+  "criteria_coverage": {
+    "language_profile": true,
+    "chinese_heavy_suitable": true,
+    "private_network_supported": false,
+    "vector_dimension": false,
+    "data_residency": true,
+    "operational_complexity": true,
+    "reranker_compatibility": true
+  },
+  "decision_notes": [
+    "Useful as hosted multilingual quality baseline.",
+    "Public data egress must be explicitly approved before use.",
+    "This evaluation does not approve or invoke the embedding provider.",
+    "Public data egress must be approved before this candidate can be used.",
+    "Vector dimension must be confirmed before Qdrant collection promotion."
+  ]
+}

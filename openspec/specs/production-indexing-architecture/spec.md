@@ -100,6 +100,73 @@ The system SHALL require Chinese-heavy benchmark seed evidence before selecting 
 - **WHEN** the local Chinese benchmark seed passes
 - **THEN** the result is treated as early comparison evidence and not final production acceptance coverage
 
+### Requirement: Production retrieval decisions reference seed evidence bundle paths
+
+The system SHALL keep local benchmark evidence paths available for later production indexing decisions.
+
+#### Scenario: Production embedding or retrieval promotion is proposed
+
+- **WHEN** a future change proposes production embedding, reranker, hybrid retrieval, or vector-store promotion
+- **THEN** it references the exported Chinese seed evidence bundle or explains why fresher customer-specific evidence is required
+
+#### Scenario: Seed evidence is interpreted
+
+- **WHEN** exported Chinese seed evidence is reviewed
+- **THEN** it is treated as an early comparison baseline and not as final production acceptance
+
+### Requirement: BGE-M3 local embedding adapter remains opt-in
+
+The system SHALL provide BGE-M3 as an explicit local embedding candidate without changing production defaults.
+
+#### Scenario: BGE-M3 local provider is selected
+
+- **WHEN** `EMBEDDING_PROVIDER=bge_m3_local` is configured
+- **THEN** the system loads BGE-M3 through a local adapter and emits dense vectors compatible with the configured vector size
+
+#### Scenario: BGE-M3 dependencies are unavailable
+
+- **WHEN** the local BGE-M3 runtime dependency or model files are unavailable
+- **THEN** readiness reports degraded instead of falling back silently or switching providers
+
+#### Scenario: Mirror acceleration is configured
+
+- **WHEN** an operator configures a Hugging Face endpoint override for local model download
+- **THEN** the adapter uses that endpoint only for the selected local provider and does not hard-code a mirror as the default
+
+#### Scenario: Hybrid retrieval is deferred
+
+- **WHEN** BGE-M3 is used in this change
+- **THEN** only dense vectors are produced and sparse, ColBERT, reranker, and hybrid retrieval remain separate decisions
+
+### Requirement: BGE-M3 model artifacts are cached explicitly
+
+The system SHALL provide a repeatable local workflow to download and validate BGE-M3 model artifacts for local and private-network deployment.
+
+#### Scenario: Model artifact is downloaded
+
+- **WHEN** the BGE-M3 download script is run with an output directory
+- **THEN** it downloads the configured model snapshot into that directory and writes a local manifest
+
+#### Scenario: Mirror endpoint is configured
+
+- **WHEN** an operator provides a Hugging Face endpoint override
+- **THEN** the download workflow uses that endpoint for the download without making it the code default
+
+#### Scenario: Domestic model hub source is configured
+
+- **WHEN** a Hugging Face-compatible mirror cannot download the artifact reliably
+- **THEN** the download workflow supports an explicit ModelScope source for the same BGE-M3 artifact
+
+#### Scenario: Model artifact is validated
+
+- **WHEN** model validation runs
+- **THEN** it confirms required config, tokenizer, and model weight files exist before reporting success
+
+#### Scenario: Model binaries remain outside git
+
+- **WHEN** BGE-M3 model artifacts are downloaded locally
+- **THEN** model directories are ignored by git and are not committed as repository content
+
 ### Requirement: GraphRAG storage remains a separate decision
 
 The system SHALL keep graph storage and GraphRAG implementation choices separate from document vector retrieval choices.

@@ -404,6 +404,95 @@ evaluate_embedding_candidates(
 
 这些 cases 仍是 seed benchmark，不是最终生产验收集。它们的价值是让后续 embedding、Qdrant、reranker 或 hybrid retrieval 候选先跑在同一张中文场景清单上。
 
+第二十阶段 OpenSpec change `export-chinese-seed-evaluation-evidence` 增加中文 seed evidence bundle 导出。可以在本地生成 retrieval baseline 和 embedding candidate 的 JSON / Markdown 证据：
+
+```python
+from pathlib import Path
+
+from app.services.retrieval_benchmark import export_chinese_seed_evidence_bundle
+
+export_chinese_seed_evidence_bundle(Path("docs/benchmark/chinese-seed"))
+```
+
+当前默认证据已生成在：
+
+- `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json`
+- `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.md`
+- `docs/benchmark/chinese-seed/embedding-candidates/*.json`
+- `docs/benchmark/chinese-seed/embedding-candidates/*.md`
+
+`fixture-chinese-seed-baseline` 只代表本地合同基线，不代表真实语义检索质量。后续如果要接真实 Qwen、BGE-M3、OpenAI 或本地 embedding adapter，应先生成同格式候选报告再讨论是否推进。
+
+第二十一阶段 OpenSpec change `add-bge-m3-local-embedding-adapter` 增加本地 BGE-M3 dense embedding adapter。默认仍是 `mock`，需要显式开启：
+
+```powershell
+$env:EMBEDDING_PROVIDER="bge_m3_local"
+$env:EMBEDDING_MODEL="BAAI/bge-m3"
+$env:EMBEDDING_VECTOR_SIZE="1024"
+$env:BGE_M3_USE_FP16="true"
+$env:BGE_M3_BATCH_SIZE="12"
+$env:BGE_M3_MAX_LENGTH="8192"
+```
+
+安装依赖：
+
+```powershell
+conda run -n GRAPHRAG python -m pip install -r requirements.txt
+```
+
+如果国内直接访问 Hugging Face 下载较慢，可以显式配置镜像 endpoint：
+
+```powershell
+$env:EMBEDDING_HF_ENDPOINT="https://hf-mirror.com"
+```
+
+镜像地址不作为默认值写死进代码；生产或企业内网部署时更推荐提前下载模型，然后指定本地路径：
+
+```powershell
+$env:EMBEDDING_MODEL_PATH="D:\models\bge-m3"
+$env:EMBEDDING_LOCAL_FILES_ONLY="true"
+```
+
+当前 adapter 只使用 BGE-M3 的 `dense_vecs`，不启用 sparse / ColBERT / hybrid retrieval；这些能力会在后续基于 benchmark misses 单独讨论。
+
+第二十二阶段 OpenSpec change `cache-bge-m3-local-model-artifact` 增加本地模型缓存脚本，方便先把 BGE-M3 下载好，后续本地和内网部署直接复用模型目录：
+
+```powershell
+conda run -n GRAPHRAG python scripts/download_bge_m3_model.py `
+  --output-dir models/bge-m3
+```
+
+国内网络较慢时，可以显式使用 Hugging Face 兼容镜像：
+
+```powershell
+conda run -n GRAPHRAG python scripts/download_bge_m3_model.py `
+  --output-dir models/bge-m3 `
+  --hf-endpoint https://hf-mirror.com
+```
+
+如果 Hugging Face 镜像 metadata 兼容性不稳定，可以改用 ModelScope 下载源：
+
+```powershell
+conda run -n GRAPHRAG python scripts/download_bge_m3_model.py `
+  --source modelscope `
+  --output-dir models/bge-m3
+```
+
+下载完成后会生成：
+
+```text
+models/bge-m3/model-manifest.json
+```
+
+`models/` 已加入 `.gitignore`，模型文件不会进入仓库。内网部署时拷贝整个 `models/bge-m3` 目录，然后配置：
+
+```powershell
+$env:EMBEDDING_PROVIDER="bge_m3_local"
+$env:EMBEDDING_MODEL_PATH="D:\models\bge-m3"
+$env:EMBEDDING_LOCAL_FILES_ONLY="true"
+$env:EMBEDDING_VECTOR_SIZE="1024"
+```
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

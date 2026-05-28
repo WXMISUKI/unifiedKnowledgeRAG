@@ -98,6 +98,13 @@ class EmbeddingCandidateEvaluation:
     markdown_path: Path | None = None
 
 
+@dataclass(frozen=True)
+class ChineseSeedEvidenceBundle:
+    retrieval_evaluations: list[RetrievalCandidateEvaluation]
+    embedding_evaluations: list[EmbeddingCandidateEvaluation]
+    output_dir: Path
+
+
 def load_benchmark_cases(path: Path) -> list[RetrievalBenchmarkCase]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     return [RetrievalBenchmarkCase(**item) for item in payload]
@@ -173,6 +180,23 @@ def qdrant_retrieval_candidate(settings: Settings | None = None) -> RetrievalCan
     )
 
 
+def fixture_chinese_seed_retrieval_candidate() -> RetrievalCandidate:
+    return RetrievalCandidate(
+        id="fixture-chinese-seed-baseline",
+        backend="fixture",
+        description=(
+            "Fixture baseline for the local Chinese benchmark seed; "
+            "contract evidence only, not semantic retrieval quality."
+        ),
+        metadata={
+            "benchmark_seed": "chinese-enterprise-support-v1",
+            "embedding": "none",
+            "vector_store": "none",
+            "quality_claim": "contract-baseline-only",
+        },
+    )
+
+
 def default_embedding_candidates() -> list[EmbeddingCandidate]:
     return [
         EmbeddingCandidate(
@@ -217,7 +241,7 @@ def default_embedding_candidates() -> list[EmbeddingCandidate]:
             model_name="bge-m3",
             deployment_mode="local-or-private-network",
             language_profile="chinese-heavy-and-multilingual",
-            vector_dimension=None,
+            vector_dimension=1024,
             data_residency="private-network-capable",
             operational_complexity="medium-high",
             reranker_compatibility="strong-local-reranker-ecosystem",
@@ -226,6 +250,7 @@ def default_embedding_candidates() -> list[EmbeddingCandidate]:
             private_network_supported=True,
             notes=[
                 "Local route is suitable for private data constraints.",
+                "Dense embedding adapter is available as an opt-in local path.",
                 "Runtime footprint and serving stack still need benchmark evidence.",
             ],
         ),
@@ -278,6 +303,28 @@ def evaluate_embedding_candidates(
             )
         )
     return evaluations
+
+
+def export_chinese_seed_evidence_bundle(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    base_settings: Settings | None = None,
+) -> ChineseSeedEvidenceBundle:
+    cases = load_benchmark_cases(cases_path)
+    retrieval_evaluations = evaluate_retrieval_candidates(
+        cases=cases,
+        candidates=[fixture_chinese_seed_retrieval_candidate()],
+        base_settings=base_settings or Settings(rag_retrieval_backend="fixture"),
+        output_dir=output_dir / "retrieval-candidates",
+    )
+    embedding_evaluations = evaluate_embedding_candidates(
+        output_dir=output_dir / "embedding-candidates",
+    )
+    return ChineseSeedEvidenceBundle(
+        retrieval_evaluations=retrieval_evaluations,
+        embedding_evaluations=embedding_evaluations,
+        output_dir=output_dir,
+    )
 
 
 def benchmark_report_to_dict(report: RetrievalBenchmarkReport) -> dict:

@@ -1,0 +1,37 @@
+{
+  "candidate": {
+    "id": "bge-m3-local-candidate",
+    "provider_family": "local",
+    "model_name": "bge-m3",
+    "deployment_mode": "local-or-private-network",
+    "language_profile": "chinese-heavy-and-multilingual",
+    "vector_dimension": 1024,
+    "data_residency": "private-network-capable",
+    "operational_complexity": "medium-high",
+    "reranker_compatibility": "strong-local-reranker-ecosystem",
+    "approval_status": "candidate",
+    "chinese_heavy_suitable": true,
+    "private_network_supported": true,
+    "notes": [
+      "Local route is suitable for private data constraints.",
+      "Dense embedding adapter is available as an opt-in local path.",
+      "Runtime footprint and serving stack still need benchmark evidence."
+    ]
+  },
+  "readiness_status": "review_required",
+  "criteria_coverage": {
+    "language_profile": true,
+    "chinese_heavy_suitable": true,
+    "private_network_supported": true,
+    "vector_dimension": true,
+    "data_residency": true,
+    "operational_complexity": true,
+    "reranker_compatibility": true
+  },
+  "decision_notes": [
+    "Local route is suitable for private data constraints.",
+    "Dense embedding adapter is available as an opt-in local path.",
+    "Runtime footprint and serving stack still need benchmark evidence.",
+    "This evaluation does not approve or invoke the embedding provider."
+  ]
+}
