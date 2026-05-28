@@ -12,6 +12,7 @@ from app.services.retrieval_benchmark import (
     EmbeddingCandidate,
     export_chunking_strategy_evaluation,
     export_chinese_seed_evidence_bundle,
+    export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -23,6 +24,7 @@ from app.services.retrieval_benchmark import (
     render_chunking_strategy_evaluation_markdown,
     render_embedding_candidate_markdown,
     render_benchmark_report_markdown,
+    render_qdrant_chunking_comparison_markdown,
     render_qdrant_threshold_recommendation_markdown,
     render_qdrant_threshold_sweep_evidence_markdown,
     fixture_chinese_seed_retrieval_candidate,
@@ -30,6 +32,7 @@ from app.services.retrieval_benchmark import (
     run_retrieval_benchmark,
     ThresholdRecommendationGates,
     chunking_strategy_evaluation_to_dict,
+    qdrant_chunking_comparison_to_dict,
     qdrant_threshold_recommendation_to_dict,
     qdrant_threshold_sweep_evidence_to_dict,
 )
@@ -644,6 +647,130 @@ def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):
     assert "# Qdrant BGE-M3 Threshold Sweep Evidence" in markdown
     assert "| 0.1000 | 1 | 1.0000 | 1.0000 | 0.0000 |" in markdown
     assert render_qdrant_threshold_sweep_evidence_markdown(report) == markdown
+
+
+def test_export_qdrant_bge_chunking_comparison_evidence(monkeypatch, tmp_path):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款。\n\n"
+        "退款处理需要保留订单编号。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "refund-basic",
+    "category": "policy",
+    "difficulty": "easy",
+    "query": "客户三天未发货能否退款？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#section-3",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    clients = []
+
+    def fake_create_client(settings):
+        client = FakeQdrantClient(
+            collection_exists=False,
+            hits=[
+                {
+                    "score": 0.91,
+                    "payload": {
+                        "source_id": "refund_policy_docs",
+                        "document_id": "refund_policy_2026",
+                        "title": "售后退款规则",
+                        "text": "客户三天未发货可以申请退款。",
+                        "citation": "refund_policy_2026#section-3",
+                    },
+                }
+            ],
+        )
+        clients.append(client)
+        return client
+
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        fake_create_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_chunking_comparison_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert len(clients) == 2
+    assert report.strategies == ["markdown-paragraph-v1", "markdown-section-v1"]
+    assert report.json_path == tmp_path / "evidence" / "qdrant-bge-m3-chunking-comparison.json"
+    assert report.markdown_path == tmp_path / "evidence" / "qdrant-bge-m3-chunking-comparison.md"
+    assert [
+        item.indexed_sources["refund_policy_docs"]["chunk_count"]
+        for item in report.reports
+    ] == [2, 1]
+    assert [
+        item.metadata["chunking_strategy"]
+        for item in report.reports
+    ] == ["markdown-paragraph-v1", "markdown-section-v1"]
+
+    payload = json.loads(report.json_path.read_text(encoding="utf-8"))
+    markdown = report.markdown_path.read_text(encoding="utf-8")
+
+    assert payload == qdrant_chunking_comparison_to_dict(report)
+    assert payload["summary"][0]["chunk_count"] == 2
+    assert payload["summary"][1]["chunk_count"] == 1
+    assert "# Qdrant BGE-M3 Chunking Comparison Evidence" in markdown
+    assert "| markdown-paragraph-v1 | 2 | 1.0000 | 1.0000 | 0.0000 |" in markdown
+    assert "| markdown-section-v1 | 1 | 1.0000 | 1.0000 | 0.0000 |" in markdown
+    assert render_qdrant_chunking_comparison_markdown(report) == markdown
+
+
+def test_qdrant_bge_chunking_comparison_rejects_invalid_strategies(tmp_path):
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=tmp_path / "sources",
+        rag_index_dir=tmp_path / "index",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    for strategies, expected_message in [
+        ([], "At least one chunking strategy"),
+        (["markdown-paragraph-v1", "markdown-paragraph-v1"], "Duplicate chunking"),
+        (["unknown-v1"], "Unsupported chunking"),
+    ]:
+        try:
+            export_qdrant_bge_chunking_comparison_evidence(
+                output_dir=tmp_path / "evidence",
+                strategies=strategies,
+                settings=settings,
+            )
+        except ValueError as error:
+            assert expected_message in str(error)
+        else:
+            raise AssertionError("Expected invalid chunking comparison to be rejected")
 
 
 def test_qdrant_bge_threshold_sweep_rejects_invalid_thresholds(tmp_path):

@@ -688,6 +688,35 @@ docs/benchmark/chinese-seed/chunking-candidates/chunking-strategy-candidates.md
 
 第三十二阶段 OpenSpec change `add-markdown-section-chunking-candidate` 将 `markdown-section-v1` 从 planned 推进为 runnable candidate。它会按 markdown heading 聚合段落并生成 `markdown-section-v1` metadata，但 `load_qdrant_source_chunks(...)` 和运行时 Qdrant ingestion 仍使用 `markdown-paragraph-v1`。当前 evidence 只说明 section candidate 能生成稳定 chunk，还不声明检索质量优于 paragraph baseline；下一步需要把 section candidate 接入独立 Qdrant smoke，对比实际 retrieval metrics。
 
+第三十三阶段 OpenSpec change `compare-qdrant-chunking-strategies` 增加 Qdrant+BGE-M3 分块策略 smoke 对比证据导出。它允许在不改变运行时默认 ingestion 的前提下，用同一组中文 seed cases 对比 `markdown-paragraph-v1` 和 `markdown-section-v1`：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --output-dir docs/benchmark/chinese-seed/chunking-candidates `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7 `
+  --chunking-comparison
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/chunking-candidates/qdrant-bge-m3-chunking-comparison.json
+docs/benchmark/chinese-seed/chunking-candidates/qdrant-bge-m3-chunking-comparison.md
+```
+
+当前本地 seed evidence 显示：
+
+| Strategy | Chunk Count | Hit Rate | Citation Match Rate | Empty Handling Rate | Long-Section Hit Rate | Long-Section Citation Match Rate |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `markdown-paragraph-v1` | 11 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| `markdown-section-v1` | 2 | 0.6667 | 0.3333 | 1.0000 | 0.5000 | 0.0000 |
+
+结论：`markdown-section-v1` 虽然显著减少 chunk 数，但当前会损失细粒度 citation match 和部分命中；因此默认 Qdrant ingestion 继续保留 `markdown-paragraph-v1`。下一步更适合推进 `token-window-v1` 或“section + paragraph 多粒度索引”候选，而不是直接切换到纯 section chunking。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

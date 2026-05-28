@@ -8,6 +8,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from app.config import get_settings
 from app.services.retrieval_benchmark import (
+    export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -34,6 +35,19 @@ def main() -> None:
     if args.rag_score_threshold is not None:
         update["rag_score_threshold"] = args.rag_score_threshold
     settings = get_settings().model_copy(update=update)
+    if args.chunking_comparison:
+        report = export_qdrant_bge_chunking_comparison_evidence(
+            output_dir=args.output_dir,
+            strategies=args.chunking_strategy,
+            cases_path=args.cases_path,
+            source_ids=args.source_id,
+            case_ids=args.case_id,
+            settings=settings,
+        )
+        print(f"Qdrant BGE-M3 chunking comparison evidence ready: {report.json_path}")
+        print(f"Qdrant BGE-M3 chunking comparison evidence ready: {report.markdown_path}")
+        return
+
     if args.threshold_sweep:
         report = export_qdrant_bge_threshold_sweep_evidence(
             output_dir=args.output_dir,
@@ -112,6 +126,22 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "Run threshold sweep evidence for this threshold. "
+            "Can be supplied multiple times."
+        ),
+    )
+    parser.add_argument(
+        "--chunking-comparison",
+        action="store_true",
+        help=(
+            "Compare Qdrant+BGE smoke retrieval evidence across chunking strategies."
+        ),
+    )
+    parser.add_argument(
+        "--chunking-strategy",
+        action="append",
+        default=None,
+        help=(
+            "Chunking strategy to include in --chunking-comparison. "
             "Can be supplied multiple times."
         ),
     )

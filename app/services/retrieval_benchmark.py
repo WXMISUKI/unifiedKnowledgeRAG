@@ -161,6 +161,15 @@ class QdrantThresholdRecommendation:
 
 
 @dataclass(frozen=True)
+class QdrantChunkingComparisonReport:
+    strategies: list[str]
+    reports: list[QdrantSmokeEvidenceReport]
+    metadata: dict[str, str | list[str]]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
 class ChunkingStrategyCandidate:
     id: str
     description: str
@@ -440,6 +449,7 @@ def export_qdrant_bge_smoke_evidence(
     case_ids: list[str] | None = None,
     settings: Settings | None = None,
     write_files: bool = True,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
 ) -> QdrantSmokeEvidenceReport:
     settings = settings or get_settings()
     source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
@@ -455,6 +465,7 @@ def export_qdrant_bge_smoke_evidence(
         settings=settings,
         source_ids=source_ids,
         embedding_adapter=embedding_adapter,
+        chunking_strategy=chunking_strategy,
     )
     case_results = [
         _run_qdrant_smoke_case(
@@ -472,7 +483,7 @@ def export_qdrant_bge_smoke_evidence(
     smoke_report = QdrantSmokeEvidenceReport(
         candidate=qdrant_bge_smoke_candidate(settings),
         report=report,
-        metadata=_qdrant_smoke_metadata(settings, source_ids),
+        metadata=_qdrant_smoke_metadata(settings, source_ids, chunking_strategy),
         indexed_sources=indexed_sources,
     )
     json_path = None
@@ -503,6 +514,7 @@ def export_qdrant_bge_threshold_sweep_evidence(
     source_ids: list[str] | None = None,
     case_ids: list[str] | None = None,
     settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
 ) -> QdrantThresholdSweepEvidenceReport:
     settings = settings or get_settings()
     validated_thresholds = _validate_thresholds(thresholds)
@@ -516,6 +528,7 @@ def export_qdrant_bge_threshold_sweep_evidence(
                 update={"rag_score_threshold": threshold}
             ),
             write_files=False,
+            chunking_strategy=chunking_strategy,
         )
         for threshold in validated_thresholds
     ]
@@ -527,6 +540,7 @@ def export_qdrant_bge_threshold_sweep_evidence(
             settings=settings,
             source_ids=source_ids or ["refund_policy_docs", "logistics_faq"],
             thresholds=validated_thresholds,
+            chunking_strategy=chunking_strategy,
         ),
     )
     json_path = export_qdrant_threshold_sweep_evidence_json(
@@ -542,6 +556,67 @@ def export_qdrant_bge_threshold_sweep_evidence(
         thresholds=sweep_report.thresholds,
         reports=sweep_report.reports,
         metadata=sweep_report.metadata,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_chunking_comparison_evidence(
+    output_dir: Path,
+    strategies: list[str] | None = None,
+    cases_path: Path = Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+) -> QdrantChunkingComparisonReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    if strategies is None:
+        strategies = [
+            QDRANT_CHUNKING_STRATEGY,
+            QDRANT_SECTION_CHUNKING_STRATEGY,
+        ]
+    _validate_chunking_strategies(strategies)
+    reports = [
+        export_qdrant_bge_smoke_evidence(
+            output_dir=output_dir,
+            cases_path=cases_path,
+            source_ids=source_ids,
+            case_ids=case_ids,
+            settings=settings,
+            write_files=False,
+            chunking_strategy=strategy,
+        )
+        for strategy in strategies
+    ]
+    comparison = QdrantChunkingComparisonReport(
+        strategies=strategies,
+        reports=reports,
+        metadata={
+            "created_at": datetime.now(UTC).isoformat(),
+            "embedding_provider": settings.embedding_provider,
+            "embedding_model": settings.embedding_model,
+            "embedding_model_path": (
+                str(settings.embedding_model_path)
+                if settings.embedding_model_path is not None
+                else ""
+            ),
+            "rag_score_threshold": str(settings.rag_score_threshold),
+            "source_ids": source_ids,
+        },
+    )
+    json_path = export_qdrant_chunking_comparison_json(
+        comparison,
+        output_dir / "qdrant-bge-m3-chunking-comparison.json",
+    )
+    markdown_path = export_qdrant_chunking_comparison_markdown(
+        comparison,
+        output_dir / "qdrant-bge-m3-chunking-comparison.md",
+    )
+    return QdrantChunkingComparisonReport(
+        strategies=comparison.strategies,
+        reports=comparison.reports,
+        metadata=comparison.metadata,
         json_path=json_path,
         markdown_path=markdown_path,
     )
@@ -739,6 +814,23 @@ def qdrant_threshold_sweep_evidence_to_dict(
     }
 
 
+def qdrant_chunking_comparison_to_dict(
+    report: QdrantChunkingComparisonReport,
+) -> dict:
+    return {
+        "metadata": report.metadata,
+        "strategies": report.strategies,
+        "summary": [
+            _chunking_comparison_summary(strategy, smoke_report)
+            for strategy, smoke_report in zip(report.strategies, report.reports)
+        ],
+        "reports": [
+            qdrant_smoke_evidence_to_dict(smoke_report)
+            for smoke_report in report.reports
+        ],
+    }
+
+
 def qdrant_threshold_recommendation_to_dict(
     recommendation: QdrantThresholdRecommendation,
 ) -> dict:
@@ -843,6 +935,22 @@ def export_qdrant_threshold_sweep_evidence_json(
     path.write_text(
         json.dumps(
             qdrant_threshold_sweep_evidence_to_dict(report),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_qdrant_chunking_comparison_json(
+    report: QdrantChunkingComparisonReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            qdrant_chunking_comparison_to_dict(report),
             ensure_ascii=False,
             indent=2,
         ),
@@ -1053,6 +1161,60 @@ def render_qdrant_threshold_sweep_evidence_markdown(
     return "\n".join(lines)
 
 
+def render_qdrant_chunking_comparison_markdown(
+    report: QdrantChunkingComparisonReport,
+) -> str:
+    lines = [
+        "# Qdrant BGE-M3 Chunking Comparison Evidence",
+        "",
+        "## Metadata",
+        "",
+        "| Key | Value |",
+        "| --- | --- |",
+    ]
+    for key, value in sorted(report.metadata.items()):
+        lines.append(f"| {key} | {_markdown_value(value)} |")
+    lines.extend([
+        "",
+        "## Strategy Summary",
+        "",
+        "| Strategy | Chunk Count | Hit Rate | Citation Match Rate | Empty Handling Rate | Long-Section Hit Rate | Long-Section Citation Match Rate |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ])
+    for strategy, smoke_report in zip(report.strategies, report.reports):
+        summary = _chunking_comparison_summary(strategy, smoke_report)
+        lines.append(
+            f"| {strategy} | {summary['chunk_count']} | "
+            f"{summary['hit_rate']:.4f} | "
+            f"{summary['citation_match_rate']:.4f} | "
+            f"{summary['empty_handling_rate']:.4f} | "
+            f"{summary['long_section_hit_rate']:.4f} | "
+            f"{summary['long_section_citation_match_rate']:.4f} |"
+        )
+    lines.extend(["", "## Case Results By Strategy", ""])
+    for strategy, smoke_report in zip(report.strategies, report.reports):
+        lines.extend([
+            f"### {strategy}",
+            "",
+            "| Case | Category | Hit@K | Citation Match | Empty Handling | Returned Citations |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ])
+        for case in smoke_report.report.cases:
+            empty = (
+                ""
+                if case.empty_query_handling is None
+                else str(case.empty_query_handling).lower()
+            )
+            lines.append(
+                f"| {case.id} | {case.category} | "
+                f"{str(case.hit_at_k).lower()} | "
+                f"{str(case.citation_match).lower()} | {empty} | "
+                f"{', '.join(case.returned_citations)} |"
+            )
+        lines.append("")
+    return "\n".join(lines)
+
+
 def render_qdrant_threshold_recommendation_markdown(
     recommendation: QdrantThresholdRecommendation,
 ) -> str:
@@ -1217,6 +1379,18 @@ def export_qdrant_threshold_sweep_evidence_markdown(
     return path
 
 
+def export_qdrant_chunking_comparison_markdown(
+    report: QdrantChunkingComparisonReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_qdrant_chunking_comparison_markdown(report),
+        encoding="utf-8",
+    )
+    return path
+
+
 def export_qdrant_threshold_recommendation_markdown(
     recommendation: QdrantThresholdRecommendation,
     path: Path,
@@ -1246,6 +1420,7 @@ def _index_qdrant_smoke_sources(
     settings: Settings,
     source_ids: list[str],
     embedding_adapter,
+    chunking_strategy: str,
 ) -> dict[str, dict[str, str | int]]:
     status, reason = ensure_qdrant_collection(client, settings)
     if status != "ready":
@@ -1256,7 +1431,7 @@ def _index_qdrant_smoke_sources(
     for source_id in source_ids:
         job_id = f"smoke_{uuid4().hex}"
         chunks = embed_qdrant_chunks(
-            load_qdrant_source_chunks(source_id, settings),
+            _load_smoke_chunks(source_id, settings, chunking_strategy),
             embedding_adapter,
         )
         chunk_count = upsert_qdrant_chunks(client, chunks, settings)
@@ -1272,6 +1447,7 @@ def _index_qdrant_smoke_sources(
             "job_id": job_id,
             "chunk_count": chunk_count,
             "status": "ready",
+            "chunking_strategy": chunking_strategy,
         }
     return indexed_sources
 
@@ -1321,6 +1497,7 @@ def _run_qdrant_smoke_case(
 def _qdrant_smoke_metadata(
     settings: Settings,
     source_ids: list[str],
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
 ) -> dict[str, str | list[str] | dict[str, str]]:
     return {
         "created_at": datetime.now(UTC).isoformat(),
@@ -1338,6 +1515,7 @@ def _qdrant_smoke_metadata(
         ),
         "embedding_local_files_only": str(settings.embedding_local_files_only).lower(),
         "source_ids": source_ids,
+        "chunking_strategy": chunking_strategy,
     }
 
 
@@ -1345,8 +1523,9 @@ def _qdrant_threshold_sweep_metadata(
     settings: Settings,
     source_ids: list[str],
     thresholds: list[float],
+    chunking_strategy: str,
 ) -> dict[str, str | list[str] | dict[str, str]]:
-    metadata = _qdrant_smoke_metadata(settings, source_ids)
+    metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
     metadata["created_at"] = datetime.now(UTC).isoformat()
     metadata["thresholds"] = [str(threshold) for threshold in thresholds]
     metadata["rag_score_threshold"] = "sweep"
@@ -1394,6 +1573,17 @@ def _validate_thresholds(thresholds: list[float]) -> list[float]:
     return sorted(normalized)
 
 
+def _validate_chunking_strategies(strategies: list[str]) -> None:
+    supported = {QDRANT_CHUNKING_STRATEGY, QDRANT_SECTION_CHUNKING_STRATEGY}
+    if not strategies:
+        raise ValueError("At least one chunking strategy is required.")
+    unsupported = [strategy for strategy in strategies if strategy not in supported]
+    if unsupported:
+        raise ValueError(f"Unsupported chunking strategies: {unsupported}")
+    if len(set(strategies)) != len(strategies):
+        raise ValueError("Duplicate chunking strategies are not allowed.")
+
+
 def _validate_recommendation_gates(gates: ThresholdRecommendationGates) -> None:
     values = [
         gates.min_hit_rate,
@@ -1413,6 +1603,43 @@ def _threshold_row_passes_gates(
         and float(row["citation_match_rate"]) >= gates.min_citation_match_rate
         and float(row["empty_handling_rate"]) >= gates.min_empty_handling_rate
     )
+
+
+def _load_smoke_chunks(
+    source_id: str,
+    settings: Settings,
+    chunking_strategy: str,
+):
+    if chunking_strategy == QDRANT_CHUNKING_STRATEGY:
+        return load_qdrant_source_chunks(source_id, settings)
+    if chunking_strategy == QDRANT_SECTION_CHUNKING_STRATEGY:
+        return _load_section_candidate_chunks(source_id, settings)
+    raise ValueError(f"Unsupported chunking strategy: {chunking_strategy}")
+
+
+def _chunking_comparison_summary(
+    strategy: str,
+    smoke_report: QdrantSmokeEvidenceReport,
+) -> dict[str, float | int | str]:
+    category = smoke_report.report.summary.category_summaries.get(
+        "long-section",
+        {
+            "hit_rate": 0.0,
+            "citation_match_rate": 0.0,
+        },
+    )
+    return {
+        "strategy": strategy,
+        "chunk_count": sum(
+            int(source["chunk_count"])
+            for source in smoke_report.indexed_sources.values()
+        ),
+        "hit_rate": smoke_report.report.summary.hit_rate,
+        "citation_match_rate": smoke_report.report.summary.citation_match_rate,
+        "empty_handling_rate": smoke_report.report.summary.empty_handling_rate,
+        "long_section_hit_rate": float(category["hit_rate"]),
+        "long_section_citation_match_rate": float(category["citation_match_rate"]),
+    }
 
 
 def _evaluate_chunking_candidate(

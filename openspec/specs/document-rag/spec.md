@@ -281,6 +281,11 @@ The system SHALL generate section-aware markdown evidence chunks for local evalu
 - **WHEN** a known local source is chunked with the section-aware candidate
 - **THEN** the generated chunks use deterministic section candidate citations rather than generic fallback citations
 
+#### Scenario: Section candidate can be used in smoke evaluation
+
+- **WHEN** local Qdrant smoke evaluation explicitly selects `markdown-section-v1`
+- **THEN** the smoke path indexes section chunks for comparison evidence without changing default ingestion
+
 #### Scenario: Default ingestion remains paragraph based
 
 - **WHEN** Qdrant source ingestion loads chunks for runtime indexing
