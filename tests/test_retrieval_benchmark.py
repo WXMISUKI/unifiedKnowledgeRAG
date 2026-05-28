@@ -447,6 +447,7 @@ def test_export_qdrant_bge_smoke_evidence_uses_single_client(monkeypatch, tmp_pa
         rag_source_dir=source_dir,
         rag_index_dir=tmp_path / "index",
         qdrant_url=":memory:",
+        rag_score_threshold=0.37,
         embedding_provider="mock",
         embedding_vector_size=3,
         qdrant_vector_size=3,
@@ -467,4 +468,5 @@ def test_export_qdrant_bge_smoke_evidence_uses_single_client(monkeypatch, tmp_pa
     assert report.markdown_path.exists()
     assert report.indexed_sources["refund_policy_docs"]["chunk_count"] == 1
     assert report.report.summary.hit_rate == 1.0
+    assert report.metadata["rag_score_threshold"] == "0.37"
     assert "qdrant-bge-m3-smoke" in report.markdown_path.read_text(encoding="utf-8")

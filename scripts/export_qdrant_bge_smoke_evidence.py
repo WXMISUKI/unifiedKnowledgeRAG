@@ -12,22 +12,23 @@ from app.services.retrieval_benchmark import export_qdrant_bge_smoke_evidence
 
 def main() -> None:
     args = _parse_args()
-    settings = get_settings().model_copy(
-        update={
-            "rag_retrieval_backend": "qdrant",
-            "qdrant_url": args.qdrant_url,
-            "qdrant_collection": args.qdrant_collection,
-            "qdrant_vector_name": args.qdrant_vector_name,
-            "qdrant_vector_size": args.qdrant_vector_size,
-            "embedding_provider": args.embedding_provider,
-            "embedding_model": args.embedding_model,
-            "embedding_model_path": args.embedding_model_path,
-            "embedding_vector_size": args.embedding_vector_size,
-            "embedding_local_files_only": args.embedding_local_files_only,
-            "rag_source_dir": args.source_dir,
-            "rag_index_dir": args.index_dir,
-        }
-    )
+    update = {
+        "rag_retrieval_backend": "qdrant",
+        "qdrant_url": args.qdrant_url,
+        "qdrant_collection": args.qdrant_collection,
+        "qdrant_vector_name": args.qdrant_vector_name,
+        "qdrant_vector_size": args.qdrant_vector_size,
+        "embedding_provider": args.embedding_provider,
+        "embedding_model": args.embedding_model,
+        "embedding_model_path": args.embedding_model_path,
+        "embedding_vector_size": args.embedding_vector_size,
+        "embedding_local_files_only": args.embedding_local_files_only,
+        "rag_source_dir": args.source_dir,
+        "rag_index_dir": args.index_dir,
+    }
+    if args.rag_score_threshold is not None:
+        update["rag_score_threshold"] = args.rag_score_threshold
+    settings = get_settings().model_copy(update=update)
     report = export_qdrant_bge_smoke_evidence(
         output_dir=args.output_dir,
         cases_path=args.cases_path,
@@ -71,6 +72,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--qdrant-collection", default="knowledge_chunks")
     parser.add_argument("--qdrant-vector-name", default="text-dense")
     parser.add_argument("--qdrant-vector-size", type=int, default=1024)
+    parser.add_argument("--rag-score-threshold", type=float, default=None)
     parser.add_argument("--embedding-provider", default="bge_m3_local")
     parser.add_argument("--embedding-model", default="BAAI/bge-m3")
     parser.add_argument("--embedding-model-path", type=Path, default=Path("models/bge-m3"))

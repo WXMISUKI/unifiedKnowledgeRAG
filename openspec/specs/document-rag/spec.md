@@ -153,6 +153,25 @@ The system SHALL query Qdrant with an already-created query vector and map valid
 - **WHEN** the Qdrant adapter is called for vector query
 - **THEN** the caller supplies the query vector and the adapter does not choose or call an embedding model
 
+### Requirement: Qdrant retrieval respects score threshold
+
+The system SHALL filter Qdrant retrieval hits using the configured retrieval score threshold before returning evidence documents.
+
+#### Scenario: Qdrant hit meets threshold
+
+- **WHEN** a Qdrant hit has valid evidence payload and score greater than or equal to `RAG_SCORE_THRESHOLD`
+- **THEN** the hit is returned as an `EvidenceDocument`
+
+#### Scenario: Qdrant hit is below threshold
+
+- **WHEN** a Qdrant hit has valid evidence payload but score below `RAG_SCORE_THRESHOLD`
+- **THEN** the hit is omitted from returned evidence
+
+#### Scenario: Qdrant retrieval has no hits above threshold
+
+- **WHEN** all Qdrant hits are below `RAG_SCORE_THRESHOLD`
+- **THEN** retrieval returns an empty document list using the existing successful empty retrieval contract
+
 ### Requirement: Embedding adapters expose a provider-neutral contract
 
 The system SHALL convert text into dense vectors through a provider-neutral embedding adapter interface.
@@ -221,12 +240,22 @@ The system SHALL report Qdrant backend readiness from both Qdrant collection rea
 
 ### Requirement: Qdrant source ingestion builds evidence chunks
 
-The system SHALL convert configured local source documents into Qdrant evidence chunks during explicit Qdrant ingestion.
+The system SHALL convert configured local source documents into Qdrant evidence chunks during explicit Qdrant ingestion, using stable business citation anchors for known local benchmark sources and deterministic chunk fallback citations for other content.
 
 #### Scenario: Markdown source is chunked
 
 - **WHEN** Qdrant ingestion builds an index for a configured markdown source
 - **THEN** the source content is converted into deterministic evidence chunks with stable source, document, chunk, title, text, and citation metadata
+
+#### Scenario: Known local source emits business citation
+
+- **WHEN** Qdrant ingestion chunks a known local benchmark source paragraph with an approved citation anchor
+- **THEN** the chunk citation uses that source-specific business anchor instead of a generic `chunk-N` citation
+
+#### Scenario: Unknown paragraph uses chunk fallback
+
+- **WHEN** Qdrant ingestion chunks a source or paragraph without a source-specific business anchor
+- **THEN** the chunk citation falls back to `document_id#chunk-N`
 
 #### Scenario: Chunk metadata is preserved
 

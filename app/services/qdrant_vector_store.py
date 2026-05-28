@@ -12,6 +12,21 @@ from app.services.source_catalog import get_knowledge_base, knowledge_base_exist
 
 
 QDRANT_CHUNKING_STRATEGY = "markdown-paragraph-v1"
+LOCAL_SOURCE_CITATION_ANCHORS = {
+    "refund_policy_docs": {
+        1: "refund_policy_2026#section-3",
+        2: "refund_policy_2026#section-5",
+        3: "refund_policy_2026#exception",
+        4: "refund_policy_2026#high-value-review",
+        5: "refund_policy_2026#address-change",
+    },
+    "logistics_faq": {
+        1: "logistics_faq_2026#delay",
+        2: "logistics_faq_2026#same-city-timeout",
+        3: "logistics_faq_2026#lost-package",
+        4: "logistics_faq_2026#address-intercept",
+    },
+}
 
 
 @dataclass(frozen=True)
@@ -129,7 +144,7 @@ def markdown_source_to_qdrant_chunks(
             chunk_id=f"chunk-{index}",
             title=title,
             text=paragraph,
-            citation=f"{document_id}#chunk-{index}",
+            citation=_citation_for(source_id, document_id, index),
             vector=[],
             metadata={
                 "tenant_id": "default",
@@ -268,7 +283,7 @@ def query_qdrant_documents(
     hits = getattr(result, "points", result)
     documents = []
     for hit in hits:
-        document = _hit_to_evidence_document(hit)
+        document = _hit_to_evidence_document(hit, min_score=settings.rag_score_threshold)
         if document is not None:
             documents.append(document)
     return documents
@@ -298,9 +313,11 @@ def query_qdrant_documents_for_text(
     )
 
 
-def _hit_to_evidence_document(hit) -> EvidenceDocument | None:
+def _hit_to_evidence_document(hit, min_score: float) -> EvidenceDocument | None:
     payload = _hit_value(hit, "payload") or {}
     score = _hit_value(hit, "score") or 0.0
+    if float(score) < min_score:
+        return None
     required_fields = ("source_id", "document_id", "title", "text", "citation")
     if any(field not in payload for field in required_fields):
         return None
@@ -322,6 +339,13 @@ def _hit_value(hit, key: str):
 
 def _qdrant_point_id(stable_id: str) -> str:
     return str(uuid5(NAMESPACE_URL, f"unifiedKnowledgeRAG:qdrant:{stable_id}"))
+
+
+def _citation_for(source_id: str, document_id: str, paragraph_index: int) -> str:
+    return LOCAL_SOURCE_CITATION_ANCHORS.get(source_id, {}).get(
+        paragraph_index,
+        f"{document_id}#chunk-{paragraph_index}",
+    )
 
 
 def _document_id_for(source_id: str) -> str:

@@ -543,6 +543,7 @@ conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
   --source-id refund_policy_docs `
   --source-id logistics_faq `
   --embedding-model-path models/bge-m3 `
+  --rag-score-threshold 0.5 `
   --embedding-local-files-only
 ```
 
@@ -554,6 +555,40 @@ docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-smoke.md
 ```
 
 这个报告是“集成 smoke evidence”，不是生产验收。若命中率或 citation match 低，优先把它视为 chunking、top-k、reranker、hybrid retrieval 或 benchmark expected citation 需要继续设计的证据。
+
+第二十五阶段 OpenSpec change `add-qdrant-score-threshold` 让 Qdrant retrieval 使用 `RAG_SCORE_THRESHOLD` 过滤低置信 hits。该阈值会写入 smoke evidence metadata，便于比较不同阈值下的 hit rate 和 empty handling：
+
+```powershell
+$env:RAG_SCORE_THRESHOLD="0.5"
+
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --output-dir docs/benchmark/chinese-seed/retrieval-candidates `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only
+```
+
+阈值不是越高越好：过低会让 empty 问题返回噪声证据，过高会压掉真实命中。后续应基于导出的 smoke/benchmark 报告讨论默认阈值、按 backend/model 区分阈值、以及是否引入 reranker 或 empty-intent 检测。
+
+第二十六阶段 OpenSpec change `align-qdrant-markdown-citations` 将本地 Qdrant markdown ingestion 的 citation 从通用 `chunk-N` 对齐到业务锚点。当前只覆盖本地 fixture source，用于让中文 seed benchmark 的 citation match 具备评估意义：
+
+```text
+refund_policy_docs:
+  chunk-1 -> refund_policy_2026#section-3
+  chunk-2 -> refund_policy_2026#section-5
+  chunk-3 -> refund_policy_2026#exception
+  chunk-4 -> refund_policy_2026#high-value-review
+  chunk-5 -> refund_policy_2026#address-change
+
+logistics_faq:
+  chunk-1 -> logistics_faq_2026#delay
+  chunk-2 -> logistics_faq_2026#same-city-timeout
+  chunk-3 -> logistics_faq_2026#lost-package
+  chunk-4 -> logistics_faq_2026#address-intercept
+```
+
+未知 source 或未映射段落仍回退到 `document_id#chunk-N`。这不是最终企业文档解析器；后续 PDF/Word/表格、标题层级、显式 anchor、chunk overlap 和多粒度索引仍需要单独设计。
 
 ## 设计文档
 

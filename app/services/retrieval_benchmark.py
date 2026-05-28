@@ -798,6 +798,7 @@ def _qdrant_smoke_metadata(
         "qdrant_collection": settings.qdrant_collection,
         "qdrant_vector_name": settings.qdrant_vector_name,
         "qdrant_vector_size": str(settings.qdrant_vector_size),
+        "rag_score_threshold": str(settings.rag_score_threshold),
         "embedding_provider": settings.embedding_provider,
         "embedding_model": settings.embedding_model,
         "embedding_model_path": (

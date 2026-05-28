@@ -14,11 +14,12 @@
     }
   },
   "metadata": {
-    "created_at": "2026-05-28T12:27:14.651371+00:00",
+    "created_at": "2026-05-28T12:56:52.425995+00:00",
     "qdrant_url": ":memory:",
     "qdrant_collection": "knowledge_chunks",
     "qdrant_vector_name": "text-dense",
     "qdrant_vector_size": "1024",
+    "rag_score_threshold": "0.5",
     "embedding_provider": "bge_m3_local",
     "embedding_model": "BAAI/bge-m3",
     "embedding_model_path": "models\\bge-m3",
@@ -30,12 +31,12 @@
   },
   "indexed_sources": {
     "refund_policy_docs": {
-      "job_id": "smoke_0d9f39383a884faab4f1d41c9a0e9986",
+      "job_id": "smoke_438f033e3b0648bd928d810f2eb052a1",
       "chunk_count": 5,
       "status": "ready"
     },
     "logistics_faq": {
-      "job_id": "smoke_21ecc33cc58e44af91d6405fafb66779",
+      "job_id": "smoke_0ad2225a8b9f44fe9cc7b4f694511f85",
       "chunk_count": 4,
       "status": "ready"
     }
@@ -44,74 +45,74 @@
     "summary": {
       "backend": "qdrant",
       "total_cases": 15,
-      "hit_rate": 0.8,
-      "citation_match_rate": 0.0,
-      "empty_handling_rate": 0.0,
+      "hit_rate": 0.9333,
+      "citation_match_rate": 0.9333,
+      "empty_handling_rate": 0.6667,
       "category_summaries": {
         "cross-source": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "empty": {
           "total_cases": 3,
-          "hit_rate": 0.0,
-          "citation_match_rate": 0.0,
-          "empty_handling_rate": 0.0
+          "hit_rate": 0.6667,
+          "citation_match_rate": 0.6667,
+          "empty_handling_rate": 0.6667
         },
         "evidence": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "exception-policy": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "faq": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "multi-intent": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "multi-source": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "operational-escalation": {
           "total_cases": 2,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "paraphrase": {
           "total_cases": 2,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "policy": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         },
         "sla": {
           "total_cases": 1,
           "hit_rate": 1.0,
-          "citation_match_rate": 0.0,
+          "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
         }
       }
@@ -122,12 +123,12 @@
         "category": "policy",
         "difficulty": "easy",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 268.728,
+        "latency_ms": 265.186,
         "returned_citations": [
-          "refund_policy_2026#chunk-1",
-          "refund_policy_2026#chunk-5"
+          "refund_policy_2026#section-3",
+          "refund_policy_2026#address-change"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -139,12 +140,12 @@
         "category": "faq",
         "difficulty": "easy",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 282.653,
+        "latency_ms": 280.127,
         "returned_citations": [
-          "logistics_faq_2026#chunk-1",
-          "logistics_faq_2026#chunk-2"
+          "logistics_faq_2026#delay",
+          "logistics_faq_2026#same-city-timeout"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -155,32 +156,24 @@
         "id": "empty-moon-warehouse",
         "category": "empty",
         "difficulty": "easy",
-        "hit_at_k": false,
-        "citation_match": false,
-        "empty_query_handling": false,
-        "latency_ms": 249.497,
-        "returned_citations": [
-          "refund_policy_2026#chunk-3",
-          "refund_policy_2026#chunk-5",
-          "refund_policy_2026#chunk-2"
-        ],
-        "returned_source_ids": [
-          "refund_policy_docs",
-          "refund_policy_docs",
-          "refund_policy_docs"
-        ]
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 251.116,
+        "returned_citations": [],
+        "returned_source_ids": []
       },
       {
         "id": "refund-delivery-paraphrase",
         "category": "paraphrase",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 298.833,
+        "latency_ms": 295.903,
         "returned_citations": [
-          "refund_policy_2026#chunk-1",
-          "refund_policy_2026#chunk-5"
+          "refund_policy_2026#section-3",
+          "refund_policy_2026#address-change"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -192,12 +185,12 @@
         "category": "evidence",
         "difficulty": "easy",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 292.235,
+        "latency_ms": 294.237,
         "returned_citations": [
-          "refund_policy_2026#chunk-2",
-          "refund_policy_2026#chunk-4"
+          "refund_policy_2026#section-5",
+          "refund_policy_2026#high-value-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -209,12 +202,12 @@
         "category": "paraphrase",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 288.822,
+        "latency_ms": 299.145,
         "returned_citations": [
-          "logistics_faq_2026#chunk-1",
-          "logistics_faq_2026#chunk-2"
+          "logistics_faq_2026#delay",
+          "logistics_faq_2026#same-city-timeout"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -226,13 +219,13 @@
         "category": "multi-source",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 305.333,
+        "latency_ms": 305.119,
         "returned_citations": [
-          "refund_policy_2026#chunk-2",
-          "refund_policy_2026#chunk-5",
-          "refund_policy_2026#chunk-4"
+          "refund_policy_2026#section-5",
+          "refund_policy_2026#address-change",
+          "refund_policy_2026#high-value-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -245,12 +238,12 @@
         "category": "exception-policy",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 287.952,
+        "latency_ms": 290.687,
         "returned_citations": [
-          "refund_policy_2026#chunk-3",
-          "refund_policy_2026#chunk-4"
+          "refund_policy_2026#exception",
+          "refund_policy_2026#high-value-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -262,12 +255,12 @@
         "category": "operational-escalation",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 313.614,
+        "latency_ms": 300.44,
         "returned_citations": [
-          "refund_policy_2026#chunk-4",
-          "refund_policy_2026#chunk-2"
+          "refund_policy_2026#high-value-review",
+          "refund_policy_2026#section-5"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -279,13 +272,13 @@
         "category": "multi-intent",
         "difficulty": "hard",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 330.786,
+        "latency_ms": 329.421,
         "returned_citations": [
-          "refund_policy_2026#chunk-5",
-          "logistics_faq_2026#chunk-4",
-          "refund_policy_2026#chunk-1"
+          "refund_policy_2026#address-change",
+          "logistics_faq_2026#address-intercept",
+          "refund_policy_2026#section-3"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -298,12 +291,12 @@
         "category": "sla",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 309.578,
+        "latency_ms": 299.427,
         "returned_citations": [
-          "logistics_faq_2026#chunk-2",
-          "logistics_faq_2026#chunk-1"
+          "logistics_faq_2026#same-city-timeout",
+          "logistics_faq_2026#delay"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -315,13 +308,13 @@
         "category": "cross-source",
         "difficulty": "hard",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 338.737,
+        "latency_ms": 334.555,
         "returned_citations": [
-          "logistics_faq_2026#chunk-3",
-          "logistics_faq_2026#chunk-1",
-          "logistics_faq_2026#chunk-2"
+          "logistics_faq_2026#lost-package",
+          "logistics_faq_2026#delay",
+          "logistics_faq_2026#same-city-timeout"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -334,12 +327,12 @@
         "category": "operational-escalation",
         "difficulty": "medium",
         "hit_at_k": true,
-        "citation_match": false,
+        "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 309.915,
+        "latency_ms": 324.569,
         "returned_citations": [
-          "logistics_faq_2026#chunk-4",
-          "logistics_faq_2026#chunk-1"
+          "logistics_faq_2026#address-intercept",
+          "logistics_faq_2026#delay"
         ],
         "returned_source_ids": [
           "logistics_faq",
@@ -353,11 +346,11 @@
         "hit_at_k": false,
         "citation_match": false,
         "empty_query_handling": false,
-        "latency_ms": 274.389,
+        "latency_ms": 282.612,
         "returned_citations": [
-          "refund_policy_2026#chunk-5",
-          "logistics_faq_2026#chunk-4",
-          "refund_policy_2026#chunk-4"
+          "refund_policy_2026#address-change",
+          "logistics_faq_2026#address-intercept",
+          "refund_policy_2026#high-value-review"
         ],
         "returned_source_ids": [
           "refund_policy_docs",
@@ -369,20 +362,12 @@
         "id": "empty-invoice-tax-policy",
         "category": "empty",
         "difficulty": "hard",
-        "hit_at_k": false,
-        "citation_match": false,
-        "empty_query_handling": false,
-        "latency_ms": 292.301,
-        "returned_citations": [
-          "refund_policy_2026#chunk-2",
-          "refund_policy_2026#chunk-4",
-          "logistics_faq_2026#chunk-3"
-        ],
-        "returned_source_ids": [
-          "refund_policy_docs",
-          "refund_policy_docs",
-          "logistics_faq"
-        ]
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 291.746,
+        "returned_citations": [],
+        "returned_source_ids": []
       }
     ]
   }

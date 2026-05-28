@@ -105,11 +105,55 @@ def test_markdown_source_to_qdrant_chunks_preserves_source_metadata(tmp_path):
     assert chunks[0].point_id == "refund_policy_2026:chunk-1"
     assert chunks[0].document_id == "refund_policy_2026"
     assert chunks[0].title == "售后退款规则"
-    assert chunks[0].citation == "refund_policy_2026#chunk-1"
+    assert chunks[0].citation == "refund_policy_2026#section-3"
     assert chunks[0].text == "客户三天未发货可以申请退款。"
     assert chunks[0].metadata["tenant_id"] == "default"
     assert chunks[0].metadata["chunking_strategy"] == "markdown-paragraph-v1"
     assert chunks[0].metadata["source_path"] == str(source_path)
+
+
+def test_markdown_source_to_qdrant_chunks_uses_known_business_citations(tmp_path):
+    source_path = tmp_path / "logistics_faq.md"
+    source_path.write_text(
+        "# 物流常见问题\n\n"
+        "物流轨迹超过二十四小时未更新时，应先联系承运商确认揽收和中转状态。\n\n"
+        "同城即时配送超过两小时未送达时，客服应优先核实骑手位置和收件人联系方式。\n\n"
+        "承运商确认包裹丢失后，客服应创建物流异常工单，并同步售后团队评估补发或退款。\n\n"
+        "用户要求修改收货地址时，如果订单已经出库，应先联系承运商拦截。",
+        encoding="utf-8",
+    )
+
+    chunks = markdown_source_to_qdrant_chunks(
+        source_id="logistics_faq",
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
+    )
+
+    assert [chunk.citation for chunk in chunks] == [
+        "logistics_faq_2026#delay",
+        "logistics_faq_2026#same-city-timeout",
+        "logistics_faq_2026#lost-package",
+        "logistics_faq_2026#address-intercept",
+    ]
+
+
+def test_markdown_source_to_qdrant_chunks_falls_back_for_unmapped_paragraphs(tmp_path):
+    source_path = tmp_path / "unknown_docs.md"
+    source_path.write_text(
+        "# 未知文档\n\n第一段。\n\n第二段。",
+        encoding="utf-8",
+    )
+
+    chunks = markdown_source_to_qdrant_chunks(
+        source_id="unknown_docs",
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
+    )
+
+    assert [chunk.citation for chunk in chunks] == [
+        "unknown_docs#chunk-1",
+        "unknown_docs#chunk-2",
+    ]
 
 
 def test_qdrant_payload_filter_includes_tenant_sources_and_acl():
@@ -293,7 +337,7 @@ def test_build_qdrant_source_index_embeds_upserts_and_marks_ready(tmp_path):
     first_point = client.upserts[0]["points"][0]
     assert first_point.payload["source_id"] == "refund_policy_docs"
     assert first_point.payload["document_id"] == "refund_policy_2026"
-    assert first_point.payload["citation"] == "refund_policy_2026#chunk-1"
+    assert first_point.payload["citation"] == "refund_policy_2026#section-3"
     assert first_point.payload["embedding_provider"] == "mock"
     assert first_point.payload["embedding_model"] == "mock-hash-v1"
     assert first_point.payload["chunking_strategy"] == "markdown-paragraph-v1"
@@ -349,6 +393,72 @@ def test_query_qdrant_documents_maps_valid_hits_and_skips_malformed_hits():
             {"key": "acl_tags", "match": {"any": ["after_sales"]}},
         ]
     }
+
+
+def test_query_qdrant_documents_filters_hits_below_score_threshold():
+    client = FakeQdrantClient(
+        hits=[
+            {
+                "score": 0.42,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "低置信命中。",
+                    "citation": "refund_policy_2026#chunk-low",
+                },
+            },
+            {
+                "score": 0.88,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "高置信命中。",
+                    "citation": "refund_policy_2026#chunk-high",
+                },
+            },
+        ]
+    )
+
+    documents = query_qdrant_documents(
+        client,
+        query_vector=[0.1, 0.2, 0.3],
+        source_ids=["refund_policy_docs"],
+        settings=Settings(rag_score_threshold=0.5),
+        top_k=3,
+    )
+
+    assert [document.citation for document in documents] == [
+        "refund_policy_2026#chunk-high"
+    ]
+
+
+def test_query_qdrant_documents_returns_empty_when_all_hits_below_threshold():
+    client = FakeQdrantClient(
+        hits=[
+            {
+                "score": 0.3,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "低置信命中。",
+                    "citation": "refund_policy_2026#chunk-low",
+                },
+            }
+        ]
+    )
+
+    documents = query_qdrant_documents(
+        client,
+        query_vector=[0.1, 0.2, 0.3],
+        source_ids=["refund_policy_docs"],
+        settings=Settings(rag_score_threshold=0.5),
+        top_k=3,
+    )
+
+    assert documents == []
 
 
 def test_query_qdrant_documents_for_text_embeds_query_before_vector_search():
