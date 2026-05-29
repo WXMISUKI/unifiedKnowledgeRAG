@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from app.config import Settings
 from app.models.contracts import EvidenceDocument, ProviderError, RagAnswerResult
+from app.services.answer_output_parser import parse_cited_answer_output
 from app.services.answer_output_validator import validate_cited_answer_output
 from app.services.answer_prompt_package import (
     build_cited_answer_prompt_package,
@@ -68,12 +69,17 @@ class DeterministicAnswerComposer(AnswerComposer):
         citations = _unique_citations(cited_documents)
         prompt_package = build_cited_answer_prompt_package(query, cited_documents)
         rendered_prompt = render_cited_answer_prompt(prompt_package)
+        answer_parts = [
+            f"[{document.citation}] {document.snippet}" for document in cited_documents
+        ]
+        parsed_output = parse_cited_answer_output("\n".join(answer_parts))
         validation = validate_cited_answer_output(
-            citations=citations,
+            citations=parsed_output.citations,
             allowed_citations=prompt_package.allowed_citations,
         )
         metadata["prompt_package"] = prompt_package.metadata()
         metadata["prompt_render"] = rendered_prompt.metadata()
+        metadata["output_parser"] = parsed_output.metadata()
         metadata["output_validation"] = validation.metadata()
         if not validation.passed:
             return RagAnswerResult(
@@ -83,13 +89,10 @@ class DeterministicAnswerComposer(AnswerComposer):
                 documents=documents,
                 metadata=metadata,
             )
-        answer_parts = [
-            f"[{document.citation}] {document.snippet}" for document in cited_documents
-        ]
         return RagAnswerResult(
             answer_status="answered",
-            answer="\n".join(answer_parts),
-            citations=citations,
+            answer=parsed_output.answer_text,
+            citations=parsed_output.citations,
             documents=documents,
             metadata=metadata,
         )

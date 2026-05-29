@@ -166,6 +166,11 @@ def test_rag_answer_returns_cited_answer_envelope():
         "message_count": 2,
         "citation_policy": "use_only_allowed_citations",
     }
+    output_parser = body["result"]["metadata"]["output_parser"]
+    assert output_parser == {
+        "parser": "bracketed-citation-output-parser-v1",
+        "citation_count": len(body["result"]["citations"]),
+    }
     output_validation = body["result"]["metadata"]["output_validation"]
     assert output_validation == {
         "validator": "cited-answer-output-validator-v1",
@@ -240,6 +245,7 @@ def test_rag_answer_low_score_gate_returns_insufficient_evidence(monkeypatch):
     assert body["result"]["documents"]
     assert "prompt_package" not in body["result"]["metadata"]
     assert "prompt_render" not in body["result"]["metadata"]
+    assert "output_parser" not in body["result"]["metadata"]
     assert "output_validation" not in body["result"]["metadata"]
     gate = body["result"]["metadata"]["evidence_gate"]
     assert gate["passed"] is False
@@ -269,6 +275,7 @@ def test_rag_answer_min_count_gate_returns_insufficient_evidence(monkeypatch):
     assert len(body["result"]["documents"]) == 2
     assert "prompt_package" not in body["result"]["metadata"]
     assert "prompt_render" not in body["result"]["metadata"]
+    assert "output_parser" not in body["result"]["metadata"]
     assert "output_validation" not in body["result"]["metadata"]
     gate = body["result"]["metadata"]["evidence_gate"]
     assert gate["passed"] is False
@@ -338,6 +345,7 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
     }
     assert "prompt_package" not in body["result"]["metadata"]
     assert "prompt_render" not in body["result"]["metadata"]
+    assert "output_parser" not in body["result"]["metadata"]
     assert "output_validation" not in body["result"]["metadata"]
 
 
