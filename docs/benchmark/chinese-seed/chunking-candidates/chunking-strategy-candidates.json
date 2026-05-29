@@ -52,25 +52,26 @@
     {
       "candidate": {
         "id": "token-window-v1",
-        "description": "Planned token-window chunking with overlap for long dense content.",
-        "implementation_status": "planned",
+        "description": "Runnable token-window chunking with overlap for long dense content.",
+        "implementation_status": "runnable",
         "expected_fit": "long paragraphs, pasted policy text, PDF/Word extracted body text",
         "tradeoffs": [
           "May improve recall inside long dense sections.",
           "Can duplicate evidence and complicate citation stability.",
-          "Requires tokenizer-aware sizing and overlap decisions."
+          "Uses a deterministic lightweight tokenizer until production tokenizer evidence exists."
         ]
       },
       "source_ids": [
         "refund_policy_docs",
         "logistics_faq"
       ],
-      "total_chunks": null,
-      "citation_stability": "planned",
-      "long_section_support": "planned",
+      "total_chunks": 8,
+      "citation_stability": "stable",
+      "long_section_support": "covered-by-window",
       "decision_notes": [
-        "Candidate is not runnable yet; no retrieval metrics are claimed.",
-        "Implement runnable benchmark evidence before production promotion."
+        "Candidate can generate overlapping token-window chunks for local markdown sources.",
+        "Runtime Qdrant ingestion still uses markdown-paragraph-v1.",
+        "Use Qdrant+BGE smoke comparison before promoting this strategy."
       ]
     }
   ]

@@ -283,7 +283,7 @@ def test_default_chunking_strategy_candidates_include_baseline_and_planned():
 
     assert by_id["markdown-paragraph-v1"].implementation_status == "implemented"
     assert by_id["markdown-section-v1"].implementation_status == "runnable"
-    assert by_id["token-window-v1"].implementation_status == "planned"
+    assert by_id["token-window-v1"].implementation_status == "runnable"
     assert "long paragraphs" in by_id["token-window-v1"].expected_fit
 
 
@@ -459,7 +459,9 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
     assert by_id["markdown-section-v1"].total_chunks == 2
     assert by_id["markdown-section-v1"].citation_stability == "stable"
     assert by_id["markdown-section-v1"].long_section_support == "covered-by-section"
-    assert by_id["token-window-v1"].long_section_support == "planned"
+    assert by_id["token-window-v1"].total_chunks == 2
+    assert by_id["token-window-v1"].citation_stability == "stable"
+    assert by_id["token-window-v1"].long_section_support == "covered-by-window"
 
     payload = json.loads(evaluation.json_path.read_text(encoding="utf-8"))
     markdown = evaluation.markdown_path.read_text(encoding="utf-8")
@@ -468,7 +470,7 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
     assert "# Chunking Strategy Candidate Evaluation" in markdown
     assert "| markdown-paragraph-v1 | implemented | 11 | stable | covered |" in markdown
     assert "| markdown-section-v1 | runnable | 2 | stable | covered-by-section |" in markdown
-    assert "Candidate is not runnable yet" in markdown
+    assert "| token-window-v1 | runnable | 2 | stable | covered-by-window |" in markdown
     assert render_chunking_strategy_evaluation_markdown(evaluation) == markdown
 
 
@@ -721,18 +723,22 @@ def test_export_qdrant_bge_chunking_comparison_evidence(monkeypatch, tmp_path):
         settings=settings,
     )
 
-    assert len(clients) == 2
-    assert report.strategies == ["markdown-paragraph-v1", "markdown-section-v1"]
+    assert len(clients) == 3
+    assert report.strategies == [
+        "markdown-paragraph-v1",
+        "markdown-section-v1",
+        "token-window-v1",
+    ]
     assert report.json_path == tmp_path / "evidence" / "qdrant-bge-m3-chunking-comparison.json"
     assert report.markdown_path == tmp_path / "evidence" / "qdrant-bge-m3-chunking-comparison.md"
     assert [
         item.indexed_sources["refund_policy_docs"]["chunk_count"]
         for item in report.reports
-    ] == [2, 1]
+    ] == [2, 1, 1]
     assert [
         item.metadata["chunking_strategy"]
         for item in report.reports
-    ] == ["markdown-paragraph-v1", "markdown-section-v1"]
+    ] == ["markdown-paragraph-v1", "markdown-section-v1", "token-window-v1"]
 
     payload = json.loads(report.json_path.read_text(encoding="utf-8"))
     markdown = report.markdown_path.read_text(encoding="utf-8")
@@ -740,9 +746,11 @@ def test_export_qdrant_bge_chunking_comparison_evidence(monkeypatch, tmp_path):
     assert payload == qdrant_chunking_comparison_to_dict(report)
     assert payload["summary"][0]["chunk_count"] == 2
     assert payload["summary"][1]["chunk_count"] == 1
+    assert payload["summary"][2]["chunk_count"] == 1
     assert "# Qdrant BGE-M3 Chunking Comparison Evidence" in markdown
     assert "| markdown-paragraph-v1 | 2 | 1.0000 | 1.0000 | 0.0000 |" in markdown
     assert "| markdown-section-v1 | 1 | 1.0000 | 1.0000 | 0.0000 |" in markdown
+    assert "| token-window-v1 | 1 | 1.0000 | 1.0000 | 0.0000 |" in markdown
     assert render_qdrant_chunking_comparison_markdown(report) == markdown
 
 

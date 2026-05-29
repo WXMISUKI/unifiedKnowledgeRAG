@@ -11,6 +11,7 @@ from app.services.qdrant_vector_store import (
     query_qdrant_documents_for_text,
     markdown_source_to_qdrant_chunks,
     markdown_source_to_section_chunks,
+    markdown_source_to_token_window_chunks,
     upsert_qdrant_chunks,
 )
 from app.services.index_lifecycle import get_index_status
@@ -184,6 +185,62 @@ def test_markdown_source_to_section_chunks_groups_heading_content(tmp_path):
     assert chunks[0].metadata["chunking_strategy"] == "markdown-section-v1"
     assert "客户三天未发货" in chunks[0].text
     assert "二线审核" in chunks[1].text
+
+
+def test_markdown_source_to_token_window_chunks_overlap_and_metadata(tmp_path):
+    source_path = tmp_path / "refund_policy_docs.md"
+    source_path.write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款，并且客服需要保留订单编号和沟通记录。",
+        encoding="utf-8",
+    )
+
+    chunks = markdown_source_to_token_window_chunks(
+        source_id="refund_policy_docs",
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
+        max_tokens=12,
+        overlap_tokens=4,
+        min_tokens=4,
+    )
+
+    assert [chunk.chunk_id for chunk in chunks] == [
+        "token-window-1",
+        "token-window-2",
+        "token-window-3",
+        "token-window-4",
+    ]
+    assert chunks[0].point_id == "refund_policy_2026:token-window-1"
+    assert chunks[0].citation == "refund_policy_2026#token-window-candidate-1"
+    assert chunks[1].citation == "refund_policy_2026#token-window-2"
+    assert chunks[0].metadata["chunking_strategy"] == "token-window-v1"
+    assert chunks[0].metadata["token_window_max_tokens"] == 12
+    assert chunks[0].metadata["token_window_overlap_tokens"] == 4
+    assert chunks[0].metadata["token_window_min_tokens"] == 4
+    assert chunks[0].text[-4:] == chunks[1].text[:4]
+
+
+def test_markdown_source_to_token_window_chunks_rejects_invalid_settings(tmp_path):
+    source_path = tmp_path / "unknown_docs.md"
+    source_path.write_text("# 未知文档\n\n第一段。", encoding="utf-8")
+
+    for kwargs, expected_message in [
+        ({"max_tokens": 0}, "max_tokens"),
+        ({"overlap_tokens": -1}, "overlap_tokens"),
+        ({"max_tokens": 4, "overlap_tokens": 4}, "overlap_tokens"),
+        ({"max_tokens": 4, "overlap_tokens": 1, "min_tokens": 5}, "min_tokens"),
+    ]:
+        try:
+            markdown_source_to_token_window_chunks(
+                source_id="unknown_docs",
+                source_path=source_path,
+                content=source_path.read_text(encoding="utf-8"),
+                **kwargs,
+            )
+        except ValueError as error:
+            assert expected_message in str(error)
+        else:
+            raise AssertionError("Expected invalid token-window settings to fail")
 
 
 def test_qdrant_payload_filter_includes_tenant_sources_and_acl():

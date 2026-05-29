@@ -4,7 +4,7 @@
 | --- | --- | ---: | --- | --- |
 | markdown-paragraph-v1 | implemented | 11 | stable | covered |
 | markdown-section-v1 | runnable | 2 | stable | covered-by-section |
-| token-window-v1 | planned |  | planned | planned |
+| token-window-v1 | runnable | 8 | stable | covered-by-window |
 
 ## Candidate Notes
 
@@ -33,11 +33,12 @@
 
 ### token-window-v1
 
-- Description: Planned token-window chunking with overlap for long dense content.
+- Description: Runnable token-window chunking with overlap for long dense content.
 - Expected fit: long paragraphs, pasted policy text, PDF/Word extracted body text
 - Source ids: refund_policy_docs, logistics_faq
 - Trade-off: May improve recall inside long dense sections.
 - Trade-off: Can duplicate evidence and complicate citation stability.
-- Trade-off: Requires tokenizer-aware sizing and overlap decisions.
-- Decision note: Candidate is not runnable yet; no retrieval metrics are claimed.
-- Decision note: Implement runnable benchmark evidence before production promotion.
+- Trade-off: Uses a deterministic lightweight tokenizer until production tokenizer evidence exists.
+- Decision note: Candidate can generate overlapping token-window chunks for local markdown sources.
+- Decision note: Runtime Qdrant ingestion still uses markdown-paragraph-v1.
+- Decision note: Use Qdrant+BGE smoke comparison before promoting this strategy.

@@ -13,11 +13,13 @@ from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.qdrant_vector_store import (
     QDRANT_CHUNKING_STRATEGY,
     QDRANT_SECTION_CHUNKING_STRATEGY,
+    QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY,
     create_qdrant_client,
     embed_qdrant_chunks,
     ensure_qdrant_collection,
     load_qdrant_source_chunks,
     markdown_source_to_section_chunks,
+    markdown_source_to_token_window_chunks,
     query_qdrant_documents_for_text,
     upsert_qdrant_chunks,
 )
@@ -575,6 +577,7 @@ def export_qdrant_bge_chunking_comparison_evidence(
         strategies = [
             QDRANT_CHUNKING_STRATEGY,
             QDRANT_SECTION_CHUNKING_STRATEGY,
+            QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY,
         ]
     _validate_chunking_strategies(strategies)
     reports = [
@@ -706,13 +709,13 @@ def default_chunking_strategy_candidates() -> list[ChunkingStrategyCandidate]:
         ),
         ChunkingStrategyCandidate(
             id="token-window-v1",
-            description="Planned token-window chunking with overlap for long dense content.",
-            implementation_status="planned",
+            description="Runnable token-window chunking with overlap for long dense content.",
+            implementation_status="runnable",
             expected_fit="long paragraphs, pasted policy text, PDF/Word extracted body text",
             tradeoffs=[
                 "May improve recall inside long dense sections.",
                 "Can duplicate evidence and complicate citation stability.",
-                "Requires tokenizer-aware sizing and overlap decisions.",
+                "Uses a deterministic lightweight tokenizer until production tokenizer evidence exists.",
             ],
         ),
     ]
@@ -1574,7 +1577,11 @@ def _validate_thresholds(thresholds: list[float]) -> list[float]:
 
 
 def _validate_chunking_strategies(strategies: list[str]) -> None:
-    supported = {QDRANT_CHUNKING_STRATEGY, QDRANT_SECTION_CHUNKING_STRATEGY}
+    supported = {
+        QDRANT_CHUNKING_STRATEGY,
+        QDRANT_SECTION_CHUNKING_STRATEGY,
+        QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY,
+    }
     if not strategies:
         raise ValueError("At least one chunking strategy is required.")
     unsupported = [strategy for strategy in strategies if strategy not in supported]
@@ -1614,6 +1621,8 @@ def _load_smoke_chunks(
         return load_qdrant_source_chunks(source_id, settings)
     if chunking_strategy == QDRANT_SECTION_CHUNKING_STRATEGY:
         return _load_section_candidate_chunks(source_id, settings)
+    if chunking_strategy == QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY:
+        return _load_token_window_candidate_chunks(source_id, settings)
     raise ValueError(f"Unsupported chunking strategy: {chunking_strategy}")
 
 
@@ -1686,6 +1695,32 @@ def _evaluate_chunking_candidate(
             ],
         )
 
+    if candidate.id == QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY:
+        chunks = [
+            chunk
+            for source_id in source_ids
+            for chunk in _load_token_window_candidate_chunks(source_id, settings)
+        ]
+        citations_are_stable = all("#chunk-" not in chunk.citation for chunk in chunks)
+        has_long_section_support = all(
+            marker in " ".join(chunk.text for chunk in chunks)
+            for marker in ("退款申诉复核", "批量物流异常")
+        )
+        return ChunkingStrategyResult(
+            candidate=candidate,
+            source_ids=source_ids,
+            total_chunks=len(chunks),
+            citation_stability="stable" if citations_are_stable else "mixed",
+            long_section_support=(
+                "covered-by-window" if has_long_section_support else "not-covered"
+            ),
+            decision_notes=[
+                "Candidate can generate overlapping token-window chunks for local markdown sources.",
+                "Runtime Qdrant ingestion still uses markdown-paragraph-v1.",
+                "Use Qdrant+BGE smoke comparison before promoting this strategy.",
+            ],
+        )
+
     if candidate.id != QDRANT_CHUNKING_STRATEGY:
         raise ValueError(f"Implemented chunking candidate is not wired: {candidate.id}")
 
@@ -1718,6 +1753,15 @@ def _evaluate_chunking_candidate(
 def _load_section_candidate_chunks(source_id: str, settings: Settings):
     source_path = settings.rag_source_dir / f"{source_id}.md"
     return markdown_source_to_section_chunks(
+        source_id=source_id,
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
+    )
+
+
+def _load_token_window_candidate_chunks(source_id: str, settings: Settings):
+    source_path = settings.rag_source_dir / f"{source_id}.md"
+    return markdown_source_to_token_window_chunks(
         source_id=source_id,
         source_path=source_path,
         content=source_path.read_text(encoding="utf-8"),

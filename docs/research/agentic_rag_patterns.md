@@ -216,9 +216,9 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | `token-window-v1` chunking candidate | Current evidence shows pure section chunking is too coarse, while paragraph chunking may not survive enterprise long documents |
-| 2 | Query rewrite candidate evidence | Mature agentic RAG systems commonly improve retrieval before searching; this is cheaper than adding graph storage |
-| 3 | Evidence grading candidate evidence | Separates high vector score from answer-bearing evidence |
+| 1 | Query rewrite candidate evidence | Mature agentic RAG systems commonly improve retrieval before searching; this is cheaper than adding graph storage |
+| 2 | Evidence grading candidate evidence | Separates high vector score from answer-bearing evidence |
+| 3 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
 | 4 | Exact-term / identifier benchmark cases | Required before deciding hybrid retrieval |
 | 5 | Dense+sparse hybrid candidate | Only after dense-only misses justify schema/query complexity |
 | 6 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
@@ -236,10 +236,10 @@ Dependency risk:
 
 ## Near-Term Recommendation
 
-The next implementation slice should be:
+After the runnable token-window candidate evidence, the next implementation slice should be:
 
 ```text
-add-token-window-chunking-candidate
+evaluate-query-rewrite-candidate
 ```
 
-It should make `token-window-v1` runnable, compare it against paragraph and section chunking with Qdrant+BGE-M3 smoke evidence, and keep default ingestion unchanged until evidence supports promotion.
+It should compare original queries against controlled rewritten queries, preserve expected-empty cases, and keep runtime retrieval defaults unchanged until evidence supports promotion.

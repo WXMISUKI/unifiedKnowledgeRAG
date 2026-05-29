@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -13,6 +14,10 @@ from app.services.source_catalog import get_knowledge_base, knowledge_base_exist
 
 QDRANT_CHUNKING_STRATEGY = "markdown-paragraph-v1"
 QDRANT_SECTION_CHUNKING_STRATEGY = "markdown-section-v1"
+QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY = "token-window-v1"
+TOKEN_WINDOW_DEFAULT_MAX_TOKENS = 120
+TOKEN_WINDOW_DEFAULT_OVERLAP_TOKENS = 24
+TOKEN_WINDOW_DEFAULT_MIN_TOKENS = 12
 LOCAL_SOURCE_CITATION_ANCHORS = {
     "refund_policy_docs": {
         1: "refund_policy_2026#section-3",
@@ -36,6 +41,14 @@ LOCAL_SOURCE_SECTION_CITATION_ANCHORS = {
     },
     "logistics_faq": {
         1: "logistics_faq_2026#section-candidate",
+    },
+}
+LOCAL_SOURCE_TOKEN_WINDOW_CITATION_ANCHORS = {
+    "refund_policy_docs": {
+        1: "refund_policy_2026#token-window-candidate-1",
+    },
+    "logistics_faq": {
+        1: "logistics_faq_2026#token-window-candidate-1",
     },
 }
 
@@ -192,6 +205,42 @@ def markdown_source_to_section_chunks(
             },
         )
         for index, section in enumerate(sections, start=1)
+    ]
+
+
+def markdown_source_to_token_window_chunks(
+    source_id: str,
+    source_path: Path,
+    content: str,
+    max_tokens: int = TOKEN_WINDOW_DEFAULT_MAX_TOKENS,
+    overlap_tokens: int = TOKEN_WINDOW_DEFAULT_OVERLAP_TOKENS,
+    min_tokens: int = TOKEN_WINDOW_DEFAULT_MIN_TOKENS,
+) -> list[VectorEvidenceChunk]:
+    _validate_token_window_settings(max_tokens, overlap_tokens, min_tokens)
+    document_id = _document_id_for(source_id)
+    title = _title_for(source_id, content)
+    tokens = _tokenize_for_window(" ".join(_source_paragraphs(content)))
+    windows = _token_windows(tokens, max_tokens, overlap_tokens, min_tokens)
+    return [
+        VectorEvidenceChunk(
+            point_id=f"{document_id}:token-window-{index}",
+            source_id=source_id,
+            document_id=document_id,
+            chunk_id=f"token-window-{index}",
+            title=title,
+            text=_join_window_tokens(window),
+            citation=_token_window_citation_for(source_id, document_id, index),
+            vector=[],
+            metadata={
+                "tenant_id": "default",
+                "source_path": str(source_path),
+                "chunking_strategy": QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY,
+                "token_window_max_tokens": max_tokens,
+                "token_window_overlap_tokens": overlap_tokens,
+                "token_window_min_tokens": min_tokens,
+            },
+        )
+        for index, window in enumerate(windows, start=1)
     ]
 
 
@@ -394,6 +443,17 @@ def _section_citation_for(source_id: str, document_id: str, section_index: int) 
     )
 
 
+def _token_window_citation_for(
+    source_id: str,
+    document_id: str,
+    window_index: int,
+) -> str:
+    return LOCAL_SOURCE_TOKEN_WINDOW_CITATION_ANCHORS.get(source_id, {}).get(
+        window_index,
+        f"{document_id}#token-window-{window_index}",
+    )
+
+
 def _document_id_for(source_id: str) -> str:
     return {
         "refund_policy_docs": "refund_policy_2026",
@@ -452,3 +512,66 @@ def _source_sections(content: str) -> list[dict[str, str]]:
             "text": " ".join(current_lines),
         })
     return sections
+
+
+def _validate_token_window_settings(
+    max_tokens: int,
+    overlap_tokens: int,
+    min_tokens: int,
+) -> None:
+    if max_tokens <= 0:
+        raise ValueError("max_tokens must be greater than zero.")
+    if min_tokens <= 0:
+        raise ValueError("min_tokens must be greater than zero.")
+    if overlap_tokens < 0:
+        raise ValueError("overlap_tokens must be greater than or equal to zero.")
+    if overlap_tokens >= max_tokens:
+        raise ValueError("overlap_tokens must be smaller than max_tokens.")
+    if min_tokens > max_tokens:
+        raise ValueError("min_tokens must be smaller than or equal to max_tokens.")
+
+
+def _tokenize_for_window(text: str) -> list[str]:
+    return re.findall(r"[\u4e00-\u9fff]|[A-Za-z0-9_]+|[^\s]", text)
+
+
+def _token_windows(
+    tokens: list[str],
+    max_tokens: int,
+    overlap_tokens: int,
+    min_tokens: int,
+) -> list[list[str]]:
+    if not tokens:
+        return []
+    step = max_tokens - overlap_tokens
+    windows = []
+    start = 0
+    while start < len(tokens):
+        window = tokens[start:start + max_tokens]
+        if len(window) < min_tokens and windows:
+            break
+        windows.append(window)
+        if start + max_tokens >= len(tokens):
+            break
+        start += step
+    return windows
+
+
+def _join_window_tokens(tokens: list[str]) -> str:
+    text = ""
+    previous = ""
+    for token in tokens:
+        if _needs_space_between(previous, token):
+            text += " "
+        text += token
+        previous = token
+    return text
+
+
+def _needs_space_between(previous: str, current: str) -> bool:
+    if not previous:
+        return False
+    return bool(re.fullmatch(r"[A-Za-z0-9_]+", previous) and re.fullmatch(
+        r"[A-Za-z0-9_]+",
+        current,
+    ))

@@ -290,10 +290,10 @@ The system SHALL export local evidence for chunking strategy candidates without 
 - **WHEN** `markdown-section-v1` is evaluated
 - **THEN** the evidence reports section chunk counts, citation stability, source ids, and runnable implementation status without changing ingestion defaults
 
-#### Scenario: Planned strategy remains non-runnable
+#### Scenario: Runnable token-window strategy reports source metrics
 
-- **WHEN** a planned but unimplemented chunking strategy is evaluated
-- **THEN** the evidence marks it as planned and does not claim retrieval metrics
+- **WHEN** `token-window-v1` is evaluated
+- **THEN** the evidence reports token-window chunk counts, citation stability, source ids, and runnable implementation status without changing ingestion defaults
 
 #### Scenario: Evaluation does not change ingestion defaults
 
@@ -318,6 +318,11 @@ The system SHALL export local Qdrant+BGE smoke comparison evidence for selected 
 
 - **WHEN** chunking comparison evidence is exported
 - **THEN** the output includes each strategy id, chunk count, hit rate, citation match rate, empty handling rate, and long-section category metrics
+
+#### Scenario: Token-window strategy participates in comparison
+
+- **WHEN** chunking comparison uses `token-window-v1`
+- **THEN** the comparison indexes token-window chunks and includes their strategy-level metrics
 
 #### Scenario: Comparison remains local
 

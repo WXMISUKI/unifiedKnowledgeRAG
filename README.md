@@ -724,6 +724,18 @@ docs/benchmark/chinese-seed/chunking-candidates/qdrant-bge-m3-chunking-compariso
 - Hybrid retrieval、reranker、GraphRAG storage 都需要独立 benchmark gate，不应一次性引入。
 - MyPrivateAgent 继续做 agent control plane，`unifiedKnowledgeRAG` 继续做 knowledge data plane。
 
+第三十五阶段 OpenSpec change `add-token-window-chunking-candidate` 将 `token-window-v1` 从 planned 推进为 runnable candidate。它使用轻量确定性 tokenizer：中文字符按单字计，英文/数字连续串按一个 token 计，并支持窗口 overlap。当前默认参数是 `max_tokens=120`、`overlap_tokens=24`、`min_tokens=12`，仍只用于本地评估，不改变默认 Qdrant ingestion。
+
+重新导出的三策略 Qdrant+BGE-M3 evidence 显示：
+
+| Strategy | Chunk Count | Hit Rate | Citation Match Rate | Empty Handling Rate | Long-Section Hit Rate | Long-Section Citation Match Rate |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `markdown-paragraph-v1` | 11 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| `markdown-section-v1` | 2 | 0.6667 | 0.3333 | 1.0000 | 0.5000 | 0.0000 |
+| `token-window-v1` | 8 | 0.7619 | 0.3333 | 1.0000 | 0.5000 | 0.0000 |
+
+结论：`token-window-v1` 比纯 section 多保留了一些命中，但当前 citation match 仍不足，不能替换 `markdown-paragraph-v1` 默认策略。后续更适合做“多粒度索引”或先进入 query rewrite / evidence grading 评估，而不是直接推广单一 token-window 策略。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)
