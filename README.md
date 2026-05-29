@@ -80,6 +80,8 @@ Answer composer 内部会构造 provider-owned prompt package。当前不会暴�
 
 Prompt package 还会被内部渲染为稳定的 chat-style messages。接口只暴露 `metadata.prompt_render` 的摘要，例如 `renderer=cited-chat-messages-v1`、`prompt_package_id`、`message_count` 和引用策略；完整 prompt 内容仍是 provider 内部实现细节，避免过早固化模型提示词。
 
+Answered 结果还会经过 provider-owned output validator。当前 validator 会确认 `citations` 非空且全部来自 prompt package 的 allowed citations，并在 `metadata.output_validation` 返回验证摘要；未来 Qwen、本地 LLM 或其他 composer 产出的答案也应复用这层出站校验。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：
