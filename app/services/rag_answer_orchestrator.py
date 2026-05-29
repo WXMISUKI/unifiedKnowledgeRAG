@@ -89,6 +89,14 @@ def create_answer_composer(settings: Settings) -> tuple[AnswerComposer | None, P
     )
 
 
+def answer_composer_readiness(settings: Settings) -> tuple[str, str | None, str, str]:
+    provider = settings.rag_answer_composer.lower()
+    _, error = create_answer_composer(settings)
+    if error is None:
+        return "ready", None, provider, settings.rag_answer_composer_model
+    return "degraded", error.message, provider, settings.rag_answer_composer_model
+
+
 def _unique_citations(documents: list[EvidenceDocument]) -> list[str]:
     citations: list[str] = []
     seen: set[str] = set()

@@ -14,7 +14,26 @@ def test_health_reports_machine_readable_readiness():
     assert body["status"] == "ok"
     assert body["service"] == "unifiedKnowledgeProvider"
     assert body["rag"]["status"] == "ready"
+    assert body["answer"]["status"] == "ready"
+    assert body["answer"]["backend"] == "deterministic"
+    assert body["answer"]["backend_status"] == "ready"
     assert body["graph"]["status"] == "planned"
+
+
+def test_health_reports_degraded_answer_composer(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_COMPOSER", "hosted")
+    scoped_client = TestClient(create_app())
+
+    response = scoped_client.get("/health")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "degraded"
+    assert body["rag"]["status"] == "ready"
+    assert body["answer"]["status"] == "degraded"
+    assert body["answer"]["backend"] == "hosted"
+    assert body["answer"]["backend_status"] == "degraded"
+    assert "not implemented" in body["answer"]["reason"]
 
 
 def test_capabilities_include_rag_and_graph_boundaries():
@@ -37,6 +56,21 @@ def test_capabilities_include_rag_and_graph_boundaries():
         "method": "POST",
         "path": "/api/rag/answer",
     }
+    assert capabilities["knowledge.rag.answer"]["status"] == "ready"
+
+
+def test_capabilities_report_degraded_answer_composer(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_COMPOSER", "local")
+    scoped_client = TestClient(create_app())
+
+    response = scoped_client.get("/api/capabilities")
+
+    assert response.status_code == 200
+    capabilities = {
+        item["id"]: item for item in response.json()["capabilities"]
+    }
+    assert capabilities["knowledge.rag.retrieve"]["status"] == "ready"
+    assert capabilities["knowledge.rag.answer"]["status"] == "degraded"
 
 
 def test_catalog_exposes_knowledge_bases_and_graphs():

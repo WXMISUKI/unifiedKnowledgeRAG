@@ -15,6 +15,7 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     rag: ComponentStatus
+    answer: ComponentStatus
     graph: ComponentStatus
 
 
