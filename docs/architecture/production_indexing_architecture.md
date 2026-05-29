@@ -262,6 +262,23 @@ Current candidates:
 
 Both candidates pass the current fixture seed with answer-bearing rate 1.0000 and expected-empty pass rate 1.0000. This is not runtime answer-gating approval. Before filtering retrieval results or blocking answer generation, add harder insufficient-evidence cases and explicitly review false-negative risk so the system does not hide useful evidence.
 
+## Evidence Grading Stress Evidence
+
+Evidence grading stress cases are maintained separately from the baseline Chinese seed so historical threshold, chunking, and query rewrite comparisons remain stable. The current stress evidence lives under:
+
+- `docs/benchmark/chinese-seed/evidence-grading-stress/evidence-grading-candidates.json`
+- `docs/benchmark/chinese-seed/evidence-grading-stress/evidence-grading-candidates.md`
+
+The stress fixture covers:
+
+| Case Type | Expected Label | Purpose |
+| --- | --- | --- |
+| same source but wrong citation | `related_insufficient` for strict citation grading | proves source match alone can over-credit weak evidence |
+| unmatched non-empty expected case | `missing_evidence` | proves retrieval misses stay visible |
+| unsupported query with keyword overlap | `unexpected_evidence` | proves expected-empty false positives are measured |
+
+Current stress evidence shows `citation-match-grader-v1` records one related-insufficient case, one missing-evidence case, and one unexpected-evidence case. `source-match-grader-v1` over-credits the same-source/wrong-citation case. Future runtime answer gates should prefer citation-level or answer-bearing evidence over source-level evidence alone, and should be evaluated against more customer-like stress cases before promotion.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

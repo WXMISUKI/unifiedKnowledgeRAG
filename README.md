@@ -780,6 +780,28 @@ docs/benchmark/chinese-seed/evidence-grading-candidates/evidence-grading-candida
 
 结论：当前 fixture baseline 下，严格 citation grader 和宽松 source grader 都没有暴露失败。但这主要说明当前 seed 的 fixture 检索链路稳定；后续要让 evidence grading 真正产生决策价值，需要引入“同 source 但 citation 不足”“相关但不能回答”“召回为空但应回答”等 harder cases，再讨论是否作为 runtime answer gate。
 
+第三十八阶段 OpenSpec change `expand-insufficient-evidence-benchmark-cases` 增加 evidence grading stress fixture。它独立于主中文 seed，不影响 threshold、chunking、query rewrite 的历史 baseline，用来专门暴露 answer gate 需要处理的失败模式：
+
+```powershell
+conda run -n GRAPHRAG python -c "from pathlib import Path; from app.services.retrieval_benchmark import export_evidence_grading_candidate_evaluation; export_evidence_grading_candidate_evaluation(Path('docs/benchmark/chinese-seed/evidence-grading-stress'), cases_path=Path('tests/fixtures/evidence_grading_stress_cases.json'))"
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/evidence-grading-stress/evidence-grading-candidates.json
+docs/benchmark/chinese-seed/evidence-grading-stress/evidence-grading-candidates.md
+```
+
+当前 stress evidence 显示：
+
+| Candidate | Answer-bearing Rate | Related-insufficient | Missing Evidence | Unexpected Evidence | Expected-empty Pass Rate |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `citation-match-grader-v1` | 0.0000 | 1 | 1 | 1 | 0.0000 |
+| `source-match-grader-v1` | 0.3333 | 0 | 1 | 1 | 0.0000 |
+
+结论：严格 citation grader 能把“同 source 但 citation 不足”识别为 `related_insufficient`，宽松 source grader 会把它放过；两者都会暴露漏召回和 expected-empty 误召回。这说明后续若做 runtime answer gate，不能只按 source 命中判断，需要继续扩展真实 false-positive/false-negative 样本并评估是否需要 reranker 或更细粒度 citation。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "stress-refund-source-but-wrong-citation",
+    "category": "insufficient-evidence",
+    "difficulty": "hard",
+    "query": "客户三天未发货能否退款？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#appeal-review",
+    "expect_empty": false
+  },
+  {
+    "id": "stress-missing-evidence-unmatched-vocabulary",
+    "category": "missing-evidence",
+    "difficulty": "hard",
+    "query": "跨境税票红冲资质归哪个开票系统审批？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#section-5",
+    "expect_empty": false
+  },
+  {
+    "id": "stress-unexpected-evidence-membership-refund-overlap",
+    "category": "unexpected-evidence",
+    "difficulty": "hard",
+    "query": "会员退款审批需要谁复核？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]

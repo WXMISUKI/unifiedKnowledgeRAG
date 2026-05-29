@@ -214,10 +214,10 @@ The system SHALL maintain an internal research reference that maps mature Agenti
 - **WHEN** a future change proposes enabling query rewriting in runtime retrieval
 - **THEN** it references local query rewrite candidate evidence and explicitly reviews expected-empty false-positive risk
 
-#### Scenario: Evidence grading evidence precedes answer gating
+#### Scenario: Evidence grading stress evidence precedes answer gating
 
 - **WHEN** a future change proposes filtering retrieval results or blocking answer generation based on evidence grading
-- **THEN** it references local evidence grading candidate evidence and explicitly reviews false-negative risk
+- **THEN** it references stress evidence that includes insufficient, missing, and unexpected evidence outcomes and explicitly reviews false-negative risk
 
 #### Scenario: Pattern adoption remains provider-neutral
 

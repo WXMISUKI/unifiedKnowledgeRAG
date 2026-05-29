@@ -50,6 +50,9 @@ from app.services.retrieval_benchmark import (
 
 
 FIXTURE_PATH = Path("tests/fixtures/retrieval_benchmark_cases.json")
+EVIDENCE_GRADING_STRESS_PATH = Path(
+    "tests/fixtures/evidence_grading_stress_cases.json"
+)
 
 
 def test_loads_retrieval_benchmark_cases():
@@ -379,6 +382,52 @@ def test_evidence_grading_distinguishes_citation_and_source_policies():
     assert by_id["citation-match-grader-v1"].answer_bearing_rate < 1.0
     assert source_case.grading_label == "answer_bearing"
     assert by_id["source-match-grader-v1"].answer_bearing_rate == 1.0
+
+
+def test_loads_evidence_grading_stress_cases_separately():
+    baseline_cases = load_benchmark_cases(FIXTURE_PATH)
+    stress_cases = load_benchmark_cases(EVIDENCE_GRADING_STRESS_PATH)
+
+    assert len(baseline_cases) == 21
+    assert [case.id for case in stress_cases] == [
+        "stress-refund-source-but-wrong-citation",
+        "stress-missing-evidence-unmatched-vocabulary",
+        "stress-unexpected-evidence-membership-refund-overlap",
+    ]
+    assert {case.category for case in stress_cases} == {
+        "insufficient-evidence",
+        "missing-evidence",
+        "unexpected-evidence",
+    }
+
+
+def test_evidence_grading_stress_cases_expose_failure_labels():
+    stress_cases = load_benchmark_cases(EVIDENCE_GRADING_STRESS_PATH)
+
+    evaluation = evaluate_evidence_grading_candidates(
+        cases=stress_cases,
+        settings=Settings(rag_retrieval_backend="fixture"),
+    )
+
+    by_id = {result.candidate.id: result for result in evaluation.results}
+    strict = by_id["citation-match-grader-v1"]
+    loose = by_id["source-match-grader-v1"]
+    strict_labels = {case.case_id: case.grading_label for case in strict.cases}
+    loose_labels = {case.case_id: case.grading_label for case in loose.cases}
+
+    assert strict_labels == {
+        "stress-refund-source-but-wrong-citation": "related_insufficient",
+        "stress-missing-evidence-unmatched-vocabulary": "missing_evidence",
+        "stress-unexpected-evidence-membership-refund-overlap": "unexpected_evidence",
+    }
+    assert loose_labels["stress-refund-source-but-wrong-citation"] == "answer_bearing"
+    assert loose_labels["stress-missing-evidence-unmatched-vocabulary"] == "missing_evidence"
+    assert loose_labels["stress-unexpected-evidence-membership-refund-overlap"] == "unexpected_evidence"
+    assert strict.related_insufficient_count == 1
+    assert strict.missing_evidence_count == 1
+    assert strict.unexpected_evidence_count == 1
+    assert strict.answer_bearing_rate == 0.0
+    assert loose.answer_bearing_rate == 0.3333
 
 
 def test_exports_evidence_grading_candidate_evaluation(tmp_path):

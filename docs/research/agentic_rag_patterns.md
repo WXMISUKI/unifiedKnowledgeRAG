@@ -18,6 +18,7 @@ The provider currently has:
 - A Chinese-heavy benchmark seed with positive citation cases, long-section cases, and expected-empty cases.
 - Local query rewrite candidate evidence that compares original queries with deterministic controlled rewrites.
 - Local evidence grading candidate evidence that labels answer-bearing, insufficient, missing, and expected-empty outcomes.
+- A dedicated evidence grading stress fixture that exposes related-insufficient, missing-evidence, and unexpected-evidence outcomes without replacing the main Chinese seed.
 
 Current evidence says:
 
@@ -26,6 +27,7 @@ Current evidence says:
 - Pure `markdown-section-v1` reduces chunk count but loses fine-grained citation match and some hits.
 - `controlled-support-rewrite-v1` rewrites selected non-empty seed cases without regressing fixture metrics, while preserving expected-empty cases.
 - `citation-match-grader-v1` and `source-match-grader-v1` establish a local evidence grading shape, but harder insufficient-evidence cases are still needed before runtime answer gating.
+- Evidence grading stress evidence shows strict citation grading can catch related-but-insufficient evidence that source-level grading would over-credit.
 
 ## Mature Pattern Families
 
@@ -220,13 +222,12 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Harder insufficient-evidence benchmark cases | Needed before evidence grading can become a meaningful answer gate |
+| 1 | Exact-term / identifier benchmark cases | Required before deciding hybrid retrieval |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
-| 3 | Exact-term / identifier benchmark cases | Required before deciding hybrid retrieval |
-| 4 | Dense+sparse hybrid candidate | Only after dense-only misses justify schema/query complexity |
-| 5 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
-| 6 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
-| 7 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
+| 3 | Dense+sparse hybrid candidate | Only after dense-only misses justify schema/query complexity |
+| 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
+| 5 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
+| 6 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
 
 ## Decisions For This Provider
 
@@ -240,10 +241,10 @@ Dependency risk:
 
 ## Near-Term Recommendation
 
-After the evidence grading candidate shape is in place, the next implementation slice should be:
+After insufficient-evidence stress cases are in place, the next implementation slice should be:
 
 ```text
-expand-insufficient-evidence-benchmark-cases
+expand-exact-term-identifier-benchmark-cases
 ```
 
-It should add harder benchmark cases where returned evidence is related but not answer-bearing, so citation-level grading, reranking, and future answer gates can be evaluated against meaningful failure modes.
+It should add policy numbers, order-like ids, form names, and business acronyms so dense-only retrieval can be tested against cases that may need sparse or hybrid retrieval later.

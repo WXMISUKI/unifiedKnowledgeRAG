@@ -1,0 +1,389 @@
+{
+  "results": [
+    {
+      "candidate": {
+        "id": "citation-match-grader-v1",
+        "description": "Strict local grader that requires the expected citation.",
+        "implementation_status": "candidate",
+        "grading_policy": "citation_match",
+        "risk_notes": [
+          "Can mark source-level evidence as insufficient when citation granularity changes.",
+          "Useful as a strict grounding gate baseline, not a runtime answer gate."
+        ]
+      },
+      "total_cases": 3,
+      "answer_bearing_rate": 0.0,
+      "related_insufficient_count": 1,
+      "missing_evidence_count": 1,
+      "unexpected_evidence_count": 1,
+      "expected_empty_pass_rate": 0.0,
+      "report": {
+        "summary": {
+          "backend": "fixture",
+          "total_cases": 3,
+          "hit_rate": 0.3333,
+          "citation_match_rate": 0.0,
+          "empty_handling_rate": 0.0,
+          "category_summaries": {
+            "insufficient-evidence": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            },
+            "missing-evidence": {
+              "total_cases": 1,
+              "hit_rate": 0.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            },
+            "unexpected-evidence": {
+              "total_cases": 1,
+              "hit_rate": 0.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "stress-refund-source-but-wrong-citation",
+            "category": "insufficient-evidence",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.294,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "stress-missing-evidence-unmatched-vocabulary",
+            "category": "missing-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.18,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "stress-unexpected-evidence-membership-refund-overlap",
+            "category": "unexpected-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": false,
+            "latency_ms": 0.138,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "stress-refund-source-but-wrong-citation",
+          "category": "insufficient-evidence",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#appeal-review",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#address-change"
+          ],
+          "grading_label": "related_insufficient",
+          "grading_reason": "Expected source was returned but expected citation was missing.",
+          "result": {
+            "id": "stress-refund-source-but-wrong-citation",
+            "category": "insufficient-evidence",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.294,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "stress-missing-evidence-unmatched-vocabulary",
+          "category": "missing-evidence",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-5",
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "missing_evidence",
+          "grading_reason": "Expected source and citation were not returned.",
+          "result": {
+            "id": "stress-missing-evidence-unmatched-vocabulary",
+            "category": "missing-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.18,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "stress-unexpected-evidence-membership-refund-overlap",
+          "category": "unexpected-evidence",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#high-value-review",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "unexpected_evidence",
+          "grading_reason": "Expected-empty case returned evidence.",
+          "result": {
+            "id": "stress-unexpected-evidence-membership-refund-overlap",
+            "category": "unexpected-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": false,
+            "latency_ms": 0.138,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        }
+      ],
+      "decision_notes": [
+        "This evaluation is local evidence only and does not filter runtime answers.",
+        "Policy: citation_match.",
+        "1 case(s) returned related but insufficient evidence.",
+        "1 case(s) missed expected evidence.",
+        "1 expected-empty case(s) returned evidence."
+      ]
+    },
+    {
+      "candidate": {
+        "id": "source-match-grader-v1",
+        "description": "Looser local grader that accepts the expected source.",
+        "implementation_status": "candidate",
+        "grading_policy": "source_match",
+        "risk_notes": [
+          "Can over-credit evidence when the correct source contains multiple topics.",
+          "Useful for diagnosing citation granularity problems before reranking."
+        ]
+      },
+      "total_cases": 3,
+      "answer_bearing_rate": 0.3333,
+      "related_insufficient_count": 0,
+      "missing_evidence_count": 1,
+      "unexpected_evidence_count": 1,
+      "expected_empty_pass_rate": 0.0,
+      "report": {
+        "summary": {
+          "backend": "fixture",
+          "total_cases": 3,
+          "hit_rate": 0.3333,
+          "citation_match_rate": 0.0,
+          "empty_handling_rate": 0.0,
+          "category_summaries": {
+            "insufficient-evidence": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            },
+            "missing-evidence": {
+              "total_cases": 1,
+              "hit_rate": 0.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            },
+            "unexpected-evidence": {
+              "total_cases": 1,
+              "hit_rate": 0.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "stress-refund-source-but-wrong-citation",
+            "category": "insufficient-evidence",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.294,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "stress-missing-evidence-unmatched-vocabulary",
+            "category": "missing-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.18,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "stress-unexpected-evidence-membership-refund-overlap",
+            "category": "unexpected-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": false,
+            "latency_ms": 0.138,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "stress-refund-source-but-wrong-citation",
+          "category": "insufficient-evidence",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#appeal-review",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#address-change"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "stress-refund-source-but-wrong-citation",
+            "category": "insufficient-evidence",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.294,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "stress-missing-evidence-unmatched-vocabulary",
+          "category": "missing-evidence",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-5",
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "missing_evidence",
+          "grading_reason": "No evidence was returned for a non-empty case.",
+          "result": {
+            "id": "stress-missing-evidence-unmatched-vocabulary",
+            "category": "missing-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": null,
+            "latency_ms": 0.18,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "stress-unexpected-evidence-membership-refund-overlap",
+          "category": "unexpected-evidence",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#high-value-review",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "unexpected_evidence",
+          "grading_reason": "Expected-empty case returned evidence.",
+          "result": {
+            "id": "stress-unexpected-evidence-membership-refund-overlap",
+            "category": "unexpected-evidence",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": false,
+            "latency_ms": 0.138,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        }
+      ],
+      "decision_notes": [
+        "This evaluation is local evidence only and does not filter runtime answers.",
+        "Policy: source_match.",
+        "1 case(s) missed expected evidence.",
+        "1 expected-empty case(s) returned evidence."
+      ]
+    }
+  ]
+}
