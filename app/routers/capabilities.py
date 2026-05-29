@@ -9,9 +9,10 @@ router = APIRouter(prefix="/api")
 
 @router.get("/capabilities", response_model=CapabilitiesResponse)
 def capabilities() -> CapabilitiesResponse:
-    answer_status, _answer_reason, _answer_backend, _answer_model = answer_composer_readiness(
+    answer_status, answer_reason, _answer_backend, _answer_model = answer_composer_readiness(
         get_settings()
     )
+    graph_reason = "Graph query execution is not implemented in this slice."
     return CapabilitiesResponse(
         capabilities=[
             Capability(
@@ -32,6 +33,7 @@ def capabilities() -> CapabilitiesResponse:
                     "Compose cited document RAG answers with evidence gating and "
                     "configurable composer boundaries."
                 ),
+                reason=answer_reason,
                 invocation=CapabilityInvocation(
                     method="POST",
                     path="/api/rag/answer",
@@ -43,6 +45,7 @@ def capabilities() -> CapabilitiesResponse:
                 id="knowledge.graph.query",
                 status="planned",
                 description="Graph query contract boundary; execution is deferred.",
+                reason=graph_reason,
                 invocation=CapabilityInvocation(
                     method="POST",
                     path="/api/graph/query",

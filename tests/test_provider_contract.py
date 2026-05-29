@@ -53,6 +53,7 @@ def test_capabilities_include_rag_and_graph_boundaries():
         "request_schema_ref": "#/components/schemas/RagRetrieveRequest",
         "response_schema_ref": "#/components/schemas/RagRetrieveResponse",
     }
+    assert capabilities["knowledge.rag.retrieve"]["reason"] is None
     assert capabilities["knowledge.rag.answer"]["invocation"] == {
         "protocol": "http",
         "method": "POST",
@@ -61,6 +62,9 @@ def test_capabilities_include_rag_and_graph_boundaries():
         "response_schema_ref": "#/components/schemas/RagAnswerResponse",
     }
     assert capabilities["knowledge.rag.answer"]["status"] == "ready"
+    assert capabilities["knowledge.rag.answer"]["reason"] is None
+    assert capabilities["knowledge.graph.query"]["status"] == "planned"
+    assert "not implemented" in capabilities["knowledge.graph.query"]["reason"]
 
 
 def test_capabilities_report_degraded_answer_composer(monkeypatch):
@@ -75,6 +79,7 @@ def test_capabilities_report_degraded_answer_composer(monkeypatch):
     }
     assert capabilities["knowledge.rag.retrieve"]["status"] == "ready"
     assert capabilities["knowledge.rag.answer"]["status"] == "degraded"
+    assert "not implemented" in capabilities["knowledge.rag.answer"]["reason"]
 
 
 def test_catalog_exposes_knowledge_bases_and_graphs():

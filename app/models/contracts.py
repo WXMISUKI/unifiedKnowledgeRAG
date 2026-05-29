@@ -31,6 +31,7 @@ class Capability(BaseModel):
     id: str
     status: str
     description: str
+    reason: str | None = None
     invocation: CapabilityInvocation | None = None
 
 
