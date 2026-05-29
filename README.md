@@ -84,6 +84,8 @@ Answered 结果还会经过 provider-owned output validator。当前 validator �
 
 在 validation 之前，composer 输出会先经过 provider-owned output parser。当前 parser 识别回答文本中的方括号 citation，并在 `metadata.output_parser` 返回解析摘要；这样未来 LLM adapter 可以先产出文本，再由统一 parser 提取 citations，最后交给 validator 校验。
 
+Answer composer 的出站组装已经收敛到 shared finalization pipeline。未来 hosted/local composer 只需要产出候选回答文本，统一由 finalizer 负责 prompt package/render metadata、output parser、output validator 和 fail-closed answer envelope，避免每个模型 adapter 重复实现安全逻辑。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：

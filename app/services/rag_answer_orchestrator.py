@@ -2,12 +2,7 @@ from abc import ABC, abstractmethod
 
 from app.config import Settings
 from app.models.contracts import EvidenceDocument, ProviderError, RagAnswerResult
-from app.services.answer_output_parser import parse_cited_answer_output
-from app.services.answer_output_validator import validate_cited_answer_output
-from app.services.answer_prompt_package import (
-    build_cited_answer_prompt_package,
-    render_cited_answer_prompt,
-)
+from app.services.answer_finalizer import finalize_cited_answer
 
 
 DETERMINISTIC_COMPOSER_ID = "deterministic-extractive-v1"
@@ -66,35 +61,14 @@ class DeterministicAnswerComposer(AnswerComposer):
             )
 
         cited_documents = documents[:3]
-        citations = _unique_citations(cited_documents)
-        prompt_package = build_cited_answer_prompt_package(query, cited_documents)
-        rendered_prompt = render_cited_answer_prompt(prompt_package)
         answer_parts = [
             f"[{document.citation}] {document.snippet}" for document in cited_documents
         ]
-        parsed_output = parse_cited_answer_output("\n".join(answer_parts))
-        validation = validate_cited_answer_output(
-            citations=parsed_output.citations,
-            allowed_citations=prompt_package.allowed_citations,
-        )
-        metadata["prompt_package"] = prompt_package.metadata()
-        metadata["prompt_render"] = rendered_prompt.metadata()
-        metadata["output_parser"] = parsed_output.metadata()
-        metadata["output_validation"] = validation.metadata()
-        if not validation.passed:
-            return RagAnswerResult(
-                answer_status="insufficient_evidence",
-                answer="",
-                citations=[],
-                documents=documents,
-                metadata=metadata,
-            )
-        return RagAnswerResult(
-            answer_status="answered",
-            answer=parsed_output.answer_text,
-            citations=parsed_output.citations,
-            documents=documents,
-            metadata=metadata,
+        return finalize_cited_answer(
+            query=query,
+            documents=cited_documents,
+            candidate_answer="\n".join(answer_parts),
+            base_metadata=metadata,
         )
 
 
@@ -122,17 +96,6 @@ def answer_composer_readiness(settings: Settings) -> tuple[str, str | None, str,
     if error is None:
         return "ready", None, provider, settings.rag_answer_composer_model
     return "degraded", error.message, provider, settings.rag_answer_composer_model
-
-
-def _unique_citations(documents: list[EvidenceDocument]) -> list[str]:
-    citations: list[str] = []
-    seen: set[str] = set()
-    for document in documents:
-        if document.citation in seen:
-            continue
-        seen.add(document.citation)
-        citations.append(document.citation)
-    return citations
 
 
 def _evaluate_evidence_gate(
