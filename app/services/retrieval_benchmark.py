@@ -1,6 +1,6 @@
 import json
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
@@ -195,6 +195,68 @@ class ChunkingStrategyEvaluation:
     results: list[ChunkingStrategyResult]
     json_path: Path | None = None
     markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class QueryRewriteCandidate:
+    id: str
+    description: str
+    implementation_status: str
+    rewrite_policy: str
+    risk_notes: list[str]
+
+
+@dataclass(frozen=True)
+class QueryRewriteCaseResult:
+    case_id: str
+    category: str
+    difficulty: str
+    original_query: str
+    rewritten_query: str
+    rewritten: bool
+    expect_empty: bool
+    result: RetrievalBenchmarkCaseResult
+
+
+@dataclass(frozen=True)
+class QueryRewriteCandidateResult:
+    candidate: QueryRewriteCandidate
+    total_cases: int
+    rewritten_cases: int
+    rewrite_rate: float
+    expected_empty_rewrites: int
+    report: RetrievalBenchmarkReport
+    cases: list[QueryRewriteCaseResult]
+    decision_notes: list[str]
+
+
+@dataclass(frozen=True)
+class QueryRewriteCandidateEvaluation:
+    results: list[QueryRewriteCandidateResult]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+CONTROLLED_SUPPORT_QUERY_REWRITES = {
+    "refund-delivery-paraphrase": (
+        "客户三天未发货可以申请退款，售后专员应核验订单状态和发货记录后处理。"
+    ),
+    "logistics-carrier-paraphrase": (
+        "物流轨迹超过二十四小时未更新时，应先联系承运商确认揽收和中转状态。"
+    ),
+    "refund-address-change-before-shipping": (
+        "用户同时反馈未发货和地址变更，售后专员应先暂停发货，再确认继续履约或退款。"
+    ),
+    "logistics-lost-package-cross-team": (
+        "承运商确认包裹丢失后，客服应创建物流异常工单，并同步售后团队评估补发或退款。"
+    ),
+    "refund-appeal-second-review": (
+        "退款申诉复核场景中，客服应补充原始订单、沟通记录和拒绝理由交由二线复核。"
+    ),
+    "logistics-batch-exception-escalation": (
+        "批量物流异常需要创建批量异常工单，记录受影响订单范围并通知运营负责人。"
+    ),
+}
 
 
 def load_benchmark_cases(path: Path) -> list[RetrievalBenchmarkCase]:
@@ -763,6 +825,78 @@ def export_chunking_strategy_evaluation(
     )
 
 
+def default_query_rewrite_candidates() -> list[QueryRewriteCandidate]:
+    return [
+        QueryRewriteCandidate(
+            id="original-query-baseline",
+            description="Original benchmark queries without rewrite.",
+            implementation_status="baseline",
+            rewrite_policy="none",
+            risk_notes=[
+                "Used as the regression control for any future rewrite strategy.",
+                "Does not improve ambiguous or terse user wording.",
+            ],
+        ),
+        QueryRewriteCandidate(
+            id="controlled-support-rewrite-v1",
+            description=(
+                "Deterministic support-domain rewrite for selected non-empty "
+                "benchmark cases."
+            ),
+            implementation_status="candidate",
+            rewrite_policy="controlled_support_rules",
+            risk_notes=[
+                "Only rewrites known benchmark cases; not a general production policy.",
+                "Expected-empty cases are never rewritten to avoid false positives.",
+                "Runtime adoption still requires broader false-positive evidence.",
+            ],
+        ),
+    ]
+
+
+def evaluate_query_rewrite_candidates(
+    cases: list[RetrievalBenchmarkCase],
+    candidates: list[QueryRewriteCandidate] | None = None,
+    settings: Settings | None = None,
+) -> QueryRewriteCandidateEvaluation:
+    candidates = candidates or default_query_rewrite_candidates()
+    _validate_candidate_ids(candidates, "query rewrite candidate")
+    settings = settings or Settings(rag_retrieval_backend="fixture")
+
+    results = [
+        _evaluate_query_rewrite_candidate(candidate, cases, settings)
+        for candidate in candidates
+    ]
+    return QueryRewriteCandidateEvaluation(results=results)
+
+
+def export_query_rewrite_candidate_evaluation(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    candidates: list[QueryRewriteCandidate] | None = None,
+    settings: Settings | None = None,
+) -> QueryRewriteCandidateEvaluation:
+    cases = load_benchmark_cases(cases_path)
+    evaluation = evaluate_query_rewrite_candidates(
+        cases=cases,
+        candidates=candidates,
+        settings=settings,
+    )
+    json_path = export_query_rewrite_candidate_evaluation_json(
+        evaluation,
+        output_dir / "query-rewrite-candidates.json",
+    )
+    markdown_path = export_query_rewrite_candidate_evaluation_markdown(
+        evaluation,
+        output_dir / "query-rewrite-candidates.md",
+    )
+    return QueryRewriteCandidateEvaluation(
+        results=evaluation.results,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
 def benchmark_report_to_dict(report: RetrievalBenchmarkReport) -> dict:
     return {
         "summary": asdict(report.summary),
@@ -858,6 +992,38 @@ def chunking_strategy_evaluation_to_dict(
                 "total_chunks": result.total_chunks,
                 "citation_stability": result.citation_stability,
                 "long_section_support": result.long_section_support,
+                "decision_notes": result.decision_notes,
+            }
+            for result in evaluation.results
+        ]
+    }
+
+
+def query_rewrite_candidate_evaluation_to_dict(
+    evaluation: QueryRewriteCandidateEvaluation,
+) -> dict:
+    return {
+        "results": [
+            {
+                "candidate": asdict(result.candidate),
+                "total_cases": result.total_cases,
+                "rewritten_cases": result.rewritten_cases,
+                "rewrite_rate": result.rewrite_rate,
+                "expected_empty_rewrites": result.expected_empty_rewrites,
+                "report": benchmark_report_to_dict(result.report),
+                "cases": [
+                    {
+                        "case_id": case.case_id,
+                        "category": case.category,
+                        "difficulty": case.difficulty,
+                        "original_query": case.original_query,
+                        "rewritten_query": case.rewritten_query,
+                        "rewritten": case.rewritten,
+                        "expect_empty": case.expect_empty,
+                        "result": asdict(case.result),
+                    }
+                    for case in result.cases
+                ],
                 "decision_notes": result.decision_notes,
             }
             for result in evaluation.results
@@ -986,6 +1152,22 @@ def export_chunking_strategy_evaluation_json(
     path.write_text(
         json.dumps(
             chunking_strategy_evaluation_to_dict(evaluation),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_query_rewrite_candidate_evaluation_json(
+    evaluation: QueryRewriteCandidateEvaluation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            query_rewrite_candidate_evaluation_to_dict(evaluation),
             ensure_ascii=False,
             indent=2,
         ),
@@ -1293,6 +1475,64 @@ def render_chunking_strategy_evaluation_markdown(
     return "\n".join(lines)
 
 
+def render_query_rewrite_candidate_evaluation_markdown(
+    evaluation: QueryRewriteCandidateEvaluation,
+) -> str:
+    lines = [
+        "# Query Rewrite Candidate Evaluation",
+        "",
+        "## Summary",
+        "",
+        "| Candidate | Status | Total Cases | Rewritten Cases | Rewrite Rate | Expected-empty Rewrites | Hit Rate | Citation Match Rate | Empty Handling Rate |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for result in evaluation.results:
+        summary = result.report.summary
+        lines.append(
+            f"| {result.candidate.id} | {result.candidate.implementation_status} | "
+            f"{result.total_cases} | {result.rewritten_cases} | "
+            f"{result.rewrite_rate:.4f} | {result.expected_empty_rewrites} | "
+            f"{summary.hit_rate:.4f} | {summary.citation_match_rate:.4f} | "
+            f"{summary.empty_handling_rate:.4f} |"
+        )
+
+    lines.extend(["", "## Candidate Notes", ""])
+    for result in evaluation.results:
+        lines.extend([
+            f"### {result.candidate.id}",
+            "",
+            f"- Description: {result.candidate.description}",
+            f"- Rewrite policy: {result.candidate.rewrite_policy}",
+        ])
+        lines.extend(f"- Risk note: {note}" for note in result.candidate.risk_notes)
+        lines.extend(f"- Decision note: {note}" for note in result.decision_notes)
+        lines.append("")
+
+    lines.extend([
+        "## Case Results",
+        "",
+        "| Candidate | Case | Category | Rewritten | Expected Empty | Hit@K | Citation Match | Empty Handling | Original Query | Rewritten Query |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ])
+    for result in evaluation.results:
+        for case in result.cases:
+            empty = (
+                ""
+                if case.result.empty_query_handling is None
+                else str(case.result.empty_query_handling).lower()
+            )
+            lines.append(
+                f"| {result.candidate.id} | {case.case_id} | {case.category} | "
+                f"{str(case.rewritten).lower()} | "
+                f"{str(case.expect_empty).lower()} | "
+                f"{str(case.result.hit_at_k).lower()} | "
+                f"{str(case.result.citation_match).lower()} | {empty} | "
+                f"{case.original_query} | {case.rewritten_query} |"
+            )
+    lines.append("")
+    return "\n".join(lines)
+
+
 def render_embedding_candidate_markdown(result: EmbeddingCandidateResult) -> str:
     candidate = result.candidate
     lines = [
@@ -1413,6 +1653,18 @@ def export_chunking_strategy_evaluation_markdown(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         render_chunking_strategy_evaluation_markdown(evaluation),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_query_rewrite_candidate_evaluation_markdown(
+    evaluation: QueryRewriteCandidateEvaluation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_query_rewrite_candidate_evaluation_markdown(evaluation),
         encoding="utf-8",
     )
     return path
@@ -1748,6 +2000,107 @@ def _evaluate_chunking_candidate(
             "Use retrieval benchmark evidence before deciding whether to replace it.",
         ],
     )
+
+
+def _evaluate_query_rewrite_candidate(
+    candidate: QueryRewriteCandidate,
+    cases: list[RetrievalBenchmarkCase],
+    settings: Settings,
+) -> QueryRewriteCandidateResult:
+    retriever = create_document_retriever(settings)
+    case_results: list[QueryRewriteCaseResult] = []
+    benchmark_results: list[RetrievalBenchmarkCaseResult] = []
+    expected_empty_rewrites = 0
+
+    for case in cases:
+        rewritten_query = _rewrite_query_for_candidate(candidate, case)
+        rewritten = rewritten_query != case.query
+        if rewritten and case.expect_empty:
+            expected_empty_rewrites += 1
+        rewritten_case = replace(case, query=rewritten_query)
+        benchmark_result = _run_case(retriever, rewritten_case)
+        benchmark_results.append(benchmark_result)
+        case_results.append(
+            QueryRewriteCaseResult(
+                case_id=case.id,
+                category=case.category,
+                difficulty=case.difficulty,
+                original_query=case.query,
+                rewritten_query=rewritten_query,
+                rewritten=rewritten,
+                expect_empty=case.expect_empty,
+                result=benchmark_result,
+            )
+        )
+
+    rewritten_cases = sum(1 for item in case_results if item.rewritten)
+    report = RetrievalBenchmarkReport(
+        summary=_summarize(f"{retriever.backend_name}:{candidate.id}", benchmark_results),
+        cases=benchmark_results,
+    )
+    return QueryRewriteCandidateResult(
+        candidate=candidate,
+        total_cases=len(cases),
+        rewritten_cases=rewritten_cases,
+        rewrite_rate=round(rewritten_cases / len(cases), 4) if cases else 0.0,
+        expected_empty_rewrites=expected_empty_rewrites,
+        report=report,
+        cases=case_results,
+        decision_notes=_query_rewrite_decision_notes(
+            candidate,
+            rewritten_cases,
+            expected_empty_rewrites,
+            report,
+        ),
+    )
+
+
+def _rewrite_query_for_candidate(
+    candidate: QueryRewriteCandidate,
+    case: RetrievalBenchmarkCase,
+) -> str:
+    if candidate.rewrite_policy == "none":
+        return case.query
+    if candidate.rewrite_policy == "controlled_support_rules":
+        if case.expect_empty:
+            return case.query
+        return CONTROLLED_SUPPORT_QUERY_REWRITES.get(case.id, case.query)
+    raise ValueError(
+        f"Unsupported query rewrite policy for {candidate.id}: {candidate.rewrite_policy}"
+    )
+
+
+def _query_rewrite_decision_notes(
+    candidate: QueryRewriteCandidate,
+    rewritten_cases: int,
+    expected_empty_rewrites: int,
+    report: RetrievalBenchmarkReport,
+) -> list[str]:
+    if candidate.rewrite_policy == "none":
+        return [
+            "Baseline candidate preserves every original benchmark query.",
+            "Use this as the comparison row for future rewrite strategies.",
+        ]
+
+    notes = [
+        f"Candidate rewrote {rewritten_cases} benchmark case(s) with deterministic local rules.",
+        "No LLM call, hosted provider, or runtime API behavior is introduced.",
+    ]
+    if expected_empty_rewrites == 0:
+        notes.append("Expected-empty cases were preserved to protect negative controls.")
+    else:
+        notes.append(
+            "Expected-empty cases were rewritten; this candidate must not be promoted."
+        )
+    if (
+        report.summary.hit_rate == 1.0
+        and report.summary.citation_match_rate == 1.0
+        and report.summary.empty_handling_rate == 1.0
+    ):
+        notes.append("Current seed evidence does not show a regression against fixture retrieval.")
+    else:
+        notes.append("Current seed evidence shows a regression and requires investigation.")
+    return notes
 
 
 def _load_section_candidate_chunks(source_id: str, settings: Settings):

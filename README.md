@@ -736,6 +736,28 @@ docs/benchmark/chinese-seed/chunking-candidates/qdrant-bge-m3-chunking-compariso
 
 结论：`token-window-v1` 比纯 section 多保留了一些命中，但当前 citation match 仍不足，不能替换 `markdown-paragraph-v1` 默认策略。后续更适合做“多粒度索引”或先进入 query rewrite / evidence grading 评估，而不是直接推广单一 token-window 策略。
 
+第三十六阶段 OpenSpec change `evaluate-query-rewrite-candidate` 增加离线 query rewrite candidate evidence。当前候选只使用确定性规则，不调用 LLM，不改变运行时检索默认行为，也不新增 HTTP API：
+
+```powershell
+conda run -n GRAPHRAG python -c "from pathlib import Path; from app.services.retrieval_benchmark import export_query_rewrite_candidate_evaluation; export_query_rewrite_candidate_evaluation(Path('docs/benchmark/chinese-seed/query-rewrite-candidates'))"
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/query-rewrite-candidates/query-rewrite-candidates.json
+docs/benchmark/chinese-seed/query-rewrite-candidates/query-rewrite-candidates.md
+```
+
+当前本地 seed evidence 显示：
+
+| Candidate | Rewritten Cases | Rewrite Rate | Expected-empty Rewrites | Hit Rate | Citation Match Rate | Empty Handling Rate |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `original-query-baseline` | 0 | 0.0000 | 0 | 1.0000 | 1.0000 | 1.0000 |
+| `controlled-support-rewrite-v1` | 6 | 0.2857 | 0 | 1.0000 | 1.0000 | 1.0000 |
+
+结论：受控改写在当前 fixture seed 上没有造成回归，并且保护了 expected-empty 样本；但这只是离线候选证据，不代表可以直接上线 LLM query rewrite。后续若启用运行时改写，需要先扩展真实问法、空问法和 false-positive 评估，并明确是否允许公网 LLM 或仅使用内网模型。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

@@ -1,0 +1,1899 @@
+{
+  "results": [
+    {
+      "candidate": {
+        "id": "original-query-baseline",
+        "description": "Original benchmark queries without rewrite.",
+        "implementation_status": "baseline",
+        "rewrite_policy": "none",
+        "risk_notes": [
+          "Used as the regression control for any future rewrite strategy.",
+          "Does not improve ambiguous or terse user wording."
+        ]
+      },
+      "total_cases": 21,
+      "rewritten_cases": 0,
+      "rewrite_rate": 0.0,
+      "expected_empty_rewrites": 0,
+      "report": {
+        "summary": {
+          "backend": "fixture:original-query-baseline",
+          "total_cases": 21,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 1.0,
+          "category_summaries": {
+            "cross-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "empty": {
+              "total_cases": 7,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 1.0
+            },
+            "evidence": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "exception-policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "faq": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-intent": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "operational-escalation": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "paraphrase": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "sla": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.27,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.15,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.128,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.135,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#lost-package"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.324,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.155,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.227,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.253,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "logistics_faq_2026#lost-package",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.248,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.142,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.145,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.132,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.224,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.222,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.218,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.217,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.216,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.214,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "refund-delayed-shipping",
+          "category": "policy",
+          "difficulty": "easy",
+          "original_query": "客户三天未发货能否退款？",
+          "rewritten_query": "客户三天未发货能否退款？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.27,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-delay",
+          "category": "faq",
+          "difficulty": "easy",
+          "original_query": "物流轨迹二十四小时没有更新怎么办？",
+          "rewritten_query": "物流轨迹二十四小时没有更新怎么办？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.15,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-moon-warehouse",
+          "category": "empty",
+          "difficulty": "easy",
+          "original_query": "完全不存在的月球仓库规则",
+          "rewritten_query": "完全不存在的月球仓库规则",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.128,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "refund-delivery-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "original_query": "买家等了三天还没有发出包裹，可以走售后退款吗？",
+          "rewritten_query": "买家等了三天还没有发出包裹，可以走售后退款吗？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.135,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-evidence-records",
+          "category": "evidence",
+          "difficulty": "easy",
+          "original_query": "处理退款时要保留哪些凭证和记录？",
+          "rewritten_query": "处理退款时要保留哪些凭证和记录？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-carrier-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "original_query": "快递信息一天都没变化，应该先找谁确认？",
+          "rewritten_query": "快递信息一天都没变化，应该先找谁确认？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#lost-package"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "multi-source-after-sales",
+          "category": "multi-source",
+          "difficulty": "medium",
+          "original_query": "售后同事同时关注退款记录和物流延迟时，应该查哪些资料？",
+          "rewritten_query": "售后同事同时关注退款记录和物流延迟时，应该查哪些资料？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.324,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-customized-exception",
+          "category": "exception-policy",
+          "difficulty": "medium",
+          "original_query": "定制商品拆封以后还能无理由退款吗？",
+          "rewritten_query": "定制商品拆封以后还能无理由退款吗？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.155,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-high-value-review",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "original_query": "五千元以上的高价值退款需要谁复核？",
+          "rewritten_query": "五千元以上的高价值退款需要谁复核？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.227,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-address-change-before-shipping",
+          "category": "multi-intent",
+          "difficulty": "hard",
+          "original_query": "客户说还没发货但想改地址，客服应该先退款还是先暂停发货？",
+          "rewritten_query": "客户说还没发货但想改地址，客服应该先退款还是先暂停发货？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.253,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "logistics_faq_2026#lost-package",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-same-city-timeout",
+          "category": "sla",
+          "difficulty": "medium",
+          "original_query": "同城配送两个小时还没送到，客服先核实什么？",
+          "rewritten_query": "同城配送两个小时还没送到，客服先核实什么？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-lost-package-cross-team",
+          "category": "cross-source",
+          "difficulty": "hard",
+          "original_query": "承运商确认包裹丢失后，客服要建什么工单并同步哪个团队？",
+          "rewritten_query": "承运商确认包裹丢失后，客服要建什么工单并同步哪个团队？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.248,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-address-intercept",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "original_query": "订单已经出库后用户要改收货地址，应该先联系谁拦截？",
+          "rewritten_query": "订单已经出库后用户要改收货地址，应该先联系谁拦截？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.142,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-appeal-second-review",
+          "category": "long-section",
+          "difficulty": "hard",
+          "original_query": "客户补充付款凭证和沟通截图后，退款申诉要直接关闭还是提交二线审核？",
+          "rewritten_query": "客户补充付款凭证和沟通截图后，退款申诉要直接关闭还是提交二线审核？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.145,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-batch-exception-escalation",
+          "category": "long-section",
+          "difficulty": "hard",
+          "original_query": "同一承运商一小时内多单轨迹停滞时，客服主管要汇总什么并同步哪个团队？",
+          "rewritten_query": "同一承运商一小时内多单轨迹停滞时，客服主管要汇总什么并同步哪个团队？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.132,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-membership-points",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "会员积分兑换失败以后应该怎么补偿？",
+          "rewritten_query": "会员积分兑换失败以后应该怎么补偿？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.224,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-invoice-tax-policy",
+          "category": "empty",
+          "difficulty": "hard",
+          "original_query": "企业客户要求开具跨境税务发票时需要哪些资质？",
+          "rewritten_query": "企业客户要求开具跨境税务发票时需要哪些资质？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.222,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-membership-tier-recovery",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "会员等级降级后权益如何恢复？",
+          "rewritten_query": "会员等级降级后权益如何恢复？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.218,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-coupon-approval",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "优惠券核销码过期后由谁审批？",
+          "rewritten_query": "优惠券核销码过期后由谁审批？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.217,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-password-reset-email",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "密码重置邮件收不到的规则是什么？",
+          "rewritten_query": "密码重置邮件收不到的规则是什么？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.216,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-finance-reconciliation",
+          "category": "empty",
+          "difficulty": "hard",
+          "original_query": "财务回款对账差异归属哪个流程？",
+          "rewritten_query": "财务回款对账差异归属哪个流程？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.214,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        }
+      ],
+      "decision_notes": [
+        "Baseline candidate preserves every original benchmark query.",
+        "Use this as the comparison row for future rewrite strategies."
+      ]
+    },
+    {
+      "candidate": {
+        "id": "controlled-support-rewrite-v1",
+        "description": "Deterministic support-domain rewrite for selected non-empty benchmark cases.",
+        "implementation_status": "candidate",
+        "rewrite_policy": "controlled_support_rules",
+        "risk_notes": [
+          "Only rewrites known benchmark cases; not a general production policy.",
+          "Expected-empty cases are never rewritten to avoid false positives.",
+          "Runtime adoption still requires broader false-positive evidence."
+        ]
+      },
+      "total_cases": 21,
+      "rewritten_cases": 6,
+      "rewrite_rate": 0.2857,
+      "expected_empty_rewrites": 0,
+      "report": {
+        "summary": {
+          "backend": "fixture:controlled-support-rewrite-v1",
+          "total_cases": 21,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 1.0,
+          "category_summaries": {
+            "cross-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "empty": {
+              "total_cases": 7,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 1.0
+            },
+            "evidence": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "exception-policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "faq": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-intent": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "operational-escalation": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "paraphrase": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "sla": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.125,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.123,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.121,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.13,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.12,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.231,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.121,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.143,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.241,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.123,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.236,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.122,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.133,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#high-value-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.137,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.249,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.224,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.216,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.215,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.214,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.211,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "refund-delayed-shipping",
+          "category": "policy",
+          "difficulty": "easy",
+          "original_query": "客户三天未发货能否退款？",
+          "rewritten_query": "客户三天未发货能否退款？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.125,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-delay",
+          "category": "faq",
+          "difficulty": "easy",
+          "original_query": "物流轨迹二十四小时没有更新怎么办？",
+          "rewritten_query": "物流轨迹二十四小时没有更新怎么办？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.123,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-moon-warehouse",
+          "category": "empty",
+          "difficulty": "easy",
+          "original_query": "完全不存在的月球仓库规则",
+          "rewritten_query": "完全不存在的月球仓库规则",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.121,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "refund-delivery-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "original_query": "买家等了三天还没有发出包裹，可以走售后退款吗？",
+          "rewritten_query": "客户三天未发货可以申请退款，售后专员应核验订单状态和发货记录后处理。",
+          "rewritten": true,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.13,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-evidence-records",
+          "category": "evidence",
+          "difficulty": "easy",
+          "original_query": "处理退款时要保留哪些凭证和记录？",
+          "rewritten_query": "处理退款时要保留哪些凭证和记录？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.12,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-carrier-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "original_query": "快递信息一天都没变化，应该先找谁确认？",
+          "rewritten_query": "物流轨迹超过二十四小时未更新时，应先联系承运商确认揽收和中转状态。",
+          "rewritten": true,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "multi-source-after-sales",
+          "category": "multi-source",
+          "difficulty": "medium",
+          "original_query": "售后同事同时关注退款记录和物流延迟时，应该查哪些资料？",
+          "rewritten_query": "售后同事同时关注退款记录和物流延迟时，应该查哪些资料？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.231,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-customized-exception",
+          "category": "exception-policy",
+          "difficulty": "medium",
+          "original_query": "定制商品拆封以后还能无理由退款吗？",
+          "rewritten_query": "定制商品拆封以后还能无理由退款吗？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.121,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-high-value-review",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "original_query": "五千元以上的高价值退款需要谁复核？",
+          "rewritten_query": "五千元以上的高价值退款需要谁复核？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.143,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-address-change-before-shipping",
+          "category": "multi-intent",
+          "difficulty": "hard",
+          "original_query": "客户说还没发货但想改地址，客服应该先退款还是先暂停发货？",
+          "rewritten_query": "用户同时反馈未发货和地址变更，售后专员应先暂停发货，再确认继续履约或退款。",
+          "rewritten": true,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.241,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-same-city-timeout",
+          "category": "sla",
+          "difficulty": "medium",
+          "original_query": "同城配送两个小时还没送到，客服先核实什么？",
+          "rewritten_query": "同城配送两个小时还没送到，客服先核实什么？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.123,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-lost-package-cross-team",
+          "category": "cross-source",
+          "difficulty": "hard",
+          "original_query": "承运商确认包裹丢失后，客服要建什么工单并同步哪个团队？",
+          "rewritten_query": "承运商确认包裹丢失后，客服应创建物流异常工单，并同步售后团队评估补发或退款。",
+          "rewritten": true,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.236,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-address-intercept",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "original_query": "订单已经出库后用户要改收货地址，应该先联系谁拦截？",
+          "rewritten_query": "订单已经出库后用户要改收货地址，应该先联系谁拦截？",
+          "rewritten": false,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.122,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-appeal-second-review",
+          "category": "long-section",
+          "difficulty": "hard",
+          "original_query": "客户补充付款凭证和沟通截图后，退款申诉要直接关闭还是提交二线审核？",
+          "rewritten_query": "退款申诉复核场景中，客服应补充原始订单、沟通记录和拒绝理由交由二线复核。",
+          "rewritten": true,
+          "expect_empty": false,
+          "result": {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.133,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#high-value-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-batch-exception-escalation",
+          "category": "long-section",
+          "difficulty": "hard",
+          "original_query": "同一承运商一小时内多单轨迹停滞时，客服主管要汇总什么并同步哪个团队？",
+          "rewritten_query": "批量物流异常需要创建批量异常工单，记录受影响订单范围并通知运营负责人。",
+          "rewritten": true,
+          "expect_empty": false,
+          "result": {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.137,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-membership-points",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "会员积分兑换失败以后应该怎么补偿？",
+          "rewritten_query": "会员积分兑换失败以后应该怎么补偿？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.249,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-invoice-tax-policy",
+          "category": "empty",
+          "difficulty": "hard",
+          "original_query": "企业客户要求开具跨境税务发票时需要哪些资质？",
+          "rewritten_query": "企业客户要求开具跨境税务发票时需要哪些资质？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.224,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-membership-tier-recovery",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "会员等级降级后权益如何恢复？",
+          "rewritten_query": "会员等级降级后权益如何恢复？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.216,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-coupon-approval",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "优惠券核销码过期后由谁审批？",
+          "rewritten_query": "优惠券核销码过期后由谁审批？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.215,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-password-reset-email",
+          "category": "empty",
+          "difficulty": "medium",
+          "original_query": "密码重置邮件收不到的规则是什么？",
+          "rewritten_query": "密码重置邮件收不到的规则是什么？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.214,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-finance-reconciliation",
+          "category": "empty",
+          "difficulty": "hard",
+          "original_query": "财务回款对账差异归属哪个流程？",
+          "rewritten_query": "财务回款对账差异归属哪个流程？",
+          "rewritten": false,
+          "expect_empty": true,
+          "result": {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.211,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        }
+      ],
+      "decision_notes": [
+        "Candidate rewrote 6 benchmark case(s) with deterministic local rules.",
+        "No LLM call, hosted provider, or runtime API behavior is introduced.",
+        "Expected-empty cases were preserved to protect negative controls.",
+        "Current seed evidence does not show a regression against fixture retrieval."
+      ]
+    }
+  ]
+}

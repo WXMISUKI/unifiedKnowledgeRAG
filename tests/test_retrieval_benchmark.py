@@ -8,14 +8,17 @@ from app.services.retrieval_benchmark import (
     candidate_evaluation_to_dict,
     default_embedding_candidates,
     default_chunking_strategy_candidates,
+    default_query_rewrite_candidates,
     embedding_candidate_result_to_dict,
     EmbeddingCandidate,
     export_chunking_strategy_evaluation,
     export_chinese_seed_evidence_bundle,
+    export_query_rewrite_candidate_evaluation,
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
+    evaluate_query_rewrite_candidates,
     evaluate_retrieval_candidates,
     evaluate_embedding_candidates,
     export_benchmark_report_json,
@@ -24,10 +27,12 @@ from app.services.retrieval_benchmark import (
     render_chunking_strategy_evaluation_markdown,
     render_embedding_candidate_markdown,
     render_benchmark_report_markdown,
+    render_query_rewrite_candidate_evaluation_markdown,
     render_qdrant_chunking_comparison_markdown,
     render_qdrant_threshold_recommendation_markdown,
     render_qdrant_threshold_sweep_evidence_markdown,
     fixture_chinese_seed_retrieval_candidate,
+    query_rewrite_candidate_evaluation_to_dict,
     RetrievalCandidate,
     run_retrieval_benchmark,
     ThresholdRecommendationGates,
@@ -285,6 +290,68 @@ def test_default_chunking_strategy_candidates_include_baseline_and_planned():
     assert by_id["markdown-section-v1"].implementation_status == "runnable"
     assert by_id["token-window-v1"].implementation_status == "runnable"
     assert "long paragraphs" in by_id["token-window-v1"].expected_fit
+
+
+def test_default_query_rewrite_candidates_include_baseline_and_controlled():
+    candidates = default_query_rewrite_candidates()
+    by_id = {candidate.id: candidate for candidate in candidates}
+
+    assert by_id["original-query-baseline"].rewrite_policy == "none"
+    assert by_id["original-query-baseline"].implementation_status == "baseline"
+    assert by_id["controlled-support-rewrite-v1"].rewrite_policy == (
+        "controlled_support_rules"
+    )
+    assert by_id["controlled-support-rewrite-v1"].implementation_status == "candidate"
+
+
+def test_query_rewrite_candidate_preserves_expected_empty_cases():
+    cases = load_benchmark_cases(FIXTURE_PATH)
+    candidate = next(
+        candidate
+        for candidate in default_query_rewrite_candidates()
+        if candidate.id == "controlled-support-rewrite-v1"
+    )
+
+    evaluation = evaluate_query_rewrite_candidates(
+        cases=cases,
+        candidates=[candidate],
+        settings=Settings(rag_retrieval_backend="fixture"),
+    )
+
+    result = evaluation.results[0]
+    assert result.rewritten_cases == 6
+    assert result.expected_empty_rewrites == 0
+    assert result.report.summary.hit_rate == 1.0
+    assert result.report.summary.citation_match_rate == 1.0
+    assert result.report.summary.empty_handling_rate == 1.0
+    assert all(
+        case.original_query == case.rewritten_query
+        for case in result.cases
+        if case.expect_empty
+    )
+
+
+def test_exports_query_rewrite_candidate_evaluation(tmp_path):
+    output_dir = tmp_path / "query-rewrite"
+
+    evaluation = export_query_rewrite_candidate_evaluation(output_dir=output_dir)
+
+    assert evaluation.json_path == output_dir / "query-rewrite-candidates.json"
+    assert evaluation.markdown_path == output_dir / "query-rewrite-candidates.md"
+
+    payload = json.loads(evaluation.json_path.read_text(encoding="utf-8"))
+    markdown = evaluation.markdown_path.read_text(encoding="utf-8")
+
+    assert payload == query_rewrite_candidate_evaluation_to_dict(evaluation)
+    by_id = {result.candidate.id: result for result in evaluation.results}
+    assert by_id["original-query-baseline"].rewritten_cases == 0
+    assert by_id["controlled-support-rewrite-v1"].rewritten_cases == 6
+    assert by_id["controlled-support-rewrite-v1"].expected_empty_rewrites == 0
+    assert "# Query Rewrite Candidate Evaluation" in markdown
+    assert "| Candidate | Status | Total Cases | Rewritten Cases | Rewrite Rate |" in markdown
+    assert "controlled-support-rewrite-v1" in markdown
+    assert "refund-delivery-paraphrase" in markdown
+    assert render_query_rewrite_candidate_evaluation_markdown(evaluation) == markdown
 
 
 def test_embedding_candidate_evaluation_remains_review_only():

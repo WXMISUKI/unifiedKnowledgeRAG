@@ -209,6 +209,11 @@ The system SHALL maintain an internal research reference that maps mature Agenti
 - **WHEN** a future change proposes agentic retrieval, query rewriting, hybrid retrieval, reranking, or GraphRAG storage
 - **THEN** the change references the research note or fresher benchmark evidence before adding runtime dependencies
 
+#### Scenario: Query rewrite evidence precedes runtime adoption
+
+- **WHEN** a future change proposes enabling query rewriting in runtime retrieval
+- **THEN** it references local query rewrite candidate evidence and explicitly reviews expected-empty false-positive risk
+
 #### Scenario: Pattern adoption remains provider-neutral
 
 - **WHEN** a mature pattern is selected for implementation

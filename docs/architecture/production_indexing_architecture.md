@@ -230,6 +230,22 @@ Preferred evidence format:
 - JSON report for machine-readable comparison.
 - Markdown report for human review in docs, PRs, or OpenSpec artifacts.
 
+## Query Rewrite Candidate Evidence
+
+Query rewrite is now represented as local service-level candidate evidence before any runtime adoption. The current evidence lives under:
+
+- `docs/benchmark/chinese-seed/query-rewrite-candidates/query-rewrite-candidates.json`
+- `docs/benchmark/chinese-seed/query-rewrite-candidates/query-rewrite-candidates.md`
+
+Current candidates:
+
+| Candidate | Status | Boundary |
+| --- | --- | --- |
+| `original-query-baseline` | baseline | preserves every original benchmark query |
+| `controlled-support-rewrite-v1` | candidate | rewrites selected non-empty support cases with deterministic local rules |
+
+The controlled candidate rewrites 6 of 21 seed cases, rewrites 0 expected-empty cases, and does not regress fixture hit rate, citation match rate, or empty handling. This is not runtime approval. Before enabling query rewriting in the retrieval API, add broader true/false positive cases, review empty-query false positives explicitly, and decide whether rewriting may use a hosted LLM, a private-network model, or deterministic domain rules only.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.
