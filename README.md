@@ -78,6 +78,8 @@ $env:RAG_ANSWER_COMPOSER_MODEL="deterministic-extractive-v1"
 
 Answer composer 内部会构造 provider-owned prompt package。当前不会暴露完整 prompt 文本，也不会调用 LLM；answered 结果会在 `metadata.prompt_package` 中返回 `cited-answer-prompt-v1`、引用策略和允许使用的 citations，方便后续 Qwen 或本地 LLM adapter 复用同一套证据包装与引用约束。
 
+Prompt package 还会被内部渲染为稳定的 chat-style messages。接口只暴露 `metadata.prompt_render` 的摘要，例如 `renderer=cited-chat-messages-v1`、`prompt_package_id`、`message_count` 和引用策略；完整 prompt 内容仍是 provider 内部实现细节，避免过早固化模型提示词。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：
