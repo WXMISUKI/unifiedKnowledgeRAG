@@ -1,0 +1,105 @@
+{
+  "summary": {
+    "backend": "fixture",
+    "total_cases": 4,
+    "hit_rate": 1.0,
+    "citation_match_rate": 1.0,
+    "empty_handling_rate": 0.0,
+    "category_summaries": {
+      "form-name": {
+        "total_cases": 1,
+        "hit_rate": 1.0,
+        "citation_match_rate": 1.0,
+        "empty_handling_rate": 0.0
+      },
+      "order-like-id": {
+        "total_cases": 1,
+        "hit_rate": 1.0,
+        "citation_match_rate": 1.0,
+        "empty_handling_rate": 0.0
+      },
+      "policy-code": {
+        "total_cases": 1,
+        "hit_rate": 1.0,
+        "citation_match_rate": 1.0,
+        "empty_handling_rate": 0.0
+      },
+      "workflow-acronym": {
+        "total_cases": 1,
+        "hit_rate": 1.0,
+        "citation_match_rate": 1.0,
+        "empty_handling_rate": 0.0
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "exact-refund-policy-code",
+      "category": "policy-code",
+      "difficulty": "medium",
+      "hit_at_k": true,
+      "citation_match": true,
+      "empty_query_handling": null,
+      "latency_ms": 0.341,
+      "returned_citations": [
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#high-value-review"
+      ],
+      "returned_source_ids": [
+        "refund_policy_docs",
+        "refund_policy_docs"
+      ]
+    },
+    {
+      "id": "exact-refund-form-name",
+      "category": "form-name",
+      "difficulty": "medium",
+      "hit_at_k": true,
+      "citation_match": true,
+      "empty_query_handling": null,
+      "latency_ms": 0.169,
+      "returned_citations": [
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#appeal-review"
+      ],
+      "returned_source_ids": [
+        "refund_policy_docs",
+        "refund_policy_docs"
+      ]
+    },
+    {
+      "id": "exact-logistics-workflow-acronym",
+      "category": "workflow-acronym",
+      "difficulty": "hard",
+      "hit_at_k": true,
+      "citation_match": true,
+      "empty_query_handling": null,
+      "latency_ms": 0.249,
+      "returned_citations": [
+        "logistics_faq_2026#exact-logistics-id",
+        "logistics_faq_2026#batch-exception"
+      ],
+      "returned_source_ids": [
+        "logistics_faq",
+        "logistics_faq"
+      ]
+    },
+    {
+      "id": "exact-logistics-order-id",
+      "category": "order-like-id",
+      "difficulty": "hard",
+      "hit_at_k": true,
+      "citation_match": true,
+      "empty_query_handling": null,
+      "latency_ms": 0.157,
+      "returned_citations": [
+        "logistics_faq_2026#exact-logistics-id",
+        "logistics_faq_2026#batch-exception"
+      ],
+      "returned_source_ids": [
+        "logistics_faq",
+        "logistics_faq"
+      ]
+    }
+  ]
+}

@@ -53,6 +53,9 @@ FIXTURE_PATH = Path("tests/fixtures/retrieval_benchmark_cases.json")
 EVIDENCE_GRADING_STRESS_PATH = Path(
     "tests/fixtures/evidence_grading_stress_cases.json"
 )
+EXACT_TERM_IDENTIFIER_PATH = Path(
+    "tests/fixtures/exact_term_identifier_cases.json"
+)
 
 
 def test_loads_retrieval_benchmark_cases():
@@ -399,6 +402,41 @@ def test_loads_evidence_grading_stress_cases_separately():
         "missing-evidence",
         "unexpected-evidence",
     }
+
+
+def test_loads_exact_term_identifier_cases_separately():
+    baseline_cases = load_benchmark_cases(FIXTURE_PATH)
+    exact_cases = load_benchmark_cases(EXACT_TERM_IDENTIFIER_PATH)
+
+    assert len(baseline_cases) == 21
+    assert [case.id for case in exact_cases] == [
+        "exact-refund-policy-code",
+        "exact-refund-form-name",
+        "exact-logistics-workflow-acronym",
+        "exact-logistics-order-id",
+    ]
+    assert {case.category for case in exact_cases} == {
+        "policy-code",
+        "form-name",
+        "workflow-acronym",
+        "order-like-id",
+    }
+
+
+def test_exact_term_identifier_cases_pass_fixture_backend():
+    exact_cases = load_benchmark_cases(EXACT_TERM_IDENTIFIER_PATH)
+
+    report = run_retrieval_benchmark(
+        exact_cases,
+        Settings(rag_retrieval_backend="fixture"),
+    )
+
+    assert report.summary.total_cases == 4
+    assert report.summary.hit_rate == 1.0
+    assert report.summary.citation_match_rate == 1.0
+    assert report.summary.empty_handling_rate == 0.0
+    assert report.cases[0].returned_citations[0] == "refund_policy_2026#exact-refund-code"
+    assert report.cases[-1].returned_citations[0] == "logistics_faq_2026#exact-logistics-id"
 
 
 def test_evidence_grading_stress_cases_expose_failure_labels():

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "exact-refund-policy-code",
+    "category": "policy-code",
+    "difficulty": "medium",
+    "query": "RFD-2026-003 对应哪类退款复核？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  },
+  {
+    "id": "exact-refund-form-name",
+    "category": "form-name",
+    "difficulty": "medium",
+    "query": "AF-REFUND-02 表单需要关联哪些付款凭证？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  },
+  {
+    "id": "exact-logistics-workflow-acronym",
+    "category": "workflow-acronym",
+    "difficulty": "hard",
+    "query": "LST-BATCH-OPS 是什么升级代号？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#exact-logistics-id",
+    "expect_empty": false
+  },
+  {
+    "id": "exact-logistics-order-id",
+    "category": "order-like-id",
+    "difficulty": "hard",
+    "query": "ORD-ZS-2026-0007 用于演示哪类物流升级凭据？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#exact-logistics-id",
+    "expect_empty": false
+  }
+]

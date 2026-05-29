@@ -279,6 +279,24 @@ The stress fixture covers:
 
 Current stress evidence shows `citation-match-grader-v1` records one related-insufficient case, one missing-evidence case, and one unexpected-evidence case. `source-match-grader-v1` over-credits the same-source/wrong-citation case. Future runtime answer gates should prefer citation-level or answer-bearing evidence over source-level evidence alone, and should be evaluated against more customer-like stress cases before promotion.
 
+## Exact-Term Identifier Evidence
+
+Exact-term and identifier-heavy cases are maintained separately from the baseline Chinese seed so the project can evaluate dense-only retrieval against lexical stress without disrupting historical reports. The current fixture evidence lives under:
+
+- `docs/benchmark/chinese-seed/exact-term-candidates/exact-term-fixture-baseline.json`
+- `docs/benchmark/chinese-seed/exact-term-candidates/exact-term-fixture-baseline.md`
+
+The fixture covers:
+
+| Category | Example Anchor | Purpose |
+| --- | --- | --- |
+| policy code | `RFD-2026-003` | tests policy-number lookup |
+| form name | `AF-REFUND-02` | tests exact form-name lookup |
+| workflow acronym | `LST-BATCH-OPS` | tests acronym-heavy process lookup |
+| order-like id | `ORD-ZS-2026-0007` | tests order-style identifier lookup |
+
+The fixture backend currently passes all four cases. This is only a contract baseline. Before adding sparse vectors, BM25, or dense+sparse hybrid retrieval, run the same fixture through Qdrant+BGE-M3 or fresher customer-specific dense retrieval evidence and identify concrete dense-only misses.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

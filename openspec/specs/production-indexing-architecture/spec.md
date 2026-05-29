@@ -209,6 +209,11 @@ The system SHALL maintain an internal research reference that maps mature Agenti
 - **WHEN** a future change proposes agentic retrieval, query rewriting, evidence grading, hybrid retrieval, reranking, or GraphRAG storage
 - **THEN** the change references the research note or fresher benchmark evidence before adding runtime dependencies
 
+#### Scenario: Exact-term evidence precedes hybrid retrieval
+
+- **WHEN** a future change proposes sparse vectors, BM25, or dense+sparse hybrid retrieval
+- **THEN** it references exact-term and identifier benchmark evidence and explains which dense-only misses justify the added retrieval complexity
+
 #### Scenario: Query rewrite evidence precedes runtime adoption
 
 - **WHEN** a future change proposes enabling query rewriting in runtime retrieval

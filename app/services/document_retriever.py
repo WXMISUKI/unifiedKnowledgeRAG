@@ -32,6 +32,16 @@ DOCUMENTS = [
     DocumentChunk(
         source_id="refund_policy_docs",
         document_id="refund_policy_2026",
+        title="精确退款编码",
+        text=(
+            "政策编号 RFD-2026-003 适用于三天未发货退款复核；"
+            "售后专员需填写表单 AF-REFUND-02，并关联原订单编号和付款凭证。"
+        ),
+        citation="refund_policy_2026#exact-refund-code",
+    ),
+    DocumentChunk(
+        source_id="refund_policy_docs",
+        document_id="refund_policy_2026",
         title="退款例外规则",
         text="定制商品、已拆封影响二次销售的商品，除质量问题外不支持无理由退款。",
         citation="refund_policy_2026#exception",
@@ -99,6 +109,16 @@ DOCUMENTS = [
             "工单需要同步物流运营团队判断是否触发承运商升级沟通，同时通知售后团队准备补发、退款或安抚方案，避免单个客服重复联系造成口径不一致。"
         ),
         citation="logistics_faq_2026#batch-exception",
+    ),
+    DocumentChunk(
+        source_id="logistics_faq",
+        document_id="logistics_faq_2026",
+        title="精确物流标识",
+        text=(
+            "工作流缩写 LST-BATCH-OPS 是批量物流异常升级代号；"
+            "样例订单 ORD-ZS-2026-0007 用于演示承运商网点滞留后的拦截和升级凭据。"
+        ),
+        citation="logistics_faq_2026#exact-logistics-id",
     ),
 ]
 

@@ -802,6 +802,30 @@ docs/benchmark/chinese-seed/evidence-grading-stress/evidence-grading-candidates.
 
 结论：严格 citation grader 能把“同 source 但 citation 不足”识别为 `related_insufficient`，宽松 source grader 会把它放过；两者都会暴露漏召回和 expected-empty 误召回。这说明后续若做 runtime answer gate，不能只按 source 命中判断，需要继续扩展真实 false-positive/false-negative 样本并评估是否需要 reranker 或更细粒度 citation。
 
+第三十九阶段 OpenSpec change `expand-exact-term-identifier-benchmark-cases` 增加 exact-term / identifier benchmark fixture。它独立于主中文 seed，用来专门观察政策编号、表单名、工作流缩写、订单样式 ID 这类问题是否会成为 dense-only retrieval 的短板：
+
+```powershell
+conda run -n GRAPHRAG python -c "from pathlib import Path; from app.services.retrieval_benchmark import load_benchmark_cases, run_retrieval_benchmark, export_benchmark_report_json, export_benchmark_report_markdown; from app.config import Settings; cases=load_benchmark_cases(Path('tests/fixtures/exact_term_identifier_cases.json')); report=run_retrieval_benchmark(cases, Settings(rag_retrieval_backend='fixture')); output=Path('docs/benchmark/chinese-seed/exact-term-candidates'); export_benchmark_report_json(report, output / 'exact-term-fixture-baseline.json'); export_benchmark_report_markdown(report, output / 'exact-term-fixture-baseline.md')"
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/exact-term-candidates/exact-term-fixture-baseline.json
+docs/benchmark/chinese-seed/exact-term-candidates/exact-term-fixture-baseline.md
+```
+
+当前 exact-term fixture baseline 显示：
+
+| Category | Cases | Hit Rate | Citation Match Rate |
+| --- | ---: | ---: | ---: |
+| `policy-code` | 1 | 1.0000 | 1.0000 |
+| `form-name` | 1 | 1.0000 | 1.0000 |
+| `workflow-acronym` | 1 | 1.0000 | 1.0000 |
+| `order-like-id` | 1 | 1.0000 | 1.0000 |
+
+结论：fixture backend 可以命中这些精确词锚点，但这只是本地合同 baseline。后续是否需要 sparse/hybrid retrieval，应基于 Qdrant+BGE-M3 或真实向量检索对这组 exact-term fixture 的表现决定，不能因为 fixture 通过就直接认为 dense-only 足够。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

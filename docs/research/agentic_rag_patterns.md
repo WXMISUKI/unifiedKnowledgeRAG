@@ -19,6 +19,7 @@ The provider currently has:
 - Local query rewrite candidate evidence that compares original queries with deterministic controlled rewrites.
 - Local evidence grading candidate evidence that labels answer-bearing, insufficient, missing, and expected-empty outcomes.
 - A dedicated evidence grading stress fixture that exposes related-insufficient, missing-evidence, and unexpected-evidence outcomes without replacing the main Chinese seed.
+- A dedicated exact-term / identifier fixture that covers policy codes, form names, workflow acronyms, and order-like ids.
 
 Current evidence says:
 
@@ -28,6 +29,7 @@ Current evidence says:
 - `controlled-support-rewrite-v1` rewrites selected non-empty seed cases without regressing fixture metrics, while preserving expected-empty cases.
 - `citation-match-grader-v1` and `source-match-grader-v1` establish a local evidence grading shape, but harder insufficient-evidence cases are still needed before runtime answer gating.
 - Evidence grading stress evidence shows strict citation grading can catch related-but-insufficient evidence that source-level grading would over-credit.
+- Exact-term fixture evidence now exists as a contract baseline; Qdrant+BGE or future dense retrieval evidence must decide whether hybrid/sparse retrieval is justified.
 
 ## Mature Pattern Families
 
@@ -222,7 +224,7 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Exact-term / identifier benchmark cases | Required before deciding hybrid retrieval |
+| 1 | Qdrant+BGE exact-term smoke evidence | Needed to see whether dense-only retrieval misses exact identifiers |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
 | 3 | Dense+sparse hybrid candidate | Only after dense-only misses justify schema/query complexity |
 | 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
@@ -241,10 +243,10 @@ Dependency risk:
 
 ## Near-Term Recommendation
 
-After insufficient-evidence stress cases are in place, the next implementation slice should be:
+After exact-term identifier cases are in place, the next implementation slice should be:
 
 ```text
-expand-exact-term-identifier-benchmark-cases
+evaluate-qdrant-exact-term-smoke
 ```
 
-It should add policy numbers, order-like ids, form names, and business acronyms so dense-only retrieval can be tested against cases that may need sparse or hybrid retrieval later.
+It should run the exact-term fixture through Qdrant+BGE-M3 dense retrieval before proposing sparse vectors, BM25, or hybrid query fusion.
