@@ -83,6 +83,18 @@ class RagRetrieveResult(BaseModel):
     documents: list[EvidenceDocument]
 
 
+class RagAnswerRequest(RagRetrieveRequest):
+    pass
+
+
+class RagAnswerResult(BaseModel):
+    answer_status: str
+    answer: str
+    citations: list[str]
+    documents: list[EvidenceDocument]
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
 class ProviderError(BaseModel):
     code: str
     message: str
@@ -180,6 +192,12 @@ class IndexStatusResponse(BaseModel):
 class RagRetrieveResponse(BaseModel):
     ok: bool
     result: RagRetrieveResult | None = None
+    error: ProviderError | None = None
+
+
+class RagAnswerResponse(BaseModel):
+    ok: bool
+    result: RagAnswerResult | None = None
     error: ProviderError | None = None
 
 

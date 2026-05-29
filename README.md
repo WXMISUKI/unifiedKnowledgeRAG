@@ -13,10 +13,13 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /api/catalog`
 - `GET /api/rag/sources`
 - `POST /api/rag/retrieve`
+- `POST /api/rag/answer`
 - `GET /api/graph/schemas`
 - `POST /api/graph/query`
 
 GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，图数据库、ontology traversal、hybrid retrieval 将在后续 change 中实现。
+
+`POST /api/rag/answer` 是 retrieval 之上的引用式回答编排入口。当前第一版使用确定性 extractive composer，不调用 Qwen、OpenAI 或本地大模型；它用于先稳定 answer envelope、citation、evidence 和 insufficient-evidence 合同。生产 LLM、流式回答、reranker、多 chunk synthesis 和 GraphRAG 多跳仍会按后续 OpenSpec change 单独评估。
 
 ## 本地运行
 
@@ -30,6 +33,20 @@ conda run -n GRAPHRAG uvicorn app.main:app --reload --port 8020
 conda run -n GRAPHRAG python -m pytest tests/test_provider_contract.py -q
 openspec validate add-knowledge-provider-v1 --strict
 ```
+
+## 引用式回答 MVP
+
+本地 fixture 后端下可以直接验证 answer orchestration：
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8020/api/rag/answer `
+  -ContentType "application/json" `
+  -Body '{"query":"客户三天未发货能否退款？","knowledge_base_ids":["refund_policy_docs"],"top_k":2}'
+```
+
+有证据时返回 `answer_status=answered`，并携带 `answer`、`citations`、`documents` 和 `metadata`。没有可用证据时返回 `ok=true` 且 `answer_status=insufficient_evidence`，不会伪造答案，也不会把证据不足当成 provider error。
 
 ## Python 环境
 

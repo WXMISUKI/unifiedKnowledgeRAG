@@ -110,6 +110,33 @@ def test_retrieval_returns_index_not_ready_for_llamaindex(monkeypatch, tmp_path)
     assert body["error"]["code"] == "INDEX_NOT_READY"
 
 
+def test_answer_returns_index_not_ready_for_llamaindex(monkeypatch, tmp_path):
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n客户三天未发货可以申请退款。",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("RAG_RETRIEVAL_BACKEND", "llamaindex")
+    monkeypatch.setenv("RAG_SOURCE_DIR", str(source_dir))
+    monkeypatch.setenv("RAG_INDEX_DIR", str(tmp_path / "index"))
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/rag/answer",
+        json={
+            "query": "三天未发货",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 1,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INDEX_NOT_READY"
+
+
 def test_retrieval_returns_index_not_ready_before_qdrant_query(monkeypatch, tmp_path):
     source_dir = tmp_path / "sources"
     source_dir.mkdir()

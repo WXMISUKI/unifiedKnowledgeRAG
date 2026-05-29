@@ -71,6 +71,33 @@ def test_rag_retrieve_returns_compact_context_and_citations():
     assert body["result"]["documents"][0]["citation"] == "refund_policy_2026#section-3"
 
 
+def test_rag_answer_returns_cited_answer_envelope():
+    response = client.post(
+        "/api/rag/answer",
+        json={
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+            "filters": {
+                "agent_id": "ecommerce_support",
+                "role": "after_sales_specialist",
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["answer_status"] == "answered"
+    assert "三天未发货" in body["result"]["answer"]
+    assert body["result"]["citations"]
+    document_citations = {
+        document["citation"] for document in body["result"]["documents"]
+    }
+    assert set(body["result"]["citations"]).issubset(document_citations)
+    assert body["result"]["metadata"]["composer"] == "deterministic-extractive-v1"
+
+
 def test_rag_retrieve_empty_result_is_explicit_success():
     response = client.post(
         "/api/rag/retrieve",
@@ -94,9 +121,58 @@ def test_rag_retrieve_empty_result_is_explicit_success():
     }
 
 
+def test_rag_answer_empty_result_is_insufficient_evidence():
+    response = client.post(
+        "/api/rag/answer",
+        json={
+            "query": "完全不存在的月球仓库规则",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 3,
+            "filters": {"agent_id": "ecommerce_support"},
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body == {
+        "ok": True,
+        "result": {
+            "answer_status": "insufficient_evidence",
+            "answer": "",
+            "citations": [],
+            "documents": [],
+            "metadata": {
+                "composer": "deterministic-extractive-v1",
+                "evidence_count": 0,
+                "retrieval_backend": "fixture",
+            },
+        },
+        "error": None,
+    }
+
+
 def test_rag_retrieve_unknown_source_returns_structured_error():
     response = client.post(
         "/api/rag/retrieve",
+        json={
+            "query": "测试",
+            "knowledge_base_ids": ["missing_docs"],
+            "top_k": 3,
+            "filters": {"agent_id": "ecommerce_support"},
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["result"] is None
+    assert body["error"]["code"] == "UNKNOWN_KNOWLEDGE_BASE"
+    assert "missing_docs" in body["error"]["message"]
+
+
+def test_rag_answer_unknown_source_returns_structured_error():
+    response = client.post(
+        "/api/rag/answer",
         json={
             "query": "测试",
             "knowledge_base_ids": ["missing_docs"],
