@@ -24,6 +24,7 @@ def test_capabilities_include_rag_and_graph_boundaries():
     body = response.json()
     capability_ids = {item["id"] for item in body["capabilities"]}
     assert "knowledge.rag.retrieve" in capability_ids
+    assert "knowledge.rag.answer" in capability_ids
     assert "knowledge.graph.query" in capability_ids
 
 

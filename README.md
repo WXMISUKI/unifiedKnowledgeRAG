@@ -17,6 +17,12 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /api/graph/schemas`
 - `POST /api/graph/query`
 
+`GET /api/capabilities` 当前暴露三个稳定能力 id：
+
+- `knowledge.rag.retrieve`：返回引用证据和紧凑 answer context。
+- `knowledge.rag.answer`：执行引用式回答编排、evidence gate 和 composer boundary。
+- `knowledge.graph.query`：GraphRAG 查询合同边界，当前仍是 planned。
+
 GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，图数据库、ontology traversal、hybrid retrieval 将在后续 change 中实现。
 
 `POST /api/rag/answer` 是 retrieval 之上的引用式回答编排入口。当前第一版使用确定性 extractive composer，不调用 Qwen、OpenAI 或本地大模型；它用于先稳定 answer envelope、citation、evidence 和 insufficient-evidence 合同。生产 LLM、流式回答、reranker、多 chunk synthesis 和 GraphRAG 多跳仍会按后续 OpenSpec change 单独评估。

@@ -15,6 +15,14 @@ def capabilities() -> CapabilitiesResponse:
                 description="Retrieve compact document evidence with stable citations.",
             ),
             Capability(
+                id="knowledge.rag.answer",
+                status="ready",
+                description=(
+                    "Compose cited document RAG answers with evidence gating and "
+                    "configurable composer boundaries."
+                ),
+            ),
+            Capability(
                 id="knowledge.graph.query",
                 status="planned",
                 description="Graph query contract boundary; execution is deferred.",
