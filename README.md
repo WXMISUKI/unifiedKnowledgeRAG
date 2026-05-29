@@ -1040,6 +1040,62 @@ docs/benchmark/chinese-seed/noisy-identifier-gating-candidates/qdrant-bge-m3-hyb
 
 结论：alias-aware gate 证明了“小型本地归一化表 + strict identifier gate”的可行性，但它仍不是生产别名治理。生产推广前需要把 alias 来源、审批、版本、审计、冲突处理做成显式流程，并继续补编号跨 chunk、OCR 噪声更强、无编号语义问题和 noisy top-k reranker/evidence grading 证据。
 
+第四十六阶段 OpenSpec change `add-alias-governance-split-chunk-benchmark` 将别名规则从代码中的硬编码推进为本地治理 catalog，并增加 split-chunk 风险证据。
+
+新增 alias catalog：
+
+```text
+app/data/identifier_alias_catalog.json
+```
+
+新增 split-chunk source / fixture：
+
+```text
+app/data/sources/split_refund_policy_docs.md
+tests/fixtures/split_chunk_identifier_cases.json
+tests/fixtures/no_benchmark_cases.json
+```
+
+alias governance 导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --alias-governance `
+  --output-dir docs/benchmark/chinese-seed/alias-governance-candidates
+```
+
+split-chunk gating 导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-gating-candidate `
+  --output-dir docs/benchmark/chinese-seed/split-chunk-gating-candidates `
+  --cases-path tests/fixtures/split_chunk_identifier_cases.json `
+  --empty-cases-path tests/fixtures/no_benchmark_cases.json `
+  --source-id split_refund_policy_docs `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/alias-governance-candidates/identifier-alias-governance.json
+docs/benchmark/chinese-seed/alias-governance-candidates/identifier-alias-governance.md
+docs/benchmark/chinese-seed/split-chunk-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.json
+docs/benchmark/chinese-seed/split-chunk-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.md
+```
+
+当前 evidence 显示：
+
+| Evidence | Result | Notes |
+| --- | --- | --- |
+| alias governance | 6 aliases, all `candidate`, all `medium` risk | 仍需 owner approval、版本、审计和冲突处理，不能当生产 alias service |
+| split-chunk gating | hit rate `0.0000`, citation match `0.0000` | raw hybrid 返回了 `policy-code` 和 `form-code` 两个相关 chunk，但 strict gate 因没有单个 chunk 同时包含两个 identifier 而全部过滤 |
+
+结论：alias 方向需要治理流程，而不是继续硬编码；split-chunk 结果说明 strict identifier gate 不能单独解决“相关证据分散在多个 chunk”的企业文档问题。下一步应评估 parent/section context、multi-chunk evidence aggregation 或 reranker/evidence grading，而不是直接把 strict gate 推为默认。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

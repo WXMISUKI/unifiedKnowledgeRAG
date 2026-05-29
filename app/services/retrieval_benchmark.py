@@ -1,5 +1,6 @@
 import json
 import re
+from collections import Counter
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -161,6 +162,28 @@ class QdrantHybridGatingEvidenceReport:
     cases: list[HybridGatingCaseResult]
     metadata: dict[str, str | list[str] | dict[str, str]]
     indexed_sources: dict[str, dict[str, str | int]]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class IdentifierAliasRule:
+    id: str
+    canonical_prefix: str
+    match_pattern: str
+    segment_widths: list[int]
+    owner: str
+    status: str
+    version: str
+    risk_level: str
+    notes: list[str]
+
+
+@dataclass(frozen=True)
+class IdentifierAliasGovernanceReport:
+    aliases: list[IdentifierAliasRule]
+    summary: dict[str, int | dict[str, int]]
+    decision_notes: list[str]
     json_path: Path | None = None
     markdown_path: Path | None = None
 
@@ -1115,6 +1138,33 @@ def export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
     )
 
 
+def export_identifier_alias_governance_evidence(
+    output_dir: Path,
+    catalog_path: Path = Path("app/data/identifier_alias_catalog.json"),
+) -> IdentifierAliasGovernanceReport:
+    aliases = load_identifier_alias_catalog(catalog_path)
+    report = IdentifierAliasGovernanceReport(
+        aliases=aliases,
+        summary=_alias_governance_summary(aliases),
+        decision_notes=_alias_governance_decision_notes(aliases),
+    )
+    json_path = export_identifier_alias_governance_json(
+        report,
+        output_dir / "identifier-alias-governance.json",
+    )
+    markdown_path = export_identifier_alias_governance_markdown(
+        report,
+        output_dir / "identifier-alias-governance.md",
+    )
+    return IdentifierAliasGovernanceReport(
+        aliases=report.aliases,
+        summary=report.summary,
+        decision_notes=report.decision_notes,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
 def export_qdrant_bge_threshold_sweep_evidence(
     output_dir: Path,
     thresholds: list[float],
@@ -1565,6 +1615,16 @@ def qdrant_hybrid_gating_evidence_to_dict(
     }
 
 
+def identifier_alias_governance_to_dict(
+    report: IdentifierAliasGovernanceReport,
+) -> dict:
+    return {
+        "summary": report.summary,
+        "aliases": [asdict(alias) for alias in report.aliases],
+        "decision_notes": report.decision_notes,
+    }
+
+
 def qdrant_threshold_sweep_evidence_to_dict(
     report: QdrantThresholdSweepEvidenceReport,
 ) -> dict:
@@ -1782,6 +1842,22 @@ def export_qdrant_hybrid_gating_evidence_json(
     path.write_text(
         json.dumps(
             qdrant_hybrid_gating_evidence_to_dict(report),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_identifier_alias_governance_json(
+    report: IdentifierAliasGovernanceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            identifier_alias_governance_to_dict(report),
             ensure_ascii=False,
             indent=2,
         ),
@@ -2062,6 +2138,41 @@ def render_qdrant_hybrid_gating_evidence_markdown(
             f"{', '.join(case.raw_returned_citations)} | "
             f"{', '.join(case.gated_result.returned_citations)} | {empty} |"
         )
+    return "\n".join(lines)
+
+
+def render_identifier_alias_governance_markdown(
+    report: IdentifierAliasGovernanceReport,
+) -> str:
+    lines = [
+        "# Identifier Alias Governance Evidence",
+        "",
+        "## Summary",
+        "",
+        "| Metric | Value |",
+        "| --- | ---: |",
+        f"| total_aliases | {report.summary['total_aliases']} |",
+    ]
+    for status, count in sorted(report.summary["status_counts"].items()):
+        lines.append(f"| status:{status} | {count} |")
+    for risk_level, count in sorted(report.summary["risk_counts"].items()):
+        lines.append(f"| risk:{risk_level} | {count} |")
+
+    lines.extend([
+        "",
+        "## Alias Rules",
+        "",
+        "| ID | Canonical Prefix | Pattern | Owner | Status | Version | Risk |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ])
+    for alias in report.aliases:
+        lines.append(
+            f"| {alias.id} | {alias.canonical_prefix} | `{alias.match_pattern}` | "
+            f"{alias.owner} | {alias.status} | {alias.version} | {alias.risk_level} |"
+        )
+
+    lines.extend(["", "## Decision Notes", ""])
+    lines.extend(f"- {note}" for note in report.decision_notes)
     return "\n".join(lines)
 
 
@@ -2453,6 +2564,18 @@ def export_qdrant_hybrid_gating_evidence_markdown(
     return path
 
 
+def export_identifier_alias_governance_markdown(
+    report: IdentifierAliasGovernanceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_identifier_alias_governance_markdown(report),
+        encoding="utf-8",
+    )
+    return path
+
+
 def export_qdrant_threshold_sweep_evidence_markdown(
     report: QdrantThresholdSweepEvidenceReport,
     path: Path,
@@ -2720,6 +2843,15 @@ def extract_alias_aware_identifiers(text: str) -> list[str]:
     return sorted(identifier for identifier in identifiers if identifier)
 
 
+def load_identifier_alias_catalog(
+    catalog_path: Path = Path("app/data/identifier_alias_catalog.json"),
+) -> list[IdentifierAliasRule]:
+    payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+    aliases = [IdentifierAliasRule(**item) for item in payload]
+    _validate_identifier_alias_catalog(aliases)
+    return aliases
+
+
 def apply_alias_aware_identifier_gate(
     query: str,
     documents: list[EvidenceDocument],
@@ -2749,26 +2881,72 @@ def _local_noisy_identifier_aliases(text: str) -> set[str]:
     normalized = text.lower()
     compact = re.sub(r"[\s_\-]+", "", normalized)
     compact = re.sub(r"[：:，,。；;？?！!（）()【】\[\]]+", "", compact)
-    compact_ocr = compact.replace("o", "0")
     aliases: set[str] = set()
 
-    for match in re.finditer(r"af退款([0-9o]{1,3})", compact):
-        aliases.add(f"af-refund-{match.group(1).replace('o', '0').zfill(2)}")
-    for match in re.finditer(r"afrefund([0-9o]{1,3})", compact_ocr):
-        aliases.add(f"af-refund-{match.group(1).zfill(2)}")
-    for match in re.finditer(r"rfd([0-9o]{4})([0-9o]{3})", compact):
-        aliases.add(
-            f"rfd-{match.group(1).replace('o', '0')}-{match.group(2).replace('o', '0')}"
-        )
-    for match in re.finditer(r"lst批量([a-z0-9o]+)", compact):
-        aliases.add(f"lst-batch-{_canonicalize_identifier(match.group(1))}")
-    for match in re.finditer(r"lstbatch([a-z0-9o]+)", compact):
-        aliases.add(f"lst-batch-{_canonicalize_identifier(match.group(1))}")
-    for match in re.finditer(r"ordzs([0-9o]{4})([0-9o]{4})", compact):
-        aliases.add(
-            f"ord-zs-{match.group(1).replace('o', '0')}-{match.group(2).replace('o', '0')}"
-        )
+    for alias in load_identifier_alias_catalog():
+        for match in re.finditer(alias.match_pattern, compact):
+            aliases.add(_canonical_identifier_from_alias_match(alias, match))
     return aliases
+
+
+def _canonical_identifier_from_alias_match(
+    alias: IdentifierAliasRule,
+    match: re.Match,
+) -> str:
+    segments = []
+    for index, value in enumerate(match.groups()):
+        segment = _canonicalize_identifier(value)
+        width = alias.segment_widths[index] if index < len(alias.segment_widths) else 0
+        if width > 0:
+            segment = segment.zfill(width)
+        segments.append(segment)
+    return "-".join([alias.canonical_prefix, *segments])
+
+
+def _validate_identifier_alias_catalog(aliases: list[IdentifierAliasRule]) -> None:
+    ids = [alias.id for alias in aliases]
+    if len(ids) != len(set(ids)):
+        raise ValueError("Duplicate identifier alias ids are not allowed.")
+    for alias in aliases:
+        if alias.status not in {"candidate", "approved", "deprecated"}:
+            raise ValueError(f"Unsupported alias status for {alias.id}: {alias.status}")
+        if alias.risk_level not in {"low", "medium", "high"}:
+            raise ValueError(
+                f"Unsupported alias risk level for {alias.id}: {alias.risk_level}"
+            )
+        if not alias.owner:
+            raise ValueError(f"Alias owner is required for {alias.id}")
+        re.compile(alias.match_pattern)
+
+
+def _alias_governance_summary(
+    aliases: list[IdentifierAliasRule],
+) -> dict[str, int | dict[str, int]]:
+    return {
+        "total_aliases": len(aliases),
+        "status_counts": dict(sorted(Counter(alias.status for alias in aliases).items())),
+        "risk_counts": dict(
+            sorted(Counter(alias.risk_level for alias in aliases).items())
+        ),
+    }
+
+
+def _alias_governance_decision_notes(
+    aliases: list[IdentifierAliasRule],
+) -> list[str]:
+    notes = [
+        "This catalog is local evaluation evidence and is not a production alias service.",
+        "Runtime retrieval defaults and public provider contracts remain unchanged.",
+    ]
+    candidate_count = sum(1 for alias in aliases if alias.status == "candidate")
+    if candidate_count:
+        notes.append(
+            f"{candidate_count} alias rule(s) remain candidate status and require owner approval before production use."
+        )
+    high_risk_count = sum(1 for alias in aliases if alias.risk_level == "high")
+    if high_risk_count:
+        notes.append(f"{high_risk_count} high-risk alias rule(s) require review.")
+    return notes
 
 
 def _run_qdrant_hybrid_gated_smoke_case(

@@ -42,6 +42,10 @@ LOCAL_SOURCE_CITATION_ANCHORS = {
         5: "logistics_faq_2026#address-intercept",
         6: "logistics_faq_2026#batch-exception",
     },
+    "split_refund_policy_docs": {
+        1: "split_refund_policy_2026#policy-code",
+        2: "split_refund_policy_2026#form-code",
+    },
 }
 LOCAL_SOURCE_SECTION_CITATION_ANCHORS = {
     "refund_policy_docs": {
@@ -664,6 +668,7 @@ def _document_id_for(source_id: str) -> str:
     return {
         "refund_policy_docs": "refund_policy_2026",
         "logistics_faq": "logistics_faq_2026",
+        "split_refund_policy_docs": "split_refund_policy_2026",
     }.get(source_id, source_id)
 
 

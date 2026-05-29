@@ -23,6 +23,10 @@ KNOWLEDGE_BASES = [
     ),
 ]
 
+EVALUATION_ONLY_KNOWLEDGE_BASE_IDS = {
+    "split_refund_policy_docs",
+}
+
 GRAPHS = [
     GraphSource(
         id="ecommerce_order_graph",
@@ -66,7 +70,10 @@ def list_graphs() -> list[GraphSource]:
 
 
 def knowledge_base_exists(source_id: str) -> bool:
-    return get_knowledge_base(source_id) is not None
+    return (
+        get_knowledge_base(source_id) is not None
+        or source_id in EVALUATION_ONLY_KNOWLEDGE_BASE_IDS
+    )
 
 
 def _document_backend_readiness() -> tuple[str, str | None]:

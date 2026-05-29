@@ -1,0 +1,13 @@
+[
+  {
+    "id": "split-chunk-refund-policy-and-form",
+    "category": "split-chunk-identifier",
+    "difficulty": "hard",
+    "query": "RFD-2026-003 和 AF-REFUND-02 在同一个退款复核流程中分别要求什么？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 3,
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation": "split_refund_policy_2026#form-code",
+    "expect_empty": false
+  }
+]

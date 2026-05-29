@@ -1,0 +1,118 @@
+{
+  "candidate": {
+    "id": "qdrant-bge-m3-hybrid-exact-identifier-gate",
+    "backend": "qdrant",
+    "description": "Evaluation-only Qdrant+BGE-M3 dense+sparse candidate with an exact identifier containment gate for retrieved evidence.",
+    "metadata": {
+      "vector_store": "qdrant",
+      "collection": "knowledge_chunks",
+      "vector_name": "text-dense",
+      "embedding_provider": "bge_m3_local",
+      "embedding_model": "BAAI/bge-m3",
+      "embedding_model_path": "models\\bge-m3",
+      "deployment_path": "local-smoke-or-private-network",
+      "benchmark_fixture": "hybrid-gating-combined-v1",
+      "retrieval_mode": "dense+sparse-hybrid",
+      "sparse_vector_name": "text-sparse",
+      "sparse_vectorizer": "lexical-identifier-sparse-v1",
+      "fusion": "rrf",
+      "gating_policy": "exact-identifier-containment-gate-v1"
+    }
+  },
+  "metadata": {
+    "created_at": "2026-05-29T07:26:05.448391+00:00",
+    "qdrant_url": ":memory:",
+    "qdrant_collection": "knowledge_chunks",
+    "qdrant_vector_name": "text-dense",
+    "qdrant_vector_size": "1024",
+    "rag_score_threshold": "0.7",
+    "embedding_provider": "bge_m3_local",
+    "embedding_model": "BAAI/bge-m3",
+    "embedding_model_path": "models\\bge-m3",
+    "embedding_local_files_only": "true",
+    "source_ids": [
+      "split_refund_policy_docs"
+    ],
+    "chunking_strategy": "markdown-paragraph-v1",
+    "benchmark_fixture": "hybrid-gating-combined-v1",
+    "exact_cases_path": "tests\\fixtures\\split_chunk_identifier_cases.json",
+    "empty_cases_path": "tests\\fixtures\\no_benchmark_cases.json",
+    "retrieval_mode": "dense+sparse-hybrid",
+    "gating_policy": "exact-identifier-containment-gate-v1",
+    "sparse_vector_name": "text-sparse",
+    "sparse_vectorizer": "lexical-identifier-sparse-v1",
+    "fusion": "rrf",
+    "score_filter": "disabled-for-rrf-fusion-score"
+  },
+  "indexed_sources": {
+    "split_refund_policy_docs": {
+      "job_id": "hybrid_smoke_0f59bfe2c305499a92050bb8c08410b5",
+      "chunk_count": 2,
+      "status": "ready",
+      "chunking_strategy": "markdown-paragraph-v1",
+      "sparse_vector_name": "text-sparse"
+    }
+  },
+  "report": {
+    "summary": {
+      "backend": "qdrant-hybrid:exact-identifier-containment-gate-v1",
+      "total_cases": 1,
+      "hit_rate": 0.0,
+      "citation_match_rate": 0.0,
+      "empty_handling_rate": 0.0,
+      "category_summaries": {
+        "split-chunk-identifier": {
+          "total_cases": 1,
+          "hit_rate": 0.0,
+          "citation_match_rate": 0.0,
+          "empty_handling_rate": 0.0
+        }
+      }
+    },
+    "cases": [
+      {
+        "id": "split-chunk-refund-policy-and-form",
+        "category": "split-chunk-identifier",
+        "difficulty": "hard",
+        "hit_at_k": false,
+        "citation_match": false,
+        "empty_query_handling": null,
+        "latency_ms": 355.514,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "split-chunk-refund-policy-and-form",
+      "category": "split-chunk-identifier",
+      "difficulty": "hard",
+      "expect_empty": false,
+      "query_identifiers": [
+        "af-refund-02",
+        "rfd-2026-003"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "split_refund_policy_2026#form-code",
+        "split_refund_policy_2026#policy-code"
+      ],
+      "raw_returned_source_ids": [
+        "split_refund_policy_docs",
+        "split_refund_policy_docs"
+      ],
+      "gated_result": {
+        "id": "split-chunk-refund-policy-and-form",
+        "category": "split-chunk-identifier",
+        "difficulty": "hard",
+        "hit_at_k": false,
+        "citation_match": false,
+        "empty_query_handling": null,
+        "latency_ms": 355.514,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    }
+  ]
+}

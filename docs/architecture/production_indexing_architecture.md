@@ -347,6 +347,17 @@ The `alias-aware-identifier-gate-v1` candidate adds local OCR `O/0` normalizatio
 
 This evidence supports alias-aware gating as a candidate, not as a production alias service. Production adoption needs alias ownership, approval workflow, versioning, audit logs, conflict resolution, and customer-corpus evaluation before any runtime default is changed.
 
+Alias governance and split-chunk evidence now lives under:
+
+- `docs/benchmark/chinese-seed/alias-governance-candidates/identifier-alias-governance.json`
+- `docs/benchmark/chinese-seed/alias-governance-candidates/identifier-alias-governance.md`
+- `docs/benchmark/chinese-seed/split-chunk-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.json`
+- `docs/benchmark/chinese-seed/split-chunk-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.md`
+
+The alias governance catalog currently has six candidate rules, all medium risk. This keeps aliases auditable, but none are production-approved. The split-chunk benchmark intentionally separates `RFD-2026-003` and `AF-REFUND-02` into different chunks. Raw hybrid retrieval returns both relevant citations, but strict identifier gating filters both out, producing hit rate `0.0000` and citation match rate `0.0000`.
+
+This is a useful failure. It shows the production path cannot rely only on stricter identifier gating. For documents where related codes and forms are distributed across paragraphs, the architecture needs parent/section context, multi-chunk evidence aggregation, or reranking/evidence grading before any runtime hybrid gate is approved.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

@@ -211,8 +211,8 @@ The system SHALL maintain an internal research reference that maps mature Agenti
 
 #### Scenario: Exact-term evidence precedes hybrid retrieval
 
-- **WHEN** a future change proposes sparse vectors, BM25, dense+sparse hybrid retrieval, runtime hybrid gating, or production alias normalization
-- **THEN** it references exact-term and identifier benchmark evidence, including dense-only, hybrid recall, hybrid empty-stress, hybrid gating, expanded partial-identifier gating, and noisy/alias gating evidence when available, and explains which retrieval misses, false-positive risks, false-negative risks, or alias-governance risks justify the added retrieval complexity
+- **WHEN** a future change proposes sparse vectors, BM25, dense+sparse hybrid retrieval, runtime hybrid gating, production alias normalization, or split-chunk aggregation
+- **THEN** it references exact-term and identifier benchmark evidence, including dense-only, hybrid recall, hybrid empty-stress, hybrid gating, expanded partial-identifier gating, noisy/alias gating, alias governance, and split-chunk evidence when available, and explains which retrieval misses, false-positive risks, false-negative risks, alias-governance risks, or chunk-boundary risks justify the added retrieval complexity
 
 #### Scenario: Query rewrite evidence precedes runtime adoption
 

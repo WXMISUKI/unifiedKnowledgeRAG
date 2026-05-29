@@ -17,6 +17,7 @@ from app.services.retrieval_benchmark import (
     evidence_grading_candidate_evaluation_to_dict,
     embedding_candidate_result_to_dict,
     EmbeddingCandidate,
+    export_identifier_alias_governance_evidence,
     export_chunking_strategy_evaluation,
     export_chinese_seed_evidence_bundle,
     export_evidence_grading_candidate_evaluation,
@@ -47,6 +48,8 @@ from app.services.retrieval_benchmark import (
     render_qdrant_threshold_sweep_evidence_markdown,
     fixture_chinese_seed_retrieval_candidate,
     extract_alias_aware_identifiers,
+    identifier_alias_governance_to_dict,
+    load_identifier_alias_catalog,
     query_rewrite_candidate_evaluation_to_dict,
     RetrievalCandidate,
     run_retrieval_benchmark,
@@ -77,6 +80,8 @@ NOISY_IDENTIFIER_POSITIVE_PATH = Path(
     "tests/fixtures/noisy_identifier_positive_cases.json"
 )
 NOISY_IDENTIFIER_EMPTY_PATH = Path("tests/fixtures/noisy_identifier_empty_cases.json")
+SPLIT_CHUNK_IDENTIFIER_PATH = Path("tests/fixtures/split_chunk_identifier_cases.json")
+NO_BENCHMARK_CASES_PATH = Path("tests/fixtures/no_benchmark_cases.json")
 
 
 def test_loads_retrieval_benchmark_cases():
@@ -519,6 +524,17 @@ def test_loads_noisy_identifier_cases_separately():
         "noisy-identifier-empty-alias",
         "noisy-identifier-empty-ocr",
     }
+
+
+def test_loads_split_chunk_identifier_cases_separately():
+    cases = load_benchmark_cases(SPLIT_CHUNK_IDENTIFIER_PATH)
+    empty_cases = load_benchmark_cases(NO_BENCHMARK_CASES_PATH)
+
+    assert [case.id for case in cases] == ["split-chunk-refund-policy-and-form"]
+    assert cases[0].knowledge_base_ids == ["split_refund_policy_docs"]
+    assert cases[0].expected_citation == "split_refund_policy_2026#form-code"
+    assert cases[0].expect_empty is False
+    assert empty_cases == []
 
 
 def test_exact_term_identifier_cases_pass_fixture_backend():
@@ -1230,6 +1246,32 @@ def test_alias_aware_identifier_extraction_normalizes_ocr_and_aliases():
     ]
 
 
+def test_identifier_alias_catalog_exports_governance_evidence(tmp_path):
+    aliases = load_identifier_alias_catalog()
+
+    report = export_identifier_alias_governance_evidence(tmp_path / "alias-governance")
+    payload = identifier_alias_governance_to_dict(report)
+
+    assert {alias.id for alias in aliases} >= {
+        "af-refund-chinese-shorthand",
+        "rfd-compact-ocr",
+        "lst-batch-chinese-shorthand",
+        "ord-zs-compact-ocr",
+    }
+    assert report.json_path == (
+        tmp_path / "alias-governance" / "identifier-alias-governance.json"
+    )
+    assert report.markdown_path == (
+        tmp_path / "alias-governance" / "identifier-alias-governance.md"
+    )
+    assert payload["summary"]["total_aliases"] == len(aliases)
+    assert payload["summary"]["status_counts"]["candidate"] == len(aliases)
+    assert "production alias service" in report.decision_notes[0]
+    assert "af-refund-chinese-shorthand" in report.markdown_path.read_text(
+        encoding="utf-8"
+    )
+
+
 def test_alias_aware_identifier_gate_keeps_alias_and_filters_wrong_aliases():
     documents = [
         EvidenceDocument(
@@ -1477,6 +1519,101 @@ def test_export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
     assert report.cases[0].query_identifiers == ["af-refund-02"]
     assert report.cases[1].query_identifiers == ["af-refund-99"]
     assert report.cases[1].gated_result.returned_citations == []
+
+
+def test_export_qdrant_bge_hybrid_gating_records_split_chunk_miss(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "split_refund_policy_docs.md").write_text(
+        "# 拆分退款编号规则\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核。\n\n"
+        "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "split-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "split-chunk-refund-policy-and-form",
+    "category": "split-chunk-identifier",
+    "difficulty": "hard",
+    "query": "RFD-2026-003 和 AF-REFUND-02 在同一个退款复核流程中分别要求什么？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation": "split_refund_policy_2026#form-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    empty_cases_path = tmp_path / "empty-cases.json"
+    empty_cases_path.write_text("[]", encoding="utf-8")
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "政策编号 RFD-2026-003 适用于三天未发货退款复核。",
+                    "citation": "split_refund_policy_2026#policy-code",
+                },
+            },
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+                    "citation": "split_refund_policy_2026#form-code",
+                },
+            },
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_gating_candidate_evidence(
+        output_dir=tmp_path / "evidence",
+        exact_cases_path=cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=["split_refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.report.summary.hit_rate == 0.0
+    assert report.report.summary.citation_match_rate == 0.0
+    assert report.cases[0].raw_returned_citations == [
+        "split_refund_policy_2026#policy-code",
+        "split_refund_policy_2026#form-code",
+    ]
+    assert report.cases[0].query_identifiers == [
+        "af-refund-02",
+        "rfd-2026-003",
+    ]
+    assert report.cases[0].gated_result.returned_citations == []
 
 
 def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):

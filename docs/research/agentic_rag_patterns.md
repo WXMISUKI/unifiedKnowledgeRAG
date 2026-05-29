@@ -227,11 +227,11 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Alias governance and split-chunk benchmark | Noisy alias gate passes local seed, but production still needs owned alias lifecycle and identifiers split across chunks |
-| 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
-| 3 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, alias governance, split-chunk behavior, and false-negative review all pass |
-| 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
-| 5 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
+| 1 | Multi-chunk evidence aggregation candidate | Split-chunk benchmark shows raw hybrid can find relevant chunks while strict gate drops them |
+| 2 | Multi-granularity indexing candidate | Parent/section context may be needed when related identifiers span paragraphs |
+| 3 | Reranker or evidence grading candidate | Needed to judge whether separate chunks jointly answer a query |
+| 4 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, alias governance, split-chunk behavior, and false-negative review all pass |
+| 5 | Runtime query rewrite decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
 | 6 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
 
 ## Decisions For This Provider
@@ -256,4 +256,6 @@ The current seed result passes with `exact-identifier-containment-gate-v1`: exac
 
 The next retrieval-quality slice moved beyond clean identifiers with `alias-aware-identifier-gate-v1`. It passes the noisy local seed by normalizing OCR `O/0`, spaced IDs, and fixture-local shorthand while still filtering wrong aliases and wrong IDs.
 
-The next slice should not keep adding hard-coded aliases. It should define alias governance and test cases where identifiers are split across chunks. That will tell us whether aliases belong in a managed metadata layer, whether chunking needs to keep code/form context together, and where reranking/evidence grading should sit after hybrid retrieval.
+The next slice moved aliases into a local governance catalog and added split-chunk evidence. Alias rules are now auditable but remain candidate-only. More importantly, split-chunk evidence shows raw hybrid can retrieve separate policy/form chunks while strict identifier gating filters them all out.
+
+The next retrieval-quality slice should evaluate multi-chunk evidence aggregation or parent/section context. This is now more urgent than making the gate stricter, because the current failure is a false negative caused by chunk boundaries rather than a sparse retrieval miss.

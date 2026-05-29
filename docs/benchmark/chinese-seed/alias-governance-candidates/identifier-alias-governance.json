@@ -1,0 +1,110 @@
+{
+  "summary": {
+    "total_aliases": 6,
+    "status_counts": {
+      "candidate": 6
+    },
+    "risk_counts": {
+      "medium": 6
+    }
+  },
+  "aliases": [
+    {
+      "id": "af-refund-chinese-shorthand",
+      "canonical_prefix": "af-refund",
+      "match_pattern": "af退款([0-9o]{1,3})",
+      "segment_widths": [
+        2
+      ],
+      "owner": "customer_service",
+      "status": "candidate",
+      "version": "2026-05-29",
+      "risk_level": "medium",
+      "notes": [
+        "Local fixture shorthand for refund form aliases."
+      ]
+    },
+    {
+      "id": "af-refund-compact",
+      "canonical_prefix": "af-refund",
+      "match_pattern": "afrefund([0-9o]{1,3})",
+      "segment_widths": [
+        2
+      ],
+      "owner": "customer_service",
+      "status": "candidate",
+      "version": "2026-05-29",
+      "risk_level": "medium",
+      "notes": [
+        "Compact refund form alias after punctuation and spacing normalization."
+      ]
+    },
+    {
+      "id": "rfd-compact-ocr",
+      "canonical_prefix": "rfd",
+      "match_pattern": "rfd([0-9o]{4})([0-9o]{3})",
+      "segment_widths": [
+        4,
+        3
+      ],
+      "owner": "customer_service",
+      "status": "candidate",
+      "version": "2026-05-29",
+      "risk_level": "medium",
+      "notes": [
+        "OCR-tolerant compact refund policy code alias."
+      ]
+    },
+    {
+      "id": "lst-batch-chinese-shorthand",
+      "canonical_prefix": "lst-batch",
+      "match_pattern": "lst批量([a-z0-9o]+)",
+      "segment_widths": [
+        0
+      ],
+      "owner": "logistics",
+      "status": "candidate",
+      "version": "2026-05-29",
+      "risk_level": "medium",
+      "notes": [
+        "Local fixture shorthand for logistics batch workflow aliases."
+      ]
+    },
+    {
+      "id": "lst-batch-compact",
+      "canonical_prefix": "lst-batch",
+      "match_pattern": "lstbatch([a-z0-9o]+)",
+      "segment_widths": [
+        0
+      ],
+      "owner": "logistics",
+      "status": "candidate",
+      "version": "2026-05-29",
+      "risk_level": "medium",
+      "notes": [
+        "Compact logistics workflow alias after punctuation and spacing normalization."
+      ]
+    },
+    {
+      "id": "ord-zs-compact-ocr",
+      "canonical_prefix": "ord-zs",
+      "match_pattern": "ordzs([0-9o]{4})([0-9o]{4})",
+      "segment_widths": [
+        4,
+        4
+      ],
+      "owner": "logistics",
+      "status": "candidate",
+      "version": "2026-05-29",
+      "risk_level": "medium",
+      "notes": [
+        "OCR-tolerant compact logistics order id alias."
+      ]
+    }
+  ],
+  "decision_notes": [
+    "This catalog is local evaluation evidence and is not a production alias service.",
+    "Runtime retrieval defaults and public provider contracts remain unchanged.",
+    "6 alias rule(s) remain candidate status and require owner approval before production use."
+  ]
+}

@@ -17,6 +17,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
+    export_identifier_alias_governance_evidence,
     ThresholdRecommendationGates,
 )
 
@@ -40,6 +41,15 @@ def main() -> None:
     if args.rag_score_threshold is not None:
         update["rag_score_threshold"] = args.rag_score_threshold
     settings = get_settings().model_copy(update=update)
+    if args.alias_governance:
+        report = export_identifier_alias_governance_evidence(
+            output_dir=args.output_dir,
+            catalog_path=args.alias_catalog_path,
+        )
+        print(f"Identifier alias governance evidence ready: {report.json_path}")
+        print(f"Identifier alias governance evidence ready: {report.markdown_path}")
+        return
+
     if args.chunking_comparison:
         report = export_qdrant_bge_chunking_comparison_evidence(
             output_dir=args.output_dir,
@@ -171,6 +181,16 @@ def _parse_args() -> argparse.Namespace:
         "--empty-cases-path",
         type=Path,
         default=Path("tests/fixtures/hybrid_empty_stress_cases.json"),
+    )
+    parser.add_argument(
+        "--alias-governance",
+        action="store_true",
+        help="Export local identifier alias governance evidence without running Qdrant.",
+    )
+    parser.add_argument(
+        "--alias-catalog-path",
+        type=Path,
+        default=Path("app/data/identifier_alias_catalog.json"),
     )
     parser.add_argument(
         "--source-id",
