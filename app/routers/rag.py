@@ -11,7 +11,7 @@ from app.models.contracts import (
 )
 from app.config import get_settings
 from app.services.retrieval_backends import create_document_retriever
-from app.services.rag_answer_orchestrator import compose_cited_answer
+from app.services.rag_answer_orchestrator import create_answer_composer
 from app.services.source_catalog import list_knowledge_bases
 
 router = APIRouter(prefix="/api/rag")
@@ -69,6 +69,10 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
 @router.post("/answer", response_model=RagAnswerResponse)
 def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
     settings = get_settings()
+    composer, composer_error = create_answer_composer(settings)
+    if composer_error is not None or composer is None:
+        return RagAnswerResponse(ok=False, error=composer_error)
+
     retriever = create_document_retriever(settings)
     unknown_sources = retriever.unknown_sources(request.knowledge_base_ids)
     if unknown_sources:
@@ -104,7 +108,7 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
 
     return RagAnswerResponse(
         ok=True,
-        result=compose_cited_answer(
+        result=composer.compose(
             documents=documents,
             retrieval_backend=retriever.backend_name,
             min_evidence_count=settings.rag_answer_min_evidence_count,

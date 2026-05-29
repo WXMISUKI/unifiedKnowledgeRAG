@@ -25,6 +25,8 @@ class Settings(BaseModel):
     bge_m3_max_length: int = Field(default=8192, ge=1)
     rag_answer_min_evidence_count: int = Field(default=1, ge=0)
     rag_answer_min_evidence_score: float = Field(default=0.0, ge=0.0, le=1.0)
+    rag_answer_composer: str = Field(default="deterministic")
+    rag_answer_composer_model: str = Field(default="deterministic-extractive-v1")
 
 
 def get_settings() -> Settings:
@@ -66,5 +68,10 @@ def get_settings() -> Settings:
         ),
         rag_answer_min_evidence_score=float(
             os.getenv("RAG_ANSWER_MIN_EVIDENCE_SCORE", "0.0")
+        ),
+        rag_answer_composer=os.getenv("RAG_ANSWER_COMPOSER", "deterministic"),
+        rag_answer_composer_model=os.getenv(
+            "RAG_ANSWER_COMPOSER_MODEL",
+            "deterministic-extractive-v1",
         ),
     )

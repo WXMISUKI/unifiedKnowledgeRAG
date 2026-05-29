@@ -1,46 +1,91 @@
-from app.models.contracts import EvidenceDocument, RagAnswerResult
+from abc import ABC, abstractmethod
+
+from app.config import Settings
+from app.models.contracts import EvidenceDocument, ProviderError, RagAnswerResult
 
 
-COMPOSER_ID = "deterministic-extractive-v1"
+DETERMINISTIC_COMPOSER_ID = "deterministic-extractive-v1"
 
 
-def compose_cited_answer(
-    documents: list[EvidenceDocument],
-    retrieval_backend: str,
-    min_evidence_count: int = 1,
-    min_top_score: float = 0.0,
-) -> RagAnswerResult:
-    gate = _evaluate_evidence_gate(
-        documents=documents,
-        min_evidence_count=min_evidence_count,
-        min_top_score=min_top_score,
-    )
-    metadata = {
-        "composer": COMPOSER_ID,
-        "evidence_count": len(documents),
-        "evidence_gate": gate,
-        "retrieval_backend": retrieval_backend,
-    }
-    if not gate["passed"]:
+class AnswerComposer(ABC):
+    provider: str
+    model: str
+
+    @abstractmethod
+    def compose(
+        self,
+        documents: list[EvidenceDocument],
+        retrieval_backend: str,
+        min_evidence_count: int,
+        min_top_score: float,
+    ) -> RagAnswerResult:
+        raise NotImplementedError
+
+
+class DeterministicAnswerComposer(AnswerComposer):
+    provider = "deterministic"
+
+    def __init__(self, model: str = DETERMINISTIC_COMPOSER_ID):
+        self.model = model or DETERMINISTIC_COMPOSER_ID
+
+    def compose(
+        self,
+        documents: list[EvidenceDocument],
+        retrieval_backend: str,
+        min_evidence_count: int,
+        min_top_score: float,
+    ) -> RagAnswerResult:
+        gate = _evaluate_evidence_gate(
+            documents=documents,
+            min_evidence_count=min_evidence_count,
+            min_top_score=min_top_score,
+        )
+        metadata = {
+            "composer": DETERMINISTIC_COMPOSER_ID,
+            "composer_provider": self.provider,
+            "composer_model": self.model,
+            "evidence_count": len(documents),
+            "evidence_gate": gate,
+            "retrieval_backend": retrieval_backend,
+        }
+        if not gate["passed"]:
+            return RagAnswerResult(
+                answer_status="insufficient_evidence",
+                answer="",
+                citations=[],
+                documents=documents,
+                metadata=metadata,
+            )
+
+        cited_documents = documents[:3]
+        citations = _unique_citations(cited_documents)
+        answer_parts = [
+            f"[{document.citation}] {document.snippet}" for document in cited_documents
+        ]
         return RagAnswerResult(
-            answer_status="insufficient_evidence",
-            answer="",
-            citations=[],
+            answer_status="answered",
+            answer="\n".join(answer_parts),
+            citations=citations,
             documents=documents,
             metadata=metadata,
         )
 
-    cited_documents = documents[:3]
-    citations = _unique_citations(cited_documents)
-    answer_parts = [
-        f"[{document.citation}] {document.snippet}" for document in cited_documents
-    ]
-    return RagAnswerResult(
-        answer_status="answered",
-        answer="\n".join(answer_parts),
-        citations=citations,
-        documents=documents,
-        metadata=metadata,
+
+def create_answer_composer(settings: Settings) -> tuple[AnswerComposer | None, ProviderError | None]:
+    provider = settings.rag_answer_composer.lower()
+    if provider == "deterministic":
+        return DeterministicAnswerComposer(settings.rag_answer_composer_model), None
+    if provider in {"hosted", "local"}:
+        return None, ProviderError(
+            code="ANSWER_COMPOSER_NOT_IMPLEMENTED",
+            message=(
+                f"Answer composer '{provider}' is not implemented yet. "
+                "Use deterministic until a model provider change is approved."
+            ),
+        )
+    return None, ProviderError(
+        code="UNSUPPORTED_ANSWER_COMPOSER",
+        message=f"Unsupported RAG_ANSWER_COMPOSER: {settings.rag_answer_composer}",
     )
 
 

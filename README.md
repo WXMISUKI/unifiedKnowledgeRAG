@@ -57,6 +57,15 @@ $env:RAG_ANSWER_MIN_EVIDENCE_SCORE="0.5"
 
 如果检索结果未达到门槛，接口会返回 `answer_status=insufficient_evidence`，`answer` 和 `citations` 为空，同时保留 `documents` 和 `metadata.evidence_gate` 供诊断。这个 gate 只是第一层确定性防线，不替代后续 reranker、evidence grading 或 LLM answer validation。
 
+Answer composer 已经有 provider-neutral adapter 边界。默认 composer 是离线确定性的：
+
+```powershell
+$env:RAG_ANSWER_COMPOSER="deterministic"
+$env:RAG_ANSWER_COMPOSER_MODEL="deterministic-extractive-v1"
+```
+
+`hosted` 和 `local` 是后续接入 Qwen、OpenAI、vLLM、Ollama 或其他内网模型的预留配置名；当前会 fail-closed 返回结构化 `ANSWER_COMPOSER_NOT_IMPLEMENTED`，不会静默 fallback，也不会偷偷调用公网或本地 LLM runtime。真正接入模型前仍需单独 OpenSpec change 讨论模型、密钥、数据出公网、prompt、引用约束和成本。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：

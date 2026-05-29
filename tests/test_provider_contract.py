@@ -96,7 +96,51 @@ def test_rag_answer_returns_cited_answer_envelope():
     }
     assert set(body["result"]["citations"]).issubset(document_citations)
     assert body["result"]["metadata"]["composer"] == "deterministic-extractive-v1"
+    assert body["result"]["metadata"]["composer_provider"] == "deterministic"
+    assert body["result"]["metadata"]["composer_model"] == "deterministic-extractive-v1"
     assert body["result"]["metadata"]["evidence_gate"]["passed"] is True
+
+
+def test_rag_answer_hosted_composer_fails_closed(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_COMPOSER", "hosted")
+    scoped_client = TestClient(create_app())
+
+    response = scoped_client.post(
+        "/api/rag/answer",
+        json={
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["result"] is None
+    assert body["error"]["code"] == "ANSWER_COMPOSER_NOT_IMPLEMENTED"
+    assert "hosted" in body["error"]["message"]
+
+
+def test_rag_answer_unknown_composer_returns_structured_error(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_COMPOSER", "mystery")
+    scoped_client = TestClient(create_app())
+
+    response = scoped_client.post(
+        "/api/rag/answer",
+        json={
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["result"] is None
+    assert body["error"]["code"] == "UNSUPPORTED_ANSWER_COMPOSER"
+    assert "mystery" in body["error"]["message"]
 
 
 def test_rag_answer_low_score_gate_returns_insufficient_evidence(monkeypatch):
@@ -194,10 +238,12 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
             "answer": "",
             "citations": [],
             "documents": [],
-            "metadata": {
-                "composer": "deterministic-extractive-v1",
-                "evidence_count": 0,
-                "evidence_gate": {
+                "metadata": {
+                    "composer": "deterministic-extractive-v1",
+                    "composer_provider": "deterministic",
+                    "composer_model": "deterministic-extractive-v1",
+                    "evidence_count": 0,
+                    "evidence_gate": {
                     "passed": False,
                     "reason": "no_documents",
                     "min_evidence_count": 1,
