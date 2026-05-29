@@ -5,6 +5,7 @@ from app.services.answer_prompt_package import (
     build_cited_answer_prompt_package,
     render_cited_answer_prompt,
 )
+from app.services.answer_trace import attach_answer_trace
 
 
 def finalize_cited_answer(
@@ -28,6 +29,11 @@ def finalize_cited_answer(
         "output_validation": validation.metadata(),
     }
     if not validation.passed:
+        metadata = attach_answer_trace(
+            final_status="insufficient_evidence",
+            metadata=metadata,
+            documents=documents,
+        )
         return RagAnswerResult(
             answer_status="insufficient_evidence",
             answer="",
@@ -36,6 +42,11 @@ def finalize_cited_answer(
             metadata=metadata,
         )
 
+    metadata = attach_answer_trace(
+        final_status="answered",
+        metadata=metadata,
+        documents=documents,
+    )
     return RagAnswerResult(
         answer_status="answered",
         answer=parsed_output.answer_text,

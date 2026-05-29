@@ -179,6 +179,19 @@ def test_rag_answer_returns_cited_answer_envelope():
         "citation_count": len(body["result"]["citations"]),
         "allowed_citation_count": len(prompt_package["allowed_citations"]),
     }
+    answer_trace = body["result"]["metadata"]["answer_trace"]
+    assert answer_trace["version"] == "answer-trace-v1"
+    assert answer_trace["final_status"] == "answered"
+    assert [stage["name"] for stage in answer_trace["stages"]] == [
+        "retrieval",
+        "evidence_gate",
+        "composer",
+        "output_parser",
+        "output_validator",
+        "final_decision",
+    ]
+    assert answer_trace["stages"][0]["document_count"] == len(body["result"]["documents"])
+    assert answer_trace["stages"][-1]["reason"] == "validated_answer"
 
 
 def test_rag_answer_hosted_composer_fails_closed(monkeypatch):
@@ -247,6 +260,16 @@ def test_rag_answer_low_score_gate_returns_insufficient_evidence(monkeypatch):
     assert "prompt_render" not in body["result"]["metadata"]
     assert "output_parser" not in body["result"]["metadata"]
     assert "output_validation" not in body["result"]["metadata"]
+    answer_trace = body["result"]["metadata"]["answer_trace"]
+    assert [stage["name"] for stage in answer_trace["stages"]] == [
+        "retrieval",
+        "evidence_gate",
+        "composer",
+        "final_decision",
+    ]
+    assert answer_trace["final_status"] == "insufficient_evidence"
+    assert answer_trace["stages"][1]["status"] == "failed"
+    assert answer_trace["stages"][-1]["reason"] == "evidence_gate_failed"
     gate = body["result"]["metadata"]["evidence_gate"]
     assert gate["passed"] is False
     assert gate["reason"] == "top_score_below_minimum"
@@ -339,6 +362,7 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
                     "top_score": None,
                 },
                 "retrieval_backend": "fixture",
+                "answer_trace": body["result"]["metadata"]["answer_trace"],
             },
         },
         "error": None,
@@ -347,6 +371,7 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
     assert "prompt_render" not in body["result"]["metadata"]
     assert "output_parser" not in body["result"]["metadata"]
     assert "output_validation" not in body["result"]["metadata"]
+    assert body["result"]["metadata"]["answer_trace"]["final_status"] == "insufficient_evidence"
 
 
 def test_rag_retrieve_unknown_source_returns_structured_error():

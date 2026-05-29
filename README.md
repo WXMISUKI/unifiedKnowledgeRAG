@@ -86,6 +86,8 @@ Answered 结果还会经过 provider-owned output validator。当前 validator �
 
 Answer composer 的出站组装已经收敛到 shared finalization pipeline。未来 hosted/local composer 只需要产出候选回答文本，统一由 finalizer 负责 prompt package/render metadata、output parser、output validator 和 fail-closed answer envelope，避免每个模型 adapter 重复实现安全逻辑。
 
+Answer metadata 还会返回 compact `answer_trace`。它按顺序记录 retrieval、evidence gate、composer、output parser、output validator 和 final decision 等阶段的机器可读状态，便于上层智能体控制面、审计日志和本地调试解释“为什么回答/为什么拒答”。Trace 不包含完整 prompt 文本或原始模型输出。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：

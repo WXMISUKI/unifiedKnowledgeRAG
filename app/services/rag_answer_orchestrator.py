@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from app.config import Settings
 from app.models.contracts import EvidenceDocument, ProviderError, RagAnswerResult
 from app.services.answer_finalizer import finalize_cited_answer
+from app.services.answer_trace import attach_answer_trace
 
 
 DETERMINISTIC_COMPOSER_ID = "deterministic-extractive-v1"
@@ -52,6 +53,11 @@ class DeterministicAnswerComposer(AnswerComposer):
             "retrieval_backend": retrieval_backend,
         }
         if not gate["passed"]:
+            metadata = attach_answer_trace(
+                final_status="insufficient_evidence",
+                metadata=metadata,
+                documents=documents,
+            )
             return RagAnswerResult(
                 answer_status="insufficient_evidence",
                 answer="",
