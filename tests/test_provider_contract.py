@@ -26,6 +26,17 @@ def test_capabilities_include_rag_and_graph_boundaries():
     assert "knowledge.rag.retrieve" in capability_ids
     assert "knowledge.rag.answer" in capability_ids
     assert "knowledge.graph.query" in capability_ids
+    capabilities = {item["id"]: item for item in body["capabilities"]}
+    assert capabilities["knowledge.rag.retrieve"]["invocation"] == {
+        "protocol": "http",
+        "method": "POST",
+        "path": "/api/rag/retrieve",
+    }
+    assert capabilities["knowledge.rag.answer"]["invocation"] == {
+        "protocol": "http",
+        "method": "POST",
+        "path": "/api/rag/answer",
+    }
 
 
 def test_catalog_exposes_knowledge_bases_and_graphs():

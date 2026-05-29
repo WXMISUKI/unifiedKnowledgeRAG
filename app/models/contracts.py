@@ -18,10 +18,17 @@ class HealthResponse(BaseModel):
     graph: ComponentStatus
 
 
+class CapabilityInvocation(BaseModel):
+    protocol: str = "http"
+    method: str
+    path: str
+
+
 class Capability(BaseModel):
     id: str
     status: str
     description: str
+    invocation: CapabilityInvocation | None = None
 
 
 class CapabilitiesResponse(BaseModel):
