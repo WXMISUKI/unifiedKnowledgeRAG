@@ -18,7 +18,12 @@ def capabilities() -> CapabilitiesResponse:
                 id="knowledge.rag.retrieve",
                 status="ready",
                 description="Retrieve compact document evidence with stable citations.",
-                invocation=CapabilityInvocation(method="POST", path="/api/rag/retrieve"),
+                invocation=CapabilityInvocation(
+                    method="POST",
+                    path="/api/rag/retrieve",
+                    request_schema_ref="#/components/schemas/RagRetrieveRequest",
+                    response_schema_ref="#/components/schemas/RagRetrieveResponse",
+                ),
             ),
             Capability(
                 id="knowledge.rag.answer",
@@ -27,13 +32,23 @@ def capabilities() -> CapabilitiesResponse:
                     "Compose cited document RAG answers with evidence gating and "
                     "configurable composer boundaries."
                 ),
-                invocation=CapabilityInvocation(method="POST", path="/api/rag/answer"),
+                invocation=CapabilityInvocation(
+                    method="POST",
+                    path="/api/rag/answer",
+                    request_schema_ref="#/components/schemas/RagAnswerRequest",
+                    response_schema_ref="#/components/schemas/RagAnswerResponse",
+                ),
             ),
             Capability(
                 id="knowledge.graph.query",
                 status="planned",
                 description="Graph query contract boundary; execution is deferred.",
-                invocation=CapabilityInvocation(method="POST", path="/api/graph/query"),
+                invocation=CapabilityInvocation(
+                    method="POST",
+                    path="/api/graph/query",
+                    request_schema_ref="#/components/schemas/GraphQueryRequest",
+                    response_schema_ref="#/components/schemas/GraphQueryResponse",
+                ),
             ),
         ]
     )

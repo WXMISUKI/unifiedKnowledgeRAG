@@ -19,7 +19,7 @@ The system SHALL expose provider health with machine-readable service, RAG, answ
 - **THEN** `GET /health` reports provider `status=degraded` and includes a machine-readable answer degradation reason
 
 ### Requirement: Provider capabilities expose stable knowledge capability ids
-The system SHALL expose stable capability identifiers and optional invocation metadata for document RAG retrieval, document RAG cited answer orchestration, and graph query boundaries while keeping production infrastructure choices behind explicit architecture decision records.
+The system SHALL expose stable capability identifiers and optional invocation metadata, including request and response schema references when available, for document RAG retrieval, document RAG cited answer orchestration, and graph query boundaries while keeping production infrastructure choices behind explicit architecture decision records.
 
 #### Scenario: Capabilities are discoverable
 - **WHEN** a caller requests `GET /api/capabilities`
@@ -27,11 +27,11 @@ The system SHALL expose stable capability identifiers and optional invocation me
 
 #### Scenario: Retrieval capability is invokable
 - **WHEN** a caller inspects the `knowledge.rag.retrieve` capability
-- **THEN** its invocation metadata identifies `POST /api/rag/retrieve`
+- **THEN** its invocation metadata identifies `POST /api/rag/retrieve` and references the retrieval request and response schemas
 
 #### Scenario: Answer capability is invokable
 - **WHEN** a caller inspects the `knowledge.rag.answer` capability
-- **THEN** its invocation metadata identifies `POST /api/rag/answer`
+- **THEN** its invocation metadata identifies `POST /api/rag/answer` and references the answer request and response schemas
 
 #### Scenario: Answer composer is not ready
 - **WHEN** the configured answer composer is unavailable

@@ -50,11 +50,15 @@ def test_capabilities_include_rag_and_graph_boundaries():
         "protocol": "http",
         "method": "POST",
         "path": "/api/rag/retrieve",
+        "request_schema_ref": "#/components/schemas/RagRetrieveRequest",
+        "response_schema_ref": "#/components/schemas/RagRetrieveResponse",
     }
     assert capabilities["knowledge.rag.answer"]["invocation"] == {
         "protocol": "http",
         "method": "POST",
         "path": "/api/rag/answer",
+        "request_schema_ref": "#/components/schemas/RagAnswerRequest",
+        "response_schema_ref": "#/components/schemas/RagAnswerResponse",
     }
     assert capabilities["knowledge.rag.answer"]["status"] == "ready"
 
