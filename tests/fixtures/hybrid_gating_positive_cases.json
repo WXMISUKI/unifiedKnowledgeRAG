@@ -1,0 +1,35 @@
+[
+  {
+    "id": "hybrid-gating-positive-refund-multi-id",
+    "category": "hybrid-gating-multi-id",
+    "difficulty": "hard",
+    "query": "RFD-2026-003 和 AF-REFUND-02 在同一个退款复核证据里说明了什么？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  },
+  {
+    "id": "hybrid-gating-positive-logistics-multi-id",
+    "category": "hybrid-gating-multi-id",
+    "difficulty": "hard",
+    "query": "LST-BATCH-OPS 和 ORD-ZS-2026-0007 分别用于哪类物流升级凭据？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#exact-logistics-id",
+    "expect_empty": false
+  },
+  {
+    "id": "hybrid-gating-positive-refund-contextual-id",
+    "category": "hybrid-gating-contextual-id",
+    "difficulty": "medium",
+    "query": "客户只报了 RFD-2026-003，客服应按哪个退款复核资料处理？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  }
+]

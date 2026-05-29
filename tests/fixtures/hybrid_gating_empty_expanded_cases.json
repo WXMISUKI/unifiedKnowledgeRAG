@@ -1,0 +1,46 @@
+[
+  {
+    "id": "hybrid-gating-empty-partial-refund-form",
+    "category": "hybrid-gating-partial-id",
+    "difficulty": "hard",
+    "query": "AF-REFUND 表单可以直接作为线下补贴退款依据吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "hybrid-gating-empty-partial-refund-policy",
+    "category": "hybrid-gating-partial-id",
+    "difficulty": "hard",
+    "query": "RFD-2026 是跨境税务退款总流程编号吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "hybrid-gating-empty-partial-logistics-workflow",
+    "category": "hybrid-gating-partial-id",
+    "difficulty": "hard",
+    "query": "LST-BATCH 是物流账单复核升级代号吗？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "hybrid-gating-empty-same-prefix-order",
+    "category": "hybrid-gating-same-prefix-id",
+    "difficulty": "hard",
+    "query": "ORD-ZS-2026-0008 用于演示会员积分补偿凭据吗？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]

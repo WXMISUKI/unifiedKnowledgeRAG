@@ -227,9 +227,9 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Broaden hybrid gating benchmark | `exact-identifier-containment-gate-v1` passes the current seed, but production needs more customer-like true/false identifier cases |
+| 1 | Noisy identifier and alias benchmark | Expanded exact identifier gating passes local seed, but production still needs OCR/noisy/alias and split-chunk coverage |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
-| 3 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, and false-negative review all pass |
+| 3 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, noisy identifier handling, and false-negative review all pass |
 | 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
 | 5 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
 | 6 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
@@ -252,4 +252,6 @@ After Qdrant+BGE hybrid empty-stress evidence, the project evaluated:
 evaluate-hybrid-gating-candidate
 ```
 
-The current seed result passes with `exact-identifier-containment-gate-v1`: exact-term recall remains `1.0000`, and hybrid empty-stress handling improves from raw false positives to `1.0000`. The next implementation slice should broaden that evidence before runtime promotion, especially with customer-like identifiers, ambiguous partial IDs, natural-language questions without IDs, and cases where an overly strict gate could hide useful evidence.
+The current seed result passes with `exact-identifier-containment-gate-v1`: exact-term recall remains `1.0000`, and hybrid empty-stress handling improves from raw false positives to `1.0000`. The expanded seed also passes after changing the gate to compare extracted identifier sets, covering multi-identifier positives plus partial and same-prefix unsupported identifiers.
+
+The next retrieval-quality slice should move beyond clean identifiers: OCR/noisy identifiers, aliases, user shorthand, identifiers split across chunks, and no-identifier semantic queries. That will tell us whether strict identifier gating is enough as a narrow pre-filter or whether the production path needs reranking/evidence grading after hybrid retrieval.

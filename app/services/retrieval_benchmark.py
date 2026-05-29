@@ -502,7 +502,7 @@ def qdrant_bge_hybrid_gating_candidate(
     base_candidate = qdrant_bge_hybrid_exact_term_smoke_candidate(settings)
     metadata = dict(base_candidate.metadata or {})
     metadata.update({
-        "benchmark_fixture": "exact-term-identifier-v1+hybrid-empty-stress-v1",
+        "benchmark_fixture": "hybrid-gating-combined-v1",
         "gating_policy": "exact-identifier-containment-gate-v1",
     })
     return RetrievalCandidate(
@@ -970,7 +970,7 @@ def export_qdrant_bge_hybrid_gating_candidate_evidence(
     )
     metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
     metadata.update({
-        "benchmark_fixture": "exact-term-identifier-v1+hybrid-empty-stress-v1",
+        "benchmark_fixture": "hybrid-gating-combined-v1",
         "exact_cases_path": str(exact_cases_path),
         "empty_cases_path": str(empty_cases_path),
         "retrieval_mode": "dense+sparse-hybrid",
@@ -2597,7 +2597,7 @@ def apply_exact_identifier_containment_gate(
     gated_documents = [
         document
         for document in documents
-        if all(identifier in document.snippet.lower() for identifier in identifiers)
+        if set(identifiers).issubset(set(extract_lexical_identifiers(document.snippet)))
     ]
     return gated_documents, identifiers, True
 

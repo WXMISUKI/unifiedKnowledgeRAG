@@ -64,6 +64,12 @@ EXACT_TERM_IDENTIFIER_PATH = Path(
     "tests/fixtures/exact_term_identifier_cases.json"
 )
 HYBRID_EMPTY_STRESS_PATH = Path("tests/fixtures/hybrid_empty_stress_cases.json")
+HYBRID_GATING_POSITIVE_PATH = Path(
+    "tests/fixtures/hybrid_gating_positive_cases.json"
+)
+HYBRID_GATING_EMPTY_EXPANDED_PATH = Path(
+    "tests/fixtures/hybrid_gating_empty_expanded_cases.json"
+)
 
 
 def test_loads_retrieval_benchmark_cases():
@@ -450,6 +456,33 @@ def test_loads_hybrid_empty_stress_cases_separately():
         "hybrid-empty-policy-code",
         "hybrid-empty-workflow-acronym",
         "hybrid-empty-order-like-id",
+    }
+
+
+def test_loads_expanded_hybrid_gating_cases_separately():
+    positive_cases = load_benchmark_cases(HYBRID_GATING_POSITIVE_PATH)
+    empty_cases = load_benchmark_cases(HYBRID_GATING_EMPTY_EXPANDED_PATH)
+
+    assert [case.id for case in positive_cases] == [
+        "hybrid-gating-positive-refund-multi-id",
+        "hybrid-gating-positive-logistics-multi-id",
+        "hybrid-gating-positive-refund-contextual-id",
+    ]
+    assert all(not case.expect_empty for case in positive_cases)
+    assert {case.category for case in positive_cases} == {
+        "hybrid-gating-multi-id",
+        "hybrid-gating-contextual-id",
+    }
+    assert [case.id for case in empty_cases] == [
+        "hybrid-gating-empty-partial-refund-form",
+        "hybrid-gating-empty-partial-refund-policy",
+        "hybrid-gating-empty-partial-logistics-workflow",
+        "hybrid-gating-empty-same-prefix-order",
+    ]
+    assert all(case.expect_empty for case in empty_cases)
+    assert {case.category for case in empty_cases} == {
+        "hybrid-gating-partial-id",
+        "hybrid-gating-same-prefix-id",
     }
 
 
@@ -1129,6 +1162,28 @@ def test_exact_identifier_gate_filters_unsupported_identifier_hits():
     assert filtered == []
     assert fake_identifiers == ["af-refund-99"]
     assert fake_applied is True
+
+
+def test_exact_identifier_gate_filters_partial_identifier_substrings():
+    documents = [
+        EvidenceDocument(
+            source_id="refund_policy_docs",
+            document_id="refund_policy_2026",
+            title="售后退款规则",
+            snippet="表单 AF-REFUND-02 需要关联付款凭证。",
+            score=1.0,
+            citation="refund_policy_2026#exact-refund-code",
+        )
+    ]
+
+    filtered, identifiers, applied = apply_exact_identifier_containment_gate(
+        "AF-REFUND 表单可以直接作为线下补贴退款依据吗？",
+        documents,
+    )
+
+    assert identifiers == ["af-refund"]
+    assert applied is True
+    assert filtered == []
 
 
 def test_export_qdrant_bge_hybrid_gating_candidate_evidence_keeps_raw_and_gated(

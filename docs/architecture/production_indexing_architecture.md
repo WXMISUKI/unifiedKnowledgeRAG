@@ -327,6 +327,17 @@ The stress fixture uses unsupported but token-overlapping cases such as `AF-REFU
 
 This blocks runtime hybrid promotion. The next architecture evidence should compare hybrid gating strategies, such as sparse score gates, exact-token allowlists, dense-first/hybrid fallback, or evidence grading after hybrid retrieval. A production hybrid decision must pass both recall-oriented exact-term evidence and false-positive-oriented empty-stress evidence.
 
+Hybrid gating evidence now lives under:
+
+- `docs/benchmark/chinese-seed/hybrid-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.json`
+- `docs/benchmark/chinese-seed/hybrid-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.md`
+- `docs/benchmark/chinese-seed/hybrid-gating-candidates-expanded/qdrant-bge-m3-hybrid-exact-identifier-gate.json`
+- `docs/benchmark/chinese-seed/hybrid-gating-candidates-expanded/qdrant-bge-m3-hybrid-exact-identifier-gate.md`
+
+The first gating report proves full exact identifiers can retain exact-term recall while filtering the initial empty-stress false positives. The expanded report tightens the implementation to compare extracted identifier sets and adds partial identifier and multi-identifier cases. On the expanded local seed, the candidate reaches hit rate `1.0000`, citation match rate `1.0000`, and empty handling rate `1.0000` across seven cases.
+
+This still does not approve runtime gating. Production review must add customer-like aliases, OCR/noisy identifiers, split-chunk identifiers, no-identifier semantic queries, and false-negative review before switching hybrid retrieval or gating into the default path.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.
