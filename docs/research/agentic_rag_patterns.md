@@ -227,9 +227,9 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Noisy identifier and alias benchmark | Expanded exact identifier gating passes local seed, but production still needs OCR/noisy/alias and split-chunk coverage |
+| 1 | Alias governance and split-chunk benchmark | Noisy alias gate passes local seed, but production still needs owned alias lifecycle and identifiers split across chunks |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
-| 3 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, noisy identifier handling, and false-negative review all pass |
+| 3 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, alias governance, split-chunk behavior, and false-negative review all pass |
 | 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
 | 5 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
 | 6 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
@@ -254,4 +254,6 @@ evaluate-hybrid-gating-candidate
 
 The current seed result passes with `exact-identifier-containment-gate-v1`: exact-term recall remains `1.0000`, and hybrid empty-stress handling improves from raw false positives to `1.0000`. The expanded seed also passes after changing the gate to compare extracted identifier sets, covering multi-identifier positives plus partial and same-prefix unsupported identifiers.
 
-The next retrieval-quality slice should move beyond clean identifiers: OCR/noisy identifiers, aliases, user shorthand, identifiers split across chunks, and no-identifier semantic queries. That will tell us whether strict identifier gating is enough as a narrow pre-filter or whether the production path needs reranking/evidence grading after hybrid retrieval.
+The next retrieval-quality slice moved beyond clean identifiers with `alias-aware-identifier-gate-v1`. It passes the noisy local seed by normalizing OCR `O/0`, spaced IDs, and fixture-local shorthand while still filtering wrong aliases and wrong IDs.
+
+The next slice should not keep adding hard-coded aliases. It should define alias governance and test cases where identifiers are split across chunks. That will tell us whether aliases belong in a managed metadata layer, whether chunking needs to keep code/form context together, and where reranking/evidence grading should sit after hybrid retrieval.

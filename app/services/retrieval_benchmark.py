@@ -516,6 +516,27 @@ def qdrant_bge_hybrid_gating_candidate(
     )
 
 
+def qdrant_bge_hybrid_alias_gating_candidate(
+    settings: Settings | None = None,
+) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    base_candidate = qdrant_bge_hybrid_exact_term_smoke_candidate(settings)
+    metadata = dict(base_candidate.metadata or {})
+    metadata.update({
+        "benchmark_fixture": "noisy-identifier-gating-v1",
+        "gating_policy": "alias-aware-identifier-gate-v1",
+    })
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-hybrid-alias-identifier-gate",
+        backend=base_candidate.backend,
+        description=(
+            "Evaluation-only Qdrant+BGE-M3 dense+sparse candidate with "
+            "OCR and local alias normalization before identifier gating."
+        ),
+        metadata=metadata,
+    )
+
+
 def fixture_chinese_seed_retrieval_candidate() -> RetrievalCandidate:
     return RetrievalCandidate(
         id="fixture-chinese-seed-baseline",
@@ -994,6 +1015,94 @@ def export_qdrant_bge_hybrid_gating_candidate_evidence(
     markdown_path = export_qdrant_hybrid_gating_evidence_markdown(
         gating_report,
         output_dir / "qdrant-bge-m3-hybrid-exact-identifier-gate.md",
+    )
+    return QdrantHybridGatingEvidenceReport(
+        candidate=gating_report.candidate,
+        report=gating_report.report,
+        cases=gating_report.cases,
+        metadata=gating_report.metadata,
+        indexed_sources=gating_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
+    output_dir: Path,
+    positive_cases_path: Path = Path(
+        "tests/fixtures/noisy_identifier_positive_cases.json"
+    ),
+    empty_cases_path: Path = Path("tests/fixtures/noisy_identifier_empty_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> QdrantHybridGatingEvidenceReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    cases = [
+        *load_benchmark_cases(positive_cases_path),
+        *load_benchmark_cases(empty_cases_path),
+    ]
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    client = create_qdrant_client(settings)
+    embedding_adapter = create_embedding_adapter(settings)
+    indexed_sources = _index_qdrant_hybrid_smoke_sources(
+        client=client,
+        settings=settings,
+        source_ids=source_ids,
+        embedding_adapter=embedding_adapter,
+        chunking_strategy=chunking_strategy,
+        sparse_vector_name=sparse_vector_name,
+    )
+    case_results = [
+        _run_qdrant_hybrid_gated_smoke_case(
+            client=client,
+            settings=settings,
+            embedding_adapter=embedding_adapter,
+            case=case,
+            sparse_vector_name=sparse_vector_name,
+            gate_fn=apply_alias_aware_identifier_gate,
+        )
+        for case in cases
+    ]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize(
+            "qdrant-hybrid:alias-aware-identifier-gate-v1",
+            [case.gated_result for case in case_results],
+        ),
+        cases=[case.gated_result for case in case_results],
+    )
+    metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
+    metadata.update({
+        "benchmark_fixture": "noisy-identifier-gating-v1",
+        "positive_cases_path": str(positive_cases_path),
+        "empty_cases_path": str(empty_cases_path),
+        "retrieval_mode": "dense+sparse-hybrid",
+        "gating_policy": "alias-aware-identifier-gate-v1",
+        "sparse_vector_name": sparse_vector_name,
+        "sparse_vectorizer": QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
+        "fusion": QDRANT_HYBRID_FUSION_STRATEGY,
+        "score_filter": "disabled-for-rrf-fusion-score",
+    })
+    gating_report = QdrantHybridGatingEvidenceReport(
+        candidate=qdrant_bge_hybrid_alias_gating_candidate(settings),
+        report=report,
+        cases=case_results,
+        metadata=metadata,
+        indexed_sources=indexed_sources,
+    )
+    json_path = export_qdrant_hybrid_gating_evidence_json(
+        gating_report,
+        output_dir / "qdrant-bge-m3-hybrid-alias-identifier-gate.json",
+    )
+    markdown_path = export_qdrant_hybrid_gating_evidence_markdown(
+        gating_report,
+        output_dir / "qdrant-bge-m3-hybrid-alias-identifier-gate.md",
     )
     return QdrantHybridGatingEvidenceReport(
         candidate=gating_report.candidate,
@@ -2602,12 +2711,73 @@ def apply_exact_identifier_containment_gate(
     return gated_documents, identifiers, True
 
 
+def extract_alias_aware_identifiers(text: str) -> list[str]:
+    identifiers = {
+        _canonicalize_identifier(identifier)
+        for identifier in extract_lexical_identifiers(text)
+    }
+    identifiers.update(_local_noisy_identifier_aliases(text))
+    return sorted(identifier for identifier in identifiers if identifier)
+
+
+def apply_alias_aware_identifier_gate(
+    query: str,
+    documents: list[EvidenceDocument],
+) -> tuple[list[EvidenceDocument], list[str], bool]:
+    identifiers = extract_alias_aware_identifiers(query)
+    if not identifiers:
+        return documents, identifiers, False
+    gated_documents = [
+        document
+        for document in documents
+        if set(identifiers).issubset(set(extract_alias_aware_identifiers(document.snippet)))
+    ]
+    return gated_documents, identifiers, True
+
+
+def _canonicalize_identifier(identifier: str) -> str:
+    parts = []
+    for part in identifier.lower().split("-"):
+        if any(character.isdigit() for character in part):
+            parts.append(part.replace("o", "0"))
+        else:
+            parts.append(part)
+    return "-".join(parts)
+
+
+def _local_noisy_identifier_aliases(text: str) -> set[str]:
+    normalized = text.lower()
+    compact = re.sub(r"[\s_\-]+", "", normalized)
+    compact = re.sub(r"[：:，,。；;？?！!（）()【】\[\]]+", "", compact)
+    compact_ocr = compact.replace("o", "0")
+    aliases: set[str] = set()
+
+    for match in re.finditer(r"af退款([0-9o]{1,3})", compact):
+        aliases.add(f"af-refund-{match.group(1).replace('o', '0').zfill(2)}")
+    for match in re.finditer(r"afrefund([0-9o]{1,3})", compact_ocr):
+        aliases.add(f"af-refund-{match.group(1).zfill(2)}")
+    for match in re.finditer(r"rfd([0-9o]{4})([0-9o]{3})", compact):
+        aliases.add(
+            f"rfd-{match.group(1).replace('o', '0')}-{match.group(2).replace('o', '0')}"
+        )
+    for match in re.finditer(r"lst批量([a-z0-9o]+)", compact):
+        aliases.add(f"lst-batch-{_canonicalize_identifier(match.group(1))}")
+    for match in re.finditer(r"lstbatch([a-z0-9o]+)", compact):
+        aliases.add(f"lst-batch-{_canonicalize_identifier(match.group(1))}")
+    for match in re.finditer(r"ordzs([0-9o]{4})([0-9o]{4})", compact):
+        aliases.add(
+            f"ord-zs-{match.group(1).replace('o', '0')}-{match.group(2).replace('o', '0')}"
+        )
+    return aliases
+
+
 def _run_qdrant_hybrid_gated_smoke_case(
     client,
     settings: Settings,
     embedding_adapter,
     case: RetrievalBenchmarkCase,
     sparse_vector_name: str,
+    gate_fn=apply_exact_identifier_containment_gate,
 ) -> HybridGatingCaseResult:
     started_at = perf_counter()
     raw_documents = query_qdrant_hybrid_documents_for_text(
@@ -2619,7 +2789,7 @@ def _run_qdrant_hybrid_gated_smoke_case(
         top_k=case.top_k,
         sparse_vector_name=sparse_vector_name,
     )
-    gated_documents, identifiers, gate_applied = apply_exact_identifier_containment_gate(
+    gated_documents, identifiers, gate_applied = gate_fn(
         query=case.query,
         documents=raw_documents,
     )

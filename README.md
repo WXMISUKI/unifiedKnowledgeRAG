@@ -1001,6 +1001,45 @@ docs/benchmark/chinese-seed/hybrid-gating-candidates-expanded/qdrant-bge-m3-hybr
 
 结论：扩展 fixture 进一步证明 exact identifier gate 对“多编号正例”和“部分编号/同前缀错号”都有本地防护效果。不过这仍然只覆盖规范编号文本。生产前还应补 OCR 错字、别名、编号跨 chunk、用户简称、无编号语义问题，以及需要 reranker/evidence grading 的 noisy top-k 场景。
 
+第四十五阶段 OpenSpec change `evaluate-noisy-identifier-gate-candidate` 增加 evaluation-only noisy/alias gate 候选。`alias-aware-identifier-gate-v1` 会在 identifier gate 前做本地归一化：处理 `O/0` OCR 混淆、空格拆分编号，以及当前 fixture 中的中文简称，例如 `AF退款02`、`LST批量OPS`。
+
+新增 fixture：
+
+```text
+tests/fixtures/noisy_identifier_positive_cases.json
+tests/fixtures/noisy_identifier_empty_cases.json
+```
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-alias-gating-candidate `
+  --output-dir docs/benchmark/chinese-seed/noisy-identifier-gating-candidates `
+  --cases-path tests/fixtures/noisy_identifier_positive_cases.json `
+  --empty-cases-path tests/fixtures/noisy_identifier_empty_cases.json `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/noisy-identifier-gating-candidates/qdrant-bge-m3-hybrid-alias-identifier-gate.json
+docs/benchmark/chinese-seed/noisy-identifier-gating-candidates/qdrant-bge-m3-hybrid-alias-identifier-gate.md
+```
+
+当前 noisy/alias evidence 显示：
+
+| Candidate | Cases | Hit Rate | Citation Match Rate | Empty Handling Rate | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `qdrant-bge-m3-hybrid-alias-identifier-gate` | 8 | 1.0000 | 1.0000 | 1.0000 | OCR/中文简称 positive 4/4 保留，错误别名/错号 empty 4/4 过滤为空 |
+
+结论：alias-aware gate 证明了“小型本地归一化表 + strict identifier gate”的可行性，但它仍不是生产别名治理。生产推广前需要把 alias 来源、审批、版本、审计、冲突处理做成显式流程，并继续补编号跨 chunk、OCR 噪声更强、无编号语义问题和 noisy top-k reranker/evidence grading 证据。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

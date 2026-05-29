@@ -338,6 +338,15 @@ The first gating report proves full exact identifiers can retain exact-term reca
 
 This still does not approve runtime gating. Production review must add customer-like aliases, OCR/noisy identifiers, split-chunk identifiers, no-identifier semantic queries, and false-negative review before switching hybrid retrieval or gating into the default path.
 
+Noisy/alias identifier gating evidence now lives under:
+
+- `docs/benchmark/chinese-seed/noisy-identifier-gating-candidates/qdrant-bge-m3-hybrid-alias-identifier-gate.json`
+- `docs/benchmark/chinese-seed/noisy-identifier-gating-candidates/qdrant-bge-m3-hybrid-alias-identifier-gate.md`
+
+The `alias-aware-identifier-gate-v1` candidate adds local OCR `O/0` normalization, spacing normalization, and a small fixture-local alias map for shorthand such as `AF退款02` and `LST批量OPS`. On the noisy/alias local seed, it reaches hit rate `1.0000`, citation match rate `1.0000`, and empty handling rate `1.0000` across eight cases.
+
+This evidence supports alias-aware gating as a candidate, not as a production alias service. Production adoption needs alias ownership, approval workflow, versioning, audit logs, conflict resolution, and customer-corpus evaluation before any runtime default is changed.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

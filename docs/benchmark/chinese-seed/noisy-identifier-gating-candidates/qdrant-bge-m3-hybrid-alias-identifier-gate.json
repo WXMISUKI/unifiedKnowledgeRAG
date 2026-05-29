@@ -1,0 +1,455 @@
+{
+  "candidate": {
+    "id": "qdrant-bge-m3-hybrid-alias-identifier-gate",
+    "backend": "qdrant",
+    "description": "Evaluation-only Qdrant+BGE-M3 dense+sparse candidate with OCR and local alias normalization before identifier gating.",
+    "metadata": {
+      "vector_store": "qdrant",
+      "collection": "knowledge_chunks",
+      "vector_name": "text-dense",
+      "embedding_provider": "bge_m3_local",
+      "embedding_model": "BAAI/bge-m3",
+      "embedding_model_path": "models\\bge-m3",
+      "deployment_path": "local-smoke-or-private-network",
+      "benchmark_fixture": "noisy-identifier-gating-v1",
+      "retrieval_mode": "dense+sparse-hybrid",
+      "sparse_vector_name": "text-sparse",
+      "sparse_vectorizer": "lexical-identifier-sparse-v1",
+      "fusion": "rrf",
+      "gating_policy": "alias-aware-identifier-gate-v1"
+    }
+  },
+  "metadata": {
+    "created_at": "2026-05-29T06:57:12.129085+00:00",
+    "qdrant_url": ":memory:",
+    "qdrant_collection": "knowledge_chunks",
+    "qdrant_vector_name": "text-dense",
+    "qdrant_vector_size": "1024",
+    "rag_score_threshold": "0.7",
+    "embedding_provider": "bge_m3_local",
+    "embedding_model": "BAAI/bge-m3",
+    "embedding_model_path": "models\\bge-m3",
+    "embedding_local_files_only": "true",
+    "source_ids": [
+      "refund_policy_docs",
+      "logistics_faq"
+    ],
+    "chunking_strategy": "markdown-paragraph-v1",
+    "benchmark_fixture": "noisy-identifier-gating-v1",
+    "positive_cases_path": "tests\\fixtures\\noisy_identifier_positive_cases.json",
+    "empty_cases_path": "tests\\fixtures\\noisy_identifier_empty_cases.json",
+    "retrieval_mode": "dense+sparse-hybrid",
+    "gating_policy": "alias-aware-identifier-gate-v1",
+    "sparse_vector_name": "text-sparse",
+    "sparse_vectorizer": "lexical-identifier-sparse-v1",
+    "fusion": "rrf",
+    "score_filter": "disabled-for-rrf-fusion-score"
+  },
+  "indexed_sources": {
+    "refund_policy_docs": {
+      "job_id": "hybrid_smoke_6e7c00dfaf294b1aa01c1419a1b38193",
+      "chunk_count": 7,
+      "status": "ready",
+      "chunking_strategy": "markdown-paragraph-v1",
+      "sparse_vector_name": "text-sparse"
+    },
+    "logistics_faq": {
+      "job_id": "hybrid_smoke_4e2538cfbcff419881cfae227c8f68b0",
+      "chunk_count": 6,
+      "status": "ready",
+      "chunking_strategy": "markdown-paragraph-v1",
+      "sparse_vector_name": "text-sparse"
+    }
+  },
+  "report": {
+    "summary": {
+      "backend": "qdrant-hybrid:alias-aware-identifier-gate-v1",
+      "total_cases": 8,
+      "hit_rate": 1.0,
+      "citation_match_rate": 1.0,
+      "empty_handling_rate": 1.0,
+      "category_summaries": {
+        "noisy-identifier-alias": {
+          "total_cases": 2,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 0.0
+        },
+        "noisy-identifier-empty-alias": {
+          "total_cases": 2,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 1.0
+        },
+        "noisy-identifier-empty-ocr": {
+          "total_cases": 2,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 1.0
+        },
+        "noisy-identifier-ocr": {
+          "total_cases": 2,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 0.0
+        }
+      }
+    },
+    "cases": [
+      {
+        "id": "noisy-positive-refund-policy-ocr",
+        "category": "noisy-identifier-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 326.769,
+        "returned_citations": [
+          "refund_policy_2026#exact-refund-code"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs"
+        ]
+      },
+      {
+        "id": "noisy-positive-refund-form-chinese-alias",
+        "category": "noisy-identifier-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 325.116,
+        "returned_citations": [
+          "refund_policy_2026#exact-refund-code"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs"
+        ]
+      },
+      {
+        "id": "noisy-positive-logistics-workflow-chinese-alias",
+        "category": "noisy-identifier-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 298.881,
+        "returned_citations": [
+          "logistics_faq_2026#exact-logistics-id"
+        ],
+        "returned_source_ids": [
+          "logistics_faq"
+        ]
+      },
+      {
+        "id": "noisy-positive-logistics-order-ocr-spacing",
+        "category": "noisy-identifier-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 333.672,
+        "returned_citations": [
+          "logistics_faq_2026#exact-logistics-id"
+        ],
+        "returned_source_ids": [
+          "logistics_faq"
+        ]
+      },
+      {
+        "id": "noisy-empty-refund-form-chinese-alias",
+        "category": "noisy-identifier-empty-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 324.391,
+        "returned_citations": [],
+        "returned_source_ids": []
+      },
+      {
+        "id": "noisy-empty-refund-policy-ocr",
+        "category": "noisy-identifier-empty-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 317.132,
+        "returned_citations": [],
+        "returned_source_ids": []
+      },
+      {
+        "id": "noisy-empty-logistics-workflow-chinese-alias",
+        "category": "noisy-identifier-empty-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 316.078,
+        "returned_citations": [],
+        "returned_source_ids": []
+      },
+      {
+        "id": "noisy-empty-logistics-order-ocr-spacing",
+        "category": "noisy-identifier-empty-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 324.534,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "noisy-positive-refund-policy-ocr",
+      "category": "noisy-identifier-ocr",
+      "difficulty": "hard",
+      "expect_empty": false,
+      "query_identifiers": [
+        "rfd-2026-003"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#high-value-review"
+      ],
+      "raw_returned_source_ids": [
+        "refund_policy_docs",
+        "refund_policy_docs"
+      ],
+      "gated_result": {
+        "id": "noisy-positive-refund-policy-ocr",
+        "category": "noisy-identifier-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 326.769,
+        "returned_citations": [
+          "refund_policy_2026#exact-refund-code"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs"
+        ]
+      }
+    },
+    {
+      "id": "noisy-positive-refund-form-chinese-alias",
+      "category": "noisy-identifier-alias",
+      "difficulty": "hard",
+      "expect_empty": false,
+      "query_identifiers": [
+        "af-refund-02"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#section-5"
+      ],
+      "raw_returned_source_ids": [
+        "refund_policy_docs",
+        "refund_policy_docs"
+      ],
+      "gated_result": {
+        "id": "noisy-positive-refund-form-chinese-alias",
+        "category": "noisy-identifier-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 325.116,
+        "returned_citations": [
+          "refund_policy_2026#exact-refund-code"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs"
+        ]
+      }
+    },
+    {
+      "id": "noisy-positive-logistics-workflow-chinese-alias",
+      "category": "noisy-identifier-alias",
+      "difficulty": "hard",
+      "expect_empty": false,
+      "query_identifiers": [
+        "lst-batch-ops"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "logistics_faq_2026#exact-logistics-id",
+        "logistics_faq_2026#batch-exception"
+      ],
+      "raw_returned_source_ids": [
+        "logistics_faq",
+        "logistics_faq"
+      ],
+      "gated_result": {
+        "id": "noisy-positive-logistics-workflow-chinese-alias",
+        "category": "noisy-identifier-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 298.881,
+        "returned_citations": [
+          "logistics_faq_2026#exact-logistics-id"
+        ],
+        "returned_source_ids": [
+          "logistics_faq"
+        ]
+      }
+    },
+    {
+      "id": "noisy-positive-logistics-order-ocr-spacing",
+      "category": "noisy-identifier-ocr",
+      "difficulty": "hard",
+      "expect_empty": false,
+      "query_identifiers": [
+        "ord-zs-2026-0007"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "logistics_faq_2026#exact-logistics-id",
+        "logistics_faq_2026#delay"
+      ],
+      "raw_returned_source_ids": [
+        "logistics_faq",
+        "logistics_faq"
+      ],
+      "gated_result": {
+        "id": "noisy-positive-logistics-order-ocr-spacing",
+        "category": "noisy-identifier-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 333.672,
+        "returned_citations": [
+          "logistics_faq_2026#exact-logistics-id"
+        ],
+        "returned_source_ids": [
+          "logistics_faq"
+        ]
+      }
+    },
+    {
+      "id": "noisy-empty-refund-form-chinese-alias",
+      "category": "noisy-identifier-empty-alias",
+      "difficulty": "hard",
+      "expect_empty": true,
+      "query_identifiers": [
+        "af-refund-99"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#section-5"
+      ],
+      "raw_returned_source_ids": [
+        "refund_policy_docs",
+        "refund_policy_docs"
+      ],
+      "gated_result": {
+        "id": "noisy-empty-refund-form-chinese-alias",
+        "category": "noisy-identifier-empty-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 324.391,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    },
+    {
+      "id": "noisy-empty-refund-policy-ocr",
+      "category": "noisy-identifier-empty-ocr",
+      "difficulty": "hard",
+      "expect_empty": true,
+      "query_identifiers": [
+        "rfd-2026-999"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#section-5"
+      ],
+      "raw_returned_source_ids": [
+        "refund_policy_docs",
+        "refund_policy_docs"
+      ],
+      "gated_result": {
+        "id": "noisy-empty-refund-policy-ocr",
+        "category": "noisy-identifier-empty-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 317.132,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    },
+    {
+      "id": "noisy-empty-logistics-workflow-chinese-alias",
+      "category": "noisy-identifier-empty-alias",
+      "difficulty": "hard",
+      "expect_empty": true,
+      "query_identifiers": [
+        "lst-batch-billing"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "logistics_faq_2026#exact-logistics-id",
+        "logistics_faq_2026#batch-exception"
+      ],
+      "raw_returned_source_ids": [
+        "logistics_faq",
+        "logistics_faq"
+      ],
+      "gated_result": {
+        "id": "noisy-empty-logistics-workflow-chinese-alias",
+        "category": "noisy-identifier-empty-alias",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 316.078,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    },
+    {
+      "id": "noisy-empty-logistics-order-ocr-spacing",
+      "category": "noisy-identifier-empty-ocr",
+      "difficulty": "hard",
+      "expect_empty": true,
+      "query_identifiers": [
+        "ord-zs-2026-0008"
+      ],
+      "gate_applied": true,
+      "raw_returned_citations": [
+        "logistics_faq_2026#exact-logistics-id",
+        "logistics_faq_2026#address-intercept"
+      ],
+      "raw_returned_source_ids": [
+        "logistics_faq",
+        "logistics_faq"
+      ],
+      "gated_result": {
+        "id": "noisy-empty-logistics-order-ocr-spacing",
+        "category": "noisy-identifier-empty-ocr",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": true,
+        "latency_ms": 324.534,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    }
+  ]
+}

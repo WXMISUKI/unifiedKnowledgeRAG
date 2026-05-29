@@ -11,6 +11,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_empty_stress_evidence,
+    export_qdrant_bge_hybrid_alias_gating_candidate_evidence,
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_gating_candidate_evidence,
     export_qdrant_bge_smoke_evidence,
@@ -128,6 +129,19 @@ def main() -> None:
         print(f"Qdrant BGE-M3 hybrid gating evidence ready: {report.markdown_path}")
         return
 
+    if args.hybrid_alias_gating_candidate:
+        report = export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
+            output_dir=args.output_dir,
+            positive_cases_path=args.cases_path,
+            empty_cases_path=args.empty_cases_path,
+            source_ids=args.source_id,
+            case_ids=args.case_id,
+            settings=settings,
+        )
+        print(f"Qdrant BGE-M3 hybrid alias gating evidence ready: {report.json_path}")
+        print(f"Qdrant BGE-M3 hybrid alias gating evidence ready: {report.markdown_path}")
+        return
+
     report = export_qdrant_bge_smoke_evidence(
         output_dir=args.output_dir,
         cases_path=args.cases_path,
@@ -230,6 +244,14 @@ def _parse_args() -> argparse.Namespace:
         help=(
             "Export evaluation-only Qdrant+BGE hybrid gating evidence across "
             "exact-term and empty-stress fixtures."
+        ),
+    )
+    parser.add_argument(
+        "--hybrid-alias-gating-candidate",
+        action="store_true",
+        help=(
+            "Export evaluation-only Qdrant+BGE hybrid alias-aware gating "
+            "evidence across noisy positive and expected-empty fixtures."
         ),
     )
     parser.add_argument("--min-hit-rate", type=float, default=1.0)

@@ -6,6 +6,7 @@ from app.config import Settings
 from app.models.contracts import EvidenceDocument
 
 from app.services.retrieval_benchmark import (
+    apply_alias_aware_identifier_gate,
     apply_exact_identifier_containment_gate,
     benchmark_report_to_dict,
     candidate_evaluation_to_dict,
@@ -23,6 +24,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_empty_stress_evidence,
+    export_qdrant_bge_hybrid_alias_gating_candidate_evidence,
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_gating_candidate_evidence,
     export_qdrant_bge_smoke_evidence,
@@ -44,6 +46,7 @@ from app.services.retrieval_benchmark import (
     render_qdrant_threshold_recommendation_markdown,
     render_qdrant_threshold_sweep_evidence_markdown,
     fixture_chinese_seed_retrieval_candidate,
+    extract_alias_aware_identifiers,
     query_rewrite_candidate_evaluation_to_dict,
     RetrievalCandidate,
     run_retrieval_benchmark,
@@ -70,6 +73,10 @@ HYBRID_GATING_POSITIVE_PATH = Path(
 HYBRID_GATING_EMPTY_EXPANDED_PATH = Path(
     "tests/fixtures/hybrid_gating_empty_expanded_cases.json"
 )
+NOISY_IDENTIFIER_POSITIVE_PATH = Path(
+    "tests/fixtures/noisy_identifier_positive_cases.json"
+)
+NOISY_IDENTIFIER_EMPTY_PATH = Path("tests/fixtures/noisy_identifier_empty_cases.json")
 
 
 def test_loads_retrieval_benchmark_cases():
@@ -483,6 +490,34 @@ def test_loads_expanded_hybrid_gating_cases_separately():
     assert {case.category for case in empty_cases} == {
         "hybrid-gating-partial-id",
         "hybrid-gating-same-prefix-id",
+    }
+
+
+def test_loads_noisy_identifier_cases_separately():
+    positive_cases = load_benchmark_cases(NOISY_IDENTIFIER_POSITIVE_PATH)
+    empty_cases = load_benchmark_cases(NOISY_IDENTIFIER_EMPTY_PATH)
+
+    assert [case.id for case in positive_cases] == [
+        "noisy-positive-refund-policy-ocr",
+        "noisy-positive-refund-form-chinese-alias",
+        "noisy-positive-logistics-workflow-chinese-alias",
+        "noisy-positive-logistics-order-ocr-spacing",
+    ]
+    assert all(not case.expect_empty for case in positive_cases)
+    assert {case.category for case in positive_cases} == {
+        "noisy-identifier-ocr",
+        "noisy-identifier-alias",
+    }
+    assert [case.id for case in empty_cases] == [
+        "noisy-empty-refund-form-chinese-alias",
+        "noisy-empty-refund-policy-ocr",
+        "noisy-empty-logistics-workflow-chinese-alias",
+        "noisy-empty-logistics-order-ocr-spacing",
+    ]
+    assert all(case.expect_empty for case in empty_cases)
+    assert {case.category for case in empty_cases} == {
+        "noisy-identifier-empty-alias",
+        "noisy-identifier-empty-ocr",
     }
 
 
@@ -1186,6 +1221,47 @@ def test_exact_identifier_gate_filters_partial_identifier_substrings():
     assert filtered == []
 
 
+def test_alias_aware_identifier_extraction_normalizes_ocr_and_aliases():
+    assert extract_alias_aware_identifiers("RFD-2O26-OO3") == ["rfd-2026-003"]
+    assert extract_alias_aware_identifiers("AF退款02") == ["af-refund-02"]
+    assert extract_alias_aware_identifiers("LST批量OPS") == ["lst-batch-ops"]
+    assert extract_alias_aware_identifiers("ORD ZS 2O26 0007") == [
+        "ord-zs-2026-0007"
+    ]
+
+
+def test_alias_aware_identifier_gate_keeps_alias_and_filters_wrong_aliases():
+    documents = [
+        EvidenceDocument(
+            source_id="refund_policy_docs",
+            document_id="refund_policy_2026",
+            title="售后退款规则",
+            snippet=(
+                "政策编号 RFD-2026-003 适用于三天未发货退款复核；"
+                "售后专员需填写表单 AF-REFUND-02。"
+            ),
+            score=1.0,
+            citation="refund_policy_2026#exact-refund-code",
+        )
+    ]
+
+    retained, identifiers, applied = apply_alias_aware_identifier_gate(
+        "AF退款02 表单需要关联哪些付款凭证？",
+        documents,
+    )
+    filtered, fake_identifiers, fake_applied = apply_alias_aware_identifier_gate(
+        "AF退款99 表单用于线下补贴退款吗？",
+        documents,
+    )
+
+    assert retained == documents
+    assert identifiers == ["af-refund-02"]
+    assert applied is True
+    assert filtered == []
+    assert fake_identifiers == ["af-refund-99"]
+    assert fake_applied is True
+
+
 def test_export_qdrant_bge_hybrid_gating_candidate_evidence_keeps_raw_and_gated(
     monkeypatch,
     tmp_path,
@@ -1297,6 +1373,110 @@ def test_export_qdrant_bge_hybrid_gating_candidate_evidence_keeps_raw_and_gated(
     assert "Raw And Gated Case Results" in report.markdown_path.read_text(
         encoding="utf-8"
     )
+
+
+def test_export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核；售后专员需填写表单 AF-REFUND-02。",
+        encoding="utf-8",
+    )
+    positive_cases_path = tmp_path / "positive-cases.json"
+    positive_cases_path.write_text(
+        """
+[
+  {
+    "id": "noisy-positive-refund-form-chinese-alias",
+    "category": "noisy-identifier-alias",
+    "difficulty": "hard",
+    "query": "AF退款02 表单需要关联哪些付款凭证？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    empty_cases_path = tmp_path / "empty-cases.json"
+    empty_cases_path.write_text(
+        """
+[
+  {
+    "id": "noisy-empty-refund-form-chinese-alias",
+    "category": "noisy-identifier-empty-alias",
+    "difficulty": "hard",
+    "query": "AF退款99 表单用于线下补贴退款吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "表单 AF-REFUND-02 需要关联付款凭证。",
+                    "citation": "refund_policy_2026#exact-refund-code",
+                },
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
+        output_dir=tmp_path / "evidence",
+        positive_cases_path=positive_cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.candidate.id == "qdrant-bge-m3-hybrid-alias-identifier-gate"
+    assert report.json_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-alias-identifier-gate.json"
+    )
+    assert report.markdown_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-alias-identifier-gate.md"
+    )
+    assert report.metadata["gating_policy"] == "alias-aware-identifier-gate-v1"
+    assert report.report.summary.hit_rate == 1.0
+    assert report.report.summary.citation_match_rate == 1.0
+    assert report.report.summary.empty_handling_rate == 1.0
+    assert report.cases[0].query_identifiers == ["af-refund-02"]
+    assert report.cases[1].query_identifiers == ["af-refund-99"]
+    assert report.cases[1].gated_result.returned_citations == []
 
 
 def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):
