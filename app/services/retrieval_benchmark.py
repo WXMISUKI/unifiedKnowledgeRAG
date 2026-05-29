@@ -451,6 +451,24 @@ def qdrant_bge_hybrid_exact_term_smoke_candidate(
     )
 
 
+def qdrant_bge_hybrid_empty_stress_candidate(
+    settings: Settings | None = None,
+) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    base_candidate = qdrant_bge_hybrid_exact_term_smoke_candidate(settings)
+    metadata = dict(base_candidate.metadata or {})
+    metadata["benchmark_fixture"] = "hybrid-empty-stress-v1"
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-hybrid-empty-stress",
+        backend=base_candidate.backend,
+        description=(
+            "Evaluation-only Qdrant+BGE-M3 dense+sparse smoke path for "
+            "expected-empty cases with exact-token overlap."
+        ),
+        metadata=metadata,
+    )
+
+
 def fixture_chinese_seed_retrieval_candidate() -> RetrievalCandidate:
     return RetrievalCandidate(
         id="fixture-chinese-seed-baseline",
@@ -777,6 +795,80 @@ def export_qdrant_bge_hybrid_exact_term_smoke_evidence(
         report=hybrid_report.report,
         metadata=hybrid_report.metadata,
         indexed_sources=hybrid_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_hybrid_empty_stress_evidence(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/hybrid_empty_stress_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> QdrantSmokeEvidenceReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    cases = load_benchmark_cases(cases_path)
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    client = create_qdrant_client(settings)
+    embedding_adapter = create_embedding_adapter(settings)
+    indexed_sources = _index_qdrant_hybrid_smoke_sources(
+        client=client,
+        settings=settings,
+        source_ids=source_ids,
+        embedding_adapter=embedding_adapter,
+        chunking_strategy=chunking_strategy,
+        sparse_vector_name=sparse_vector_name,
+    )
+    case_results = [
+        _run_qdrant_hybrid_smoke_case(
+            client=client,
+            settings=settings,
+            embedding_adapter=embedding_adapter,
+            case=case,
+            sparse_vector_name=sparse_vector_name,
+        )
+        for case in cases
+    ]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize("qdrant-hybrid", case_results),
+        cases=case_results,
+    )
+    metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
+    metadata.update({
+        "benchmark_fixture": "hybrid-empty-stress-v1",
+        "benchmark_cases_path": str(cases_path),
+        "retrieval_mode": "dense+sparse-hybrid",
+        "sparse_vector_name": sparse_vector_name,
+        "sparse_vectorizer": QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
+        "fusion": QDRANT_HYBRID_FUSION_STRATEGY,
+        "score_filter": "disabled-for-rrf-fusion-score",
+    })
+    stress_report = QdrantSmokeEvidenceReport(
+        candidate=qdrant_bge_hybrid_empty_stress_candidate(settings),
+        report=report,
+        metadata=metadata,
+        indexed_sources=indexed_sources,
+    )
+    json_path = export_qdrant_smoke_evidence_json(
+        stress_report,
+        output_dir / "qdrant-bge-m3-hybrid-empty-stress.json",
+    )
+    markdown_path = export_qdrant_smoke_evidence_markdown(
+        stress_report,
+        output_dir / "qdrant-bge-m3-hybrid-empty-stress.md",
+    )
+    return QdrantSmokeEvidenceReport(
+        candidate=stress_report.candidate,
+        report=stress_report.report,
+        metadata=stress_report.metadata,
+        indexed_sources=stress_report.indexed_sources,
         json_path=json_path,
         markdown_path=markdown_path,
     )

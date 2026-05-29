@@ -894,6 +894,42 @@ dense-only 与 hybrid exact-term seed 对比：
 
 结论：hybrid 对 exact-term recall 有明确帮助，但当前 exact-term fixture 没有 expected-empty case，不能证明 false-positive 风险可控。下一步如果继续推进 retrieval 质量，应该补 `evaluate-qdrant-hybrid-empty-stress` 或同类门禁，用 unsupported business queries 验证 hybrid 不会因为 sparse token overlap 带来过召回。
 
+第四十二阶段 OpenSpec change `evaluate-qdrant-hybrid-empty-stress` 增加 hybrid expected-empty 压力集。它独立于主中文 seed 和 exact-term fixture，专门放入“看起来像已有编号/缩写、但知识源并不支持”的问题：
+
+- `AF-REFUND-99`
+- `RFD-2026-999`
+- `LST-BATCH-BILLING`
+- `ORD-ZS-2026-9999`
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-empty-stress `
+  --output-dir docs/benchmark/chinese-seed/hybrid-empty-stress `
+  --cases-path tests/fixtures/hybrid_empty_stress_cases.json `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/hybrid-empty-stress/qdrant-bge-m3-hybrid-empty-stress.json
+docs/benchmark/chinese-seed/hybrid-empty-stress/qdrant-bge-m3-hybrid-empty-stress.md
+```
+
+当前 evidence 显示：
+
+| Candidate | Cases | Empty Handling Rate | Notes |
+| --- | ---: | ---: | --- |
+| `qdrant-bge-m3-hybrid-empty-stress` | 4 | 0.0000 | 四条 unsupported token-overlap 问题全部返回了证据 |
+
+结论：hybrid 证明了 exact-term recall 价值，也证明了 false-positive 风险。它现在不能作为 runtime 默认，也不能只靠“exact-term 全过”推进生产；下一步应做 hybrid gating candidate，例如 sparse score gate、exact-token allowlist、dense+hybrid two-stage gate，或 evidence grading/reranker 组合，用同一组 exact-term + empty-stress 证据同时衡量召回和过召回。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

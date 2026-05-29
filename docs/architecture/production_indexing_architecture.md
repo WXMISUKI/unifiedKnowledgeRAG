@@ -315,6 +315,15 @@ This candidate uses named vectors (`text-dense` and `text-sparse`), deterministi
 
 This does not approve production hybrid retrieval. The exact-term fixture has no expected-empty cases, and RRF fusion scores are not comparable to the dense-only score threshold. Before runtime promotion, add hybrid false-positive stress evidence, decide how sparse vectors are produced in production, and plan collection schema/reindex migration.
 
+Hybrid empty-stress evidence now lives under:
+
+- `docs/benchmark/chinese-seed/hybrid-empty-stress/qdrant-bge-m3-hybrid-empty-stress.json`
+- `docs/benchmark/chinese-seed/hybrid-empty-stress/qdrant-bge-m3-hybrid-empty-stress.md`
+
+The stress fixture uses unsupported but token-overlapping cases such as `AF-REFUND-99`, `RFD-2026-999`, `LST-BATCH-BILLING`, and `ORD-ZS-2026-9999`. The current hybrid candidate returns evidence for all four expected-empty cases, producing empty handling rate `0.0000`.
+
+This blocks runtime hybrid promotion. The next architecture evidence should compare hybrid gating strategies, such as sparse score gates, exact-token allowlists, dense-first/hybrid fallback, or evidence grading after hybrid retrieval. A production hybrid decision must pass both recall-oriented exact-term evidence and false-positive-oriented empty-stress evidence.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

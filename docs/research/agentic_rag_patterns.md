@@ -32,6 +32,7 @@ Current evidence says:
 - Exact-term fixture evidence now exists as a contract baseline; Qdrant+BGE or future dense retrieval evidence must decide whether hybrid/sparse retrieval is justified.
 - Qdrant+BGE-M3 dense-only exact-term smoke evidence now shows 0.5000 hit rate and citation match rate at `RAG_SCORE_THRESHOLD=0.7`, missing the `AF-REFUND-02` form-name case and `ORD-ZS-2026-0007` order-like id case.
 - Evaluation-only Qdrant dense+sparse hybrid exact-term evidence now shows 1.0000 hit rate and citation match rate on the four exact-term cases, using named sparse vectors and RRF fusion.
+- Hybrid empty-stress evidence now shows empty handling rate 0.0000 on four unsupported but token-overlapping cases, confirming sparse/fusion false-positive risk.
 
 ## Mature Pattern Families
 
@@ -226,7 +227,7 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Hybrid threshold and false-positive stress | Hybrid fixes exact-term recall, but sparse token overlap still needs expected-empty risk evidence |
+| 1 | Hybrid gating candidate | Hybrid fixes exact-term recall but fails token-overlap expected-empty stress |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
 | 3 | Production hybrid schema decision | Only after exact-term recall and empty-query gates both pass |
 | 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
@@ -245,10 +246,10 @@ Dependency risk:
 
 ## Near-Term Recommendation
 
-After Qdrant+BGE hybrid exact-term smoke evidence, the next implementation slice should be:
+After Qdrant+BGE hybrid empty-stress evidence, the next implementation slice should be:
 
 ```text
-evaluate-qdrant-hybrid-empty-stress
+evaluate-hybrid-gating-candidate
 ```
 
-It should run hybrid retrieval against unsupported but keyword-overlapping enterprise questions, then compare false-positive behavior with the dense-only threshold evidence before any runtime hybrid promotion.
+It should compare gating strategies that preserve exact-term recall while blocking unsupported token-overlap false positives, before any runtime hybrid promotion.

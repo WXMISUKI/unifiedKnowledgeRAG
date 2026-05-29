@@ -1,0 +1,46 @@
+[
+  {
+    "id": "hybrid-empty-fake-refund-form",
+    "category": "hybrid-empty-form-name",
+    "difficulty": "hard",
+    "query": "AF-REFUND-99 表单用于线下补贴退款吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "hybrid-empty-fake-refund-policy-code",
+    "category": "hybrid-empty-policy-code",
+    "difficulty": "hard",
+    "query": "RFD-2026-999 对应跨境税务退款流程吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "hybrid-empty-fake-logistics-workflow",
+    "category": "hybrid-empty-workflow-acronym",
+    "difficulty": "hard",
+    "query": "LST-BATCH-BILLING 是物流账单复核升级代号吗？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "hybrid-empty-fake-order-id",
+    "category": "hybrid-empty-order-like-id",
+    "difficulty": "hard",
+    "query": "ORD-ZS-2026-9999 用于演示会员积分补偿凭据吗？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]

@@ -20,6 +20,7 @@ from app.services.retrieval_benchmark import (
     export_query_rewrite_candidate_evaluation,
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_exact_term_smoke_evidence,
+    export_qdrant_bge_hybrid_empty_stress_evidence,
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
@@ -58,6 +59,7 @@ EVIDENCE_GRADING_STRESS_PATH = Path(
 EXACT_TERM_IDENTIFIER_PATH = Path(
     "tests/fixtures/exact_term_identifier_cases.json"
 )
+HYBRID_EMPTY_STRESS_PATH = Path("tests/fixtures/hybrid_empty_stress_cases.json")
 
 
 def test_loads_retrieval_benchmark_cases():
@@ -422,6 +424,28 @@ def test_loads_exact_term_identifier_cases_separately():
         "form-name",
         "workflow-acronym",
         "order-like-id",
+    }
+
+
+def test_loads_hybrid_empty_stress_cases_separately():
+    baseline_cases = load_benchmark_cases(FIXTURE_PATH)
+    exact_cases = load_benchmark_cases(EXACT_TERM_IDENTIFIER_PATH)
+    stress_cases = load_benchmark_cases(HYBRID_EMPTY_STRESS_PATH)
+
+    assert len(baseline_cases) == 21
+    assert len(exact_cases) == 4
+    assert [case.id for case in stress_cases] == [
+        "hybrid-empty-fake-refund-form",
+        "hybrid-empty-fake-refund-policy-code",
+        "hybrid-empty-fake-logistics-workflow",
+        "hybrid-empty-fake-order-id",
+    ]
+    assert all(case.expect_empty for case in stress_cases)
+    assert {case.category for case in stress_cases} == {
+        "hybrid-empty-form-name",
+        "hybrid-empty-policy-code",
+        "hybrid-empty-workflow-acronym",
+        "hybrid-empty-order-like-id",
     }
 
 
@@ -981,6 +1005,95 @@ def test_export_qdrant_bge_hybrid_exact_term_smoke_evidence_uses_named_outputs(
     assert report.report.summary.backend == "qdrant-hybrid"
     assert report.report.summary.citation_match_rate == 1.0
     assert "qdrant-bge-m3-hybrid-exact-term-smoke" in (
+        report.markdown_path.read_text(encoding="utf-8")
+    )
+
+
+def test_export_qdrant_bge_hybrid_empty_stress_evidence_records_false_positive(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款。\n\n"
+        "退款处理需要保留订单编号。\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核；售后专员需填写表单 AF-REFUND-02。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "hybrid-empty-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "hybrid-empty-fake-refund-form",
+    "category": "hybrid-empty-form-name",
+    "difficulty": "hard",
+    "query": "AF-REFUND-99 表单用于线下补贴退款吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "表单 AF-REFUND-02 需要关联付款凭证。",
+                    "citation": "refund_policy_2026#exact-refund-code",
+                },
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_empty_stress_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.candidate.id == "qdrant-bge-m3-hybrid-empty-stress"
+    assert report.json_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-empty-stress.json"
+    )
+    assert report.markdown_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-empty-stress.md"
+    )
+    assert report.metadata["benchmark_fixture"] == "hybrid-empty-stress-v1"
+    assert report.metadata["retrieval_mode"] == "dense+sparse-hybrid"
+    assert report.report.summary.empty_handling_rate == 0.0
+    assert report.report.cases[0].empty_query_handling is False
+    assert report.report.cases[0].returned_citations == [
+        "refund_policy_2026#exact-refund-code"
+    ]
+    assert "qdrant-bge-m3-hybrid-empty-stress" in (
         report.markdown_path.read_text(encoding="utf-8")
     )
 
