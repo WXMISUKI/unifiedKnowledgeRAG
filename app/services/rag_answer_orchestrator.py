@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from app.config import Settings
 from app.models.contracts import EvidenceDocument, ProviderError, RagAnswerResult
+from app.services.answer_prompt_package import build_cited_answer_prompt_package
 
 
 DETERMINISTIC_COMPOSER_ID = "deterministic-extractive-v1"
@@ -14,6 +15,7 @@ class AnswerComposer(ABC):
     @abstractmethod
     def compose(
         self,
+        query: str,
         documents: list[EvidenceDocument],
         retrieval_backend: str,
         min_evidence_count: int,
@@ -30,6 +32,7 @@ class DeterministicAnswerComposer(AnswerComposer):
 
     def compose(
         self,
+        query: str,
         documents: list[EvidenceDocument],
         retrieval_backend: str,
         min_evidence_count: int,
@@ -59,6 +62,8 @@ class DeterministicAnswerComposer(AnswerComposer):
 
         cited_documents = documents[:3]
         citations = _unique_citations(cited_documents)
+        prompt_package = build_cited_answer_prompt_package(query, cited_documents)
+        metadata["prompt_package"] = prompt_package.metadata()
         answer_parts = [
             f"[{document.citation}] {document.snippet}" for document in cited_documents
         ]

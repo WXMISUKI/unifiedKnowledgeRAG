@@ -76,6 +76,8 @@ $env:RAG_ANSWER_COMPOSER_MODEL="deterministic-extractive-v1"
 
 `hosted` 和 `local` 是后续接入 Qwen、OpenAI、vLLM、Ollama 或其他内网模型的预留配置名；当前会 fail-closed 返回结构化 `ANSWER_COMPOSER_NOT_IMPLEMENTED`，不会静默 fallback，也不会偷偷调用公网或本地 LLM runtime。真正接入模型前仍需单独 OpenSpec change 讨论模型、密钥、数据出公网、prompt、引用约束和成本。
 
+Answer composer 内部会构造 provider-owned prompt package。当前不会暴露完整 prompt 文本，也不会调用 LLM；answered 结果会在 `metadata.prompt_package` 中返回 `cited-answer-prompt-v1`、引用策略和允许使用的 citations，方便后续 Qwen 或本地 LLM adapter 复用同一套证据包装与引用约束。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：

@@ -109,6 +109,7 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
     return RagAnswerResponse(
         ok=True,
         result=composer.compose(
+            query=request.query,
             documents=documents,
             retrieval_backend=retriever.backend_name,
             min_evidence_count=settings.rag_answer_min_evidence_count,

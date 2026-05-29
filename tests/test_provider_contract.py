@@ -154,6 +154,11 @@ def test_rag_answer_returns_cited_answer_envelope():
     assert body["result"]["metadata"]["composer_provider"] == "deterministic"
     assert body["result"]["metadata"]["composer_model"] == "deterministic-extractive-v1"
     assert body["result"]["metadata"]["evidence_gate"]["passed"] is True
+    prompt_package = body["result"]["metadata"]["prompt_package"]
+    assert prompt_package["id"] == "cited-answer-prompt-v1"
+    assert prompt_package["citation_policy"] == "use_only_allowed_citations"
+    assert prompt_package["allowed_citations"] == body["result"]["citations"]
+    assert prompt_package["evidence_count"] == len(body["result"]["citations"])
 
 
 def test_rag_answer_hosted_composer_fails_closed(monkeypatch):
@@ -218,6 +223,7 @@ def test_rag_answer_low_score_gate_returns_insufficient_evidence(monkeypatch):
     assert body["result"]["answer"] == ""
     assert body["result"]["citations"] == []
     assert body["result"]["documents"]
+    assert "prompt_package" not in body["result"]["metadata"]
     gate = body["result"]["metadata"]["evidence_gate"]
     assert gate["passed"] is False
     assert gate["reason"] == "top_score_below_minimum"
@@ -244,6 +250,7 @@ def test_rag_answer_min_count_gate_returns_insufficient_evidence(monkeypatch):
     assert body["result"]["answer"] == ""
     assert body["result"]["citations"] == []
     assert len(body["result"]["documents"]) == 2
+    assert "prompt_package" not in body["result"]["metadata"]
     gate = body["result"]["metadata"]["evidence_gate"]
     assert gate["passed"] is False
     assert gate["reason"] == "evidence_count_below_minimum"
@@ -310,6 +317,7 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
         },
         "error": None,
     }
+    assert "prompt_package" not in body["result"]["metadata"]
 
 
 def test_rag_retrieve_unknown_source_returns_structured_error():
