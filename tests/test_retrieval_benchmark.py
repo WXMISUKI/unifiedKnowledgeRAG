@@ -3,8 +3,10 @@ from dataclasses import replace
 from pathlib import Path
 
 from app.config import Settings
+from app.models.contracts import EvidenceDocument
 
 from app.services.retrieval_benchmark import (
+    apply_exact_identifier_containment_gate,
     benchmark_report_to_dict,
     candidate_evaluation_to_dict,
     default_embedding_candidates,
@@ -22,6 +24,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_empty_stress_evidence,
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
+    export_qdrant_bge_hybrid_gating_candidate_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -47,6 +50,7 @@ from app.services.retrieval_benchmark import (
     ThresholdRecommendationGates,
     chunking_strategy_evaluation_to_dict,
     qdrant_chunking_comparison_to_dict,
+    qdrant_hybrid_gating_evidence_to_dict,
     qdrant_threshold_recommendation_to_dict,
     qdrant_threshold_sweep_evidence_to_dict,
 )
@@ -1095,6 +1099,148 @@ def test_export_qdrant_bge_hybrid_empty_stress_evidence_records_false_positive(
     ]
     assert "qdrant-bge-m3-hybrid-empty-stress" in (
         report.markdown_path.read_text(encoding="utf-8")
+    )
+
+
+def test_exact_identifier_gate_filters_unsupported_identifier_hits():
+    documents = [
+        EvidenceDocument(
+            source_id="refund_policy_docs",
+            document_id="refund_policy_2026",
+            title="售后退款规则",
+            snippet="表单 AF-REFUND-02 需要关联付款凭证。",
+            score=1.0,
+            citation="refund_policy_2026#exact-refund-code",
+        )
+    ]
+
+    retained, identifiers, applied = apply_exact_identifier_containment_gate(
+        "AF-REFUND-02 表单需要关联哪些付款凭证？",
+        documents,
+    )
+    filtered, fake_identifiers, fake_applied = apply_exact_identifier_containment_gate(
+        "AF-REFUND-99 表单用于线下补贴退款吗？",
+        documents,
+    )
+
+    assert retained == documents
+    assert identifiers == ["af-refund-02"]
+    assert applied is True
+    assert filtered == []
+    assert fake_identifiers == ["af-refund-99"]
+    assert fake_applied is True
+
+
+def test_export_qdrant_bge_hybrid_gating_candidate_evidence_keeps_raw_and_gated(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核；售后专员需填写表单 AF-REFUND-02。",
+        encoding="utf-8",
+    )
+    exact_cases_path = tmp_path / "exact-cases.json"
+    exact_cases_path.write_text(
+        """
+[
+  {
+    "id": "exact-refund-form-name",
+    "category": "form-name",
+    "difficulty": "medium",
+    "query": "AF-REFUND-02 表单需要关联哪些付款凭证？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    empty_cases_path = tmp_path / "empty-cases.json"
+    empty_cases_path.write_text(
+        """
+[
+  {
+    "id": "hybrid-empty-fake-refund-form",
+    "category": "hybrid-empty-form-name",
+    "difficulty": "hard",
+    "query": "AF-REFUND-99 表单用于线下补贴退款吗？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "表单 AF-REFUND-02 需要关联付款凭证。",
+                    "citation": "refund_policy_2026#exact-refund-code",
+                },
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_gating_candidate_evidence(
+        output_dir=tmp_path / "evidence",
+        exact_cases_path=exact_cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+    payload = qdrant_hybrid_gating_evidence_to_dict(report)
+
+    assert report.candidate.id == "qdrant-bge-m3-hybrid-exact-identifier-gate"
+    assert report.json_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-exact-identifier-gate.json"
+    )
+    assert report.markdown_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-exact-identifier-gate.md"
+    )
+    assert report.metadata["gating_policy"] == "exact-identifier-containment-gate-v1"
+    assert report.report.summary.hit_rate == 1.0
+    assert report.report.summary.citation_match_rate == 1.0
+    assert report.report.summary.empty_handling_rate == 1.0
+    assert report.cases[0].raw_returned_citations == [
+        "refund_policy_2026#exact-refund-code"
+    ]
+    assert report.cases[1].raw_returned_citations == [
+        "refund_policy_2026#exact-refund-code"
+    ]
+    assert report.cases[1].gated_result.returned_citations == []
+    assert payload["cases"][1]["query_identifiers"] == ["af-refund-99"]
+    assert "Raw And Gated Case Results" in report.markdown_path.read_text(
+        encoding="utf-8"
     )
 
 

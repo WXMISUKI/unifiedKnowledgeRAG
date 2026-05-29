@@ -127,6 +127,7 @@ Production indexing introduces decisions that affect cost, latency, recall, data
 - Structure-aware chunks for markdown, policy docs, manuals, or PDFs.
 - Dense-only retrieval for semantic baseline.
 - Dense + sparse hybrid retrieval for exact term and semantic recall.
+- Exact identifier containment gating for hybrid false-positive control.
 - Reranker after vector/hybrid candidate generation.
 
 ### Research Reference
@@ -149,6 +150,7 @@ Mature Agentic RAG and GraphRAG patterns are summarized in [Agentic RAG Pattern 
 - Are citations required at section, paragraph, or document level?
 - Do users ask exact policy/code terms that need sparse retrieval?
 - What top-k evidence precision is acceptable before answer generation?
+- How broad must the hybrid gating benchmark be before runtime adoption?
 
 ## Decision 5: GraphRAG Storage
 
@@ -189,7 +191,7 @@ Before implementing production infrastructure, review these choices in order:
 6. Chunking and retrieval benchmark plan.
 7. GraphRAG storage priority and first graph use case.
 
-The current near-term recommendation is to improve chunking evidence first, then evaluate query rewrite and evidence grading as service-level candidates. Hybrid retrieval, reranking, and GraphRAG storage should remain separate gates.
+Current local seed evidence shows dense+sparse hybrid improves exact-term recall, but raw hybrid retrieval over-retrieves unsupported identifier-like questions. The `exact-identifier-containment-gate-v1` candidate restores local empty-stress handling while preserving exact-term recall, but it remains evaluation-only until broader customer-like cases cover false-negative risk. Hybrid retrieval, reranking, and GraphRAG storage should remain separate gates.
 
 ## Current Recommendation
 
@@ -201,13 +203,14 @@ The safest next implementation slice after the candidate adapter is live Qdrant 
 
 The initial benchmark harness lives in `app.services.retrieval_benchmark` and uses structured cases from `tests/fixtures/retrieval_benchmark_cases.json`.
 
-Before approving production embedding, vector database, reranker, or hybrid retrieval implementation:
+Before approving production embedding, vector database, reranker, hybrid retrieval, or runtime hybrid gating implementation:
 
 1. Add representative benchmark cases for the target corpus.
 2. Include positive citation cases and expected empty-retrieval cases.
 3. Run each candidate adapter through the same case set.
 4. Compare hit rate, citation match rate, empty handling rate, category-level rates, and latency.
 5. Export JSON and Markdown reports when comparing serious candidates.
+6. For hybrid retrieval, preserve both raw and gated citations so false-positive controls can be audited.
 6. Record the exported report paths in the relevant OpenSpec change before adding production dependencies.
 
 The seed benchmark set currently covers policy, FAQ, evidence, paraphrase, multi-source, and empty retrieval categories. Before final production selection, expand those categories with real domain examples and review weak categories separately instead of relying only on a single aggregate score.

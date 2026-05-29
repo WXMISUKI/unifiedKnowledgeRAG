@@ -930,6 +930,38 @@ docs/benchmark/chinese-seed/hybrid-empty-stress/qdrant-bge-m3-hybrid-empty-stres
 
 结论：hybrid 证明了 exact-term recall 价值，也证明了 false-positive 风险。它现在不能作为 runtime 默认，也不能只靠“exact-term 全过”推进生产；下一步应做 hybrid gating candidate，例如 sparse score gate、exact-token allowlist、dense+hybrid two-stage gate，或 evidence grading/reranker 组合，用同一组 exact-term + empty-stress 证据同时衡量召回和过召回。
 
+第四十三阶段 OpenSpec change `evaluate-hybrid-gating-candidate` 增加 evaluation-only hybrid gating 候选。当前实现的是最窄的 `exact-identifier-containment-gate-v1`：当 query 含有 `AF-REFUND-02`、`RFD-2026-003`、`LST-BATCH-OPS`、`ORD-ZS-2026-0007` 这类 identifier-like token 时，只有 evidence snippet 同时包含 query 中全部 identifier 才会被保留；没有 identifier 的 query 不受该 gate 影响。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-gating-candidate `
+  --output-dir docs/benchmark/chinese-seed/hybrid-gating-candidates `
+  --cases-path tests/fixtures/exact_term_identifier_cases.json `
+  --empty-cases-path tests/fixtures/hybrid_empty_stress_cases.json `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/hybrid-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.json
+docs/benchmark/chinese-seed/hybrid-gating-candidates/qdrant-bge-m3-hybrid-exact-identifier-gate.md
+```
+
+当前 evidence 显示：
+
+| Candidate | Cases | Hit Rate | Citation Match Rate | Empty Handling Rate | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `qdrant-bge-m3-hybrid-exact-identifier-gate` | 8 | 1.0000 | 1.0000 | 1.0000 | exact-term 4/4 保留，empty-stress 4/4 由 raw false positive 过滤为空 |
+
+结论：这个 gate 证明“hybrid recall + exact identifier false-positive control”在本地 seed 上可行，但它仍不是 runtime 默认。生产推广前还需要扩充真实客户语料、评估无编号自然语言 query、决定是否使用 BGE-M3 原生 sparse / BM25 / reranker，并明确误拒风险。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

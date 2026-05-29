@@ -20,6 +20,7 @@ QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY = "token-window-v1"
 QDRANT_SPARSE_VECTOR_NAME = "text-sparse"
 QDRANT_LEXICAL_SPARSE_VECTORIZER_ID = "lexical-identifier-sparse-v1"
 QDRANT_HYBRID_FUSION_STRATEGY = "rrf"
+EXACT_IDENTIFIER_PATTERN = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)+")
 TOKEN_WINDOW_DEFAULT_MAX_TOKENS = 120
 TOKEN_WINDOW_DEFAULT_OVERLAP_TOKENS = 24
 TOKEN_WINDOW_DEFAULT_MIN_TOKENS = 12
@@ -582,6 +583,10 @@ def build_lexical_sparse_vector(text: str) -> LexicalSparseVector:
     )
 
 
+def extract_lexical_identifiers(text: str) -> list[str]:
+    return sorted(set(EXACT_IDENTIFIER_PATTERN.findall(text.lower())))
+
+
 def _hit_to_evidence_document(hit, min_score: float) -> EvidenceDocument | None:
     payload = _hit_value(hit, "payload") or {}
     score = _hit_value(hit, "score") or 0.0
@@ -623,9 +628,7 @@ def _sparse_token_index(token: str) -> int:
 def _lexical_sparse_tokens(text: str) -> list[str]:
     normalized = text.lower()
     tokens = []
-    identifier_pattern = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)+")
-    for match in identifier_pattern.finditer(normalized):
-        identifier = match.group(0)
+    for identifier in extract_lexical_identifiers(normalized):
         tokens.append(identifier)
         tokens.extend(part for part in identifier.split("-") if part)
     tokens.extend(re.findall(r"[a-z0-9]+", normalized))

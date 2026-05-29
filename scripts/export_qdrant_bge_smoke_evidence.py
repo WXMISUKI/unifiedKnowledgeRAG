@@ -12,6 +12,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_empty_stress_evidence,
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
+    export_qdrant_bge_hybrid_gating_candidate_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -114,6 +115,19 @@ def main() -> None:
         print(f"Qdrant BGE-M3 hybrid empty-stress evidence ready: {report.markdown_path}")
         return
 
+    if args.hybrid_gating_candidate:
+        report = export_qdrant_bge_hybrid_gating_candidate_evidence(
+            output_dir=args.output_dir,
+            exact_cases_path=args.cases_path,
+            empty_cases_path=args.empty_cases_path,
+            source_ids=args.source_id,
+            case_ids=args.case_id,
+            settings=settings,
+        )
+        print(f"Qdrant BGE-M3 hybrid gating evidence ready: {report.json_path}")
+        print(f"Qdrant BGE-M3 hybrid gating evidence ready: {report.markdown_path}")
+        return
+
     report = export_qdrant_bge_smoke_evidence(
         output_dir=args.output_dir,
         cases_path=args.cases_path,
@@ -138,6 +152,11 @@ def _parse_args() -> argparse.Namespace:
         "--cases-path",
         type=Path,
         default=Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    )
+    parser.add_argument(
+        "--empty-cases-path",
+        type=Path,
+        default=Path("tests/fixtures/hybrid_empty_stress_cases.json"),
     )
     parser.add_argument(
         "--source-id",
@@ -204,6 +223,14 @@ def _parse_args() -> argparse.Namespace:
         "--hybrid-empty-stress",
         action="store_true",
         help="Export evaluation-only Qdrant+BGE dense+sparse expected-empty stress evidence.",
+    )
+    parser.add_argument(
+        "--hybrid-gating-candidate",
+        action="store_true",
+        help=(
+            "Export evaluation-only Qdrant+BGE hybrid gating evidence across "
+            "exact-term and empty-stress fixtures."
+        ),
     )
     parser.add_argument("--min-hit-rate", type=float, default=1.0)
     parser.add_argument("--min-citation-match-rate", type=float, default=1.0)

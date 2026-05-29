@@ -227,9 +227,9 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Hybrid gating candidate | Hybrid fixes exact-term recall but fails token-overlap expected-empty stress |
+| 1 | Broaden hybrid gating benchmark | `exact-identifier-containment-gate-v1` passes the current seed, but production needs more customer-like true/false identifier cases |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
-| 3 | Production hybrid schema decision | Only after exact-term recall and empty-query gates both pass |
+| 3 | Production hybrid schema decision | Only after exact-term recall, empty-query gates, and false-negative review all pass |
 | 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
 | 5 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
 | 6 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
@@ -246,10 +246,10 @@ Dependency risk:
 
 ## Near-Term Recommendation
 
-After Qdrant+BGE hybrid empty-stress evidence, the next implementation slice should be:
+After Qdrant+BGE hybrid empty-stress evidence, the project evaluated:
 
 ```text
 evaluate-hybrid-gating-candidate
 ```
 
-It should compare gating strategies that preserve exact-term recall while blocking unsupported token-overlap false positives, before any runtime hybrid promotion.
+The current seed result passes with `exact-identifier-containment-gate-v1`: exact-term recall remains `1.0000`, and hybrid empty-stress handling improves from raw false positives to `1.0000`. The next implementation slice should broaden that evidence before runtime promotion, especially with customer-like identifiers, ambiguous partial IDs, natural-language questions without IDs, and cases where an overly strict gate could hide useful evidence.

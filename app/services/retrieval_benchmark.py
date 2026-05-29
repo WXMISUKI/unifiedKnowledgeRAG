@@ -8,6 +8,7 @@ from uuid import uuid4
 
 from app.config import Settings, get_settings
 from app.models.contracts import IndexStatusResponse
+from app.models.contracts import EvidenceDocument
 from app.services.embedding_adapters import create_embedding_adapter
 from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.qdrant_vector_store import (
@@ -21,6 +22,7 @@ from app.services.qdrant_vector_store import (
     embed_qdrant_chunks,
     ensure_qdrant_collection,
     ensure_qdrant_hybrid_collection,
+    extract_lexical_identifiers,
     load_qdrant_source_chunks,
     markdown_source_to_section_chunks,
     markdown_source_to_token_window_chunks,
@@ -133,6 +135,30 @@ class ChineseSeedEvidenceBundle:
 class QdrantSmokeEvidenceReport:
     candidate: RetrievalCandidate
     report: RetrievalBenchmarkReport
+    metadata: dict[str, str | list[str] | dict[str, str]]
+    indexed_sources: dict[str, dict[str, str | int]]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class HybridGatingCaseResult:
+    id: str
+    category: str
+    difficulty: str
+    expect_empty: bool
+    query_identifiers: list[str]
+    gate_applied: bool
+    raw_returned_citations: list[str]
+    raw_returned_source_ids: list[str]
+    gated_result: RetrievalBenchmarkCaseResult
+
+
+@dataclass(frozen=True)
+class QdrantHybridGatingEvidenceReport:
+    candidate: RetrievalCandidate
+    report: RetrievalBenchmarkReport
+    cases: list[HybridGatingCaseResult]
     metadata: dict[str, str | list[str] | dict[str, str]]
     indexed_sources: dict[str, dict[str, str | int]]
     json_path: Path | None = None
@@ -464,6 +490,27 @@ def qdrant_bge_hybrid_empty_stress_candidate(
         description=(
             "Evaluation-only Qdrant+BGE-M3 dense+sparse smoke path for "
             "expected-empty cases with exact-token overlap."
+        ),
+        metadata=metadata,
+    )
+
+
+def qdrant_bge_hybrid_gating_candidate(
+    settings: Settings | None = None,
+) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    base_candidate = qdrant_bge_hybrid_exact_term_smoke_candidate(settings)
+    metadata = dict(base_candidate.metadata or {})
+    metadata.update({
+        "benchmark_fixture": "exact-term-identifier-v1+hybrid-empty-stress-v1",
+        "gating_policy": "exact-identifier-containment-gate-v1",
+    })
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-hybrid-exact-identifier-gate",
+        backend=base_candidate.backend,
+        description=(
+            "Evaluation-only Qdrant+BGE-M3 dense+sparse candidate with an "
+            "exact identifier containment gate for retrieved evidence."
         ),
         metadata=metadata,
     )
@@ -869,6 +916,91 @@ def export_qdrant_bge_hybrid_empty_stress_evidence(
         report=stress_report.report,
         metadata=stress_report.metadata,
         indexed_sources=stress_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_hybrid_gating_candidate_evidence(
+    output_dir: Path,
+    exact_cases_path: Path = Path("tests/fixtures/exact_term_identifier_cases.json"),
+    empty_cases_path: Path = Path("tests/fixtures/hybrid_empty_stress_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> QdrantHybridGatingEvidenceReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    cases = [
+        *load_benchmark_cases(exact_cases_path),
+        *load_benchmark_cases(empty_cases_path),
+    ]
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    client = create_qdrant_client(settings)
+    embedding_adapter = create_embedding_adapter(settings)
+    indexed_sources = _index_qdrant_hybrid_smoke_sources(
+        client=client,
+        settings=settings,
+        source_ids=source_ids,
+        embedding_adapter=embedding_adapter,
+        chunking_strategy=chunking_strategy,
+        sparse_vector_name=sparse_vector_name,
+    )
+    case_results = [
+        _run_qdrant_hybrid_gated_smoke_case(
+            client=client,
+            settings=settings,
+            embedding_adapter=embedding_adapter,
+            case=case,
+            sparse_vector_name=sparse_vector_name,
+        )
+        for case in cases
+    ]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize(
+            "qdrant-hybrid:exact-identifier-containment-gate-v1",
+            [case.gated_result for case in case_results],
+        ),
+        cases=[case.gated_result for case in case_results],
+    )
+    metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
+    metadata.update({
+        "benchmark_fixture": "exact-term-identifier-v1+hybrid-empty-stress-v1",
+        "exact_cases_path": str(exact_cases_path),
+        "empty_cases_path": str(empty_cases_path),
+        "retrieval_mode": "dense+sparse-hybrid",
+        "gating_policy": "exact-identifier-containment-gate-v1",
+        "sparse_vector_name": sparse_vector_name,
+        "sparse_vectorizer": QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
+        "fusion": QDRANT_HYBRID_FUSION_STRATEGY,
+        "score_filter": "disabled-for-rrf-fusion-score",
+    })
+    gating_report = QdrantHybridGatingEvidenceReport(
+        candidate=qdrant_bge_hybrid_gating_candidate(settings),
+        report=report,
+        cases=case_results,
+        metadata=metadata,
+        indexed_sources=indexed_sources,
+    )
+    json_path = export_qdrant_hybrid_gating_evidence_json(
+        gating_report,
+        output_dir / "qdrant-bge-m3-hybrid-exact-identifier-gate.json",
+    )
+    markdown_path = export_qdrant_hybrid_gating_evidence_markdown(
+        gating_report,
+        output_dir / "qdrant-bge-m3-hybrid-exact-identifier-gate.md",
+    )
+    return QdrantHybridGatingEvidenceReport(
+        candidate=gating_report.candidate,
+        report=gating_report.report,
+        cases=gating_report.cases,
+        metadata=gating_report.metadata,
+        indexed_sources=gating_report.indexed_sources,
         json_path=json_path,
         markdown_path=markdown_path,
     )
@@ -1299,6 +1431,31 @@ def qdrant_smoke_evidence_to_dict(report: QdrantSmokeEvidenceReport) -> dict:
     }
 
 
+def qdrant_hybrid_gating_evidence_to_dict(
+    report: QdrantHybridGatingEvidenceReport,
+) -> dict:
+    return {
+        "candidate": asdict(report.candidate),
+        "metadata": report.metadata,
+        "indexed_sources": report.indexed_sources,
+        "report": benchmark_report_to_dict(report.report),
+        "cases": [
+            {
+                "id": case.id,
+                "category": case.category,
+                "difficulty": case.difficulty,
+                "expect_empty": case.expect_empty,
+                "query_identifiers": case.query_identifiers,
+                "gate_applied": case.gate_applied,
+                "raw_returned_citations": case.raw_returned_citations,
+                "raw_returned_source_ids": case.raw_returned_source_ids,
+                "gated_result": asdict(case.gated_result),
+            }
+            for case in report.cases
+        ],
+    }
+
+
 def qdrant_threshold_sweep_evidence_to_dict(
     report: QdrantThresholdSweepEvidenceReport,
 ) -> dict:
@@ -1500,6 +1657,22 @@ def export_qdrant_smoke_evidence_json(
     path.write_text(
         json.dumps(
             qdrant_smoke_evidence_to_dict(report),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_qdrant_hybrid_gating_evidence_json(
+    report: QdrantHybridGatingEvidenceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            qdrant_hybrid_gating_evidence_to_dict(report),
             ensure_ascii=False,
             indent=2,
         ),
@@ -1710,6 +1883,76 @@ def render_qdrant_smoke_evidence_markdown(report: QdrantSmokeEvidenceReport) -> 
         )
 
     lines.extend(["", render_benchmark_report_markdown(report.report)])
+    return "\n".join(lines)
+
+
+def render_qdrant_hybrid_gating_evidence_markdown(
+    report: QdrantHybridGatingEvidenceReport,
+) -> str:
+    lines = [
+        "# Qdrant BGE-M3 Hybrid Gating Evidence",
+        "",
+        "## Candidate",
+        "",
+        "| ID | Backend | Description |",
+        "| --- | --- | --- |",
+        (
+            f"| {report.candidate.id} | {report.candidate.backend} | "
+            f"{report.candidate.description} |"
+        ),
+        "",
+        "## Metadata",
+        "",
+        "| Key | Value |",
+        "| --- | --- |",
+    ]
+    for key, value in sorted(report.metadata.items()):
+        lines.append(f"| {key} | {_markdown_value(value)} |")
+
+    lines.extend([
+        "",
+        "## Indexed Sources",
+        "",
+        "| Source | Job ID | Chunk Count | Status |",
+        "| --- | --- | ---: | --- |",
+    ])
+    for source_id, source in sorted(report.indexed_sources.items()):
+        lines.append(
+            f"| {source_id} | {source['job_id']} | "
+            f"{source['chunk_count']} | {source['status']} |"
+        )
+
+    summary = report.report.summary
+    lines.extend([
+        "",
+        "## Gated Summary",
+        "",
+        "| Backend | Total Cases | Hit Rate | Citation Match Rate | Empty Handling Rate |",
+        "| --- | ---: | ---: | ---: | ---: |",
+        (
+            f"| {summary.backend} | {summary.total_cases} | "
+            f"{summary.hit_rate:.4f} | {summary.citation_match_rate:.4f} | "
+            f"{summary.empty_handling_rate:.4f} |"
+        ),
+        "",
+        "## Raw And Gated Case Results",
+        "",
+        "| Case | Category | Identifiers | Gate Applied | Raw Citations | Gated Citations | Empty Handling |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ])
+    for case in report.cases:
+        empty = (
+            ""
+            if case.gated_result.empty_query_handling is None
+            else str(case.gated_result.empty_query_handling).lower()
+        )
+        lines.append(
+            f"| {case.id} | {case.category} | "
+            f"{', '.join(case.query_identifiers)} | "
+            f"{str(case.gate_applied).lower()} | "
+            f"{', '.join(case.raw_returned_citations)} | "
+            f"{', '.join(case.gated_result.returned_citations)} | {empty} |"
+        )
     return "\n".join(lines)
 
 
@@ -2089,6 +2332,18 @@ def export_qdrant_smoke_evidence_markdown(
     return path
 
 
+def export_qdrant_hybrid_gating_evidence_markdown(
+    report: QdrantHybridGatingEvidenceReport,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_qdrant_hybrid_gating_evidence_markdown(report),
+        encoding="utf-8",
+    )
+    return path
+
+
 def export_qdrant_threshold_sweep_evidence_markdown(
     report: QdrantThresholdSweepEvidenceReport,
     path: Path,
@@ -2306,6 +2561,91 @@ def _run_qdrant_hybrid_smoke_case(
         sparse_vector_name=sparse_vector_name,
     )
     latency_ms = (perf_counter() - started_at) * 1000
+    returned_citations = [document.citation for document in documents]
+    returned_source_ids = [document.source_id for document in documents]
+    empty_query_handling = None
+    if case.expect_empty:
+        empty_query_handling = len(documents) == 0
+    return RetrievalBenchmarkCaseResult(
+        id=case.id,
+        category=case.category,
+        difficulty=case.difficulty,
+        hit_at_k=(
+            case.expected_source_id in returned_source_ids
+            if case.expected_source_id is not None
+            else len(documents) == 0
+        ),
+        citation_match=(
+            case.expected_citation in returned_citations
+            if case.expected_citation is not None
+            else len(documents) == 0
+        ),
+        empty_query_handling=empty_query_handling,
+        latency_ms=round(latency_ms, 3),
+        returned_citations=returned_citations,
+        returned_source_ids=returned_source_ids,
+    )
+
+
+def apply_exact_identifier_containment_gate(
+    query: str,
+    documents: list[EvidenceDocument],
+) -> tuple[list[EvidenceDocument], list[str], bool]:
+    identifiers = extract_lexical_identifiers(query)
+    if not identifiers:
+        return documents, identifiers, False
+    gated_documents = [
+        document
+        for document in documents
+        if all(identifier in document.snippet.lower() for identifier in identifiers)
+    ]
+    return gated_documents, identifiers, True
+
+
+def _run_qdrant_hybrid_gated_smoke_case(
+    client,
+    settings: Settings,
+    embedding_adapter,
+    case: RetrievalBenchmarkCase,
+    sparse_vector_name: str,
+) -> HybridGatingCaseResult:
+    started_at = perf_counter()
+    raw_documents = query_qdrant_hybrid_documents_for_text(
+        client=client,
+        query=case.query,
+        source_ids=case.knowledge_base_ids,
+        settings=settings,
+        embedding_adapter=embedding_adapter,
+        top_k=case.top_k,
+        sparse_vector_name=sparse_vector_name,
+    )
+    gated_documents, identifiers, gate_applied = apply_exact_identifier_containment_gate(
+        query=case.query,
+        documents=raw_documents,
+    )
+    latency_ms = (perf_counter() - started_at) * 1000
+    return HybridGatingCaseResult(
+        id=case.id,
+        category=case.category,
+        difficulty=case.difficulty,
+        expect_empty=case.expect_empty,
+        query_identifiers=identifiers,
+        gate_applied=gate_applied,
+        raw_returned_citations=[document.citation for document in raw_documents],
+        raw_returned_source_ids=[document.source_id for document in raw_documents],
+        gated_result=_benchmark_case_result_from_documents(
+            case=case,
+            documents=gated_documents,
+            latency_ms=latency_ms,
+        ),
+    )
+
+
+def _benchmark_case_result_from_documents(
+    case: RetrievalBenchmarkCase,
+    documents: list[EvidenceDocument],
+    latency_ms: float,
+) -> RetrievalBenchmarkCaseResult:
     returned_citations = [document.citation for document in documents]
     returned_source_ids = [document.source_id for document in documents]
     empty_query_handling = None

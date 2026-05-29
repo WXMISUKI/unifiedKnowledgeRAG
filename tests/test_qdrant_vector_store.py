@@ -10,6 +10,7 @@ from app.services.qdrant_vector_store import (
     create_qdrant_client,
     ensure_qdrant_collection,
     ensure_qdrant_hybrid_collection,
+    extract_lexical_identifiers,
     query_qdrant_hybrid_documents_for_text,
     query_qdrant_documents,
     query_qdrant_documents_for_text,
@@ -106,6 +107,14 @@ def test_lexical_sparse_vector_preserves_identifier_features():
     assert exact_form_indices.issubset(set(vector.indices))
     assert exact_order_indices.issubset(set(vector.indices))
     assert len(vector.indices) == len(vector.values)
+
+
+def test_extract_lexical_identifiers_returns_unique_normalized_identifiers():
+    identifiers = extract_lexical_identifiers(
+        "请核对 AF-REFUND-02、af-refund-02 和 ORD-ZS-2026-0007。"
+    )
+
+    assert identifiers == ["af-refund-02", "ord-zs-2026-0007"]
 
 
 def test_qdrant_hybrid_point_mapping_adds_sparse_vector_and_metadata():
