@@ -68,7 +68,8 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
 
 @router.post("/answer", response_model=RagAnswerResponse)
 def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
-    retriever = create_document_retriever(get_settings())
+    settings = get_settings()
+    retriever = create_document_retriever(settings)
     unknown_sources = retriever.unknown_sources(request.knowledge_base_ids)
     if unknown_sources:
         return RagAnswerResponse(
@@ -106,5 +107,7 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
         result=compose_cited_answer(
             documents=documents,
             retrieval_backend=retriever.backend_name,
+            min_evidence_count=settings.rag_answer_min_evidence_count,
+            min_top_score=settings.rag_answer_min_evidence_score,
         ),
     )

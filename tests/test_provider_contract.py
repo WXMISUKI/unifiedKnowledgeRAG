@@ -96,6 +96,59 @@ def test_rag_answer_returns_cited_answer_envelope():
     }
     assert set(body["result"]["citations"]).issubset(document_citations)
     assert body["result"]["metadata"]["composer"] == "deterministic-extractive-v1"
+    assert body["result"]["metadata"]["evidence_gate"]["passed"] is True
+
+
+def test_rag_answer_low_score_gate_returns_insufficient_evidence(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_MIN_EVIDENCE_SCORE", "0.7")
+    scoped_client = TestClient(create_app())
+
+    response = scoped_client.post(
+        "/api/rag/answer",
+        json={
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["answer_status"] == "insufficient_evidence"
+    assert body["result"]["answer"] == ""
+    assert body["result"]["citations"] == []
+    assert body["result"]["documents"]
+    gate = body["result"]["metadata"]["evidence_gate"]
+    assert gate["passed"] is False
+    assert gate["reason"] == "top_score_below_minimum"
+    assert gate["min_top_score"] == 0.7
+
+
+def test_rag_answer_min_count_gate_returns_insufficient_evidence(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_MIN_EVIDENCE_COUNT", "3")
+    scoped_client = TestClient(create_app())
+
+    response = scoped_client.post(
+        "/api/rag/answer",
+        json={
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["answer_status"] == "insufficient_evidence"
+    assert body["result"]["answer"] == ""
+    assert body["result"]["citations"] == []
+    assert len(body["result"]["documents"]) == 2
+    gate = body["result"]["metadata"]["evidence_gate"]
+    assert gate["passed"] is False
+    assert gate["reason"] == "evidence_count_below_minimum"
+    assert gate["min_evidence_count"] == 3
 
 
 def test_rag_retrieve_empty_result_is_explicit_success():
@@ -144,6 +197,13 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
             "metadata": {
                 "composer": "deterministic-extractive-v1",
                 "evidence_count": 0,
+                "evidence_gate": {
+                    "passed": False,
+                    "reason": "no_documents",
+                    "min_evidence_count": 1,
+                    "min_top_score": 0.0,
+                    "top_score": None,
+                },
                 "retrieval_backend": "fixture",
             },
         },

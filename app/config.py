@@ -23,6 +23,8 @@ class Settings(BaseModel):
     bge_m3_use_fp16: bool = Field(default=True)
     bge_m3_batch_size: int = Field(default=12, ge=1)
     bge_m3_max_length: int = Field(default=8192, ge=1)
+    rag_answer_min_evidence_count: int = Field(default=1, ge=0)
+    rag_answer_min_evidence_score: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
 def get_settings() -> Settings:
@@ -59,4 +61,10 @@ def get_settings() -> Settings:
         ),
         bge_m3_batch_size=int(os.getenv("BGE_M3_BATCH_SIZE", "12")),
         bge_m3_max_length=int(os.getenv("BGE_M3_MAX_LENGTH", "8192")),
+        rag_answer_min_evidence_count=int(
+            os.getenv("RAG_ANSWER_MIN_EVIDENCE_COUNT", "1")
+        ),
+        rag_answer_min_evidence_score=float(
+            os.getenv("RAG_ANSWER_MIN_EVIDENCE_SCORE", "0.0")
+        ),
     )

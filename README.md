@@ -48,6 +48,15 @@ Invoke-RestMethod `
 
 有证据时返回 `answer_status=answered`，并携带 `answer`、`citations`、`documents` 和 `metadata`。没有可用证据时返回 `ok=true` 且 `answer_status=insufficient_evidence`，不会伪造答案，也不会把证据不足当成 provider error。
 
+Answer orchestration 会先应用本地 evidence sufficiency gate。默认配置保持兼容，便于本地 fixture 和 smoke 测试；需要更严格验证时可以通过环境变量收紧：
+
+```powershell
+$env:RAG_ANSWER_MIN_EVIDENCE_COUNT="2"
+$env:RAG_ANSWER_MIN_EVIDENCE_SCORE="0.5"
+```
+
+如果检索结果未达到门槛，接口会返回 `answer_status=insufficient_evidence`，`answer` 和 `citations` 为空，同时保留 `documents` 和 `metadata.evidence_gate` 供诊断。这个 gate 只是第一层确定性防线，不替代后续 reranker、evidence grading 或 LLM answer validation。
+
 ## Python 环境
 
 后续开发统一使用 conda 环境 `GRAPHRAG`：
