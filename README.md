@@ -858,6 +858,42 @@ docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-exact-term-smoke
 
 总计 hit rate / citation match rate 均为 `0.5000`。这说明当前 Qdrant+BGE-M3 dense-only 在编号、表单名、订单样式 ID 上已经暴露漏召回；下一步更适合推进 sparse/BM25/dense+sparse hybrid candidate 对比，而不是继续只调 dense 阈值或直接引入 reranker。
 
+第四十一阶段 OpenSpec change `evaluate-qdrant-hybrid-exact-term-candidate` 增加 evaluation-only Qdrant dense+sparse hybrid 候选。它使用 Qdrant named vectors：
+
+- `text-dense`：现有 BGE-M3 dense vector。
+- `text-sparse`：本地确定性 `lexical-identifier-sparse-v1`，用于政策编号、表单名、工作流缩写、订单样式 ID 等精确 token。
+- `fusion=rrf`：通过 Qdrant Query API 的 prefetch + Reciprocal Rank Fusion 合并 dense/sparse 结果。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-exact-term-smoke `
+  --output-dir docs/benchmark/chinese-seed/exact-term-candidates `
+  --cases-path tests/fixtures/exact_term_identifier_cases.json `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-hybrid-exact-term-smoke.json
+docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-hybrid-exact-term-smoke.md
+```
+
+dense-only 与 hybrid exact-term seed 对比：
+
+| Candidate | Retrieval Mode | Hit Rate | Citation Match Rate | Notes |
+| --- | --- | ---: | ---: | --- |
+| `qdrant-bge-m3-exact-term-smoke` | dense-only | 0.5000 | 0.5000 | 漏掉 `AF-REFUND-02` 和 `ORD-ZS-2026-0007` |
+| `qdrant-bge-m3-hybrid-exact-term-smoke` | dense+sparse RRF | 1.0000 | 1.0000 | 四类 exact-term seed 全部命中 |
+
+结论：hybrid 对 exact-term recall 有明确帮助，但当前 exact-term fixture 没有 expected-empty case，不能证明 false-positive 风险可控。下一步如果继续推进 retrieval 质量，应该补 `evaluate-qdrant-hybrid-empty-stress` 或同类门禁，用 unsupported business queries 验证 hybrid 不会因为 sparse token overlap 带来过召回。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

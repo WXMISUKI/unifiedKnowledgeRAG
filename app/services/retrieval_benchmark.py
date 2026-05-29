@@ -12,15 +12,21 @@ from app.services.embedding_adapters import create_embedding_adapter
 from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.qdrant_vector_store import (
     QDRANT_CHUNKING_STRATEGY,
+    QDRANT_HYBRID_FUSION_STRATEGY,
+    QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
     QDRANT_SECTION_CHUNKING_STRATEGY,
+    QDRANT_SPARSE_VECTOR_NAME,
     QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY,
     create_qdrant_client,
     embed_qdrant_chunks,
     ensure_qdrant_collection,
+    ensure_qdrant_hybrid_collection,
     load_qdrant_source_chunks,
     markdown_source_to_section_chunks,
     markdown_source_to_token_window_chunks,
+    query_qdrant_hybrid_documents_for_text,
     query_qdrant_documents_for_text,
+    upsert_qdrant_hybrid_chunks,
     upsert_qdrant_chunks,
 )
 from app.services.retrieval_backends import create_document_retriever
@@ -421,6 +427,30 @@ def qdrant_bge_exact_term_smoke_candidate(
     )
 
 
+def qdrant_bge_hybrid_exact_term_smoke_candidate(
+    settings: Settings | None = None,
+) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    base_candidate = qdrant_bge_smoke_candidate(settings)
+    metadata = dict(base_candidate.metadata or {})
+    metadata.update({
+        "benchmark_fixture": "exact-term-identifier-v1",
+        "retrieval_mode": "dense+sparse-hybrid",
+        "sparse_vector_name": QDRANT_SPARSE_VECTOR_NAME,
+        "sparse_vectorizer": QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
+        "fusion": QDRANT_HYBRID_FUSION_STRATEGY,
+    })
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-hybrid-exact-term-smoke",
+        backend=base_candidate.backend,
+        description=(
+            "Evaluation-only Qdrant+BGE-M3 dense+sparse smoke path for exact "
+            "terms, identifiers, acronyms, and order-like ids."
+        ),
+        metadata=metadata,
+    )
+
+
 def fixture_chinese_seed_retrieval_candidate() -> RetrievalCandidate:
     return RetrievalCandidate(
         id="fixture-chinese-seed-baseline",
@@ -673,6 +703,80 @@ def export_qdrant_bge_exact_term_smoke_evidence(
         report=exact_report.report,
         metadata=exact_report.metadata,
         indexed_sources=exact_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_hybrid_exact_term_smoke_evidence(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/exact_term_identifier_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> QdrantSmokeEvidenceReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["refund_policy_docs", "logistics_faq"]
+    cases = load_benchmark_cases(cases_path)
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    client = create_qdrant_client(settings)
+    embedding_adapter = create_embedding_adapter(settings)
+    indexed_sources = _index_qdrant_hybrid_smoke_sources(
+        client=client,
+        settings=settings,
+        source_ids=source_ids,
+        embedding_adapter=embedding_adapter,
+        chunking_strategy=chunking_strategy,
+        sparse_vector_name=sparse_vector_name,
+    )
+    case_results = [
+        _run_qdrant_hybrid_smoke_case(
+            client=client,
+            settings=settings,
+            embedding_adapter=embedding_adapter,
+            case=case,
+            sparse_vector_name=sparse_vector_name,
+        )
+        for case in cases
+    ]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize("qdrant-hybrid", case_results),
+        cases=case_results,
+    )
+    metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
+    metadata.update({
+        "benchmark_fixture": "exact-term-identifier-v1",
+        "benchmark_cases_path": str(cases_path),
+        "retrieval_mode": "dense+sparse-hybrid",
+        "sparse_vector_name": sparse_vector_name,
+        "sparse_vectorizer": QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
+        "fusion": QDRANT_HYBRID_FUSION_STRATEGY,
+        "score_filter": "disabled-for-rrf-fusion-score",
+    })
+    hybrid_report = QdrantSmokeEvidenceReport(
+        candidate=qdrant_bge_hybrid_exact_term_smoke_candidate(settings),
+        report=report,
+        metadata=metadata,
+        indexed_sources=indexed_sources,
+    )
+    json_path = export_qdrant_smoke_evidence_json(
+        hybrid_report,
+        output_dir / "qdrant-bge-m3-hybrid-exact-term-smoke.json",
+    )
+    markdown_path = export_qdrant_smoke_evidence_markdown(
+        hybrid_report,
+        output_dir / "qdrant-bge-m3-hybrid-exact-term-smoke.md",
+    )
+    return QdrantSmokeEvidenceReport(
+        candidate=hybrid_report.candidate,
+        report=hybrid_report.report,
+        metadata=hybrid_report.metadata,
+        indexed_sources=hybrid_report.indexed_sources,
         json_path=json_path,
         markdown_path=markdown_path,
     )
@@ -2002,6 +2106,54 @@ def _index_qdrant_smoke_sources(
     return indexed_sources
 
 
+def _index_qdrant_hybrid_smoke_sources(
+    client,
+    settings: Settings,
+    source_ids: list[str],
+    embedding_adapter,
+    chunking_strategy: str,
+    sparse_vector_name: str,
+) -> dict[str, dict[str, str | int]]:
+    status, reason = ensure_qdrant_hybrid_collection(
+        client,
+        settings,
+        sparse_vector_name=sparse_vector_name,
+    )
+    if status != "ready":
+        raise RuntimeError(reason or "Qdrant hybrid collection is not ready.")
+
+    store = IndexLifecycleStore(settings)
+    indexed_sources: dict[str, dict[str, str | int]] = {}
+    for source_id in source_ids:
+        job_id = f"hybrid_smoke_{uuid4().hex}"
+        chunks = embed_qdrant_chunks(
+            _load_smoke_chunks(source_id, settings, chunking_strategy),
+            embedding_adapter,
+        )
+        chunk_count = upsert_qdrant_hybrid_chunks(
+            client,
+            chunks,
+            settings,
+            sparse_vector_name=sparse_vector_name,
+        )
+        store.write_source_status(IndexStatusResponse(
+            source_id=source_id,
+            status="ready",
+            backend="qdrant",
+            indexed_at=datetime.now(UTC).isoformat(),
+            latest_job_id=job_id,
+            reason=f"Hybrid smoke upserted {chunk_count} Qdrant chunk(s).",
+        ))
+        indexed_sources[source_id] = {
+            "job_id": job_id,
+            "chunk_count": chunk_count,
+            "status": "ready",
+            "chunking_strategy": chunking_strategy,
+            "sparse_vector_name": sparse_vector_name,
+        }
+    return indexed_sources
+
+
 def _run_qdrant_smoke_case(
     client,
     settings: Settings,
@@ -2016,6 +2168,50 @@ def _run_qdrant_smoke_case(
         settings=settings,
         embedding_adapter=embedding_adapter,
         top_k=case.top_k,
+    )
+    latency_ms = (perf_counter() - started_at) * 1000
+    returned_citations = [document.citation for document in documents]
+    returned_source_ids = [document.source_id for document in documents]
+    empty_query_handling = None
+    if case.expect_empty:
+        empty_query_handling = len(documents) == 0
+    return RetrievalBenchmarkCaseResult(
+        id=case.id,
+        category=case.category,
+        difficulty=case.difficulty,
+        hit_at_k=(
+            case.expected_source_id in returned_source_ids
+            if case.expected_source_id is not None
+            else len(documents) == 0
+        ),
+        citation_match=(
+            case.expected_citation in returned_citations
+            if case.expected_citation is not None
+            else len(documents) == 0
+        ),
+        empty_query_handling=empty_query_handling,
+        latency_ms=round(latency_ms, 3),
+        returned_citations=returned_citations,
+        returned_source_ids=returned_source_ids,
+    )
+
+
+def _run_qdrant_hybrid_smoke_case(
+    client,
+    settings: Settings,
+    embedding_adapter,
+    case: RetrievalBenchmarkCase,
+    sparse_vector_name: str,
+) -> RetrievalBenchmarkCaseResult:
+    started_at = perf_counter()
+    documents = query_qdrant_hybrid_documents_for_text(
+        client=client,
+        query=case.query,
+        source_ids=case.knowledge_base_ids,
+        settings=settings,
+        embedding_adapter=embedding_adapter,
+        top_k=case.top_k,
+        sparse_vector_name=sparse_vector_name,
     )
     latency_ms = (perf_counter() - started_at) * 1000
     returned_citations = [document.citation for document in documents]

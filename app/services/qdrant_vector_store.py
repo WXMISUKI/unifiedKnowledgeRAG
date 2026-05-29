@@ -1,4 +1,6 @@
 import re
+import zlib
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -15,6 +17,9 @@ from app.services.source_catalog import get_knowledge_base, knowledge_base_exist
 QDRANT_CHUNKING_STRATEGY = "markdown-paragraph-v1"
 QDRANT_SECTION_CHUNKING_STRATEGY = "markdown-section-v1"
 QDRANT_TOKEN_WINDOW_CHUNKING_STRATEGY = "token-window-v1"
+QDRANT_SPARSE_VECTOR_NAME = "text-sparse"
+QDRANT_LEXICAL_SPARSE_VECTORIZER_ID = "lexical-identifier-sparse-v1"
+QDRANT_HYBRID_FUSION_STRATEGY = "rrf"
 TOKEN_WINDOW_DEFAULT_MAX_TOKENS = 120
 TOKEN_WINDOW_DEFAULT_OVERLAP_TOKENS = 24
 TOKEN_WINDOW_DEFAULT_MIN_TOKENS = 12
@@ -68,6 +73,12 @@ class VectorEvidenceChunk:
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class LexicalSparseVector:
+    indices: list[int]
+    values: list[float]
+
+
 def chunk_to_qdrant_point(
     chunk: VectorEvidenceChunk,
     settings: Settings,
@@ -88,6 +99,21 @@ def chunk_to_qdrant_point(
         "vector": {settings.qdrant_vector_name: chunk.vector},
         "payload": payload,
     }
+
+
+def chunk_to_qdrant_hybrid_point(
+    chunk: VectorEvidenceChunk,
+    settings: Settings,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> dict[str, Any]:
+    point = chunk_to_qdrant_point(chunk, settings)
+    sparse_vector = build_lexical_sparse_vector(chunk.text)
+    if sparse_vector.indices:
+        point["vector"][sparse_vector_name] = _sparse_vector_to_qdrant_model(
+            sparse_vector
+        )
+    point["payload"]["sparse_vectorizer"] = QDRANT_LEXICAL_SPARSE_VECTORIZER_ID
+    return point
 
 
 def build_qdrant_payload_filter(
@@ -274,12 +300,65 @@ def ensure_qdrant_collection(client, settings: Settings) -> tuple[str, str | Non
         return "degraded", str(exc)
 
 
+def ensure_qdrant_hybrid_collection(
+    client,
+    settings: Settings,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> tuple[str, str | None]:
+    try:
+        if client.collection_exists(settings.qdrant_collection):
+            return "ready", None
+        from qdrant_client import models
+
+        client.create_collection(
+            collection_name=settings.qdrant_collection,
+            vectors_config={
+                settings.qdrant_vector_name: models.VectorParams(
+                    size=settings.qdrant_vector_size,
+                    distance=models.Distance.COSINE,
+                )
+            },
+            sparse_vectors_config={
+                sparse_vector_name: models.SparseVectorParams(),
+            },
+        )
+        return "ready", None
+    except Exception as exc:
+        return "degraded", str(exc)
+
+
 def upsert_qdrant_chunks(
     client,
     chunks: list[VectorEvidenceChunk],
     settings: Settings,
 ) -> int:
     points = [_to_qdrant_point_struct(chunk_to_qdrant_point(chunk, settings)) for chunk in chunks]
+    if not points:
+        return 0
+    client.upsert(
+        collection_name=settings.qdrant_collection,
+        points=points,
+        wait=True,
+    )
+    return len(points)
+
+
+def upsert_qdrant_hybrid_chunks(
+    client,
+    chunks: list[VectorEvidenceChunk],
+    settings: Settings,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> int:
+    points = [
+        _to_qdrant_point_struct(
+            chunk_to_qdrant_hybrid_point(
+                chunk,
+                settings,
+                sparse_vector_name=sparse_vector_name,
+            )
+        )
+        for chunk in chunks
+    ]
     if not points:
         return 0
     client.upsert(
@@ -403,6 +482,106 @@ def query_qdrant_documents_for_text(
     )
 
 
+def query_qdrant_hybrid_documents(
+    client,
+    query_vector: list[float],
+    query_sparse_vector: LexicalSparseVector,
+    source_ids: list[str],
+    settings: Settings,
+    top_k: int,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+    tenant_id: str | None = None,
+    document_ids: list[str] | None = None,
+    acl_tags: list[str] | None = None,
+    prefetch_limit: int | None = None,
+) -> list[EvidenceDocument]:
+    from qdrant_client import models
+
+    payload_filter = build_qdrant_payload_filter(
+        source_ids=source_ids,
+        tenant_id=tenant_id,
+        document_ids=document_ids,
+        acl_tags=acl_tags,
+    )
+    resolved_prefetch_limit = max(prefetch_limit or top_k * 4, top_k)
+    prefetch = [
+        models.Prefetch(
+            query=query_vector,
+            using=settings.qdrant_vector_name,
+            filter=_to_qdrant_filter(payload_filter),
+            limit=resolved_prefetch_limit,
+        )
+    ]
+    if query_sparse_vector.indices:
+        prefetch.append(
+            models.Prefetch(
+                query=_sparse_vector_to_qdrant_model(query_sparse_vector),
+                using=sparse_vector_name,
+                filter=_to_qdrant_filter(payload_filter),
+                limit=resolved_prefetch_limit,
+            )
+        )
+    result = client.query_points(
+        collection_name=settings.qdrant_collection,
+        prefetch=prefetch,
+        query=models.FusionQuery(fusion=models.Fusion.RRF),
+        query_filter=_to_qdrant_filter(payload_filter),
+        limit=top_k,
+        with_payload=True,
+    )
+    hits = getattr(result, "points", result)
+    documents = []
+    for hit in hits:
+        document = _hit_to_evidence_document(hit, min_score=0.0)
+        if document is not None:
+            documents.append(document)
+    return documents
+
+
+def query_qdrant_hybrid_documents_for_text(
+    client,
+    query: str,
+    source_ids: list[str],
+    settings: Settings,
+    embedding_adapter: EmbeddingAdapter,
+    top_k: int,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+    tenant_id: str | None = None,
+    document_ids: list[str] | None = None,
+    acl_tags: list[str] | None = None,
+    prefetch_limit: int | None = None,
+) -> list[EvidenceDocument]:
+    return query_qdrant_hybrid_documents(
+        client=client,
+        query_vector=embedding_adapter.embed_text(query),
+        query_sparse_vector=build_lexical_sparse_vector(query),
+        source_ids=source_ids,
+        settings=settings,
+        top_k=top_k,
+        sparse_vector_name=sparse_vector_name,
+        tenant_id=tenant_id,
+        document_ids=document_ids,
+        acl_tags=acl_tags,
+        prefetch_limit=prefetch_limit,
+    )
+
+
+def build_lexical_sparse_vector(text: str) -> LexicalSparseVector:
+    counter = Counter(_lexical_sparse_tokens(text))
+    if not counter:
+        return LexicalSparseVector(indices=[], values=[])
+
+    indexed_values: dict[int, float] = {}
+    for token, count in counter.items():
+        index = _sparse_token_index(token)
+        indexed_values[index] = indexed_values.get(index, 0.0) + float(count)
+    ordered = sorted(indexed_values.items())
+    return LexicalSparseVector(
+        indices=[index for index, _ in ordered],
+        values=[value for _, value in ordered],
+    )
+
+
 def _hit_to_evidence_document(hit, min_score: float) -> EvidenceDocument | None:
     payload = _hit_value(hit, "payload") or {}
     score = _hit_value(hit, "score") or 0.0
@@ -429,6 +608,28 @@ def _hit_value(hit, key: str):
 
 def _qdrant_point_id(stable_id: str) -> str:
     return str(uuid5(NAMESPACE_URL, f"unifiedKnowledgeRAG:qdrant:{stable_id}"))
+
+
+def _sparse_vector_to_qdrant_model(vector: LexicalSparseVector):
+    from qdrant_client import models
+
+    return models.SparseVector(indices=vector.indices, values=vector.values)
+
+
+def _sparse_token_index(token: str) -> int:
+    return zlib.crc32(token.encode("utf-8")) % 2_000_000_000 + 1
+
+
+def _lexical_sparse_tokens(text: str) -> list[str]:
+    normalized = text.lower()
+    tokens = []
+    identifier_pattern = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)+")
+    for match in identifier_pattern.finditer(normalized):
+        identifier = match.group(0)
+        tokens.append(identifier)
+        tokens.extend(part for part in identifier.split("-") if part)
+    tokens.extend(re.findall(r"[a-z0-9]+", normalized))
+    return tokens
 
 
 def _citation_for(source_id: str, document_id: str, paragraph_index: int) -> str:

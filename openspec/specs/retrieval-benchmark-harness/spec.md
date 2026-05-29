@@ -463,3 +463,27 @@ The system SHALL provide a named local export path for running the exact-term id
 
 - **WHEN** exact-term Qdrant smoke evidence is exported
 - **THEN** runtime retrieval defaults, public HTTP APIs, and hybrid retrieval decisions remain unchanged
+
+### Requirement: Qdrant hybrid exact-term smoke evidence can be exported locally
+
+The system SHALL provide a named local export path for evaluating exact-term identifier cases against an evaluation-only Qdrant dense+sparse hybrid candidate.
+
+#### Scenario: Hybrid exact-term smoke evidence is exported
+
+- **WHEN** the hybrid exact-term smoke helper is run with source ids and an output directory
+- **THEN** it indexes dense and sparse vectors, evaluates the exact-term identifier fixture, and writes JSON and Markdown evidence files with stable hybrid filenames
+
+#### Scenario: Hybrid evidence includes vector strategy metadata
+
+- **WHEN** hybrid exact-term evidence is exported
+- **THEN** the output includes dense vector name, sparse vector name, fusion strategy, sparse vectorizer id, indexed sources, returned citations, and benchmark metrics
+
+#### Scenario: Hybrid evidence remains evaluation-only
+
+- **WHEN** hybrid exact-term evidence is exported
+- **THEN** runtime retrieval defaults, public HTTP APIs, and production indexing dependencies remain unchanged
+
+#### Scenario: Hybrid evidence records misses honestly
+
+- **WHEN** dense+sparse retrieval returns citations that differ from exact-term fixture expectations
+- **THEN** the evidence records the miss instead of rewriting expected citations

@@ -10,6 +10,7 @@ from app.config import get_settings
 from app.services.retrieval_benchmark import (
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_exact_term_smoke_evidence,
+    export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -86,6 +87,18 @@ def main() -> None:
         )
         print(f"Qdrant BGE-M3 exact-term smoke evidence ready: {report.json_path}")
         print(f"Qdrant BGE-M3 exact-term smoke evidence ready: {report.markdown_path}")
+        return
+
+    if args.hybrid_exact_term_smoke:
+        report = export_qdrant_bge_hybrid_exact_term_smoke_evidence(
+            output_dir=args.output_dir,
+            cases_path=args.cases_path,
+            source_ids=args.source_id,
+            case_ids=args.case_id,
+            settings=settings,
+        )
+        print(f"Qdrant BGE-M3 hybrid exact-term smoke evidence ready: {report.json_path}")
+        print(f"Qdrant BGE-M3 hybrid exact-term smoke evidence ready: {report.markdown_path}")
         return
 
     report = export_qdrant_bge_smoke_evidence(
@@ -168,6 +181,11 @@ def _parse_args() -> argparse.Namespace:
         "--exact-term-smoke",
         action="store_true",
         help="Export Qdrant+BGE smoke evidence using exact-term filenames.",
+    )
+    parser.add_argument(
+        "--hybrid-exact-term-smoke",
+        action="store_true",
+        help="Export evaluation-only Qdrant+BGE dense+sparse exact-term evidence.",
     )
     parser.add_argument("--min-hit-rate", type=float, default=1.0)
     parser.add_argument("--min-citation-match-rate", type=float, default=1.0)

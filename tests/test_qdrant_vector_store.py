@@ -2,17 +2,22 @@ from app.config import Settings
 from app.models.contracts import IndexStatusResponse
 from app.services.qdrant_vector_store import (
     VectorEvidenceChunk,
+    build_lexical_sparse_vector,
     build_qdrant_source_index,
     build_qdrant_payload_filter,
+    chunk_to_qdrant_hybrid_point,
     chunk_to_qdrant_point,
     create_qdrant_client,
     ensure_qdrant_collection,
+    ensure_qdrant_hybrid_collection,
+    query_qdrant_hybrid_documents_for_text,
     query_qdrant_documents,
     query_qdrant_documents_for_text,
     markdown_source_to_qdrant_chunks,
     markdown_source_to_section_chunks,
     markdown_source_to_token_window_chunks,
     upsert_qdrant_chunks,
+    upsert_qdrant_hybrid_chunks,
 )
 from app.services.index_lifecycle import get_index_status
 from app.services.index_lifecycle_store import IndexLifecycleStore
@@ -88,6 +93,40 @@ def test_qdrant_point_mapping_preserves_evidence_metadata():
     assert point["payload"]["text"] == "客户三天未发货可以申请退款。"
     assert point["payload"]["acl_tags"] == ["after_sales"]
     assert point["payload"]["chunking_strategy"] == "structure-aware-v1"
+
+
+def test_lexical_sparse_vector_preserves_identifier_features():
+    vector = build_lexical_sparse_vector(
+        "表单 AF-REFUND-02 和订单 ORD-ZS-2026-0007 需要精确召回。"
+    )
+    exact_form_indices = set(build_lexical_sparse_vector("af-refund-02").indices)
+    exact_order_indices = set(build_lexical_sparse_vector("ord-zs-2026-0007").indices)
+
+    assert vector.indices == sorted(vector.indices)
+    assert exact_form_indices.issubset(set(vector.indices))
+    assert exact_order_indices.issubset(set(vector.indices))
+    assert len(vector.indices) == len(vector.values)
+
+
+def test_qdrant_hybrid_point_mapping_adds_sparse_vector_and_metadata():
+    settings = Settings(qdrant_vector_name="body-dense")
+    chunk = VectorEvidenceChunk(
+        point_id="refund_policy_2026:chunk-3",
+        source_id="refund_policy_docs",
+        document_id="refund_policy_2026",
+        chunk_id="chunk-3",
+        title="售后退款规则",
+        text="政策编号 RFD-2026-003 需要填写 AF-REFUND-02。",
+        citation="refund_policy_2026#exact-refund-code",
+        vector=[0.1, 0.2, 0.3],
+        metadata={"tenant_id": "tenant-a"},
+    )
+
+    point = chunk_to_qdrant_hybrid_point(chunk, settings)
+
+    assert point["vector"]["body-dense"] == [0.1, 0.2, 0.3]
+    assert "text-sparse" in point["vector"]
+    assert point["payload"]["sparse_vectorizer"] == "lexical-identifier-sparse-v1"
 
 
 def test_markdown_source_to_qdrant_chunks_preserves_source_metadata(tmp_path):
@@ -384,6 +423,18 @@ def test_ensure_qdrant_collection_creates_missing_collection():
     assert "text-dense" in client.created_collections[0]["vectors_config"]
 
 
+def test_ensure_qdrant_hybrid_collection_creates_dense_and_sparse_vectors():
+    client = FakeQdrantClient(collection_exists=False)
+    settings = Settings(qdrant_collection="enterprise_chunks")
+
+    status, reason = ensure_qdrant_hybrid_collection(client, settings)
+
+    assert status == "ready"
+    assert reason is None
+    assert "text-dense" in client.created_collections[0]["vectors_config"]
+    assert "text-sparse" in client.created_collections[0]["sparse_vectors_config"]
+
+
 def test_ensure_qdrant_collection_reports_degraded_on_failure():
     status, reason = ensure_qdrant_collection(FakeQdrantClient(fail=True), Settings())
 
@@ -415,6 +466,30 @@ def test_upsert_qdrant_chunks_writes_existing_payload_contract():
     assert point.payload["tenant_id"] == "tenant-a"
     assert point.payload["citation"] == "refund_policy_2026#section-3"
     assert point.vector == {"text-dense": [0.1, 0.2, 0.3]}
+
+
+def test_upsert_qdrant_hybrid_chunks_writes_sparse_vectors():
+    client = FakeQdrantClient()
+    settings = Settings(qdrant_collection="enterprise_chunks")
+    chunk = VectorEvidenceChunk(
+        point_id="logistics_faq_2026:chunk-4",
+        source_id="logistics_faq",
+        document_id="logistics_faq_2026",
+        chunk_id="chunk-4",
+        title="物流常见问题",
+        text="样例订单 ORD-ZS-2026-0007 用于演示升级凭据。",
+        citation="logistics_faq_2026#exact-logistics-id",
+        vector=[0.1, 0.2, 0.3],
+        metadata={"tenant_id": "tenant-a"},
+    )
+
+    count = upsert_qdrant_hybrid_chunks(client, [chunk], settings)
+
+    assert count == 1
+    point = client.upserts[0]["points"][0]
+    assert "text-dense" in point.vector
+    assert "text-sparse" in point.vector
+    assert point.payload["sparse_vectorizer"] == "lexical-identifier-sparse-v1"
 
 
 def test_build_qdrant_source_index_embeds_upserts_and_marks_ready(tmp_path):
@@ -607,6 +682,43 @@ def test_query_qdrant_documents_for_text_embeds_query_before_vector_search():
             {"key": "source_id", "match": {"any": ["refund_policy_docs"]}},
         ]
     }
+
+
+def test_query_qdrant_hybrid_documents_for_text_uses_dense_sparse_prefetches():
+    from app.services.embedding_adapters import MockEmbeddingAdapter
+
+    client = FakeQdrantClient(
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "表单 AF-REFUND-02 需要关联付款凭证。",
+                    "citation": "refund_policy_2026#exact-refund-code",
+                },
+            }
+        ]
+    )
+    settings = Settings(embedding_vector_size=3)
+    adapter = MockEmbeddingAdapter(settings)
+
+    documents = query_qdrant_hybrid_documents_for_text(
+        client=client,
+        query="AF-REFUND-02 表单需要关联哪些付款凭证？",
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+        embedding_adapter=adapter,
+        top_k=2,
+        tenant_id="tenant-a",
+    )
+
+    assert documents[0].citation == "refund_policy_2026#exact-refund-code"
+    assert client.queries[0]["query"].fusion.value == "rrf"
+    assert len(client.queries[0]["prefetch"]) == 2
+    assert client.queries[0]["prefetch"][0].using == "text-dense"
+    assert client.queries[0]["prefetch"][1].using == "text-sparse"
 
 
 def test_qdrant_retriever_uses_text_query_orchestration(monkeypatch):

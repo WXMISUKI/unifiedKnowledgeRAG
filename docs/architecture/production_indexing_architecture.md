@@ -306,6 +306,15 @@ At `RAG_SCORE_THRESHOLD=0.7`, the local exact-term smoke run indexed 7 refund-po
 
 This is the first concrete dense-only miss set. It justifies a follow-up sparse/BM25/dense+sparse hybrid candidate comparison, while still preserving the rule that runtime retrieval defaults and public HTTP contracts do not change until hybrid evidence passes both exact-term recall and expected-empty false-positive gates.
 
+Qdrant+BGE-M3 dense+sparse hybrid exact-term candidate evidence now lives under:
+
+- `docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-hybrid-exact-term-smoke.json`
+- `docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-hybrid-exact-term-smoke.md`
+
+This candidate uses named vectors (`text-dense` and `text-sparse`), deterministic lexical sparse features (`lexical-identifier-sparse-v1`), and Qdrant Query API RRF fusion. On the four exact-term seed cases it improves hit rate and citation match rate from `0.5000` to `1.0000`, recovering the form-name and order-like id misses.
+
+This does not approve production hybrid retrieval. The exact-term fixture has no expected-empty cases, and RRF fusion scores are not comparable to the dense-only score threshold. Before runtime promotion, add hybrid false-positive stress evidence, decide how sparse vectors are produced in production, and plan collection schema/reindex migration.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

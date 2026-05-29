@@ -20,6 +20,7 @@ from app.services.retrieval_benchmark import (
     export_query_rewrite_candidate_evaluation,
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_exact_term_smoke_evidence,
+    export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -891,6 +892,96 @@ def test_export_qdrant_bge_exact_term_smoke_evidence_uses_named_outputs(
     assert report.report.summary.citation_match_rate == 1.0
     assert "qdrant-bge-m3-exact-term-smoke" in report.markdown_path.read_text(
         encoding="utf-8"
+    )
+
+
+def test_export_qdrant_bge_hybrid_exact_term_smoke_evidence_uses_named_outputs(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款。\n\n"
+        "退款处理需要保留订单编号。\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核；售后专员需填写表单 AF-REFUND-02。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "exact-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "exact-refund-form-name",
+    "category": "form-name",
+    "difficulty": "medium",
+    "query": "AF-REFUND-02 表单需要关联哪些付款凭证？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "表单 AF-REFUND-02 需要关联付款凭证。",
+                    "citation": "refund_policy_2026#exact-refund-code",
+                },
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_exact_term_smoke_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.candidate.id == "qdrant-bge-m3-hybrid-exact-term-smoke"
+    assert report.json_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-exact-term-smoke.json"
+    )
+    assert report.markdown_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-exact-term-smoke.md"
+    )
+    assert report.metadata["retrieval_mode"] == "dense+sparse-hybrid"
+    assert report.metadata["sparse_vectorizer"] == "lexical-identifier-sparse-v1"
+    assert report.metadata["fusion"] == "rrf"
+    assert report.indexed_sources["refund_policy_docs"]["sparse_vector_name"] == (
+        "text-sparse"
+    )
+    assert report.report.summary.backend == "qdrant-hybrid"
+    assert report.report.summary.citation_match_rate == 1.0
+    assert "qdrant-bge-m3-hybrid-exact-term-smoke" in (
+        report.markdown_path.read_text(encoding="utf-8")
     )
 
 
