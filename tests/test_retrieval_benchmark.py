@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from app.config import Settings
@@ -8,16 +9,20 @@ from app.services.retrieval_benchmark import (
     candidate_evaluation_to_dict,
     default_embedding_candidates,
     default_chunking_strategy_candidates,
+    default_evidence_grading_candidates,
     default_query_rewrite_candidates,
+    evidence_grading_candidate_evaluation_to_dict,
     embedding_candidate_result_to_dict,
     EmbeddingCandidate,
     export_chunking_strategy_evaluation,
     export_chinese_seed_evidence_bundle,
+    export_evidence_grading_candidate_evaluation,
     export_query_rewrite_candidate_evaluation,
     export_qdrant_bge_chunking_comparison_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
+    evaluate_evidence_grading_candidates,
     evaluate_query_rewrite_candidates,
     evaluate_retrieval_candidates,
     evaluate_embedding_candidates,
@@ -25,6 +30,7 @@ from app.services.retrieval_benchmark import (
     export_benchmark_report_markdown,
     load_benchmark_cases,
     render_chunking_strategy_evaluation_markdown,
+    render_evidence_grading_candidate_evaluation_markdown,
     render_embedding_candidate_markdown,
     render_benchmark_report_markdown,
     render_query_rewrite_candidate_evaluation_markdown,
@@ -302,6 +308,98 @@ def test_default_query_rewrite_candidates_include_baseline_and_controlled():
         "controlled_support_rules"
     )
     assert by_id["controlled-support-rewrite-v1"].implementation_status == "candidate"
+
+
+def test_default_evidence_grading_candidates_include_strict_and_source_policies():
+    candidates = default_evidence_grading_candidates()
+    by_id = {candidate.id: candidate for candidate in candidates}
+
+    assert by_id["citation-match-grader-v1"].grading_policy == "citation_match"
+    assert by_id["citation-match-grader-v1"].implementation_status == "candidate"
+    assert by_id["source-match-grader-v1"].grading_policy == "source_match"
+    assert by_id["source-match-grader-v1"].implementation_status == "candidate"
+
+
+def test_evidence_grading_candidate_labels_expected_empty_cases():
+    cases = load_benchmark_cases(FIXTURE_PATH)
+
+    evaluation = evaluate_evidence_grading_candidates(
+        cases=cases,
+        settings=Settings(rag_retrieval_backend="fixture"),
+    )
+
+    citation_result = next(
+        result
+        for result in evaluation.results
+        if result.candidate.id == "citation-match-grader-v1"
+    )
+    empty_case = next(
+        case for case in citation_result.cases if case.case_id == "empty-moon-warehouse"
+    )
+
+    assert citation_result.total_cases == 21
+    assert citation_result.answer_bearing_rate == 1.0
+    assert citation_result.related_insufficient_count == 0
+    assert citation_result.missing_evidence_count == 0
+    assert citation_result.unexpected_evidence_count == 0
+    assert citation_result.expected_empty_pass_rate == 1.0
+    assert empty_case.grading_label == "no_evidence_expected"
+    assert empty_case.returned_citations == []
+
+
+def test_evidence_grading_distinguishes_citation_and_source_policies():
+    cases = load_benchmark_cases(FIXTURE_PATH)
+    mutated_cases = [
+        replace(case, expected_citation="refund_policy_2026#missing-anchor")
+        if case.id == "refund-delayed-shipping"
+        else case
+        for case in cases
+    ]
+
+    evaluation = evaluate_evidence_grading_candidates(
+        cases=mutated_cases,
+        settings=Settings(rag_retrieval_backend="fixture"),
+    )
+
+    by_id = {result.candidate.id: result for result in evaluation.results}
+    strict_case = next(
+        case
+        for case in by_id["citation-match-grader-v1"].cases
+        if case.case_id == "refund-delayed-shipping"
+    )
+    source_case = next(
+        case
+        for case in by_id["source-match-grader-v1"].cases
+        if case.case_id == "refund-delayed-shipping"
+    )
+
+    assert strict_case.grading_label == "related_insufficient"
+    assert "expected citation was missing" in strict_case.grading_reason
+    assert by_id["citation-match-grader-v1"].related_insufficient_count == 1
+    assert by_id["citation-match-grader-v1"].answer_bearing_rate < 1.0
+    assert source_case.grading_label == "answer_bearing"
+    assert by_id["source-match-grader-v1"].answer_bearing_rate == 1.0
+
+
+def test_exports_evidence_grading_candidate_evaluation(tmp_path):
+    output_dir = tmp_path / "evidence-grading"
+
+    evaluation = export_evidence_grading_candidate_evaluation(output_dir=output_dir)
+
+    assert evaluation.json_path == output_dir / "evidence-grading-candidates.json"
+    assert evaluation.markdown_path == output_dir / "evidence-grading-candidates.md"
+
+    payload = json.loads(evaluation.json_path.read_text(encoding="utf-8"))
+    markdown = evaluation.markdown_path.read_text(encoding="utf-8")
+
+    assert payload == evidence_grading_candidate_evaluation_to_dict(evaluation)
+    assert payload["results"][0]["candidate"]["id"] == "citation-match-grader-v1"
+    assert payload["results"][0]["cases"][0]["grading_label"] == "answer_bearing"
+    assert "# Evidence Grading Candidate Evaluation" in markdown
+    assert "| Candidate | Status | Total Cases | Answer-bearing Rate |" in markdown
+    assert "citation-match-grader-v1" in markdown
+    assert "no_evidence_expected" in markdown
+    assert render_evidence_grading_candidate_evaluation_markdown(evaluation) == markdown
 
 
 def test_query_rewrite_candidate_preserves_expected_empty_cases():

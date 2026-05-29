@@ -758,6 +758,28 @@ docs/benchmark/chinese-seed/query-rewrite-candidates/query-rewrite-candidates.md
 
 结论：受控改写在当前 fixture seed 上没有造成回归，并且保护了 expected-empty 样本；但这只是离线候选证据，不代表可以直接上线 LLM query rewrite。后续若启用运行时改写，需要先扩展真实问法、空问法和 false-positive 评估，并明确是否允许公网 LLM 或仅使用内网模型。
 
+第三十七阶段 OpenSpec change `evaluate-evidence-grading-candidate` 增加离线 evidence grading candidate evidence。它用于判断召回证据是否真正 answer-bearing，而不是只看向量分数或是否返回了某个 source。当前仍是确定性本地评估，不调用 LLM，不过滤运行时结果，不改变回答生成行为：
+
+```powershell
+conda run -n GRAPHRAG python -c "from pathlib import Path; from app.services.retrieval_benchmark import export_evidence_grading_candidate_evaluation; export_evidence_grading_candidate_evaluation(Path('docs/benchmark/chinese-seed/evidence-grading-candidates'))"
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/evidence-grading-candidates/evidence-grading-candidates.json
+docs/benchmark/chinese-seed/evidence-grading-candidates/evidence-grading-candidates.md
+```
+
+当前本地 seed evidence 显示：
+
+| Candidate | Policy | Answer-bearing Rate | Related-insufficient | Missing Evidence | Unexpected Evidence | Expected-empty Pass Rate |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `citation-match-grader-v1` | citation match | 1.0000 | 0 | 0 | 0 | 1.0000 |
+| `source-match-grader-v1` | source match | 1.0000 | 0 | 0 | 0 | 1.0000 |
+
+结论：当前 fixture baseline 下，严格 citation grader 和宽松 source grader 都没有暴露失败。但这主要说明当前 seed 的 fixture 检索链路稳定；后续要让 evidence grading 真正产生决策价值，需要引入“同 source 但 citation 不足”“相关但不能回答”“召回为空但应回答”等 harder cases，再讨论是否作为 runtime answer gate。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

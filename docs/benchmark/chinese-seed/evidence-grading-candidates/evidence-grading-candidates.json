@@ -1,0 +1,2174 @@
+{
+  "results": [
+    {
+      "candidate": {
+        "id": "citation-match-grader-v1",
+        "description": "Strict local grader that requires the expected citation.",
+        "implementation_status": "candidate",
+        "grading_policy": "citation_match",
+        "risk_notes": [
+          "Can mark source-level evidence as insufficient when citation granularity changes.",
+          "Useful as a strict grounding gate baseline, not a runtime answer gate."
+        ]
+      },
+      "total_cases": 21,
+      "answer_bearing_rate": 1.0,
+      "related_insufficient_count": 0,
+      "missing_evidence_count": 0,
+      "unexpected_evidence_count": 0,
+      "expected_empty_pass_rate": 1.0,
+      "report": {
+        "summary": {
+          "backend": "fixture",
+          "total_cases": 21,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 1.0,
+          "category_summaries": {
+            "cross-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "empty": {
+              "total_cases": 7,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 1.0
+            },
+            "evidence": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "exception-policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "faq": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-intent": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "operational-escalation": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "paraphrase": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "sla": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.282,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.148,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.133,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.137,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.144,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#lost-package"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.257,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.266,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "logistics_faq_2026#lost-package",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.368,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.407,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.16,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.141,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.327,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.236,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.375,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.232,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.233,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.22,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.217,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "refund-delayed-shipping",
+          "category": "policy",
+          "difficulty": "easy",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-3",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#address-change"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.282,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-delay",
+          "category": "faq",
+          "difficulty": "easy",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#delay",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#delay",
+            "logistics_faq_2026#batch-exception"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.148,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-moon-warehouse",
+          "category": "empty",
+          "difficulty": "easy",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.133,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "refund-delivery-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-3",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#section-5"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.137,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-evidence-records",
+          "category": "evidence",
+          "difficulty": "easy",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-5",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-5",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-carrier-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#delay",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#delay",
+            "logistics_faq_2026#lost-package"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.144,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#lost-package"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "multi-source-after-sales",
+          "category": "multi-source",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-5",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-5",
+            "refund_policy_2026#appeal-review",
+            "logistics_faq_2026#batch-exception"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.257,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-customized-exception",
+          "category": "exception-policy",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#exception",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#exception",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-high-value-review",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#high-value-review",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#high-value-review",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-address-change-before-shipping",
+          "category": "multi-intent",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#address-change",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "logistics_faq",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#address-change",
+            "logistics_faq_2026#lost-package",
+            "refund_policy_2026#section-3"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.266,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "logistics_faq_2026#lost-package",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-same-city-timeout",
+          "category": "sla",
+          "difficulty": "medium",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#same-city-timeout",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#same-city-timeout",
+            "logistics_faq_2026#batch-exception"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.368,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-lost-package-cross-team",
+          "category": "cross-source",
+          "difficulty": "hard",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#lost-package",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#lost-package",
+            "logistics_faq_2026#batch-exception",
+            "logistics_faq_2026#delay"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.407,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-address-intercept",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#address-intercept",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#address-intercept",
+            "logistics_faq_2026#delay"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.16,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-appeal-second-review",
+          "category": "long-section",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#appeal-review",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#appeal-review",
+            "refund_policy_2026#section-5",
+            "refund_policy_2026#section-3"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.141,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-batch-exception-escalation",
+          "category": "long-section",
+          "difficulty": "hard",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#batch-exception",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#batch-exception",
+            "logistics_faq_2026#lost-package",
+            "logistics_faq_2026#delay"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.327,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-membership-points",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.236,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-invoice-tax-policy",
+          "category": "empty",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.375,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-membership-tier-recovery",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.232,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-coupon-approval",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.233,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-password-reset-email",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.22,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-finance-reconciliation",
+          "category": "empty",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.217,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        }
+      ],
+      "decision_notes": [
+        "This evaluation is local evidence only and does not filter runtime answers.",
+        "Policy: citation_match.",
+        "Current seed evidence has no grading failures for this policy."
+      ]
+    },
+    {
+      "candidate": {
+        "id": "source-match-grader-v1",
+        "description": "Looser local grader that accepts the expected source.",
+        "implementation_status": "candidate",
+        "grading_policy": "source_match",
+        "risk_notes": [
+          "Can over-credit evidence when the correct source contains multiple topics.",
+          "Useful for diagnosing citation granularity problems before reranking."
+        ]
+      },
+      "total_cases": 21,
+      "answer_bearing_rate": 1.0,
+      "related_insufficient_count": 0,
+      "missing_evidence_count": 0,
+      "unexpected_evidence_count": 0,
+      "expected_empty_pass_rate": 1.0,
+      "report": {
+        "summary": {
+          "backend": "fixture",
+          "total_cases": 21,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 1.0,
+          "category_summaries": {
+            "cross-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "empty": {
+              "total_cases": 7,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 1.0
+            },
+            "evidence": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "exception-policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "faq": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "long-section": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-intent": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "multi-source": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "operational-escalation": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "paraphrase": {
+              "total_cases": 2,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "policy": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            },
+            "sla": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.282,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.148,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.133,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.137,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.144,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#lost-package"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.257,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.266,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "logistics_faq_2026#lost-package",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.368,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.407,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.16,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.141,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          },
+          {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.327,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          },
+          {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.236,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.375,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.232,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.233,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.22,
+            "returned_citations": [],
+            "returned_source_ids": []
+          },
+          {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.217,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "refund-delayed-shipping",
+          "category": "policy",
+          "difficulty": "easy",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-3",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#address-change"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-delayed-shipping",
+            "category": "policy",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.282,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#address-change"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-delay",
+          "category": "faq",
+          "difficulty": "easy",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#delay",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#delay",
+            "logistics_faq_2026#batch-exception"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "logistics-delay",
+            "category": "faq",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.148,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-moon-warehouse",
+          "category": "empty",
+          "difficulty": "easy",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-moon-warehouse",
+            "category": "empty",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.133,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "refund-delivery-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-3",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#section-5"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-delivery-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.137,
+            "returned_citations": [
+              "refund_policy_2026#section-3",
+              "refund_policy_2026#section-5"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-evidence-records",
+          "category": "evidence",
+          "difficulty": "easy",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-5",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-5",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-evidence-records",
+            "category": "evidence",
+            "difficulty": "easy",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-carrier-paraphrase",
+          "category": "paraphrase",
+          "difficulty": "medium",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#delay",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#delay",
+            "logistics_faq_2026#lost-package"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "logistics-carrier-paraphrase",
+            "category": "paraphrase",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.144,
+            "returned_citations": [
+              "logistics_faq_2026#delay",
+              "logistics_faq_2026#lost-package"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "multi-source-after-sales",
+          "category": "multi-source",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#section-5",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#section-5",
+            "refund_policy_2026#appeal-review",
+            "logistics_faq_2026#batch-exception"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "multi-source-after-sales",
+            "category": "multi-source",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.257,
+            "returned_citations": [
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#appeal-review",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-customized-exception",
+          "category": "exception-policy",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#exception",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#exception",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-customized-exception",
+            "category": "exception-policy",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.128,
+            "returned_citations": [
+              "refund_policy_2026#exception",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-high-value-review",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#high-value-review",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#high-value-review",
+            "refund_policy_2026#appeal-review"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-high-value-review",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.126,
+            "returned_citations": [
+              "refund_policy_2026#high-value-review",
+              "refund_policy_2026#appeal-review"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-address-change-before-shipping",
+          "category": "multi-intent",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#address-change",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "logistics_faq",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#address-change",
+            "logistics_faq_2026#lost-package",
+            "refund_policy_2026#section-3"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-address-change-before-shipping",
+            "category": "multi-intent",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.266,
+            "returned_citations": [
+              "refund_policy_2026#address-change",
+              "logistics_faq_2026#lost-package",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "logistics_faq",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-same-city-timeout",
+          "category": "sla",
+          "difficulty": "medium",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#same-city-timeout",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#same-city-timeout",
+            "logistics_faq_2026#batch-exception"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "logistics-same-city-timeout",
+            "category": "sla",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.368,
+            "returned_citations": [
+              "logistics_faq_2026#same-city-timeout",
+              "logistics_faq_2026#batch-exception"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-lost-package-cross-team",
+          "category": "cross-source",
+          "difficulty": "hard",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#lost-package",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#lost-package",
+            "logistics_faq_2026#batch-exception",
+            "logistics_faq_2026#delay"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "logistics-lost-package-cross-team",
+            "category": "cross-source",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.407,
+            "returned_citations": [
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-address-intercept",
+          "category": "operational-escalation",
+          "difficulty": "medium",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#address-intercept",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#address-intercept",
+            "logistics_faq_2026#delay"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "logistics-address-intercept",
+            "category": "operational-escalation",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.16,
+            "returned_citations": [
+              "logistics_faq_2026#address-intercept",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "refund-appeal-second-review",
+          "category": "long-section",
+          "difficulty": "hard",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation": "refund_policy_2026#appeal-review",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#appeal-review",
+            "refund_policy_2026#section-5",
+            "refund_policy_2026#section-3"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "refund-appeal-second-review",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.141,
+            "returned_citations": [
+              "refund_policy_2026#appeal-review",
+              "refund_policy_2026#section-5",
+              "refund_policy_2026#section-3"
+            ],
+            "returned_source_ids": [
+              "refund_policy_docs",
+              "refund_policy_docs",
+              "refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "logistics-batch-exception-escalation",
+          "category": "long-section",
+          "difficulty": "hard",
+          "expected_source_id": "logistics_faq",
+          "expected_citation": "logistics_faq_2026#batch-exception",
+          "returned_source_ids": [
+            "logistics_faq",
+            "logistics_faq",
+            "logistics_faq"
+          ],
+          "returned_citations": [
+            "logistics_faq_2026#batch-exception",
+            "logistics_faq_2026#lost-package",
+            "logistics_faq_2026#delay"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected source was returned.",
+          "result": {
+            "id": "logistics-batch-exception-escalation",
+            "category": "long-section",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 0.327,
+            "returned_citations": [
+              "logistics_faq_2026#batch-exception",
+              "logistics_faq_2026#lost-package",
+              "logistics_faq_2026#delay"
+            ],
+            "returned_source_ids": [
+              "logistics_faq",
+              "logistics_faq",
+              "logistics_faq"
+            ]
+          }
+        },
+        {
+          "case_id": "empty-membership-points",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-membership-points",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.236,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-invoice-tax-policy",
+          "category": "empty",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-invoice-tax-policy",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.375,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-membership-tier-recovery",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-membership-tier-recovery",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.232,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-coupon-approval",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-coupon-approval",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.233,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-password-reset-email",
+          "category": "empty",
+          "difficulty": "medium",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-password-reset-email",
+            "category": "empty",
+            "difficulty": "medium",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.22,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        },
+        {
+          "case_id": "empty-finance-reconciliation",
+          "category": "empty",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "grading_label": "no_evidence_expected",
+          "grading_reason": "Expected-empty case returned no evidence.",
+          "result": {
+            "id": "empty-finance-reconciliation",
+            "category": "empty",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": true,
+            "latency_ms": 0.217,
+            "returned_citations": [],
+            "returned_source_ids": []
+          }
+        }
+      ],
+      "decision_notes": [
+        "This evaluation is local evidence only and does not filter runtime answers.",
+        "Policy: source_match.",
+        "Current seed evidence has no grading failures for this policy."
+      ]
+    }
+  ]
+}

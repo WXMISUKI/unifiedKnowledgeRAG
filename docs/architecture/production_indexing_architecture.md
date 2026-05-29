@@ -246,6 +246,22 @@ Current candidates:
 
 The controlled candidate rewrites 6 of 21 seed cases, rewrites 0 expected-empty cases, and does not regress fixture hit rate, citation match rate, or empty handling. This is not runtime approval. Before enabling query rewriting in the retrieval API, add broader true/false positive cases, review empty-query false positives explicitly, and decide whether rewriting may use a hosted LLM, a private-network model, or deterministic domain rules only.
 
+## Evidence Grading Candidate Evidence
+
+Evidence grading is now represented as local service-level candidate evidence before any answer gate, reranker, or runtime filtering behavior is approved. The current evidence lives under:
+
+- `docs/benchmark/chinese-seed/evidence-grading-candidates/evidence-grading-candidates.json`
+- `docs/benchmark/chinese-seed/evidence-grading-candidates/evidence-grading-candidates.md`
+
+Current candidates:
+
+| Candidate | Policy | Boundary |
+| --- | --- | --- |
+| `citation-match-grader-v1` | citation match | strict local grader that requires the expected citation |
+| `source-match-grader-v1` | source match | looser local grader that accepts the expected source |
+
+Both candidates pass the current fixture seed with answer-bearing rate 1.0000 and expected-empty pass rate 1.0000. This is not runtime answer-gating approval. Before filtering retrieval results or blocking answer generation, add harder insufficient-evidence cases and explicitly review false-negative risk so the system does not hide useful evidence.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

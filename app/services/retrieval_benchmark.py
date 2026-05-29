@@ -237,6 +237,50 @@ class QueryRewriteCandidateEvaluation:
     markdown_path: Path | None = None
 
 
+@dataclass(frozen=True)
+class EvidenceGradingCandidate:
+    id: str
+    description: str
+    implementation_status: str
+    grading_policy: str
+    risk_notes: list[str]
+
+
+@dataclass(frozen=True)
+class EvidenceGradingCaseResult:
+    case_id: str
+    category: str
+    difficulty: str
+    expected_source_id: str | None
+    expected_citation: str | None
+    returned_source_ids: list[str]
+    returned_citations: list[str]
+    grading_label: str
+    grading_reason: str
+    result: RetrievalBenchmarkCaseResult
+
+
+@dataclass(frozen=True)
+class EvidenceGradingCandidateResult:
+    candidate: EvidenceGradingCandidate
+    total_cases: int
+    answer_bearing_rate: float
+    related_insufficient_count: int
+    missing_evidence_count: int
+    unexpected_evidence_count: int
+    expected_empty_pass_rate: float
+    report: RetrievalBenchmarkReport
+    cases: list[EvidenceGradingCaseResult]
+    decision_notes: list[str]
+
+
+@dataclass(frozen=True)
+class EvidenceGradingCandidateEvaluation:
+    results: list[EvidenceGradingCandidateResult]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
 CONTROLLED_SUPPORT_QUERY_REWRITES = {
     "refund-delivery-paraphrase": (
         "客户三天未发货可以申请退款，售后专员应核验订单状态和发货记录后处理。"
@@ -897,6 +941,79 @@ def export_query_rewrite_candidate_evaluation(
     )
 
 
+def default_evidence_grading_candidates() -> list[EvidenceGradingCandidate]:
+    return [
+        EvidenceGradingCandidate(
+            id="citation-match-grader-v1",
+            description="Strict local grader that requires the expected citation.",
+            implementation_status="candidate",
+            grading_policy="citation_match",
+            risk_notes=[
+                "Can mark source-level evidence as insufficient when citation granularity changes.",
+                "Useful as a strict grounding gate baseline, not a runtime answer gate.",
+            ],
+        ),
+        EvidenceGradingCandidate(
+            id="source-match-grader-v1",
+            description="Looser local grader that accepts the expected source.",
+            implementation_status="candidate",
+            grading_policy="source_match",
+            risk_notes=[
+                "Can over-credit evidence when the correct source contains multiple topics.",
+                "Useful for diagnosing citation granularity problems before reranking.",
+            ],
+        ),
+    ]
+
+
+def evaluate_evidence_grading_candidates(
+    cases: list[RetrievalBenchmarkCase],
+    candidates: list[EvidenceGradingCandidate] | None = None,
+    settings: Settings | None = None,
+) -> EvidenceGradingCandidateEvaluation:
+    candidates = candidates or default_evidence_grading_candidates()
+    _validate_candidate_ids(candidates, "evidence grading candidate")
+    settings = settings or Settings(rag_retrieval_backend="fixture")
+    retriever = create_document_retriever(settings)
+    benchmark_results = [_run_case(retriever, case) for case in cases]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize(retriever.backend_name, benchmark_results),
+        cases=benchmark_results,
+    )
+    results = [
+        _evaluate_evidence_grading_candidate(candidate, cases, report)
+        for candidate in candidates
+    ]
+    return EvidenceGradingCandidateEvaluation(results=results)
+
+
+def export_evidence_grading_candidate_evaluation(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/retrieval_benchmark_cases.json"),
+    candidates: list[EvidenceGradingCandidate] | None = None,
+    settings: Settings | None = None,
+) -> EvidenceGradingCandidateEvaluation:
+    cases = load_benchmark_cases(cases_path)
+    evaluation = evaluate_evidence_grading_candidates(
+        cases=cases,
+        candidates=candidates,
+        settings=settings,
+    )
+    json_path = export_evidence_grading_candidate_evaluation_json(
+        evaluation,
+        output_dir / "evidence-grading-candidates.json",
+    )
+    markdown_path = export_evidence_grading_candidate_evaluation_markdown(
+        evaluation,
+        output_dir / "evidence-grading-candidates.md",
+    )
+    return EvidenceGradingCandidateEvaluation(
+        results=evaluation.results,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
 def benchmark_report_to_dict(report: RetrievalBenchmarkReport) -> dict:
     return {
         "summary": asdict(report.summary),
@@ -1020,6 +1137,42 @@ def query_rewrite_candidate_evaluation_to_dict(
                         "rewritten_query": case.rewritten_query,
                         "rewritten": case.rewritten,
                         "expect_empty": case.expect_empty,
+                        "result": asdict(case.result),
+                    }
+                    for case in result.cases
+                ],
+                "decision_notes": result.decision_notes,
+            }
+            for result in evaluation.results
+        ]
+    }
+
+
+def evidence_grading_candidate_evaluation_to_dict(
+    evaluation: EvidenceGradingCandidateEvaluation,
+) -> dict:
+    return {
+        "results": [
+            {
+                "candidate": asdict(result.candidate),
+                "total_cases": result.total_cases,
+                "answer_bearing_rate": result.answer_bearing_rate,
+                "related_insufficient_count": result.related_insufficient_count,
+                "missing_evidence_count": result.missing_evidence_count,
+                "unexpected_evidence_count": result.unexpected_evidence_count,
+                "expected_empty_pass_rate": result.expected_empty_pass_rate,
+                "report": benchmark_report_to_dict(result.report),
+                "cases": [
+                    {
+                        "case_id": case.case_id,
+                        "category": case.category,
+                        "difficulty": case.difficulty,
+                        "expected_source_id": case.expected_source_id,
+                        "expected_citation": case.expected_citation,
+                        "returned_source_ids": case.returned_source_ids,
+                        "returned_citations": case.returned_citations,
+                        "grading_label": case.grading_label,
+                        "grading_reason": case.grading_reason,
                         "result": asdict(case.result),
                     }
                     for case in result.cases
@@ -1168,6 +1321,22 @@ def export_query_rewrite_candidate_evaluation_json(
     path.write_text(
         json.dumps(
             query_rewrite_candidate_evaluation_to_dict(evaluation),
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_evidence_grading_candidate_evaluation_json(
+    evaluation: EvidenceGradingCandidateEvaluation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            evidence_grading_candidate_evaluation_to_dict(evaluation),
             ensure_ascii=False,
             indent=2,
         ),
@@ -1533,6 +1702,57 @@ def render_query_rewrite_candidate_evaluation_markdown(
     return "\n".join(lines)
 
 
+def render_evidence_grading_candidate_evaluation_markdown(
+    evaluation: EvidenceGradingCandidateEvaluation,
+) -> str:
+    lines = [
+        "# Evidence Grading Candidate Evaluation",
+        "",
+        "## Summary",
+        "",
+        "| Candidate | Status | Total Cases | Answer-bearing Rate | Related-insufficient | Missing Evidence | Unexpected Evidence | Expected-empty Pass Rate |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for result in evaluation.results:
+        lines.append(
+            f"| {result.candidate.id} | {result.candidate.implementation_status} | "
+            f"{result.total_cases} | {result.answer_bearing_rate:.4f} | "
+            f"{result.related_insufficient_count} | "
+            f"{result.missing_evidence_count} | "
+            f"{result.unexpected_evidence_count} | "
+            f"{result.expected_empty_pass_rate:.4f} |"
+        )
+
+    lines.extend(["", "## Candidate Notes", ""])
+    for result in evaluation.results:
+        lines.extend([
+            f"### {result.candidate.id}",
+            "",
+            f"- Description: {result.candidate.description}",
+            f"- Grading policy: {result.candidate.grading_policy}",
+        ])
+        lines.extend(f"- Risk note: {note}" for note in result.candidate.risk_notes)
+        lines.extend(f"- Decision note: {note}" for note in result.decision_notes)
+        lines.append("")
+
+    lines.extend([
+        "## Case Results",
+        "",
+        "| Candidate | Case | Category | Label | Reason | Expected Citation | Returned Citations |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ])
+    for result in evaluation.results:
+        for case in result.cases:
+            lines.append(
+                f"| {result.candidate.id} | {case.case_id} | {case.category} | "
+                f"{case.grading_label} | {case.grading_reason} | "
+                f"{case.expected_citation or ''} | "
+                f"{', '.join(case.returned_citations)} |"
+            )
+    lines.append("")
+    return "\n".join(lines)
+
+
 def render_embedding_candidate_markdown(result: EmbeddingCandidateResult) -> str:
     candidate = result.candidate
     lines = [
@@ -1665,6 +1885,18 @@ def export_query_rewrite_candidate_evaluation_markdown(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         render_query_rewrite_candidate_evaluation_markdown(evaluation),
+        encoding="utf-8",
+    )
+    return path
+
+
+def export_evidence_grading_candidate_evaluation_markdown(
+    evaluation: EvidenceGradingCandidateEvaluation,
+    path: Path,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        render_evidence_grading_candidate_evaluation_markdown(evaluation),
         encoding="utf-8",
     )
     return path
@@ -2100,6 +2332,133 @@ def _query_rewrite_decision_notes(
         notes.append("Current seed evidence does not show a regression against fixture retrieval.")
     else:
         notes.append("Current seed evidence shows a regression and requires investigation.")
+    return notes
+
+
+def _evaluate_evidence_grading_candidate(
+    candidate: EvidenceGradingCandidate,
+    cases: list[RetrievalBenchmarkCase],
+    report: RetrievalBenchmarkReport,
+) -> EvidenceGradingCandidateResult:
+    case_results = [
+        _grade_evidence_case(candidate, case, result)
+        for case, result in zip(cases, report.cases)
+    ]
+    labels = [case.grading_label for case in case_results]
+    empty_labels = [
+        case.grading_label
+        for case in case_results
+        if case.expected_source_id is None and case.expected_citation is None
+    ]
+    related_insufficient_count = labels.count("related_insufficient")
+    missing_evidence_count = labels.count("missing_evidence")
+    unexpected_evidence_count = labels.count("unexpected_evidence")
+    return EvidenceGradingCandidateResult(
+        candidate=candidate,
+        total_cases=len(case_results),
+        answer_bearing_rate=_rate([
+            label in {"answer_bearing", "no_evidence_expected"}
+            for label in labels
+        ]),
+        related_insufficient_count=related_insufficient_count,
+        missing_evidence_count=missing_evidence_count,
+        unexpected_evidence_count=unexpected_evidence_count,
+        expected_empty_pass_rate=_rate([
+            label == "no_evidence_expected"
+            for label in empty_labels
+        ]),
+        report=report,
+        cases=case_results,
+        decision_notes=_evidence_grading_decision_notes(
+            candidate,
+            related_insufficient_count,
+            missing_evidence_count,
+            unexpected_evidence_count,
+        ),
+    )
+
+
+def _grade_evidence_case(
+    candidate: EvidenceGradingCandidate,
+    case: RetrievalBenchmarkCase,
+    result: RetrievalBenchmarkCaseResult,
+) -> EvidenceGradingCaseResult:
+    label, reason = _evidence_grading_label(candidate, case, result)
+    return EvidenceGradingCaseResult(
+        case_id=case.id,
+        category=case.category,
+        difficulty=case.difficulty,
+        expected_source_id=case.expected_source_id,
+        expected_citation=case.expected_citation,
+        returned_source_ids=result.returned_source_ids,
+        returned_citations=result.returned_citations,
+        grading_label=label,
+        grading_reason=reason,
+        result=result,
+    )
+
+
+def _evidence_grading_label(
+    candidate: EvidenceGradingCandidate,
+    case: RetrievalBenchmarkCase,
+    result: RetrievalBenchmarkCaseResult,
+) -> tuple[str, str]:
+    if case.expect_empty:
+        if result.returned_citations or result.returned_source_ids:
+            return "unexpected_evidence", "Expected-empty case returned evidence."
+        return "no_evidence_expected", "Expected-empty case returned no evidence."
+
+    if candidate.grading_policy == "citation_match":
+        if case.expected_citation in result.returned_citations:
+            return "answer_bearing", "Expected citation was returned."
+        if case.expected_source_id in result.returned_source_ids:
+            return (
+                "related_insufficient",
+                "Expected source was returned but expected citation was missing.",
+            )
+        return "missing_evidence", "Expected source and citation were not returned."
+
+    if candidate.grading_policy == "source_match":
+        if case.expected_source_id in result.returned_source_ids:
+            return "answer_bearing", "Expected source was returned."
+        if result.returned_source_ids:
+            return (
+                "related_insufficient",
+                "Evidence was returned, but not from the expected source.",
+            )
+        return "missing_evidence", "No evidence was returned for a non-empty case."
+
+    raise ValueError(
+        f"Unsupported evidence grading policy for {candidate.id}: {candidate.grading_policy}"
+    )
+
+
+def _evidence_grading_decision_notes(
+    candidate: EvidenceGradingCandidate,
+    related_insufficient_count: int,
+    missing_evidence_count: int,
+    unexpected_evidence_count: int,
+) -> list[str]:
+    notes = [
+        "This evaluation is local evidence only and does not filter runtime answers.",
+        f"Policy: {candidate.grading_policy}.",
+    ]
+    if related_insufficient_count:
+        notes.append(
+            f"{related_insufficient_count} case(s) returned related but insufficient evidence."
+        )
+    if missing_evidence_count:
+        notes.append(f"{missing_evidence_count} case(s) missed expected evidence.")
+    if unexpected_evidence_count:
+        notes.append(
+            f"{unexpected_evidence_count} expected-empty case(s) returned evidence."
+        )
+    if not (
+        related_insufficient_count
+        or missing_evidence_count
+        or unexpected_evidence_count
+    ):
+        notes.append("Current seed evidence has no grading failures for this policy.")
     return notes
 
 
