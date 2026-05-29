@@ -826,6 +826,38 @@ docs/benchmark/chinese-seed/exact-term-candidates/exact-term-fixture-baseline.md
 
 结论：fixture backend 可以命中这些精确词锚点，但这只是本地合同 baseline。后续是否需要 sparse/hybrid retrieval，应基于 Qdrant+BGE-M3 或真实向量检索对这组 exact-term fixture 的表现决定，不能因为 fixture 通过就直接认为 dense-only 足够。
 
+第四十阶段 OpenSpec change `evaluate-qdrant-exact-term-smoke` 将 exact-term fixture 跑到了 Qdrant + 本地 BGE-M3 dense-only 链路。导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --exact-term-smoke `
+  --output-dir docs/benchmark/chinese-seed/exact-term-candidates `
+  --cases-path tests/fixtures/exact_term_identifier_cases.json `
+  --source-id refund_policy_docs `
+  --source-id logistics_faq `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-exact-term-smoke.json
+docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-exact-term-smoke.md
+```
+
+当前 dense-only evidence 显示：
+
+| Category | Cases | Hit Rate | Citation Match Rate | Notes |
+| --- | ---: | ---: | ---: | --- |
+| `policy-code` | 1 | 1.0000 | 1.0000 | `RFD-2026-003` 命中 |
+| `form-name` | 1 | 0.0000 | 0.0000 | `AF-REFUND-02` 未返回证据 |
+| `workflow-acronym` | 1 | 1.0000 | 1.0000 | `LST-BATCH-OPS` 命中 |
+| `order-like-id` | 1 | 0.0000 | 0.0000 | `ORD-ZS-2026-0007` 未返回证据 |
+
+总计 hit rate / citation match rate 均为 `0.5000`。这说明当前 Qdrant+BGE-M3 dense-only 在编号、表单名、订单样式 ID 上已经暴露漏召回；下一步更适合推进 sparse/BM25/dense+sparse hybrid candidate 对比，而不是继续只调 dense 阈值或直接引入 reranker。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

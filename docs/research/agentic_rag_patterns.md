@@ -30,6 +30,7 @@ Current evidence says:
 - `citation-match-grader-v1` and `source-match-grader-v1` establish a local evidence grading shape, but harder insufficient-evidence cases are still needed before runtime answer gating.
 - Evidence grading stress evidence shows strict citation grading can catch related-but-insufficient evidence that source-level grading would over-credit.
 - Exact-term fixture evidence now exists as a contract baseline; Qdrant+BGE or future dense retrieval evidence must decide whether hybrid/sparse retrieval is justified.
+- Qdrant+BGE-M3 dense-only exact-term smoke evidence now shows 0.5000 hit rate and citation match rate at `RAG_SCORE_THRESHOLD=0.7`, missing the `AF-REFUND-02` form-name case and `ORD-ZS-2026-0007` order-like id case.
 
 ## Mature Pattern Families
 
@@ -224,9 +225,9 @@ Dependency risk:
 
 | Order | Work item | Why now |
 | ---: | --- | --- |
-| 1 | Qdrant+BGE exact-term smoke evidence | Needed to see whether dense-only retrieval misses exact identifiers |
+| 1 | Dense+sparse hybrid candidate | Qdrant+BGE dense-only misses form-name and order-like id exact-term cases |
 | 2 | Multi-granularity indexing candidate | Paragraph still wins on citation match, while section and token-window expose complementary recall/cost trade-offs |
-| 3 | Dense+sparse hybrid candidate | Only after dense-only misses justify schema/query complexity |
+| 3 | Hybrid threshold and false-positive stress | Sparse/hybrid must prove exact-term recall without breaking expected-empty handling |
 | 4 | Reranker candidate | Only after top-k contains right evidence but poor ordering |
 | 5 | Runtime query rewrite or evidence grading decision | Only after broader true/false positive evidence confirms safe promotion beyond deterministic local evidence |
 | 6 | GraphRAG first use case and storage candidate | Only after relationship-heavy questions are concrete |
@@ -243,10 +244,10 @@ Dependency risk:
 
 ## Near-Term Recommendation
 
-After exact-term identifier cases are in place, the next implementation slice should be:
+After Qdrant+BGE exact-term smoke evidence, the next implementation slice should be:
 
 ```text
-evaluate-qdrant-exact-term-smoke
+evaluate-qdrant-hybrid-exact-term-candidate
 ```
 
-It should run the exact-term fixture through Qdrant+BGE-M3 dense retrieval before proposing sparse vectors, BM25, or hybrid query fusion.
+It should compare the current dense-only Qdrant+BGE result against a sparse or dense+sparse candidate and preserve expected-empty false-positive measurement before any runtime hybrid promotion.

@@ -22,17 +22,19 @@ LOCAL_SOURCE_CITATION_ANCHORS = {
     "refund_policy_docs": {
         1: "refund_policy_2026#section-3",
         2: "refund_policy_2026#section-5",
-        3: "refund_policy_2026#exception",
-        4: "refund_policy_2026#high-value-review",
-        5: "refund_policy_2026#address-change",
-        6: "refund_policy_2026#appeal-review",
+        3: "refund_policy_2026#exact-refund-code",
+        4: "refund_policy_2026#exception",
+        5: "refund_policy_2026#high-value-review",
+        6: "refund_policy_2026#address-change",
+        7: "refund_policy_2026#appeal-review",
     },
     "logistics_faq": {
         1: "logistics_faq_2026#delay",
         2: "logistics_faq_2026#same-city-timeout",
         3: "logistics_faq_2026#lost-package",
-        4: "logistics_faq_2026#address-intercept",
-        5: "logistics_faq_2026#batch-exception",
+        4: "logistics_faq_2026#exact-logistics-id",
+        5: "logistics_faq_2026#address-intercept",
+        6: "logistics_faq_2026#batch-exception",
     },
 }
 LOCAL_SOURCE_SECTION_CITATION_ANCHORS = {

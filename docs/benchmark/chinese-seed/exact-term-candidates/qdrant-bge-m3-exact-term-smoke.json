@@ -1,0 +1,139 @@
+{
+  "candidate": {
+    "id": "qdrant-bge-m3-exact-term-smoke",
+    "backend": "qdrant",
+    "description": "Local Qdrant+BGE-M3 dense-only smoke path for exact terms, identifiers, acronyms, and order-like ids.",
+    "metadata": {
+      "vector_store": "qdrant",
+      "collection": "knowledge_chunks",
+      "vector_name": "text-dense",
+      "embedding_provider": "bge_m3_local",
+      "embedding_model": "BAAI/bge-m3",
+      "embedding_model_path": "models\\bge-m3",
+      "deployment_path": "local-smoke-or-private-network",
+      "benchmark_fixture": "exact-term-identifier-v1"
+    }
+  },
+  "metadata": {
+    "created_at": "2026-05-29T04:06:10.227725+00:00",
+    "qdrant_url": ":memory:",
+    "qdrant_collection": "knowledge_chunks",
+    "qdrant_vector_name": "text-dense",
+    "qdrant_vector_size": "1024",
+    "rag_score_threshold": "0.7",
+    "embedding_provider": "bge_m3_local",
+    "embedding_model": "BAAI/bge-m3",
+    "embedding_model_path": "models\\bge-m3",
+    "embedding_local_files_only": "true",
+    "source_ids": [
+      "refund_policy_docs",
+      "logistics_faq"
+    ],
+    "chunking_strategy": "markdown-paragraph-v1",
+    "benchmark_fixture": "exact-term-identifier-v1",
+    "benchmark_cases_path": "tests\\fixtures\\exact_term_identifier_cases.json"
+  },
+  "indexed_sources": {
+    "refund_policy_docs": {
+      "job_id": "smoke_06172ca41f5c4919b534fb65e6ccd21f",
+      "chunk_count": 7,
+      "status": "ready",
+      "chunking_strategy": "markdown-paragraph-v1"
+    },
+    "logistics_faq": {
+      "job_id": "smoke_8e9542c9d7054c1a8b9a837dac0bcec5",
+      "chunk_count": 6,
+      "status": "ready",
+      "chunking_strategy": "markdown-paragraph-v1"
+    }
+  },
+  "report": {
+    "summary": {
+      "backend": "qdrant",
+      "total_cases": 4,
+      "hit_rate": 0.5,
+      "citation_match_rate": 0.5,
+      "empty_handling_rate": 0.0,
+      "category_summaries": {
+        "form-name": {
+          "total_cases": 1,
+          "hit_rate": 0.0,
+          "citation_match_rate": 0.0,
+          "empty_handling_rate": 0.0
+        },
+        "order-like-id": {
+          "total_cases": 1,
+          "hit_rate": 0.0,
+          "citation_match_rate": 0.0,
+          "empty_handling_rate": 0.0
+        },
+        "policy-code": {
+          "total_cases": 1,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 0.0
+        },
+        "workflow-acronym": {
+          "total_cases": 1,
+          "hit_rate": 1.0,
+          "citation_match_rate": 1.0,
+          "empty_handling_rate": 0.0
+        }
+      }
+    },
+    "cases": [
+      {
+        "id": "exact-refund-policy-code",
+        "category": "policy-code",
+        "difficulty": "medium",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 334.386,
+        "returned_citations": [
+          "refund_policy_2026#exact-refund-code"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs"
+        ]
+      },
+      {
+        "id": "exact-refund-form-name",
+        "category": "form-name",
+        "difficulty": "medium",
+        "hit_at_k": false,
+        "citation_match": false,
+        "empty_query_handling": null,
+        "latency_ms": 318.839,
+        "returned_citations": [],
+        "returned_source_ids": []
+      },
+      {
+        "id": "exact-logistics-workflow-acronym",
+        "category": "workflow-acronym",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 308.6,
+        "returned_citations": [
+          "logistics_faq_2026#exact-logistics-id"
+        ],
+        "returned_source_ids": [
+          "logistics_faq"
+        ]
+      },
+      {
+        "id": "exact-logistics-order-id",
+        "category": "order-like-id",
+        "difficulty": "hard",
+        "hit_at_k": false,
+        "citation_match": false,
+        "empty_query_handling": null,
+        "latency_ms": 309.227,
+        "returned_citations": [],
+        "returned_source_ids": []
+      }
+    ]
+  }
+}

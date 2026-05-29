@@ -403,6 +403,24 @@ def qdrant_bge_smoke_candidate(settings: Settings | None = None) -> RetrievalCan
     )
 
 
+def qdrant_bge_exact_term_smoke_candidate(
+    settings: Settings | None = None,
+) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    base_candidate = qdrant_bge_smoke_candidate(settings)
+    metadata = dict(base_candidate.metadata or {})
+    metadata["benchmark_fixture"] = "exact-term-identifier-v1"
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-exact-term-smoke",
+        backend=base_candidate.backend,
+        description=(
+            "Local Qdrant+BGE-M3 dense-only smoke path for exact terms, "
+            "identifiers, acronyms, and order-like ids."
+        ),
+        metadata=metadata,
+    )
+
+
 def fixture_chinese_seed_retrieval_candidate() -> RetrievalCandidate:
     return RetrievalCandidate(
         id="fixture-chinese-seed-baseline",
@@ -610,6 +628,51 @@ def export_qdrant_bge_smoke_evidence(
         report=smoke_report.report,
         metadata=smoke_report.metadata,
         indexed_sources=smoke_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_exact_term_smoke_evidence(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/exact_term_identifier_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+) -> QdrantSmokeEvidenceReport:
+    settings = settings or get_settings()
+    report = export_qdrant_bge_smoke_evidence(
+        output_dir=output_dir,
+        cases_path=cases_path,
+        source_ids=source_ids,
+        case_ids=case_ids,
+        settings=settings,
+        write_files=False,
+        chunking_strategy=chunking_strategy,
+    )
+    metadata = dict(report.metadata)
+    metadata["benchmark_fixture"] = "exact-term-identifier-v1"
+    metadata["benchmark_cases_path"] = str(cases_path)
+    exact_report = QdrantSmokeEvidenceReport(
+        candidate=qdrant_bge_exact_term_smoke_candidate(settings),
+        report=report.report,
+        metadata=metadata,
+        indexed_sources=report.indexed_sources,
+    )
+    json_path = export_qdrant_smoke_evidence_json(
+        exact_report,
+        output_dir / "qdrant-bge-m3-exact-term-smoke.json",
+    )
+    markdown_path = export_qdrant_smoke_evidence_markdown(
+        exact_report,
+        output_dir / "qdrant-bge-m3-exact-term-smoke.md",
+    )
+    return QdrantSmokeEvidenceReport(
+        candidate=exact_report.candidate,
+        report=exact_report.report,
+        metadata=exact_report.metadata,
+        indexed_sources=exact_report.indexed_sources,
         json_path=json_path,
         markdown_path=markdown_path,
     )

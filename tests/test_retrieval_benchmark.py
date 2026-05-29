@@ -19,6 +19,7 @@ from app.services.retrieval_benchmark import (
     export_evidence_grading_candidate_evaluation,
     export_query_rewrite_candidate_evaluation,
     export_qdrant_bge_chunking_comparison_evidence,
+    export_qdrant_bge_exact_term_smoke_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -680,6 +681,7 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
         "# 售后退款规则\n\n"
         "客户三天未发货可以申请退款。\n\n"
         "退款处理需要保留订单编号。\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核。\n\n"
         "定制商品不支持无理由退款。\n\n"
         "五千元以上退款需要主管复核。\n\n"
         "未发货地址变更应先暂停发货。\n\n"
@@ -691,6 +693,7 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
         "物流轨迹超过二十四小时未更新时，应先联系承运商。\n\n"
         "同城配送超过两小时未送达时，客服应核实骑手位置。\n\n"
         "承运商确认包裹丢失后，客服应创建物流异常工单。\n\n"
+        "工作流缩写 LST-BATCH-OPS 是批量物流异常升级代号。\n\n"
         "订单已经出库后要改地址，应先联系承运商拦截。\n\n"
         "批量物流异常处理中，应创建批量异常工单。",
         encoding="utf-8",
@@ -705,13 +708,13 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
     assert evaluation.markdown_path == tmp_path / "chunking" / "chunking-strategy-candidates.md"
 
     by_id = {result.candidate.id: result for result in evaluation.results}
-    assert by_id["markdown-paragraph-v1"].total_chunks == 11
+    assert by_id["markdown-paragraph-v1"].total_chunks == 13
     assert by_id["markdown-paragraph-v1"].citation_stability == "stable"
     assert by_id["markdown-paragraph-v1"].long_section_support == "covered"
     assert by_id["markdown-section-v1"].total_chunks == 2
     assert by_id["markdown-section-v1"].citation_stability == "stable"
     assert by_id["markdown-section-v1"].long_section_support == "covered-by-section"
-    assert by_id["token-window-v1"].total_chunks == 2
+    assert by_id["token-window-v1"].total_chunks == 3
     assert by_id["token-window-v1"].citation_stability == "stable"
     assert by_id["token-window-v1"].long_section_support == "covered-by-window"
 
@@ -720,9 +723,9 @@ def test_exports_chunking_strategy_evaluation(tmp_path):
 
     assert payload == chunking_strategy_evaluation_to_dict(evaluation)
     assert "# Chunking Strategy Candidate Evaluation" in markdown
-    assert "| markdown-paragraph-v1 | implemented | 11 | stable | covered |" in markdown
+    assert "| markdown-paragraph-v1 | implemented | 13 | stable | covered |" in markdown
     assert "| markdown-section-v1 | runnable | 2 | stable | covered-by-section |" in markdown
-    assert "| token-window-v1 | runnable | 2 | stable | covered-by-window |" in markdown
+    assert "| token-window-v1 | runnable | 3 | stable | covered-by-window |" in markdown
     assert render_chunking_strategy_evaluation_markdown(evaluation) == markdown
 
 
@@ -807,6 +810,88 @@ def test_export_qdrant_bge_smoke_evidence_uses_single_client(monkeypatch, tmp_pa
     assert report.report.summary.hit_rate == 1.0
     assert report.metadata["rag_score_threshold"] == "0.37"
     assert "qdrant-bge-m3-smoke" in report.markdown_path.read_text(encoding="utf-8")
+
+
+def test_export_qdrant_bge_exact_term_smoke_evidence_uses_named_outputs(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "refund_policy_docs.md").write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款。\n\n"
+        "退款处理需要保留订单编号。\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核；售后专员需填写表单 AF-REFUND-02。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "exact-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "exact-refund-policy-code",
+    "category": "policy-code",
+    "difficulty": "medium",
+    "query": "RFD-2026-003 对应哪类退款复核？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 1,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#exact-refund-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 0.93,
+                "payload": {
+                    "source_id": "refund_policy_docs",
+                    "document_id": "refund_policy_2026",
+                    "title": "售后退款规则",
+                    "text": "政策编号 RFD-2026-003 适用于三天未发货退款复核。",
+                    "citation": "refund_policy_2026#exact-refund-code",
+                },
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_exact_term_smoke_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        source_ids=["refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.candidate.id == "qdrant-bge-m3-exact-term-smoke"
+    assert report.json_path == tmp_path / "evidence" / "qdrant-bge-m3-exact-term-smoke.json"
+    assert report.markdown_path == tmp_path / "evidence" / "qdrant-bge-m3-exact-term-smoke.md"
+    assert report.metadata["benchmark_fixture"] == "exact-term-identifier-v1"
+    assert report.metadata["benchmark_cases_path"] == str(cases_path)
+    assert report.report.summary.hit_rate == 1.0
+    assert report.report.summary.citation_match_rate == 1.0
+    assert "qdrant-bge-m3-exact-term-smoke" in report.markdown_path.read_text(
+        encoding="utf-8"
+    )
 
 
 def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):

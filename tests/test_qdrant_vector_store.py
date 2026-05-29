@@ -121,6 +121,7 @@ def test_markdown_source_to_qdrant_chunks_uses_known_business_citations(tmp_path
         "物流轨迹超过二十四小时未更新时，应先联系承运商确认揽收和中转状态。\n\n"
         "同城即时配送超过两小时未送达时，客服应优先核实骑手位置和收件人联系方式。\n\n"
         "承运商确认包裹丢失后，客服应创建物流异常工单，并同步售后团队评估补发或退款。\n\n"
+        "工作流缩写 LST-BATCH-OPS 是批量物流异常升级代号；样例订单 ORD-ZS-2026-0007 用于演示承运商网点滞留后的拦截和升级凭据。\n\n"
         "用户要求修改收货地址时，如果订单已经出库，应先联系承运商拦截。\n\n"
         "批量物流异常处理中，如果同一承运商在一个小时内出现五单以上轨迹停滞。",
         encoding="utf-8",
@@ -136,9 +137,29 @@ def test_markdown_source_to_qdrant_chunks_uses_known_business_citations(tmp_path
         "logistics_faq_2026#delay",
         "logistics_faq_2026#same-city-timeout",
         "logistics_faq_2026#lost-package",
+        "logistics_faq_2026#exact-logistics-id",
         "logistics_faq_2026#address-intercept",
         "logistics_faq_2026#batch-exception",
     ]
+
+
+def test_markdown_source_to_qdrant_chunks_uses_exact_term_refund_citation(tmp_path):
+    source_path = tmp_path / "refund_policy_docs.md"
+    source_path.write_text(
+        "# 售后退款规则\n\n"
+        "客户三天未发货可以申请退款，售后专员应核验订单状态和发货记录后处理。\n\n"
+        "退款处理需要保留订单编号、付款记录、售后沟通记录和处理人信息。\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核；售后专员需填写表单 AF-REFUND-02，并关联原订单编号和付款凭证。",
+        encoding="utf-8",
+    )
+
+    chunks = markdown_source_to_qdrant_chunks(
+        source_id="refund_policy_docs",
+        source_path=source_path,
+        content=source_path.read_text(encoding="utf-8"),
+    )
+
+    assert chunks[2].citation == "refund_policy_2026#exact-refund-code"
 
 
 def test_markdown_source_to_qdrant_chunks_falls_back_for_unmapped_paragraphs(tmp_path):

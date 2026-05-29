@@ -297,6 +297,15 @@ The fixture covers:
 
 The fixture backend currently passes all four cases. This is only a contract baseline. Before adding sparse vectors, BM25, or dense+sparse hybrid retrieval, run the same fixture through Qdrant+BGE-M3 or fresher customer-specific dense retrieval evidence and identify concrete dense-only misses.
 
+Qdrant+BGE-M3 dense-only exact-term smoke evidence now lives under:
+
+- `docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-exact-term-smoke.json`
+- `docs/benchmark/chinese-seed/exact-term-candidates/qdrant-bge-m3-exact-term-smoke.md`
+
+At `RAG_SCORE_THRESHOLD=0.7`, the local exact-term smoke run indexed 7 refund-policy chunks and 6 logistics chunks with `markdown-paragraph-v1`. It passed `RFD-2026-003` and `LST-BATCH-OPS`, but missed `AF-REFUND-02` and `ORD-ZS-2026-0007`, producing hit rate `0.5000` and citation match rate `0.5000`.
+
+This is the first concrete dense-only miss set. It justifies a follow-up sparse/BM25/dense+sparse hybrid candidate comparison, while still preserving the rule that runtime retrieval defaults and public HTTP contracts do not change until hybrid evidence passes both exact-term recall and expected-empty false-positive gates.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

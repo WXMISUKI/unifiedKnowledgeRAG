@@ -212,7 +212,7 @@ The system SHALL maintain an internal research reference that maps mature Agenti
 #### Scenario: Exact-term evidence precedes hybrid retrieval
 
 - **WHEN** a future change proposes sparse vectors, BM25, or dense+sparse hybrid retrieval
-- **THEN** it references exact-term and identifier benchmark evidence and explains which dense-only misses justify the added retrieval complexity
+- **THEN** it references exact-term and identifier benchmark evidence, including Qdrant+BGE dense-only smoke evidence when available, and explains which dense-only misses justify the added retrieval complexity
 
 #### Scenario: Query rewrite evidence precedes runtime adoption
 
