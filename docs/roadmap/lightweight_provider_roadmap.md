@@ -62,3 +62,17 @@ The current provider already has Phase 0 mostly complete. The most valuable next
 3. Prefer document ingestion and evidence packaging improvements before GraphRAG execution.
 4. Promote Qdrant/BGE-M3/hybrid behavior only after customer-like benchmark evidence supports it.
 5. Keep GraphRAG as a later, use-case-driven phase rather than a default dependency.
+
+## Retrieval Evidence Pack
+
+Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on successful RAG retrieve and answer envelopes. The pack is retrieval-owned and deterministic; it gives callers a stable bundle with:
+
+- pack id and version
+- status: `answerable` or `insufficient_evidence`
+- reason: `documents_returned` or `no_documents`
+- citation policy: `use_only_returned_citations`
+- allowed citations aligned to returned documents
+- evidence count and score summary
+- requested source ids, retrieval backend, filter context, and compact evidence entries
+
+This does not make the provider the final answer policy owner. MyPrivateAgent or another caller still owns user-facing response style, refusal policy, approval workflow, and final orchestration. The provider only exposes trustworthy evidence and diagnostics so callers can avoid hallucinating beyond returned citations.

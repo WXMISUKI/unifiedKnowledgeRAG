@@ -308,6 +308,18 @@ def test_rag_retrieve_returns_compact_context_and_citations():
     assert retrieval_trace["document_count"] == len(body["result"]["documents"])
     assert retrieval_trace["citations"][0] == "refund_policy_2026#section-3"
     assert retrieval_trace["filter_context"] == filter_context
+    evidence_pack = body["result"]["metadata"]["evidence_pack"]
+    assert evidence_pack["version"] == "evidence-pack-v1"
+    assert evidence_pack["status"] == "answerable"
+    assert evidence_pack["reason"] == "documents_returned"
+    assert evidence_pack["retrieval_backend"] == "fixture"
+    assert evidence_pack["requested_source_ids"] == ["refund_policy_docs"]
+    assert evidence_pack["citation_policy"] == "use_only_returned_citations"
+    assert evidence_pack["allowed_citations"] == [
+        document["citation"] for document in body["result"]["documents"]
+    ]
+    assert evidence_pack["evidence_count"] == len(body["result"]["documents"])
+    assert evidence_pack["filter_context"] == filter_context
 
 
 def test_rag_answer_returns_cited_answer_envelope():
@@ -352,6 +364,13 @@ def test_rag_answer_returns_cited_answer_envelope():
     assert retrieval_trace["backend"] == "fixture"
     assert retrieval_trace["requested_source_ids"] == ["refund_policy_docs"]
     assert retrieval_trace["document_count"] == len(body["result"]["documents"])
+    evidence_pack = body["result"]["metadata"]["evidence_pack"]
+    assert evidence_pack["version"] == "evidence-pack-v1"
+    assert evidence_pack["status"] == "answerable"
+    assert set(body["result"]["citations"]).issubset(
+        set(evidence_pack["allowed_citations"])
+    )
+    assert evidence_pack["evidence_count"] == len(body["result"]["documents"])
     assert body["result"]["metadata"]["evidence_gate"]["passed"] is True
     prompt_package = body["result"]["metadata"]["prompt_package"]
     assert prompt_package["id"] == "cited-answer-prompt-v1"
@@ -545,12 +564,17 @@ def test_rag_retrieve_empty_result_is_explicit_success():
                     "enforced": False,
                 },
                 "retrieval_trace": body["result"]["metadata"]["retrieval_trace"],
+                "evidence_pack": body["result"]["metadata"]["evidence_pack"],
             },
         },
         "error": None,
     }
     assert body["result"]["metadata"]["retrieval_trace"]["document_count"] == 0
     assert body["result"]["metadata"]["retrieval_trace"]["citations"] == []
+    evidence_pack = body["result"]["metadata"]["evidence_pack"]
+    assert evidence_pack["status"] == "insufficient_evidence"
+    assert evidence_pack["reason"] == "no_documents"
+    assert evidence_pack["allowed_citations"] == []
 
 
 def test_rag_answer_empty_result_is_insufficient_evidence():
@@ -597,6 +621,7 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
                     "enforced": False,
                 },
                 "retrieval_trace": body["result"]["metadata"]["retrieval_trace"],
+                "evidence_pack": body["result"]["metadata"]["evidence_pack"],
                 "answer_trace": body["result"]["metadata"]["answer_trace"],
             },
         },
@@ -608,6 +633,9 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
     assert "output_validation" not in body["result"]["metadata"]
     assert body["result"]["metadata"]["answer_trace"]["final_status"] == "insufficient_evidence"
     assert body["result"]["metadata"]["retrieval_trace"]["document_count"] == 0
+    evidence_pack = body["result"]["metadata"]["evidence_pack"]
+    assert evidence_pack["status"] == "insufficient_evidence"
+    assert evidence_pack["reason"] == "no_documents"
 
 
 def test_rag_retrieve_unknown_source_returns_structured_error():

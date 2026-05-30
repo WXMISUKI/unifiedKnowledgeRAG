@@ -1315,6 +1315,28 @@ docs/benchmark/chinese-seed/relation-aware-aggregation-grading/relation-aware-ag
 
 结论：relation-aware grader 能把“检索到相关编号，但不能证明请求关系”的负例从 `unexpected_evidence` 中分离出来；但它仍是本地 deterministic 候选，不是生产语义判断。后续若要进入 runtime，需要扩展更多关系词、真实语料和 noisy top-k，并再讨论 reranker、LLM grader 或 GraphRAG 关系检查。
 
+第五十阶段 OpenSpec change `add-retrieval-evidence-pack` 推进 roadmap Phase 4：给调用方稳定的 evidence pack，而不是继续把最终回答职责往 provider 内部堆。
+
+现在成功的 `/api/rag/retrieve` 与 `/api/rag/answer` envelope 都会在 `result.metadata.evidence_pack` 暴露：
+
+```text
+version: evidence-pack-v1
+status: answerable | insufficient_evidence
+reason: documents_returned | no_documents
+citation_policy: use_only_returned_citations
+allowed_citations: 与返回 documents 对齐的 citation 列表
+evidence_count / score_summary / retrieval_backend / requested_source_ids / filter_context
+```
+
+重新导出的 provider contract smoke 位于：
+
+```text
+docs/smoke/provider-contract/provider-contract-smoke.json
+docs/smoke/provider-contract/provider-contract-smoke.md
+```
+
+结论：调用方可以直接用 evidence pack 判断“这批证据能不能支撑回答、允许引用哪些 citation、过滤/后端上下文是什么”。这仍然不是最终 answer policy；MyPrivateAgent 或其他调用者继续负责最终措辞、拒答策略、审批和工作流。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

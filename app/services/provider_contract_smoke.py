@@ -311,14 +311,22 @@ def _check_retrieve(client: Any) -> dict[str, Any]:
     metadata = result["metadata"]
     filter_context = metadata["request_filter_context"]
     retrieval_trace = metadata["retrieval_trace"]
+    evidence_pack = metadata["evidence_pack"]
     assert retrieval_trace["version"] == "retrieval-trace-v1"
     assert retrieval_trace["document_count"] == len(result["documents"])
     assert retrieval_trace["citations"]
     assert retrieval_trace["filter_context"] == filter_context
+    assert evidence_pack["version"] == "evidence-pack-v1"
+    assert evidence_pack["status"] == "answerable"
+    assert evidence_pack["allowed_citations"] == [
+        document["citation"] for document in result["documents"]
+    ]
     return {
         "document_count": len(result["documents"]),
         "citations": retrieval_trace["citations"],
         "retrieval_trace_version": retrieval_trace["version"],
+        "evidence_pack_version": evidence_pack["version"],
+        "evidence_pack_status": evidence_pack["status"],
         "filter_context_present": bool(filter_context),
     }
 
@@ -337,6 +345,10 @@ def _check_answer(client: Any) -> dict[str, Any]:
     assert result["citations"]
     metadata = result["metadata"]
     assert metadata["retrieval_trace"]["version"] == "retrieval-trace-v1"
+    assert metadata["evidence_pack"]["version"] == "evidence-pack-v1"
+    assert set(result["citations"]).issubset(
+        set(metadata["evidence_pack"]["allowed_citations"])
+    )
     assert metadata["answer_trace"]["version"] == "answer-trace-v1"
     assert metadata["answer_trace"]["final_status"] == "answered"
     assert metadata["request_filter_context"]
@@ -344,6 +356,8 @@ def _check_answer(client: Any) -> dict[str, Any]:
         "answer_status": result["answer_status"],
         "citation_count": len(result["citations"]),
         "retrieval_trace_version": metadata["retrieval_trace"]["version"],
+        "evidence_pack_version": metadata["evidence_pack"]["version"],
+        "evidence_pack_status": metadata["evidence_pack"]["status"],
         "answer_trace_version": metadata["answer_trace"]["version"],
         "final_status": metadata["answer_trace"]["final_status"],
     }
@@ -406,6 +420,8 @@ def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
             "check_count",
             "example_request_count",
             "graph_status",
+            "evidence_pack_status",
         }
+        or key.endswith("_pack_version")
     }
     return f"`{json.dumps(compact, ensure_ascii=False)}`"

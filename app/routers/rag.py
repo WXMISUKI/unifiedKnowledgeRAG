@@ -11,6 +11,7 @@ from app.models.contracts import (
     SourceDocumentManifestResponse,
 )
 from app.config import get_settings
+from app.services.evidence_pack import build_evidence_pack
 from app.services.retrieval_backends import create_document_retriever
 from app.services.rag_answer_orchestrator import create_answer_composer
 from app.services.request_filter_context import normalize_request_filter_context
@@ -92,6 +93,13 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
         documents=documents,
         filter_context=filter_metadata,
     )
+    evidence_pack = build_evidence_pack(
+        query=request.query,
+        requested_source_ids=request.knowledge_base_ids,
+        retrieval_backend=retriever.backend_name,
+        documents=documents,
+        filter_context=filter_metadata,
+    )
     return RagRetrieveResponse(
         ok=True,
         result=RagRetrieveResult(
@@ -100,6 +108,7 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             metadata={
                 "request_filter_context": filter_metadata,
                 "retrieval_trace": retrieval_trace,
+                "evidence_pack": evidence_pack,
             },
         ),
     )
@@ -171,6 +180,13 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
         documents=documents,
         filter_context=filter_metadata,
     )
+    evidence_pack = build_evidence_pack(
+        query=request.query,
+        requested_source_ids=request.knowledge_base_ids,
+        retrieval_backend=retriever.backend_name,
+        documents=documents,
+        filter_context=filter_metadata,
+    )
     return RagAnswerResponse(
         ok=True,
         result=composer.compose(
@@ -181,5 +197,6 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             min_top_score=settings.rag_answer_min_evidence_score,
             request_filter_context=filter_metadata,
             retrieval_trace=retrieval_trace,
+            evidence_pack=evidence_pack,
         ),
     )

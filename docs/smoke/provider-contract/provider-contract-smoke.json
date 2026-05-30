@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T04:43:13.978489+00:00",
+  "generated_at": "2026-05-30T06:01:12.187753+00:00",
   "passed": true,
   "checks": [
     {
@@ -73,6 +73,8 @@
           "refund_policy_2026#exact-refund-code"
         ],
         "retrieval_trace_version": "retrieval-trace-v1",
+        "evidence_pack_version": "evidence-pack-v1",
+        "evidence_pack_status": "answerable",
         "filter_context_present": true
       },
       "error": null
@@ -85,6 +87,8 @@
         "answer_status": "answered",
         "citation_count": 2,
         "retrieval_trace_version": "retrieval-trace-v1",
+        "evidence_pack_version": "evidence-pack-v1",
+        "evidence_pack_status": "answerable",
         "answer_trace_version": "answer-trace-v1",
         "final_status": "answered"
       },
