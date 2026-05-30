@@ -1353,6 +1353,32 @@ answer_evidence_count: 0
 
 重新导出的 smoke 报告显示 `8/8` checks passed。这个切片的价值是让外部 control plane 不只看到“有证据时可引用”，也能看到“无证据时明确不可答且没有可引用 citation”。
 
+第五十二阶段 OpenSpec change `add-deployment-readiness-report` 推进 roadmap Phase 6，新增本地部署就绪报告，不改变 HTTP API 和运行时默认。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_deployment_readiness.py
+```
+
+导出文件：
+
+```text
+docs/operations/deployment-readiness/deployment-readiness.json
+docs/operations/deployment-readiness/deployment-readiness.md
+```
+
+当前默认报告状态为 `review`，核心检查为：
+
+| Check | Result |
+| --- | --- |
+| Health | `ok` |
+| Preflight | `bindable`, `6/6` checks passed |
+| Contract Smoke | `passed`, `8/8` checks passed |
+| Embedding Artifacts | `not_configured`，默认 mock provider 不要求本地模型目录 |
+
+结论：这个报告适合在本机测试、公网试验和后续内网部署前做一次只读检查。它会汇总配置和模型路径诊断，但不会下载模型、启动 Qdrant、重建索引或执行 GraphRAG。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

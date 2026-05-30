@@ -1,0 +1,189 @@
+{
+  "id": "deployment-readiness-v1",
+  "generated_at": "2026-05-30T06:28:44.261133+00:00",
+  "status": "review",
+  "provider": {
+    "provider_id": "unifiedKnowledgeProvider",
+    "provider_name": "unifiedKnowledgeRAG",
+    "provider_version": "0.1.0",
+    "contract_version": "knowledge-provider-contract-v1",
+    "manifest_version": "provider-integration-manifest-v1",
+    "component_role": "knowledge_data_plane"
+  },
+  "health": {
+    "status": "ok",
+    "service": "unifiedKnowledgeProvider",
+    "rag": {
+      "status": "ready",
+      "reason": null,
+      "backend": "fixture",
+      "backend_status": "ready",
+      "index_status": "ready"
+    },
+    "answer": {
+      "status": "ready",
+      "reason": null,
+      "backend": "deterministic",
+      "backend_status": "ready",
+      "index_status": null
+    },
+    "graph": {
+      "status": "planned",
+      "reason": "Graph query execution is not in slice v1.",
+      "backend": null,
+      "backend_status": null,
+      "index_status": null
+    }
+  },
+  "preflight": {
+    "bindable": true,
+    "requested_contract_version": "knowledge-provider-contract-v1",
+    "requested_capability_ids": [
+      "knowledge.rag.source_documents",
+      "knowledge.rag.retrieve",
+      "knowledge.rag.answer",
+      "knowledge.graph.query"
+    ],
+    "checks": [
+      {
+        "name": "manifest_identity",
+        "passed": true,
+        "status": "ready",
+        "details": {
+          "provider_id": "unifiedKnowledgeProvider",
+          "component_role": "knowledge_data_plane",
+          "compatible_control_planes": [
+            "MyPrivateAgent"
+          ],
+          "contract_version": "knowledge-provider-contract-v1"
+        },
+        "reason": null
+      },
+      {
+        "name": "contract_version",
+        "passed": true,
+        "status": "ready",
+        "details": {
+          "required_contract_version": "knowledge-provider-contract-v1",
+          "provider_contract_version": "knowledge-provider-contract-v1"
+        },
+        "reason": null
+      },
+      {
+        "name": "health_readiness",
+        "passed": true,
+        "status": "ok",
+        "details": {
+          "service": "unifiedKnowledgeProvider",
+          "rag_status": "ready",
+          "rag_backend": "fixture",
+          "rag_backend_status": "ready",
+          "rag_index_status": "ready",
+          "answer_status": "ready",
+          "answer_backend": "deterministic",
+          "graph_status": "planned"
+        },
+        "reason": null
+      },
+      {
+        "name": "required_capabilities",
+        "passed": true,
+        "status": "ready",
+        "details": {
+          "required_capability_ids": [
+            "knowledge.rag.source_documents",
+            "knowledge.rag.retrieve",
+            "knowledge.rag.answer",
+            "knowledge.graph.query"
+          ],
+          "available_capability_ids": [
+            "knowledge.graph.query",
+            "knowledge.rag.answer",
+            "knowledge.rag.retrieve",
+            "knowledge.rag.source_documents"
+          ],
+          "missing_capability_ids": []
+        },
+        "reason": null
+      },
+      {
+        "name": "schema_references",
+        "passed": true,
+        "status": "ready",
+        "details": {
+          "openapi_path": "/openapi.json",
+          "checked_capability_ids": [
+            "knowledge.rag.source_documents",
+            "knowledge.rag.retrieve",
+            "knowledge.rag.answer",
+            "knowledge.graph.query"
+          ],
+          "missing_schema_ref_capability_ids": []
+        },
+        "reason": null
+      },
+      {
+        "name": "graph_boundary",
+        "passed": true,
+        "status": "planned",
+        "details": {
+          "capability_id": "knowledge.graph.query",
+          "capability_status": "planned",
+          "execution_status": "planned",
+          "reason": "Graph query execution is not implemented in this slice."
+        },
+        "reason": null
+      }
+    ]
+  },
+  "contract_smoke": {
+    "passed": true,
+    "summary": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    "check_names": [
+      "health_readiness",
+      "provider_integration_manifest",
+      "provider_preflight",
+      "capability_invocation_metadata",
+      "rag_retrieve_contract",
+      "rag_answer_contract",
+      "rag_insufficient_evidence_pack_contract",
+      "graph_planned_boundary"
+    ]
+  },
+  "runtime_config": {
+    "rag_retrieval_backend": "fixture",
+    "rag_source_dir": "app\\data\\sources",
+    "rag_index_dir": "app\\data\\indexes\\llamaindex",
+    "rag_score_threshold": 0.01,
+    "embedding_provider": "mock",
+    "embedding_model": "mock-hash-v1",
+    "embedding_model_path": null,
+    "embedding_vector_size": null,
+    "embedding_local_files_only": false,
+    "qdrant_url": "http://localhost:6333",
+    "qdrant_collection": "knowledge_chunks",
+    "qdrant_vector_name": "text-dense",
+    "qdrant_vector_size": 1024,
+    "qdrant_api_key_configured": false,
+    "rag_answer_composer": "deterministic",
+    "rag_answer_composer_model": "deterministic-extractive-v1"
+  },
+  "model_artifacts": {
+    "status": "not_configured",
+    "model_path": null,
+    "path_exists": false,
+    "manifest_exists": false
+  },
+  "operation_notes": [
+    "This report is local readiness evidence; external control planes still own binding and governance decisions.",
+    "Contract smoke evidence should be regenerated after configuration or dependency changes.",
+    "Embedding provider is mock; use a real local or hosted embedding candidate before production retrieval promotion.",
+    "Retrieval backend is not qdrant; vector-store deployment readiness remains a separate review."
+  ],
+  "json_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
+  "markdown_path": "docs\\operations\\deployment-readiness\\deployment-readiness.md"
+}

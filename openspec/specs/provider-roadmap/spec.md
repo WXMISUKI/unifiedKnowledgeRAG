@@ -50,3 +50,14 @@ The project SHALL treat retrieval evidence packs, citation policy metadata, and 
 #### Scenario: Evidence packaging does not imply answer policy ownership
 - **WHEN** the provider exposes evidence status or allowed citations
 - **THEN** the roadmap boundary still states that the caller owns final user-facing answer style, refusal policy, and workflow decisions
+
+### Requirement: Deployment readiness evidence advances Phase 6 without expanding provider scope
+The project SHALL treat local readiness reports, model artifact diagnostics, backup/reindex notes, and integration evidence summaries as Phase 6 operations work when they help deploy the provider component without moving control-plane governance into this module.
+
+#### Scenario: Deployment readiness is phase-aligned
+- **WHEN** an OpenSpec change adds local deployment readiness evidence
+- **THEN** the change identifies Phase 6 as the roadmap phase it advances
+
+#### Scenario: Deployment readiness does not imply platform ownership
+- **WHEN** the provider exports readiness or operation notes
+- **THEN** the roadmap boundary still states that external control planes own registration, heartbeat governance, audit policy, and agent binding decisions

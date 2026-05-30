@@ -76,3 +76,22 @@ Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on 
 - requested source ids, retrieval backend, filter context, and compact evidence entries
 
 This does not make the provider the final answer policy owner. MyPrivateAgent or another caller still owns user-facing response style, refusal policy, approval workflow, and final orchestration. The provider only exposes trustworthy evidence and diagnostics so callers can avoid hallucinating beyond returned citations.
+
+## Deployment Readiness Report
+
+Phase 6 deployment and operations evidence is now represented by a local `deployment-readiness-v1` export. It consolidates:
+
+- provider health
+- provider preflight bindability
+- provider contract smoke summary
+- runtime configuration without secret values
+- local embedding model artifact diagnostics
+- operation notes for local/public-network/private-network review
+
+The default local report can be regenerated with:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_deployment_readiness.py
+```
+
+The report is intentionally read-only. It does not start ingestion jobs, rebuild indexes, download models, call embedding services, call Qdrant, or execute graph queries. External control planes still own registration, heartbeat governance, audit policy, and source-to-agent binding decisions.

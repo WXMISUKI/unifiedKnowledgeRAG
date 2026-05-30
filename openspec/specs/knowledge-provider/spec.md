@@ -247,6 +247,25 @@ The system SHALL provide a local export command for provider integration probe e
 - **WHEN** the integration probe Markdown report is rendered
 - **THEN** it summarizes provider identity, bindability, preflight checks, capability ids, statuses, invocation paths, and example request coverage without embedding full request payloads
 
+### Requirement: Provider deployment readiness evidence can be exported
+The system SHALL provide a local deployment readiness export that summarizes whether the provider is ready for local binding review and future deployment planning without requiring an external server.
+
+#### Scenario: Readiness export includes core checks
+- **WHEN** the deployment readiness export runs
+- **THEN** the report includes provider health status, provider preflight bindability, provider contract smoke status, and a combined readiness status
+
+#### Scenario: Readiness export includes configuration review
+- **WHEN** the deployment readiness export runs
+- **THEN** the report includes retrieval backend, embedding provider, embedding model, answer composer, Qdrant collection settings, and source/index paths without exposing secret values
+
+#### Scenario: Readiness export remains local and read-only
+- **WHEN** deployment readiness is exported
+- **THEN** it does not start ingestion jobs, rebuild indexes, download models, call embedding services, call vector databases, or execute graph queries
+
+#### Scenario: Readiness evidence writes review artifacts
+- **WHEN** a caller runs the deployment readiness export command
+- **THEN** the system writes machine-readable JSON and human-readable Markdown evidence files
+
 ### Requirement: Provider discovery exposes source document diagnostics
 
 The provider discovery surface SHALL expose the document source manifest diagnostic capability so external control planes can discover and preflight it before binding.
