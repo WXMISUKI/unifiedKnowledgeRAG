@@ -204,3 +204,18 @@ X-Provider-Api-Key: <token>
 `GET /health` remains public for deployment health checks.
 
 This is a lightweight component access guard, not an identity or policy system. MyPrivateAgent or another external control plane still owns user identity, roles, approvals, audit policy, source-to-agent binding, and final answer policy.
+
+## Lightweight Deployment Profile
+
+Phase 6 now includes a minimal container deployment profile:
+
+```text
+Dockerfile
+docker-compose.example.yml
+.env.example
+.dockerignore
+```
+
+The profile starts `uvicorn app.main:app` on port `8020`, exposes a `/health` health check, mounts source documents, index lifecycle state, and model artifacts as runtime directories, and keeps fixture/mock defaults unless operators explicitly opt into Qdrant or local embedding models.
+
+The image build intentionally excludes local model artifacts, index state, generated benchmark/evidence reports, and tests. It does not download models, start Qdrant, enable GraphRAG, add TLS termination, configure reverse proxies, or manage secrets. Those remain deployment-owner or external control-plane responsibilities.

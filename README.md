@@ -109,6 +109,26 @@ Provider error envelope 保持 `ok=false`、`result=null`、`error.code` 和 `er
 conda run -n GRAPHRAG uvicorn app.main:app --reload --port 8020
 ```
 
+## 轻量容器部署
+
+项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：
+
+```powershell
+Copy-Item .env.example .env
+# 编辑 .env，至少替换 PROVIDER_API_KEY
+docker compose -f docker-compose.example.yml up --build
+```
+
+默认 compose 使用 `fixture` retrieval backend 和 `mock` embedding provider，不启动 Qdrant、不下载 BGE-M3、不执行 GraphRAG。运行时目录通过 volume 挂载：
+
+```text
+./app/data/sources -> /app/app/data/sources:ro
+./app/data/indexes -> /app/app/data/indexes
+./models -> /models:ro
+```
+
+镜像不会把本地 models、indexes、benchmark/evidence 报告或测试目录打包进去。`/health` 用于容器 healthcheck；`/api/*` 如果配置 `PROVIDER_API_KEY` 则需要 token。TLS、反向代理、托管密钥、备份策略、Qdrant 服务和内网模型分发仍由部署方或外部控制面负责。
+
 ## 简单验证
 
 ```powershell
@@ -1541,6 +1561,17 @@ document.citation_anchor_count: <number>
 缺文件会建议 `restore_source_file_before_ingestion`，不支持格式会建议 `add_parser_support_before_ingestion`，空内容会建议 `repair_source_content_before_ingestion`，缺 citation anchors 会建议 `add_citation_anchors_before_ingestion`。这一步只做边界和诊断，不做 PDF/Word/Excel/OCR/table parser，也不改变 runtime retrieval 默认行为。
 
 第六十阶段 OpenSpec change `add-provider-api-key-guard` 增加默认关闭的 `/api/*` 访问保护。未设置 `PROVIDER_API_KEY` 时，本地开发和测试保持原行为；设置后，`/api/*` 会要求 `Authorization: Bearer <token>` 或 `X-Provider-Api-Key: <token>`，缺失或错误会返回 HTTP 401 和结构化 `PROVIDER_API_KEY_REQUIRED`。部署 readiness 只报告 `provider_api_key_configured=true/false`，不会输出 secret 值。
+
+第六十一阶段 OpenSpec change `add-lightweight-deployment-profile` 增加轻量容器部署剖面：
+
+```text
+Dockerfile
+docker-compose.example.yml
+.env.example
+.dockerignore
+```
+
+这个剖面只负责把 provider 作为组件启动起来，默认仍是 fixture/mock，可以独立跑 `/health` 和现有 provider API。它不会默认启动 Qdrant、下载模型、打包本地 indexes/models、引入 K8s/Helm/TLS/反向代理或托管密钥系统。生产网络、证书、密钥管理、备份和外部服务编排仍由部署方负责。
 
 ## 设计文档
 
