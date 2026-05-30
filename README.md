@@ -129,6 +129,32 @@ docker compose -f docker-compose.example.yml up --build
 
 镜像不会把本地 models、indexes、benchmark/evidence 报告或测试目录打包进去。`/health` 用于容器 healthcheck；`/api/*` 如果配置 `PROVIDER_API_KEY` 则需要 token。TLS、反向代理、托管密钥、备份策略、Qdrant 服务和内网模型分发仍由部署方或外部控制面负责。
 
+## Deployed Provider Smoke
+
+容器、uvicorn 或网络部署启动后，可以从外部 HTTP base URL 导出部署 smoke 证据：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
+  --base-url http://127.0.0.1:8020
+```
+
+如果部署配置了 `PROVIDER_API_KEY`，脚本会自动读取同名环境变量，也可以显式传入：
+
+```powershell
+$env:PROVIDER_API_KEY="replace-with-a-random-token"
+conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
+  --base-url http://127.0.0.1:8020
+```
+
+默认输出：
+
+```text
+docs/integration/deployed-provider-smoke/deployed-provider-smoke.json
+docs/integration/deployed-provider-smoke/deployed-provider-smoke.md
+```
+
+该 smoke 只调用 `GET /health`、`GET /api/provider/manifest`、`GET /api/provider/preflight` 和 `GET /api/provider/handoff`。它用于确认已经运行的 provider 组件可达、鉴权可用、handoff evidence 可审阅；不会执行 RAG 检索、回答生成、ingestion、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。若 endpoint 不可达、认证失败、manifest/preflight 不兼容或 handoff 为 `blocked`，脚本会保留证据并以非零状态退出。
+
 ## 简单验证
 
 ```powershell
@@ -1572,6 +1598,15 @@ docker-compose.example.yml
 ```
 
 这个剖面只负责把 provider 作为组件启动起来，默认仍是 fixture/mock，可以独立跑 `/health` 和现有 provider API。它不会默认启动 Qdrant、下载模型、打包本地 indexes/models、引入 K8s/Helm/TLS/反向代理或托管密钥系统。生产网络、证书、密钥管理、备份和外部服务编排仍由部署方负责。
+
+第六十二阶段 OpenSpec change `add-deployed-provider-smoke-probe` 增加部署后 HTTP smoke probe：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
+  --base-url http://127.0.0.1:8020
+```
+
+它从真实 HTTP base URL 只读验证 `/health`、provider manifest、preflight 和 handoff endpoint，并在 `docs/integration/deployed-provider-smoke/` 输出 JSON / Markdown。这个切片的价值是把“容器或网络服务是否真的可被外部控制面访问”变成可保存证据；它仍不负责 TLS、反向代理、托管密钥、注册、heartbeat、审计、source-to-agent binding 或最终 answer policy。
 
 ## 设计文档
 

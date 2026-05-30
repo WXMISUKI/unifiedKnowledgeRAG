@@ -219,3 +219,23 @@ docker-compose.example.yml
 The profile starts `uvicorn app.main:app` on port `8020`, exposes a `/health` health check, mounts source documents, index lifecycle state, and model artifacts as runtime directories, and keeps fixture/mock defaults unless operators explicitly opt into Qdrant or local embedding models.
 
 The image build intentionally excludes local model artifacts, index state, generated benchmark/evidence reports, and tests. It does not download models, start Qdrant, enable GraphRAG, add TLS termination, configure reverse proxies, or manage secrets. Those remain deployment-owner or external control-plane responsibilities.
+
+## Deployed Provider Smoke
+
+Phase 6 now includes a deployed HTTP smoke probe for already-running provider components:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
+  --base-url http://127.0.0.1:8020
+```
+
+The probe calls only:
+
+- `GET /health`
+- `GET /api/provider/manifest`
+- `GET /api/provider/preflight`
+- `GET /api/provider/handoff`
+
+It supports an optional provider API key through `PROVIDER_API_KEY` or `--provider-api-key` and writes evidence under `docs/integration/deployed-provider-smoke/`. This validates network reachability, component access guard compatibility, provider identity, bindability, and handoff evidence status after deployment.
+
+It remains a lightweight provider-component smoke, not platform certification. It does not execute retrieval, answer composition, ingestion, index rebuilds, embedding models, vector databases, model downloads, GraphRAG, TLS termination, reverse proxy policy, managed secrets, registration, heartbeat governance, audit policy, source-to-agent binding, or final answer policy.
