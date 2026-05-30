@@ -17,7 +17,7 @@ def test_provider_contract_smoke_passes_default_contract():
 
     assert payload["id"] == "provider-contract-smoke-v1"
     assert payload["passed"] is True
-    assert payload["summary"] == {"total": 7, "passed": 7, "failed": 0}
+    assert payload["summary"] == {"total": 8, "passed": 8, "failed": 0}
     assert [check["name"] for check in payload["checks"]] == [
         "health_readiness",
         "provider_integration_manifest",
@@ -25,6 +25,7 @@ def test_provider_contract_smoke_passes_default_contract():
         "capability_invocation_metadata",
         "rag_retrieve_contract",
         "rag_answer_contract",
+        "rag_insufficient_evidence_pack_contract",
         "graph_planned_boundary",
     ]
 
@@ -54,8 +55,23 @@ def test_provider_contract_smoke_covers_trace_filter_and_citations():
     assert answer.details["answer_status"] == "answered"
     assert answer.details["citation_count"] > 0
     assert answer.details["retrieval_trace_version"] == "retrieval-trace-v1"
+    assert answer.details["evidence_pack_version"] == "evidence-pack-v1"
+    assert answer.details["evidence_pack_status"] == "answerable"
     assert answer.details["answer_trace_version"] == "answer-trace-v1"
     assert answer.details["final_status"] == "answered"
+
+    insufficient = checks["rag_insufficient_evidence_pack_contract"]
+    assert insufficient.details == {
+        "retrieval_pack_status": "insufficient_evidence",
+        "retrieval_pack_reason": "no_documents",
+        "retrieval_allowed_citation_count": 0,
+        "retrieval_evidence_count": 0,
+        "answer_status": "insufficient_evidence",
+        "answer_pack_status": "insufficient_evidence",
+        "answer_pack_reason": "no_documents",
+        "answer_allowed_citation_count": 0,
+        "answer_evidence_count": 0,
+    }
 
     graph = checks["graph_planned_boundary"]
     assert graph.details == {
@@ -83,6 +99,8 @@ def test_provider_contract_smoke_export_writes_json_and_markdown(tmp_path):
     assert payload["markdown_path"] == str(report.markdown_path)
     assert "# Provider Contract Smoke Report" in markdown
     assert "`rag_answer_contract`" in markdown
+    assert "`rag_insufficient_evidence_pack_contract`" in markdown
+    assert '"retrieval_pack_status": "insufficient_evidence"' in markdown
     assert '"error_code": "GRAPH_NOT_IMPLEMENTED"' in markdown
 
 

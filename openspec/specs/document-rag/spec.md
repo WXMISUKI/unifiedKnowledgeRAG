@@ -633,3 +633,14 @@ The system SHALL include the same retrieval-owned evidence pack metadata in succ
 #### Scenario: Evidence pack preserves existing contracts
 - **WHEN** evidence pack metadata is added to retrieval and answer responses
 - **THEN** existing answer context, documents, retrieval trace, answer trace, prompt package, prompt render, output parser, and output validation metadata remain compatible
+
+### Requirement: RAG insufficient-evidence packs are executable smoke evidence
+The document RAG evidence pack contract SHALL be covered by executable smoke evidence for both answerable and insufficient-evidence paths.
+
+#### Scenario: Empty retrieval pack is covered by smoke
+- **WHEN** provider contract smoke validates document RAG retrieval
+- **THEN** smoke evidence includes an insufficient-evidence retrieval pack with zero evidence count and no allowed citations
+
+#### Scenario: Empty answer pack is covered by smoke
+- **WHEN** provider contract smoke validates document RAG answer behavior
+- **THEN** smoke evidence includes an insufficient-evidence answer pack with `answer_status=insufficient_evidence` and no endorsed answer citations

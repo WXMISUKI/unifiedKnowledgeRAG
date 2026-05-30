@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T06:01:12.187753+00:00",
+  "generated_at": "2026-05-30T06:20:54.123681+00:00",
   "passed": true,
   "checks": [
     {
@@ -95,6 +95,23 @@
       "error": null
     },
     {
+      "name": "rag_insufficient_evidence_pack_contract",
+      "passed": true,
+      "endpoint": "POST /api/rag/retrieve + POST /api/rag/answer",
+      "details": {
+        "retrieval_pack_status": "insufficient_evidence",
+        "retrieval_pack_reason": "no_documents",
+        "retrieval_allowed_citation_count": 0,
+        "retrieval_evidence_count": 0,
+        "answer_status": "insufficient_evidence",
+        "answer_pack_status": "insufficient_evidence",
+        "answer_pack_reason": "no_documents",
+        "answer_allowed_citation_count": 0,
+        "answer_evidence_count": 0
+      },
+      "error": null
+    },
+    {
       "name": "graph_planned_boundary",
       "passed": true,
       "endpoint": "POST /api/graph/query",
@@ -108,8 +125,8 @@
     }
   ],
   "summary": {
-    "total": 7,
-    "passed": 7,
+    "total": 8,
+    "passed": 8,
     "failed": 0
   },
   "json_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",

@@ -61,6 +61,11 @@ def run_provider_contract_smoke(client: Any | None = None) -> ProviderContractSm
             lambda: _check_answer(client),
         ),
         _run_check(
+            "rag_insufficient_evidence_pack_contract",
+            "POST /api/rag/retrieve + POST /api/rag/answer",
+            lambda: _check_insufficient_evidence_pack(client),
+        ),
+        _run_check(
             "graph_planned_boundary",
             "POST /api/graph/query",
             lambda: _check_graph_boundary(client),
@@ -363,6 +368,54 @@ def _check_answer(client: Any) -> dict[str, Any]:
     }
 
 
+def _check_insufficient_evidence_pack(client: Any) -> dict[str, Any]:
+    retrieve_response = client.post(
+        "/api/rag/retrieve",
+        json=_rag_insufficient_payload(),
+    )
+    assert retrieve_response.status_code == 200
+    retrieve_body = retrieve_response.json()
+    assert retrieve_body["ok"] is True
+    retrieve_result = retrieve_body["result"]
+    assert retrieve_result["documents"] == []
+    retrieve_pack = retrieve_result["metadata"]["evidence_pack"]
+    assert retrieve_pack["version"] == "evidence-pack-v1"
+    assert retrieve_pack["status"] == "insufficient_evidence"
+    assert retrieve_pack["reason"] == "no_documents"
+    assert retrieve_pack["allowed_citations"] == []
+    assert retrieve_pack["evidence_count"] == 0
+
+    answer_response = client.post(
+        "/api/rag/answer",
+        json=_rag_insufficient_payload(),
+    )
+    assert answer_response.status_code == 200
+    answer_body = answer_response.json()
+    assert answer_body["ok"] is True
+    answer_result = answer_body["result"]
+    assert answer_result["answer_status"] == "insufficient_evidence"
+    assert answer_result["answer"] == ""
+    assert answer_result["citations"] == []
+    answer_pack = answer_result["metadata"]["evidence_pack"]
+    assert answer_pack["version"] == "evidence-pack-v1"
+    assert answer_pack["status"] == "insufficient_evidence"
+    assert answer_pack["reason"] == "no_documents"
+    assert answer_pack["allowed_citations"] == []
+    assert answer_pack["evidence_count"] == 0
+
+    return {
+        "retrieval_pack_status": retrieve_pack["status"],
+        "retrieval_pack_reason": retrieve_pack["reason"],
+        "retrieval_allowed_citation_count": len(retrieve_pack["allowed_citations"]),
+        "retrieval_evidence_count": retrieve_pack["evidence_count"],
+        "answer_status": answer_result["answer_status"],
+        "answer_pack_status": answer_pack["status"],
+        "answer_pack_reason": answer_pack["reason"],
+        "answer_allowed_citation_count": len(answer_pack["allowed_citations"]),
+        "answer_evidence_count": answer_pack["evidence_count"],
+    }
+
+
 def _check_graph_boundary(client: Any) -> dict[str, Any]:
     response = client.post(
         "/api/graph/query",
@@ -402,6 +455,18 @@ def _rag_smoke_payload() -> dict[str, Any]:
     }
 
 
+def _rag_insufficient_payload() -> dict[str, Any]:
+    return {
+        "query": "完全不存在的月球仓库规则",
+        "knowledge_base_ids": ["refund_policy_docs"],
+        "top_k": 3,
+        "filters": {
+            "agent_id": "provider_contract_smoke",
+            "role": "integration_probe",
+        },
+    }
+
+
 def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
     if not check.passed:
         return f"`{check.error}`"
@@ -421,6 +486,14 @@ def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
             "example_request_count",
             "graph_status",
             "evidence_pack_status",
+            "retrieval_pack_status",
+            "retrieval_pack_reason",
+            "retrieval_allowed_citation_count",
+            "retrieval_evidence_count",
+            "answer_pack_status",
+            "answer_pack_reason",
+            "answer_allowed_citation_count",
+            "answer_evidence_count",
         }
         or key.endswith("_pack_version")
     }

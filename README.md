@@ -1337,6 +1337,22 @@ docs/smoke/provider-contract/provider-contract-smoke.md
 
 结论：调用方可以直接用 evidence pack 判断“这批证据能不能支撑回答、允许引用哪些 citation、过滤/后端上下文是什么”。这仍然不是最终 answer policy；MyPrivateAgent 或其他调用者继续负责最终措辞、拒答策略、审批和工作流。
 
+第五十一阶段 OpenSpec change `add-insufficient-evidence-pack-smoke` 补强 Phase 4 的 fail-closed 集成证据。provider contract smoke 现在包含 `rag_insufficient_evidence_pack_contract`，会用无匹配 query 同时验证 `/api/rag/retrieve` 和 `/api/rag/answer`：
+
+```text
+retrieval_pack_status: insufficient_evidence
+retrieval_pack_reason: no_documents
+retrieval_allowed_citation_count: 0
+retrieval_evidence_count: 0
+answer_status: insufficient_evidence
+answer_pack_status: insufficient_evidence
+answer_pack_reason: no_documents
+answer_allowed_citation_count: 0
+answer_evidence_count: 0
+```
+
+重新导出的 smoke 报告显示 `8/8` checks passed。这个切片的价值是让外部 control plane 不只看到“有证据时可引用”，也能看到“无证据时明确不可答且没有可引用 citation”。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)
