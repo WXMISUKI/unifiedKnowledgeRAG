@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T03:26:40.416907+00:00",
+  "generated_at": "2026-05-30T03:43:00.792953+00:00",
   "passed": true,
   "checks": [
     {
@@ -55,6 +55,7 @@
           "knowledge.rag.answer": "/api/rag/answer",
           "knowledge.graph.query": "/api/graph/query"
         },
+        "example_request_count": 3,
         "graph_status": "planned"
       },
       "error": null

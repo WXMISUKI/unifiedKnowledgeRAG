@@ -255,13 +255,29 @@ def _check_capabilities(client: Any) -> dict[str, Any]:
     }
     for capability_id, path in expected_paths.items():
         capability = capabilities[capability_id]
-        assert capability["invocation"]["method"] == "POST"
-        assert capability["invocation"]["path"] == path
-        assert capability["invocation"]["request_schema_ref"]
-        assert capability["invocation"]["response_schema_ref"]
+        invocation = capability["invocation"]
+        assert invocation["method"] == "POST"
+        assert invocation["path"] == path
+        assert invocation["request_schema_ref"]
+        assert invocation["response_schema_ref"]
+        assert invocation["example_request"]
+        assert invocation["example_request"]["query"]
+        assert invocation["example_request"]["filters"]["agent_id"] == (
+            "myprivateagent_probe"
+        )
+    rag_example = capabilities["knowledge.rag.retrieve"]["invocation"][
+        "example_request"
+    ]
+    graph_example = capabilities["knowledge.graph.query"]["invocation"][
+        "example_request"
+    ]
+    assert rag_example["knowledge_base_ids"] == ["refund_policy_docs"]
+    assert rag_example["top_k"] == 2
+    assert graph_example["graph_id"] == "ecommerce_order_graph"
     return {
         "capability_ids": sorted(expected_paths),
         "invocation_paths": expected_paths,
+        "example_request_count": len(expected_paths),
         "graph_status": capabilities["knowledge.graph.query"]["status"],
     }
 
@@ -372,6 +388,7 @@ def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
             "component_role",
             "capability_count",
             "check_count",
+            "example_request_count",
             "graph_status",
         }
     }

@@ -25,7 +25,9 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `knowledge.rag.answer`：执行引用式回答编排、evidence gate 和 composer boundary。
 - `knowledge.graph.query`：GraphRAG 查询合同边界，当前仍是 planned。
 
-每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref` 和 `response_schema_ref`，便于上层控制面根据能力 id 找到调用入口并从 `/openapi.json` 解析请求/响应合同。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`。
+每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref`、`response_schema_ref` 和 `example_request`，便于上层控制面根据能力 id 找到调用入口、从 `/openapi.json` 解析请求/响应合同，并构造第一轮绑定探测请求。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`，同时携带可直接用于本地合同验证的中文示例 payload。
+
+`example_request` 是 provider-owned 的集成提示，不是生产基础设施选型。它不会声明 embedding 模型、向量数据库、reranker、图数据库或 answer composer 实现细节；这些仍需通过后续 OpenSpec change 和架构证据单独确认。
 
 `GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 

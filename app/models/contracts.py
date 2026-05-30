@@ -25,6 +25,7 @@ class CapabilityInvocation(BaseModel):
     path: str
     request_schema_ref: str | None = None
     response_schema_ref: str | None = None
+    example_request: dict[str, Any] | None = None
 
 
 class Capability(BaseModel):

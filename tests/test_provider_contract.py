@@ -52,6 +52,15 @@ def test_capabilities_include_rag_and_graph_boundaries():
         "path": "/api/rag/retrieve",
         "request_schema_ref": "#/components/schemas/RagRetrieveRequest",
         "response_schema_ref": "#/components/schemas/RagRetrieveResponse",
+        "example_request": {
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+            "filters": {
+                "agent_id": "myprivateagent_probe",
+                "role": "after_sales_specialist",
+            },
+        },
     }
     assert capabilities["knowledge.rag.retrieve"]["reason"] is None
     assert capabilities["knowledge.rag.answer"]["invocation"] == {
@@ -60,11 +69,27 @@ def test_capabilities_include_rag_and_graph_boundaries():
         "path": "/api/rag/answer",
         "request_schema_ref": "#/components/schemas/RagAnswerRequest",
         "response_schema_ref": "#/components/schemas/RagAnswerResponse",
+        "example_request": {
+            "query": "客户三天未发货能否退款？",
+            "knowledge_base_ids": ["refund_policy_docs"],
+            "top_k": 2,
+            "filters": {
+                "agent_id": "myprivateagent_probe",
+                "role": "after_sales_specialist",
+            },
+        },
     }
     assert capabilities["knowledge.rag.answer"]["status"] == "ready"
     assert capabilities["knowledge.rag.answer"]["reason"] is None
     assert capabilities["knowledge.graph.query"]["status"] == "planned"
     assert "not implemented" in capabilities["knowledge.graph.query"]["reason"]
+    assert capabilities["knowledge.graph.query"]["invocation"]["example_request"] == {
+        "graph_id": "ecommerce_order_graph",
+        "query": "订单 order-1 的售后关系",
+        "entity_ids": ["order-1"],
+        "relation_types": ["has_refund"],
+        "filters": {"agent_id": "myprivateagent_probe"},
+    }
 
 
 def test_capabilities_report_degraded_answer_composer(monkeypatch):

@@ -22,6 +22,7 @@ def build_capabilities_response(
                     path="/api/rag/retrieve",
                     request_schema_ref="#/components/schemas/RagRetrieveRequest",
                     response_schema_ref="#/components/schemas/RagRetrieveResponse",
+                    example_request=_rag_example_request(),
                 ),
             ),
             Capability(
@@ -37,6 +38,7 @@ def build_capabilities_response(
                     path="/api/rag/answer",
                     request_schema_ref="#/components/schemas/RagAnswerRequest",
                     response_schema_ref="#/components/schemas/RagAnswerResponse",
+                    example_request=_rag_example_request(),
                 ),
             ),
             Capability(
@@ -49,7 +51,26 @@ def build_capabilities_response(
                     path="/api/graph/query",
                     request_schema_ref="#/components/schemas/GraphQueryRequest",
                     response_schema_ref="#/components/schemas/GraphQueryResponse",
+                    example_request={
+                        "graph_id": "ecommerce_order_graph",
+                        "query": "订单 order-1 的售后关系",
+                        "entity_ids": ["order-1"],
+                        "relation_types": ["has_refund"],
+                        "filters": {"agent_id": "myprivateagent_probe"},
+                    },
                 ),
             ),
         ]
     )
+
+
+def _rag_example_request() -> dict[str, object]:
+    return {
+        "query": "客户三天未发货能否退款？",
+        "knowledge_base_ids": ["refund_policy_docs"],
+        "top_k": 2,
+        "filters": {
+            "agent_id": "myprivateagent_probe",
+            "role": "after_sales_specialist",
+        },
+    }
