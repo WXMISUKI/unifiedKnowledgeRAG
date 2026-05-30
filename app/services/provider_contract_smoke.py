@@ -204,9 +204,13 @@ def _check_manifest(client: Any) -> dict[str, Any]:
     assert body["endpoints"]["health"] == "/health"
     assert body["endpoints"]["capabilities"] == "/api/capabilities"
     assert body["endpoints"]["openapi"] == "/openapi.json"
+    assert body["endpoints"]["rag_source_documents_template"] == (
+        "/api/rag/sources/{source_id}/documents"
+    )
     assert body["endpoints"]["rag_retrieve"] == "/api/rag/retrieve"
     assert body["endpoints"]["rag_answer"] == "/api/rag/answer"
     assert body["endpoints"]["graph_query"] == "/api/graph/query"
+    assert "knowledge.rag.source_documents" in body["capability_ids"]
     assert "knowledge.rag.retrieve" in body["capability_ids"]
     assert "knowledge.rag.answer" in body["capability_ids"]
     assert "knowledge.graph.query" in body["capability_ids"]
@@ -248,36 +252,48 @@ def _check_capabilities(client: Any) -> dict[str, Any]:
     response = client.get("/api/capabilities")
     assert response.status_code == 200
     capabilities = {item["id"]: item for item in response.json()["capabilities"]}
-    expected_paths = {
-        "knowledge.rag.retrieve": "/api/rag/retrieve",
-        "knowledge.rag.answer": "/api/rag/answer",
-        "knowledge.graph.query": "/api/graph/query",
+    expected_invocations = {
+        "knowledge.rag.source_documents": (
+            "GET",
+            "/api/rag/sources/{source_id}/documents",
+        ),
+        "knowledge.rag.retrieve": ("POST", "/api/rag/retrieve"),
+        "knowledge.rag.answer": ("POST", "/api/rag/answer"),
+        "knowledge.graph.query": ("POST", "/api/graph/query"),
     }
-    for capability_id, path in expected_paths.items():
+    for capability_id, (method, path) in expected_invocations.items():
         capability = capabilities[capability_id]
         invocation = capability["invocation"]
-        assert invocation["method"] == "POST"
+        assert invocation["method"] == method
         assert invocation["path"] == path
-        assert invocation["request_schema_ref"]
         assert invocation["response_schema_ref"]
         assert invocation["example_request"]
-        assert invocation["example_request"]["query"]
-        assert invocation["example_request"]["filters"]["agent_id"] == (
-            "myprivateagent_probe"
-        )
+        if method == "POST":
+            assert invocation["request_schema_ref"]
+            assert invocation["example_request"]["query"]
+            assert invocation["example_request"]["filters"]["agent_id"] == (
+                "myprivateagent_probe"
+            )
     rag_example = capabilities["knowledge.rag.retrieve"]["invocation"][
         "example_request"
     ]
+    source_documents_example = capabilities["knowledge.rag.source_documents"][
+        "invocation"
+    ]["example_request"]
     graph_example = capabilities["knowledge.graph.query"]["invocation"][
         "example_request"
     ]
+    assert source_documents_example["source_id"] == "refund_policy_docs"
     assert rag_example["knowledge_base_ids"] == ["refund_policy_docs"]
     assert rag_example["top_k"] == 2
     assert graph_example["graph_id"] == "ecommerce_order_graph"
     return {
-        "capability_ids": sorted(expected_paths),
-        "invocation_paths": expected_paths,
-        "example_request_count": len(expected_paths),
+        "capability_ids": sorted(expected_invocations),
+        "invocation_paths": {
+            capability_id: invocation[1]
+            for capability_id, invocation in expected_invocations.items()
+        },
+        "example_request_count": len(expected_invocations),
         "graph_status": capabilities["knowledge.graph.query"]["status"],
     }
 

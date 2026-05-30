@@ -6,11 +6,28 @@
   "manifest_version": "provider-integration-manifest-v1",
   "requested_contract_version": "knowledge-provider-contract-v1",
   "requested_capability_ids": [
+    "knowledge.rag.source_documents",
     "knowledge.rag.retrieve",
     "knowledge.rag.answer",
     "knowledge.graph.query"
   ],
   "capability_bindings": [
+    {
+      "id": "knowledge.rag.source_documents",
+      "status": "ready",
+      "reason": null,
+      "invocation": {
+        "protocol": "http",
+        "method": "GET",
+        "path": "/api/rag/sources/{source_id}/documents",
+        "request_schema_ref": null,
+        "response_schema_ref": "#/components/schemas/SourceDocumentManifestResponse",
+        "example_request": {
+          "source_id": "refund_policy_docs"
+        }
+      },
+      "has_example_request": true
+    },
     {
       "id": "knowledge.rag.retrieve",
       "status": "ready",
@@ -133,6 +150,7 @@
       "status": "ready",
       "details": {
         "required_capability_ids": [
+          "knowledge.rag.source_documents",
           "knowledge.rag.retrieve",
           "knowledge.rag.answer",
           "knowledge.graph.query"
@@ -140,7 +158,8 @@
         "available_capability_ids": [
           "knowledge.graph.query",
           "knowledge.rag.answer",
-          "knowledge.rag.retrieve"
+          "knowledge.rag.retrieve",
+          "knowledge.rag.source_documents"
         ],
         "missing_capability_ids": []
       },
@@ -153,6 +172,7 @@
       "details": {
         "openapi_path": "/openapi.json",
         "checked_capability_ids": [
+          "knowledge.rag.source_documents",
           "knowledge.rag.retrieve",
           "knowledge.rag.answer",
           "knowledge.graph.query"

@@ -9,6 +9,7 @@ CONTRACT_VERSION = "knowledge-provider-contract-v1"
 COMPONENT_ROLE = "knowledge_data_plane"
 COMPATIBLE_CONTROL_PLANES = ["MyPrivateAgent"]
 SUPPORTED_CAPABILITY_IDS = [
+    "knowledge.rag.source_documents",
     "knowledge.rag.retrieve",
     "knowledge.rag.answer",
     "knowledge.graph.query",
@@ -37,6 +38,7 @@ def build_provider_integration_manifest() -> ProviderIntegrationManifest:
             "openapi": "/openapi.json",
             "catalog": "/api/catalog",
             "rag_sources": "/api/rag/sources",
+            "rag_source_documents_template": "/api/rag/sources/{source_id}/documents",
             "rag_retrieve": "/api/rag/retrieve",
             "rag_answer": "/api/rag/answer",
             "graph_schemas": "/api/graph/schemas",

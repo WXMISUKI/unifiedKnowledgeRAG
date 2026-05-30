@@ -14,6 +14,22 @@ def build_capabilities_response(
     return CapabilitiesResponse(
         capabilities=[
             Capability(
+                id="knowledge.rag.source_documents",
+                status="ready",
+                description=(
+                    "Inspect provider-owned source document manifests, citation "
+                    "anchors, chunking metadata, and index readiness."
+                ),
+                invocation=CapabilityInvocation(
+                    method="GET",
+                    path="/api/rag/sources/{source_id}/documents",
+                    response_schema_ref=(
+                        "#/components/schemas/SourceDocumentManifestResponse"
+                    ),
+                    example_request={"source_id": "refund_policy_docs"},
+                ),
+            ),
+            Capability(
                 id="knowledge.rag.retrieve",
                 status="ready",
                 description="Retrieve compact document evidence with stable citations.",

@@ -6,6 +6,7 @@ from app.services.provider_manifest import build_provider_integration_manifest
 
 
 REQUIRED_CAPABILITY_IDS = [
+    "knowledge.rag.source_documents",
     "knowledge.rag.retrieve",
     "knowledge.rag.answer",
     "knowledge.graph.query",
@@ -136,11 +137,16 @@ def _schema_refs_check(
         if capability is None:
             continue
         invocation = capability.invocation if capability else None
-        if (
-            invocation is None
-            or not invocation.request_schema_ref
-            or not invocation.response_schema_ref
-        ):
+        if invocation is None or not invocation.response_schema_ref:
+            missing_schema_refs.append(capability_id)
+            continue
+        method = invocation.method.upper()
+        has_request_contract = bool(invocation.request_schema_ref)
+        has_get_example = method == "GET" and bool(invocation.example_request)
+        if method != "GET" and not has_request_contract:
+            missing_schema_refs.append(capability_id)
+            continue
+        if method == "GET" and not has_get_example:
             missing_schema_refs.append(capability_id)
     passed = not missing_schema_refs
     return ProviderPreflightCheck(

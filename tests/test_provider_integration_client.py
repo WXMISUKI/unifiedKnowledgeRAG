@@ -21,12 +21,18 @@ def test_provider_integration_probe_passes_default_provider():
     assert payload["manifest_version"] == "provider-integration-manifest-v1"
     assert payload["requested_contract_version"] == "knowledge-provider-contract-v1"
     assert payload["requested_capability_ids"] == [
+        "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
         "knowledge.graph.query",
     ]
     assert payload["errors"] == []
     bindings = {binding["id"]: binding for binding in payload["capability_bindings"]}
+    assert bindings["knowledge.rag.source_documents"]["status"] == "ready"
+    assert bindings["knowledge.rag.source_documents"]["invocation"]["path"] == (
+        "/api/rag/sources/{source_id}/documents"
+    )
+    assert bindings["knowledge.rag.source_documents"]["has_example_request"] is True
     assert bindings["knowledge.rag.retrieve"]["status"] == "ready"
     assert bindings["knowledge.rag.retrieve"]["invocation"]["path"] == (
         "/api/rag/retrieve"

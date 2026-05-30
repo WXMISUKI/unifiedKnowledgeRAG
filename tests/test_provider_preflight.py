@@ -16,6 +16,7 @@ def test_provider_preflight_passes_default_local_provider():
     assert body["manifest_version"] == "provider-integration-manifest-v1"
     assert body["requested_contract_version"] == "knowledge-provider-contract-v1"
     assert body["requested_capability_ids"] == [
+        "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
         "knowledge.graph.query",
@@ -106,6 +107,29 @@ def test_provider_preflight_accepts_matching_required_capability_ids():
     ]
 
 
+def test_provider_preflight_accepts_get_diagnostic_capability_without_request_schema():
+    client = TestClient(create_app())
+
+    response = client.get(
+        "/api/provider/preflight",
+        params=[
+            ("required_capability_ids", "knowledge.rag.source_documents"),
+        ],
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    checks = {check["name"]: check for check in body["checks"]}
+    assert body["bindable"] is True
+    assert checks["schema_references"]["passed"] is True
+    assert checks["schema_references"]["details"]["checked_capability_ids"] == [
+        "knowledge.rag.source_documents"
+    ]
+    assert checks["schema_references"]["details"][
+        "missing_schema_ref_capability_ids"
+    ] == []
+
+
 def test_provider_preflight_fails_closed_on_missing_required_capability():
     client = TestClient(create_app())
 
@@ -166,6 +190,7 @@ def test_provider_preflight_preserves_planned_graph_boundary():
         "reason": "Graph query execution is not implemented in this slice.",
     }
     required = checks["required_capabilities"]["details"]["required_capability_ids"]
+    assert "knowledge.rag.source_documents" in required
     assert "knowledge.graph.query" in required
 
 

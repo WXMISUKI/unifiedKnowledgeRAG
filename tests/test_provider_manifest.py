@@ -34,6 +34,7 @@ def test_provider_manifest_references_integration_endpoints_and_evidence():
         "openapi": "/openapi.json",
         "catalog": "/api/catalog",
         "rag_sources": "/api/rag/sources",
+        "rag_source_documents_template": "/api/rag/sources/{source_id}/documents",
         "rag_retrieve": "/api/rag/retrieve",
         "rag_answer": "/api/rag/answer",
         "graph_schemas": "/api/graph/schemas",
@@ -60,6 +61,7 @@ def test_provider_manifest_lists_capability_ids_without_internal_bindings():
     assert response.status_code == 200
     body = response.json()
     assert body["capability_ids"] == [
+        "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
         "knowledge.graph.query",

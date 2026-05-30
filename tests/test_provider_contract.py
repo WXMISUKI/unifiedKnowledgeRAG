@@ -42,10 +42,19 @@ def test_capabilities_include_rag_and_graph_boundaries():
     assert response.status_code == 200
     body = response.json()
     capability_ids = {item["id"] for item in body["capabilities"]}
+    assert "knowledge.rag.source_documents" in capability_ids
     assert "knowledge.rag.retrieve" in capability_ids
     assert "knowledge.rag.answer" in capability_ids
     assert "knowledge.graph.query" in capability_ids
     capabilities = {item["id"]: item for item in body["capabilities"]}
+    assert capabilities["knowledge.rag.source_documents"]["invocation"] == {
+        "protocol": "http",
+        "method": "GET",
+        "path": "/api/rag/sources/{source_id}/documents",
+        "request_schema_ref": None,
+        "response_schema_ref": "#/components/schemas/SourceDocumentManifestResponse",
+        "example_request": {"source_id": "refund_policy_docs"},
+    }
     assert capabilities["knowledge.rag.retrieve"]["invocation"] == {
         "protocol": "http",
         "method": "POST",
@@ -118,7 +127,11 @@ def test_provider_manifest_is_available_for_control_plane_preflight():
     assert body["compatible_control_planes"] == ["MyPrivateAgent"]
     assert body["endpoints"]["capabilities"] == "/api/capabilities"
     assert body["endpoints"]["openapi"] == "/openapi.json"
+    assert body["endpoints"]["rag_source_documents_template"] == (
+        "/api/rag/sources/{source_id}/documents"
+    )
     assert body["capability_ids"] == [
+        "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
         "knowledge.graph.query",

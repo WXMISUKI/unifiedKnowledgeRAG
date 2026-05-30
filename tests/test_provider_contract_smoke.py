@@ -36,7 +36,7 @@ def test_provider_contract_smoke_covers_trace_filter_and_citations():
     manifest = checks["provider_integration_manifest"]
     assert manifest.details["contract_version"] == "knowledge-provider-contract-v1"
     assert manifest.details["component_role"] == "knowledge_data_plane"
-    assert manifest.details["capability_count"] == 3
+    assert manifest.details["capability_count"] == 4
 
     preflight = checks["provider_preflight"]
     assert preflight.details["contract_version"] == "knowledge-provider-contract-v1"

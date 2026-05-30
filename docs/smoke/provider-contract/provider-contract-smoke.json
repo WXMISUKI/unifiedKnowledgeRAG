@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T03:43:00.792953+00:00",
+  "generated_at": "2026-05-30T04:43:13.978489+00:00",
   "passed": true,
   "checks": [
     {
@@ -24,7 +24,7 @@
         "manifest_version": "provider-integration-manifest-v1",
         "contract_version": "knowledge-provider-contract-v1",
         "component_role": "knowledge_data_plane",
-        "capability_count": 3
+        "capability_count": 4
       },
       "error": null
     },
@@ -48,14 +48,16 @@
         "capability_ids": [
           "knowledge.graph.query",
           "knowledge.rag.answer",
-          "knowledge.rag.retrieve"
+          "knowledge.rag.retrieve",
+          "knowledge.rag.source_documents"
         ],
         "invocation_paths": {
+          "knowledge.rag.source_documents": "/api/rag/sources/{source_id}/documents",
           "knowledge.rag.retrieve": "/api/rag/retrieve",
           "knowledge.rag.answer": "/api/rag/answer",
           "knowledge.graph.query": "/api/graph/query"
         },
-        "example_request_count": 3,
+        "example_request_count": 4,
         "graph_status": "planned"
       },
       "error": null

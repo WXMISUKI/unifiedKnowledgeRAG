@@ -5,6 +5,7 @@ from typing import Any, Protocol
 
 
 DEFAULT_REQUIRED_CAPABILITY_IDS = [
+    "knowledge.rag.source_documents",
     "knowledge.rag.retrieve",
     "knowledge.rag.answer",
     "knowledge.graph.query",

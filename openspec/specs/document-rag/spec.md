@@ -31,6 +31,20 @@ The system SHALL expose a read-only document manifest for each configured docume
 - **WHEN** a caller requests a source document manifest
 - **THEN** the provider does not run document retrieval, answer composition, embedding, vector search, ingestion, or graph execution
 
+### Requirement: Source document manifest diagnostics are discoverable
+
+The document RAG source document manifest endpoint SHALL be discoverable through provider-owned capability metadata.
+
+#### Scenario: Source document manifest capability points to endpoint
+
+- **WHEN** a caller inspects provider capabilities
+- **THEN** the source document manifest capability identifies `GET /api/rag/sources/{source_id}/documents` and the `SourceDocumentManifestResponse` schema
+
+#### Scenario: Diagnostic discovery does not change retrieval behavior
+
+- **WHEN** source document manifest discovery metadata is added
+- **THEN** existing retrieve and answer request and response contracts remain unchanged
+
 ### Requirement: RAG retrieve returns compact evidence context
 
 The system SHALL return compact answer context and document evidence for matching document RAG queries while preserving the existing response contract across retrieval backends and enforcing explicit source index lifecycle readiness before backend retrieval work begins.

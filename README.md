@@ -20,24 +20,25 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /api/graph/schemas`
 - `POST /api/graph/query`
 
-`GET /api/capabilities` 当前暴露三个稳定能力 id：
+`GET /api/capabilities` 当前暴露四个稳定能力 id：
 
+- `knowledge.rag.source_documents`：返回单个 RAG source 的文档清单诊断入口。
 - `knowledge.rag.retrieve`：返回引用证据和紧凑 answer context。
 - `knowledge.rag.answer`：执行引用式回答编排、evidence gate 和 composer boundary。
 - `knowledge.graph.query`：GraphRAG 查询合同边界，当前仍是 planned。
 
-每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref`、`response_schema_ref` 和 `example_request`，便于上层控制面根据能力 id 找到调用入口、从 `/openapi.json` 解析请求/响应合同，并构造第一轮绑定探测请求。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`，同时携带可直接用于本地合同验证的中文示例 payload。
+每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref`、`response_schema_ref` 和 `example_request`，便于上层控制面根据能力 id 找到调用入口、从 `/openapi.json` 解析请求/响应合同，并构造第一轮绑定探测请求。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`，同时携带可直接用于本地合同验证的中文示例 payload；`knowledge.rag.source_documents` 对应 `GET /api/rag/sources/{source_id}/documents`，使用 `example_request.source_id` 表示路径参数，不需要请求体 schema。
 
 `example_request` 是 provider-owned 的集成提示，不是生产基础设施选型。它不会声明 embedding 模型、向量数据库、reranker、图数据库或 answer composer 实现细节；这些仍需通过后续 OpenSpec change 和架构证据单独确认。
 
-`GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
+`GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。manifest 也会暴露 `rag_source_documents_template=/api/rag/sources/{source_id}/documents`，便于调用方发现 source document manifest 诊断入口。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
 Preflight 支持控制面显式声明绑定要求：
 
 ```powershell
-Invoke-RestMethod "http://127.0.0.1:8020/api/provider/preflight?required_contract_version=knowledge-provider-contract-v1&required_capability_ids=knowledge.rag.retrieve&required_capability_ids=knowledge.rag.answer"
+Invoke-RestMethod "http://127.0.0.1:8020/api/provider/preflight?required_contract_version=knowledge-provider-contract-v1&required_capability_ids=knowledge.rag.source_documents&required_capability_ids=knowledge.rag.retrieve&required_capability_ids=knowledge.rag.answer"
 ```
 
 如果 `required_contract_version` 不匹配，或任一 `required_capability_ids` 不存在，接口会返回 `bindable=false`，并在 `checks` 中给出 `contract_version` 或 `required_capabilities` 的失败详情。未传参数时仍使用默认合同版本和默认知识能力集合。
