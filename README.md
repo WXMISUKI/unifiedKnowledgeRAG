@@ -1220,3 +1220,4 @@ docs/benchmark/chinese-seed/split-chunk-gating-candidates/qdrant-bge-m3-hybrid-e
 - [外部 Knowledge Provider / RAG 项目开发规范](docs/external_rag_provider_development.md)
 - [Production Indexing Architecture Decision](docs/architecture/production_indexing_architecture.md)
 - [Agentic RAG Pattern Research](docs/research/agentic_rag_patterns.md)
+- [Lightweight Provider Roadmap](docs/roadmap/lightweight_provider_roadmap.md)
