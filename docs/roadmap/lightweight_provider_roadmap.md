@@ -177,3 +177,17 @@ GET /api/provider/handoff
 The endpoint returns the current `provider-handoff-bundle-v1` summary over existing local evidence artifacts. It does not regenerate prerequisite reports, start ingestion jobs, rebuild indexes, execute retrieval or answer composition, download models, call Qdrant, or execute GraphRAG.
 
 This gives MyPrivateAgent and other external control planes an API-native way to inspect the handoff bundle while preserving the provider boundary. Registration, heartbeat governance, audit policy, source-to-agent binding, and final answer policy remain caller-owned.
+
+## Enterprise Document Ingestion Boundary
+
+Phase 2 now includes a read-only source ingestion preflight endpoint:
+
+```text
+GET /api/ingestion/sources/{source_id}/preflight
+```
+
+The endpoint reports file presence, document format support, lightweight parser status, chunk count, chunk preview, citation anchor readiness, current index lifecycle status, and recommended action before an operator creates an ingestion job.
+
+This boundary is intentionally lightweight. Markdown is the only supported parser in this slice. PDF, Word, Excel, HTML, scanned images, and unknown formats are reported as unsupported rather than parsed. The endpoint does not create ingestion jobs, write lifecycle records, rebuild indexes, call embedding models, call Qdrant, execute retrieval or answer composition, or execute GraphRAG.
+
+The next parser-related work should be driven by real corpus demand and separate evidence-backed OpenSpec changes, not by adding every document parser dependency up front.

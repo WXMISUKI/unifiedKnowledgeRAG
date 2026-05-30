@@ -283,6 +283,46 @@ class IngestionQueueRunResponse(BaseModel):
     error: ProviderError | None = None
 
 
+class IngestionDocumentChunkPreview(BaseModel):
+    chunk_id: str
+    text_preview: str
+    char_count: int
+
+
+class IngestionDocumentPreflight(BaseModel):
+    document_id: str
+    title: str
+    source_path: str
+    format: str
+    format_supported: bool
+    file_status: str
+    parser_status: str
+    chunking_strategy: str
+    chunk_count: int = 0
+    chunk_preview: list[IngestionDocumentChunkPreview] = Field(default_factory=list)
+    citation_anchor_count: int = 0
+    recommended_action: str
+    reason: str | None = None
+
+
+class IngestionSourcePreflightResult(BaseModel):
+    source_id: str
+    status: str
+    retrieval_backend: str
+    index_status: str
+    index_reason: str | None = None
+    latest_index_job_id: str | None = None
+    documents: list[IngestionDocumentPreflight] = Field(default_factory=list)
+    operation_notes: list[str] = Field(default_factory=list)
+    recommended_action: str
+
+
+class IngestionSourcePreflightResponse(BaseModel):
+    ok: bool
+    result: IngestionSourcePreflightResult | None = None
+    error: ProviderError | None = None
+
+
 class IndexStatusResponse(BaseModel):
     source_id: str
     status: str

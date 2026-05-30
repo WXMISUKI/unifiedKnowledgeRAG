@@ -14,6 +14,7 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /api/provider/handoff`
 - `GET /api/capabilities`
 - `GET /api/catalog`
+- `GET /api/ingestion/sources/{source_id}/preflight`
 - `GET /api/rag/sources`
 - `GET /api/rag/sources/{source_id}/documents`
 - `POST /api/rag/retrieve`
@@ -37,6 +38,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
 `GET /api/provider/handoff` 是只读交接包 API。它返回当前 `provider-handoff-bundle-v1` 状态，包括 provider identity、contract version、集成证据、contract smoke、deployment readiness 和 reindex readiness 的汇总行与 recommended action。该接口读取当前本地 evidence artifacts，不会重新刷新证据、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG；需要刷新证据时仍应显式运行 `scripts/export_provider_handoff_refresh.py`。
+
+`GET /api/ingestion/sources/{source_id}/preflight` 是企业文档导入前置诊断入口。它会读取当前 source manifest 和本地文件，返回文件存在性、格式支持、parser 状态、chunk count、chunk preview、citation anchor 数量、当前 index status 和 recommended action。当前切片只支持 markdown 诊断；PDF、Word、Excel、HTML、扫描件和图片会被报告为 `unsupported_format`，不会隐式引入 OCR、复杂 parser 或重型依赖。这个接口只读，不会创建 ingestion job、写 lifecycle store、重建索引、调用 embedding/Qdrant、执行检索或 GraphRAG。
 
 Preflight 支持控制面显式声明绑定要求：
 
@@ -1503,6 +1506,24 @@ document_fingerprints[]
 | source file missing | `restore_source_file_before_reindex` |
 
 结论：如果 source 文件已经变更，即使 index lifecycle 仍显示 ready，运维报告也会提示需要重新 ingestion。这个判断仍然只读，不会自动创建 job、重建索引、调用 embedding/Qdrant 或改变检索默认行为。
+
+第五十九阶段 OpenSpec change `define-enterprise-document-ingestion-boundary` 建立企业文档 ingestion 前置边界。调用方可以在创建 ingestion job 前先检查 source 是否适合导入：
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8020/api/ingestion/sources/refund_policy_docs/preflight
+```
+
+典型 ready markdown 会返回：
+
+```text
+status: ready
+recommended_action: run_ingestion_job
+document.parser_status: ready
+document.chunk_count: <number>
+document.citation_anchor_count: <number>
+```
+
+缺文件会建议 `restore_source_file_before_ingestion`，不支持格式会建议 `add_parser_support_before_ingestion`，空内容会建议 `repair_source_content_before_ingestion`，缺 citation anchors 会建议 `add_citation_anchors_before_ingestion`。这一步只做边界和诊断，不做 PDF/Word/Excel/OCR/table parser，也不改变 runtime retrieval 默认行为。
 
 ## 设计文档
 

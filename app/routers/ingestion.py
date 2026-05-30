@@ -14,7 +14,9 @@ from app.models.contracts import (
     IngestionJobRecoveryRequest,
     IngestionJobRecoveryResponse,
     IngestionQueueRunResponse,
+    IngestionSourcePreflightResponse,
 )
+from app.services.ingestion_preflight import get_ingestion_source_preflight
 from app.services.index_lifecycle import (
     cancel_ingestion_job,
     compact_ingestion_jobs,
@@ -27,6 +29,11 @@ from app.services.index_lifecycle import (
 )
 
 router = APIRouter(prefix="/api/ingestion")
+
+
+@router.get("/sources/{source_id}/preflight", response_model=IngestionSourcePreflightResponse)
+def source_preflight(source_id: str) -> IngestionSourcePreflightResponse:
+    return get_ingestion_source_preflight(source_id, get_settings())
 
 
 @router.post("/jobs", response_model=IngestionJobResponse)

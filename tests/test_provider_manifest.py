@@ -34,6 +34,9 @@ def test_provider_manifest_references_integration_endpoints_and_evidence():
         "capabilities": "/api/capabilities",
         "openapi": "/openapi.json",
         "catalog": "/api/catalog",
+        "ingestion_source_preflight_template": (
+            "/api/ingestion/sources/{source_id}/preflight"
+        ),
         "rag_sources": "/api/rag/sources",
         "rag_source_documents_template": "/api/rag/sources/{source_id}/documents",
         "rag_retrieve": "/api/rag/retrieve",
