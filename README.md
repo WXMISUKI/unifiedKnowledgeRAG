@@ -1249,6 +1249,41 @@ docs/benchmark/chinese-seed/multi-chunk-aggregation-candidates/qdrant-bge-m3-hyb
 
 结论：multi-chunk aggregation 可以缓解当前 split-chunk false negative，但它仍是本地候选证据，不是 runtime 默认。生产前还要补 expected-empty group、同文档无关编号、跨 section 噪声、跨 chunk 引用粒度、latency 和 answer grading 评估，避免把“同一文档里都有编号”误当成“足以回答问题”。
 
+第四十八阶段 OpenSpec change `stress-multi-chunk-aggregation-negative-controls` 增加 multi-chunk aggregation negative controls。新增 expected-empty fixture：
+
+```text
+tests/fixtures/multi_chunk_aggregation_negative_cases.json
+```
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-multi-chunk-aggregation `
+  --output-dir docs/benchmark/chinese-seed/multi-chunk-aggregation-negative-controls `
+  --cases-path tests/fixtures/split_chunk_identifier_cases.json `
+  --empty-cases-path tests/fixtures/multi_chunk_aggregation_negative_cases.json `
+  --source-id split_refund_policy_docs `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/multi-chunk-aggregation-negative-controls/qdrant-bge-m3-hybrid-multi-chunk-aggregation.json
+docs/benchmark/chinese-seed/multi-chunk-aggregation-negative-controls/qdrant-bge-m3-hybrid-multi-chunk-aggregation.md
+```
+
+当前 negative-control evidence 显示：
+
+| Candidate | Cases | Hit Rate | Citation Match Rate | Empty Handling Rate | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `qdrant-bge-m3-hybrid-multi-chunk-aggregation` | 2 | 0.5000 | 0.5000 | 0.0000 | 正例恢复成功，但 expected-empty 关系问题也被同文档聚合放行 |
+
+结论：multi-chunk aggregation 现在明确是“有召回价值但过宽”的候选，不能推广为 runtime 默认。下一步如果继续这条线，应评估 relation-aware evidence grading、reranker 或更细粒度 parent/section 约束，而不是单靠 source-document grouping。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

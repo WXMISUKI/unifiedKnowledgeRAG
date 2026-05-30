@@ -83,6 +83,9 @@ NOISY_IDENTIFIER_POSITIVE_PATH = Path(
 )
 NOISY_IDENTIFIER_EMPTY_PATH = Path("tests/fixtures/noisy_identifier_empty_cases.json")
 SPLIT_CHUNK_IDENTIFIER_PATH = Path("tests/fixtures/split_chunk_identifier_cases.json")
+MULTI_CHUNK_AGGREGATION_NEGATIVE_PATH = Path(
+    "tests/fixtures/multi_chunk_aggregation_negative_cases.json"
+)
 NO_BENCHMARK_CASES_PATH = Path("tests/fixtures/no_benchmark_cases.json")
 
 
@@ -530,13 +533,25 @@ def test_loads_noisy_identifier_cases_separately():
 
 def test_loads_split_chunk_identifier_cases_separately():
     cases = load_benchmark_cases(SPLIT_CHUNK_IDENTIFIER_PATH)
-    empty_cases = load_benchmark_cases(NO_BENCHMARK_CASES_PATH)
 
     assert [case.id for case in cases] == ["split-chunk-refund-policy-and-form"]
     assert cases[0].knowledge_base_ids == ["split_refund_policy_docs"]
     assert cases[0].expected_citation == "split_refund_policy_2026#form-code"
     assert cases[0].expect_empty is False
-    assert empty_cases == []
+
+
+def test_loads_multi_chunk_aggregation_negative_cases_separately():
+    positive_cases = load_benchmark_cases(SPLIT_CHUNK_IDENTIFIER_PATH)
+    negative_cases = load_benchmark_cases(MULTI_CHUNK_AGGREGATION_NEGATIVE_PATH)
+
+    assert len(positive_cases) == 1
+    assert [case.id for case in negative_cases] == [
+        "multi-chunk-empty-unsupported-form-policy-link"
+    ]
+    assert negative_cases[0].knowledge_base_ids == ["split_refund_policy_docs"]
+    assert negative_cases[0].expected_source_id is None
+    assert negative_cases[0].expected_citation is None
+    assert negative_cases[0].expect_empty is True
 
 
 def test_exact_term_identifier_cases_pass_fixture_backend():
@@ -1758,6 +1773,122 @@ def test_export_qdrant_bge_hybrid_multi_chunk_aggregation_recovers_split_chunks(
         "split_refund_policy_2026#form-code",
     ]
     assert report.cases[0].gated_result.returned_citations == [
+        "split_refund_policy_2026#policy-code",
+        "split_refund_policy_2026#form-code",
+    ]
+
+
+def test_export_qdrant_bge_hybrid_multi_chunk_aggregation_records_negative_control(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "split_refund_policy_docs.md").write_text(
+        "# 拆分退款编号规则\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核。\n\n"
+        "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "split-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "split-chunk-refund-policy-and-form",
+    "category": "split-chunk-identifier",
+    "difficulty": "hard",
+    "query": "RFD-2026-003 和 AF-REFUND-02 在同一个退款复核流程中分别要求什么？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation": "split_refund_policy_2026#form-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    empty_cases_path = tmp_path / "empty-cases.json"
+    empty_cases_path.write_text(
+        """
+[
+  {
+    "id": "multi-chunk-empty-unsupported-form-policy-link",
+    "category": "multi-chunk-aggregation-empty",
+    "difficulty": "hard",
+    "query": "AF-REFUND-02 是否可以直接覆盖 RFD-2026-003 的订单状态核验要求？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "政策编号 RFD-2026-003 适用于三天未发货退款复核。",
+                    "citation": "split_refund_policy_2026#policy-code",
+                },
+            },
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+                    "citation": "split_refund_policy_2026#form-code",
+                },
+            },
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=["split_refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.report.summary.total_cases == 2
+    assert report.report.summary.hit_rate == 0.5
+    assert report.report.summary.citation_match_rate == 0.5
+    assert report.report.summary.empty_handling_rate == 0.0
+    negative_case = report.cases[1]
+    assert negative_case.expect_empty is True
+    assert negative_case.raw_returned_citations == [
+        "split_refund_policy_2026#policy-code",
+        "split_refund_policy_2026#form-code",
+    ]
+    assert negative_case.gated_result.empty_query_handling is False
+    assert negative_case.gated_result.returned_citations == [
         "split_refund_policy_2026#policy-code",
         "split_refund_policy_2026#form-code",
     ]

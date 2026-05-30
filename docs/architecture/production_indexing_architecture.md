@@ -367,6 +367,15 @@ The `source-document-identifier-coverage-v1` candidate groups raw hybrid hits by
 
 This is still not production approval. It proves that grouping can repair one false negative, but production review still needs expected-empty group cases, unrelated identifiers within one document, noisy top-k cases, answer-bearing grading, latency review, and citation granularity review before runtime aggregation or parent context is enabled.
 
+Multi-chunk aggregation negative-control evidence now lives under:
+
+- `docs/benchmark/chinese-seed/multi-chunk-aggregation-negative-controls/qdrant-bge-m3-hybrid-multi-chunk-aggregation.json`
+- `docs/benchmark/chinese-seed/multi-chunk-aggregation-negative-controls/qdrant-bge-m3-hybrid-multi-chunk-aggregation.md`
+
+The negative-control report combines the split-chunk positive case with an expected-empty same-document relationship case. The candidate still recovers the positive case, but it also returns evidence for the expected-empty relationship question, producing hit rate `0.5000`, citation match rate `0.5000`, and empty handling rate `0.0000` across two cases.
+
+This blocks runtime aggregation promotion. Source-document grouping alone is too broad; a production path needs relation-aware evidence grading, reranking, graph relation checks, or stricter parent/section constraints before aggregation can be considered safe.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

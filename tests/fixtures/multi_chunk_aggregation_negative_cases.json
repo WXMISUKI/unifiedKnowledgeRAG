@@ -1,0 +1,13 @@
+[
+  {
+    "id": "multi-chunk-empty-unsupported-form-policy-link",
+    "category": "multi-chunk-aggregation-empty",
+    "difficulty": "hard",
+    "query": "AF-REFUND-02 是否可以直接覆盖 RFD-2026-003 的订单状态核验要求？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]
