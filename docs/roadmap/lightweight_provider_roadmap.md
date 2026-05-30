@@ -133,3 +133,21 @@ conda run -n GRAPHRAG python scripts/export_provider_handoff_bundle.py
 ```
 
 The bundle is intentionally read-only. It does not regenerate prerequisite reports, call provider HTTP endpoints, execute retrieval or answer composition, start ingestion jobs, rebuild indexes, download models, call Qdrant, or execute GraphRAG. External control planes still own provider registration, heartbeat governance, audit policy, source-to-agent binding, and final answer policy.
+
+## Provider Handoff Evidence Refresh
+
+Phase 6 evidence freshness is now represented by a local `provider-handoff-refresh-v1` export. It regenerates the handoff prerequisites in order, then regenerates the handoff bundle:
+
+1. provider integration probe
+2. provider contract smoke
+3. deployment readiness
+4. reindex readiness
+5. provider handoff bundle
+
+The default local refresh can be run with:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_handoff_refresh.py
+```
+
+The refresh summary is written under `docs/integration/provider-handoff-refresh/`. It is intentionally local and bounded to evidence files. It does not start a server, add HTTP endpoints, create ingestion jobs, explicitly rebuild indexes, download models, call Qdrant, or execute GraphRAG. It is the preferred command before handing the provider evidence package to MyPrivateAgent or a deployment reviewer.

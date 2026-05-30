@@ -1,0 +1,74 @@
+{
+  "id": "provider-handoff-refresh-v1",
+  "generated_at": "2026-05-30T07:32:00.462833+00:00",
+  "status": "review",
+  "steps": [
+    {
+      "id": "provider_integration_probe",
+      "category": "integration",
+      "status": "ready",
+      "output_paths": [
+        "docs\\integration\\provider-binding\\provider-integration-probe.json",
+        "docs\\integration\\provider-binding\\provider-integration-probe.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; bindable=True",
+      "error": null
+    },
+    {
+      "id": "provider_contract_smoke",
+      "category": "contract",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+        "docs\\smoke\\provider-contract\\provider-contract-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"failed\": 0, \"passed\": 8, \"total\": 8}",
+      "error": null
+    },
+    {
+      "id": "deployment_readiness",
+      "category": "operations",
+      "status": "review",
+      "output_paths": [
+        "docs\\operations\\deployment-readiness\\deployment-readiness.json",
+        "docs\\operations\\deployment-readiness\\deployment-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; report_status=review",
+      "error": null
+    },
+    {
+      "id": "reindex_readiness",
+      "category": "operations",
+      "status": "ready",
+      "output_paths": [
+        "docs\\operations\\reindex-readiness\\reindex-readiness.json",
+        "docs\\operations\\reindex-readiness\\reindex-readiness.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; report_status=ready",
+      "error": null
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "category": "handoff",
+      "status": "review",
+      "output_paths": [
+        "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
+        "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; report_status=review",
+      "error": null
+    }
+  ],
+  "operation_notes": [
+    "This refresh workflow only regenerates local evidence files.",
+    "External control planes still own provider registration, heartbeat governance, audit policy, source-to-agent binding decisions, and final answer policy.",
+    "At least one refreshed report requires human review before promotion."
+  ],
+  "json_path": "docs\\integration\\provider-handoff-refresh\\provider-handoff-refresh.json",
+  "markdown_path": "docs\\integration\\provider-handoff-refresh\\provider-handoff-refresh.md"
+}

@@ -2,7 +2,7 @@
 
 - Report: `deployment-readiness-v1`
 - Status: `review`
-- Generated At: `2026-05-30T06:28:44.261133+00:00`
+- Generated At: `2026-05-30T07:32:00.456216+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 

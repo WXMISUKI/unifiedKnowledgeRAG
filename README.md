@@ -1429,6 +1429,33 @@ docs/integration/provider-handoff/provider-handoff-bundle.md
 
 结论：这个交接包是只读索引，不会重新生成前置报告、调用 HTTP endpoint、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。它把当前 provider 作为外接模块交给 MyPrivateAgent 前最该看的证据集中到一个入口。
 
+第五十五阶段 OpenSpec change `refresh-provider-handoff-evidence` 继续推进 roadmap Phase 6，新增一键刷新本地 handoff evidence 的命令。它会按固定顺序重新生成 provider integration probe、provider contract smoke、deployment readiness、reindex readiness，最后重新生成 provider handoff bundle，并额外输出一次 refresh summary。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_handoff_refresh.py
+```
+
+导出文件：
+
+```text
+docs/integration/provider-handoff-refresh/provider-handoff-refresh.json
+docs/integration/provider-handoff-refresh/provider-handoff-refresh.md
+```
+
+当前默认 refresh 状态为 `review`，核心步骤为：
+
+| Step | Status | Recommended Action |
+| --- | --- | --- |
+| `provider_integration_probe` | `ready` | `no_action_required` |
+| `provider_contract_smoke` | `ready` | `no_action_required` |
+| `deployment_readiness` | `review` | `review_evidence_notes` |
+| `reindex_readiness` | `ready` | `no_action_required` |
+| `provider_handoff_bundle` | `review` | `review_evidence_notes` |
+
+结论：交付给 MyPrivateAgent 或部署审查前，优先运行这个 refresh 命令，避免 handoff bundle 读到旧证据。它只刷新本地证据文件，不会启动服务、添加 HTTP endpoint、创建 ingestion job、显式重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)
