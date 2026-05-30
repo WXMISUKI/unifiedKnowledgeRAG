@@ -1218,6 +1218,37 @@ docs/benchmark/chinese-seed/split-chunk-gating-candidates/qdrant-bge-m3-hybrid-e
 
 结论：alias 方向需要治理流程，而不是继续硬编码；split-chunk 结果说明 strict identifier gate 不能单独解决“相关证据分散在多个 chunk”的企业文档问题。下一步应评估 parent/section context、multi-chunk evidence aggregation 或 reranker/evidence grading，而不是直接把 strict gate 推为默认。
 
+第四十七阶段 OpenSpec change `evaluate-multi-chunk-aggregation-candidate` 增加 evaluation-only multi-chunk aggregation 候选。`source-document-identifier-coverage-v1` 会先保留 raw hybrid hits，再按 `(source_id, document_id)` 聚合同一文档的多个 chunk；只要同一文档组内的 identifier 并集覆盖 query 中的 identifier，就保留该组证据。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-multi-chunk-aggregation `
+  --output-dir docs/benchmark/chinese-seed/multi-chunk-aggregation-candidates `
+  --cases-path tests/fixtures/split_chunk_identifier_cases.json `
+  --empty-cases-path tests/fixtures/no_benchmark_cases.json `
+  --source-id split_refund_policy_docs `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/multi-chunk-aggregation-candidates/qdrant-bge-m3-hybrid-multi-chunk-aggregation.json
+docs/benchmark/chinese-seed/multi-chunk-aggregation-candidates/qdrant-bge-m3-hybrid-multi-chunk-aggregation.md
+```
+
+当前 split-chunk evidence 显示：
+
+| Candidate | Cases | Hit Rate | Citation Match Rate | Notes |
+| --- | ---: | ---: | ---: | --- |
+| `qdrant-bge-m3-hybrid-multi-chunk-aggregation` | 1 | 1.0000 | 1.0000 | raw hybrid 返回 `form-code` 和 `policy-code` 两个 chunk，multi-chunk aggregation 保留同一文档组内的两条证据 |
+
+结论：multi-chunk aggregation 可以缓解当前 split-chunk false negative，但它仍是本地候选证据，不是 runtime 默认。生产前还要补 expected-empty group、同文档无关编号、跨 section 噪声、跨 chunk 引用粒度、latency 和 answer grading 评估，避免把“同一文档里都有编号”误当成“足以回答问题”。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

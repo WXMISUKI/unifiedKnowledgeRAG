@@ -8,6 +8,7 @@ from app.models.contracts import EvidenceDocument
 from app.services.retrieval_benchmark import (
     apply_alias_aware_identifier_gate,
     apply_exact_identifier_containment_gate,
+    apply_source_document_identifier_aggregation,
     benchmark_report_to_dict,
     candidate_evaluation_to_dict,
     default_embedding_candidates,
@@ -28,6 +29,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_hybrid_alias_gating_candidate_evidence,
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_gating_candidate_evidence,
+    export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -1614,6 +1616,151 @@ def test_export_qdrant_bge_hybrid_gating_records_split_chunk_miss(
         "rfd-2026-003",
     ]
     assert report.cases[0].gated_result.returned_citations == []
+
+
+def test_source_document_identifier_aggregation_recovers_split_chunks():
+    documents = [
+        EvidenceDocument(
+            source_id="split_refund_policy_docs",
+            document_id="split_refund_policy_2026",
+            title="拆分退款编号规则",
+            snippet="政策编号 RFD-2026-003 适用于三天未发货退款复核。",
+            score=1.0,
+            citation="split_refund_policy_2026#policy-code",
+        ),
+        EvidenceDocument(
+            source_id="split_refund_policy_docs",
+            document_id="split_refund_policy_2026",
+            title="拆分退款编号规则",
+            snippet="复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+            score=1.0,
+            citation="split_refund_policy_2026#form-code",
+        ),
+        EvidenceDocument(
+            source_id="refund_policy_docs",
+            document_id="refund_policy_2026",
+            title="售后退款规则",
+            snippet="政策编号 RFD-2026-003 适用于普通退款。",
+            score=0.9,
+            citation="refund_policy_2026#exact-refund-code",
+        ),
+    ]
+
+    retained, identifiers, applied = apply_source_document_identifier_aggregation(
+        "RFD-2026-003 和 AF-REFUND-02 分别要求什么？",
+        documents,
+    )
+
+    assert applied is True
+    assert identifiers == ["af-refund-02", "rfd-2026-003"]
+    assert [document.citation for document in retained] == [
+        "split_refund_policy_2026#policy-code",
+        "split_refund_policy_2026#form-code",
+    ]
+
+
+def test_export_qdrant_bge_hybrid_multi_chunk_aggregation_recovers_split_chunks(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "split_refund_policy_docs.md").write_text(
+        "# 拆分退款编号规则\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核。\n\n"
+        "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "split-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "split-chunk-refund-policy-and-form",
+    "category": "split-chunk-identifier",
+    "difficulty": "hard",
+    "query": "RFD-2026-003 和 AF-REFUND-02 在同一个退款复核流程中分别要求什么？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation": "split_refund_policy_2026#form-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    empty_cases_path = tmp_path / "empty-cases.json"
+    empty_cases_path.write_text("[]", encoding="utf-8")
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "政策编号 RFD-2026-003 适用于三天未发货退款复核。",
+                    "citation": "split_refund_policy_2026#policy-code",
+                },
+            },
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+                    "citation": "split_refund_policy_2026#form-code",
+                },
+            },
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    report = export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=["split_refund_policy_docs"],
+        settings=settings,
+    )
+
+    assert report.candidate.id == "qdrant-bge-m3-hybrid-multi-chunk-aggregation"
+    assert report.json_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.json"
+    )
+    assert report.markdown_path == (
+        tmp_path / "evidence" / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.md"
+    )
+    assert report.metadata["aggregation_policy"] == (
+        "source-document-identifier-coverage-v1"
+    )
+    assert report.report.summary.hit_rate == 1.0
+    assert report.report.summary.citation_match_rate == 1.0
+    assert report.cases[0].raw_returned_citations == [
+        "split_refund_policy_2026#policy-code",
+        "split_refund_policy_2026#form-code",
+    ]
+    assert report.cases[0].gated_result.returned_citations == [
+        "split_refund_policy_2026#policy-code",
+        "split_refund_policy_2026#form-code",
+    ]
 
 
 def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):

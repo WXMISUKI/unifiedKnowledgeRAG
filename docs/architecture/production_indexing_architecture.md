@@ -358,6 +358,15 @@ The alias governance catalog currently has six candidate rules, all medium risk.
 
 This is a useful failure. It shows the production path cannot rely only on stricter identifier gating. For documents where related codes and forms are distributed across paragraphs, the architecture needs parent/section context, multi-chunk evidence aggregation, or reranking/evidence grading before any runtime hybrid gate is approved.
 
+Multi-chunk aggregation evidence now lives under:
+
+- `docs/benchmark/chinese-seed/multi-chunk-aggregation-candidates/qdrant-bge-m3-hybrid-multi-chunk-aggregation.json`
+- `docs/benchmark/chinese-seed/multi-chunk-aggregation-candidates/qdrant-bge-m3-hybrid-multi-chunk-aggregation.md`
+
+The `source-document-identifier-coverage-v1` candidate groups raw hybrid hits by source document before checking identifier coverage. On the current split-chunk fixture it recovers both `split_refund_policy_2026#form-code` and `split_refund_policy_2026#policy-code`, reaching hit rate `1.0000` and citation match rate `1.0000` for the single split-chunk case.
+
+This is still not production approval. It proves that grouping can repair one false negative, but production review still needs expected-empty group cases, unrelated identifiers within one document, noisy top-k cases, answer-bearing grading, latency review, and citation granularity review before runtime aggregation or parent context is enabled.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

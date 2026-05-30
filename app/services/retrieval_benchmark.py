@@ -560,6 +560,27 @@ def qdrant_bge_hybrid_alias_gating_candidate(
     )
 
 
+def qdrant_bge_hybrid_multi_chunk_aggregation_candidate(
+    settings: Settings | None = None,
+) -> RetrievalCandidate:
+    settings = settings or get_settings()
+    base_candidate = qdrant_bge_hybrid_exact_term_smoke_candidate(settings)
+    metadata = dict(base_candidate.metadata or {})
+    metadata.update({
+        "benchmark_fixture": "split-chunk-identifier-v1",
+        "aggregation_policy": "source-document-identifier-coverage-v1",
+    })
+    return RetrievalCandidate(
+        id="qdrant-bge-m3-hybrid-multi-chunk-aggregation",
+        backend=base_candidate.backend,
+        description=(
+            "Evaluation-only Qdrant+BGE-M3 dense+sparse candidate that groups "
+            "retrieved chunks by source document before checking identifier coverage."
+        ),
+        metadata=metadata,
+    )
+
+
 def fixture_chinese_seed_retrieval_candidate() -> RetrievalCandidate:
     return RetrievalCandidate(
         id="fixture-chinese-seed-baseline",
@@ -1133,6 +1154,92 @@ def export_qdrant_bge_hybrid_alias_gating_candidate_evidence(
         cases=gating_report.cases,
         metadata=gating_report.metadata,
         indexed_sources=gating_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/split_chunk_identifier_cases.json"),
+    empty_cases_path: Path = Path("tests/fixtures/no_benchmark_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> QdrantHybridGatingEvidenceReport:
+    settings = settings or get_settings()
+    source_ids = source_ids or ["split_refund_policy_docs"]
+    cases = [
+        *load_benchmark_cases(cases_path),
+        *load_benchmark_cases(empty_cases_path),
+    ]
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    client = create_qdrant_client(settings)
+    embedding_adapter = create_embedding_adapter(settings)
+    indexed_sources = _index_qdrant_hybrid_smoke_sources(
+        client=client,
+        settings=settings,
+        source_ids=source_ids,
+        embedding_adapter=embedding_adapter,
+        chunking_strategy=chunking_strategy,
+        sparse_vector_name=sparse_vector_name,
+    )
+    case_results = [
+        _run_qdrant_hybrid_gated_smoke_case(
+            client=client,
+            settings=settings,
+            embedding_adapter=embedding_adapter,
+            case=case,
+            sparse_vector_name=sparse_vector_name,
+            gate_fn=apply_source_document_identifier_aggregation,
+        )
+        for case in cases
+    ]
+    report = RetrievalBenchmarkReport(
+        summary=_summarize(
+            "qdrant-hybrid:source-document-identifier-coverage-v1",
+            [case.gated_result for case in case_results],
+        ),
+        cases=[case.gated_result for case in case_results],
+    )
+    metadata = _qdrant_smoke_metadata(settings, source_ids, chunking_strategy)
+    metadata.update({
+        "benchmark_fixture": "split-chunk-identifier-v1",
+        "cases_path": str(cases_path),
+        "empty_cases_path": str(empty_cases_path),
+        "retrieval_mode": "dense+sparse-hybrid",
+        "aggregation_policy": "source-document-identifier-coverage-v1",
+        "sparse_vector_name": sparse_vector_name,
+        "sparse_vectorizer": QDRANT_LEXICAL_SPARSE_VECTORIZER_ID,
+        "fusion": QDRANT_HYBRID_FUSION_STRATEGY,
+        "score_filter": "disabled-for-rrf-fusion-score",
+    })
+    aggregation_report = QdrantHybridGatingEvidenceReport(
+        candidate=qdrant_bge_hybrid_multi_chunk_aggregation_candidate(settings),
+        report=report,
+        cases=case_results,
+        metadata=metadata,
+        indexed_sources=indexed_sources,
+    )
+    json_path = export_qdrant_hybrid_gating_evidence_json(
+        aggregation_report,
+        output_dir / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
+    )
+    markdown_path = export_qdrant_hybrid_gating_evidence_markdown(
+        aggregation_report,
+        output_dir / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.md",
+    )
+    return QdrantHybridGatingEvidenceReport(
+        candidate=aggregation_report.candidate,
+        report=aggregation_report.report,
+        cases=aggregation_report.cases,
+        metadata=aggregation_report.metadata,
+        indexed_sources=aggregation_report.indexed_sources,
         json_path=json_path,
         markdown_path=markdown_path,
     )
@@ -2865,6 +2972,34 @@ def apply_alias_aware_identifier_gate(
         if set(identifiers).issubset(set(extract_alias_aware_identifiers(document.snippet)))
     ]
     return gated_documents, identifiers, True
+
+
+def apply_source_document_identifier_aggregation(
+    query: str,
+    documents: list[EvidenceDocument],
+) -> tuple[list[EvidenceDocument], list[str], bool]:
+    identifiers = extract_lexical_identifiers(query)
+    if not identifiers:
+        return documents, identifiers, False
+
+    identifiers_set = set(identifiers)
+    matching_groups: set[tuple[str, str]] = set()
+    group_identifiers: dict[tuple[str, str], set[str]] = {}
+    for document in documents:
+        group_key = (document.source_id, document.document_id)
+        group_identifiers.setdefault(group_key, set()).update(
+            extract_lexical_identifiers(document.snippet)
+        )
+    for group_key, group_values in group_identifiers.items():
+        if identifiers_set.issubset(group_values):
+            matching_groups.add(group_key)
+
+    aggregated_documents = [
+        document
+        for document in documents
+        if (document.source_id, document.document_id) in matching_groups
+    ]
+    return aggregated_documents, identifiers, True
 
 
 def _canonicalize_identifier(identifier: str) -> str:

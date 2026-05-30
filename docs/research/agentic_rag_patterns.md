@@ -258,4 +258,6 @@ The next retrieval-quality slice moved beyond clean identifiers with `alias-awar
 
 The next slice moved aliases into a local governance catalog and added split-chunk evidence. Alias rules are now auditable but remain candidate-only. More importantly, split-chunk evidence shows raw hybrid can retrieve separate policy/form chunks while strict identifier gating filters them all out.
 
-The next retrieval-quality slice should evaluate multi-chunk evidence aggregation or parent/section context. This is now more urgent than making the gate stricter, because the current failure is a false negative caused by chunk boundaries rather than a sparse retrieval miss.
+The next retrieval-quality slice evaluated `source-document-identifier-coverage-v1` as an evaluation-only multi-chunk aggregation candidate. It groups raw hybrid hits by source document and checks identifier coverage across the group. On the current split-chunk fixture it recovers both related chunks and reaches hit rate `1.0000` / citation match rate `1.0000`.
+
+This confirms aggregation is a promising next candidate, but it does not approve runtime aggregation. The next highest-value evidence should add expected-empty group cases and noisy same-document cases, because the main risk is now over-broad grouping rather than pure recall.
