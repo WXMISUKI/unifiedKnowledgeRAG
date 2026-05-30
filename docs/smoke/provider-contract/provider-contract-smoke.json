@@ -1,0 +1,85 @@
+{
+  "id": "provider-contract-smoke-v1",
+  "generated_at": "2026-05-30T02:28:50.215522+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "health_readiness",
+      "passed": true,
+      "endpoint": "GET /health",
+      "details": {
+        "service": "unifiedKnowledgeProvider",
+        "rag_status": "ready",
+        "answer_status": "ready",
+        "graph_status": "planned"
+      },
+      "error": null
+    },
+    {
+      "name": "capability_invocation_metadata",
+      "passed": true,
+      "endpoint": "GET /api/capabilities",
+      "details": {
+        "capability_ids": [
+          "knowledge.graph.query",
+          "knowledge.rag.answer",
+          "knowledge.rag.retrieve"
+        ],
+        "invocation_paths": {
+          "knowledge.rag.retrieve": "/api/rag/retrieve",
+          "knowledge.rag.answer": "/api/rag/answer",
+          "knowledge.graph.query": "/api/graph/query"
+        },
+        "graph_status": "planned"
+      },
+      "error": null
+    },
+    {
+      "name": "rag_retrieve_contract",
+      "passed": true,
+      "endpoint": "POST /api/rag/retrieve",
+      "details": {
+        "document_count": 2,
+        "citations": [
+          "refund_policy_2026#section-3",
+          "refund_policy_2026#exact-refund-code"
+        ],
+        "retrieval_trace_version": "retrieval-trace-v1",
+        "filter_context_present": true
+      },
+      "error": null
+    },
+    {
+      "name": "rag_answer_contract",
+      "passed": true,
+      "endpoint": "POST /api/rag/answer",
+      "details": {
+        "answer_status": "answered",
+        "citation_count": 2,
+        "retrieval_trace_version": "retrieval-trace-v1",
+        "answer_trace_version": "answer-trace-v1",
+        "final_status": "answered"
+      },
+      "error": null
+    },
+    {
+      "name": "graph_planned_boundary",
+      "passed": true,
+      "endpoint": "POST /api/graph/query",
+      "details": {
+        "error_code": "GRAPH_NOT_IMPLEMENTED",
+        "graph_id": "ecommerce_order_graph",
+        "status": "planned",
+        "capability_id": "knowledge.graph.query"
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "json_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+  "markdown_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.md"
+}

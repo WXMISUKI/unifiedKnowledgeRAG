@@ -46,6 +46,16 @@ conda run -n GRAPHRAG python -m pytest tests/test_provider_contract.py -q
 openspec validate add-knowledge-provider-v1 --strict
 ```
 
+## Provider Contract Smoke
+
+当需要确认当前 provider 是否已经具备“可被外部智能体控制面调用”的基本条件时，可以导出本地合同 smoke 证据：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_contract_smoke.py
+```
+
+该命令不会启动 uvicorn，也不依赖公网或外部向量库；它会通过 FastAPI TestClient 验证 `/health`、`/api/capabilities`、`/api/rag/retrieve`、`/api/rag/answer` 和 planned GraphRAG boundary，并在 `docs/smoke/provider-contract/` 写出 JSON 与 Markdown 报告。默认路径适合本地 fixture/deterministic 合同验证；如果环境变量切到未就绪后端，报告会失败并保留失败检查详情。
+
 ## 引用式回答 MVP
 
 本地 fixture 后端下可以直接验证 answer orchestration：
