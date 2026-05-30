@@ -191,3 +191,16 @@ The endpoint reports file presence, document format support, lightweight parser 
 This boundary is intentionally lightweight. Markdown is the only supported parser in this slice. PDF, Word, Excel, HTML, scanned images, and unknown formats are reported as unsupported rather than parsed. The endpoint does not create ingestion jobs, write lifecycle records, rebuild indexes, call embedding models, call Qdrant, execute retrieval or answer composition, or execute GraphRAG.
 
 The next parser-related work should be driven by real corpus demand and separate evidence-backed OpenSpec changes, not by adding every document parser dependency up front.
+
+## Provider API Access Guard
+
+Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:
+
+```text
+Authorization: Bearer <token>
+X-Provider-Api-Key: <token>
+```
+
+`GET /health` remains public for deployment health checks.
+
+This is a lightweight component access guard, not an identity or policy system. MyPrivateAgent or another external control plane still owns user identity, roles, approvals, audit policy, source-to-agent binding, and final answer policy.

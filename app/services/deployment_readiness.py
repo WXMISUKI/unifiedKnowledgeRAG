@@ -129,6 +129,7 @@ def render_deployment_readiness_markdown(
         f"| Qdrant URL | `{config['qdrant_url']}` |",
         f"| Qdrant Collection | `{config['qdrant_collection']}` |",
         f"| Qdrant API Key Configured | `{config['qdrant_api_key_configured']}` |",
+        f"| Provider API Key Configured | `{config['provider_api_key_configured']}` |",
         f"| Answer Composer | `{config['rag_answer_composer']}` |",
         "",
         "## Model Artifacts",
@@ -213,6 +214,7 @@ def _runtime_config(settings: Settings) -> dict[str, Any]:
         "qdrant_api_key_configured": bool(settings.qdrant_api_key),
         "rag_answer_composer": settings.rag_answer_composer,
         "rag_answer_composer_model": settings.rag_answer_composer_model,
+        "provider_api_key_configured": bool(settings.provider_api_key),
     }
 
 
@@ -258,6 +260,12 @@ def _operation_notes(
         )
     if settings.qdrant_api_key:
         notes.append("Qdrant API key is configured; the report intentionally redacts secrets.")
+    if not settings.provider_api_key:
+        notes.append(
+            "Provider API key is not configured; set PROVIDER_API_KEY before exposing /api endpoints outside trusted local development."
+        )
+    else:
+        notes.append("Provider API key is configured; the report intentionally redacts secrets.")
     return notes
 
 

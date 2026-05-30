@@ -1,6 +1,6 @@
 {
   "id": "deployment-readiness-v1",
-  "generated_at": "2026-05-30T08:02:30.747099+00:00",
+  "generated_at": "2026-05-30T08:55:38.134299+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -170,7 +170,8 @@
     "qdrant_vector_size": 1024,
     "qdrant_api_key_configured": false,
     "rag_answer_composer": "deterministic",
-    "rag_answer_composer_model": "deterministic-extractive-v1"
+    "rag_answer_composer_model": "deterministic-extractive-v1",
+    "provider_api_key_configured": false
   },
   "model_artifacts": {
     "status": "not_configured",
@@ -182,7 +183,8 @@
     "This report is local readiness evidence; external control planes still own binding and governance decisions.",
     "Contract smoke evidence should be regenerated after configuration or dependency changes.",
     "Embedding provider is mock; use a real local or hosted embedding candidate before production retrieval promotion.",
-    "Retrieval backend is not qdrant; vector-store deployment readiness remains a separate review."
+    "Retrieval backend is not qdrant; vector-store deployment readiness remains a separate review.",
+    "Provider API key is not configured; set PROVIDER_API_KEY before exposing /api endpoints outside trusted local development."
   ],
   "json_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
   "markdown_path": "docs\\operations\\deployment-readiness\\deployment-readiness.md"

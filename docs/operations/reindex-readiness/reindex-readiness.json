@@ -1,6 +1,6 @@
 {
   "id": "reindex-readiness-v1",
-  "generated_at": "2026-05-30T08:02:30.750639+00:00",
+  "generated_at": "2026-05-30T08:55:38.137468+00:00",
   "status": "ready",
   "retrieval_backend": "fixture",
   "source_dir": "app\\data\\sources",

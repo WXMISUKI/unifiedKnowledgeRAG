@@ -25,15 +25,18 @@ def test_deployment_readiness_report_summarizes_default_provider():
 
 
 def test_deployment_readiness_redacts_qdrant_api_key():
-    settings = Settings(qdrant_api_key="secret-token")
+    settings = Settings(qdrant_api_key="secret-token", provider_api_key="provider-secret")
 
     report = build_deployment_readiness_report(settings=settings)
     payload = json.dumps(report.runtime_config, ensure_ascii=False)
     markdown = render_deployment_readiness_markdown(report)
 
     assert report.runtime_config["qdrant_api_key_configured"] is True
+    assert report.runtime_config["provider_api_key_configured"] is True
     assert "secret-token" not in payload
     assert "secret-token" not in markdown
+    assert "provider-secret" not in payload
+    assert "provider-secret" not in markdown
 
 
 def test_deployment_readiness_reports_model_artifact_status(tmp_path):

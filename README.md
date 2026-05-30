@@ -41,6 +41,21 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 `GET /api/ingestion/sources/{source_id}/preflight` 是企业文档导入前置诊断入口。它会读取当前 source manifest 和本地文件，返回文件存在性、格式支持、parser 状态、chunk count、chunk preview、citation anchor 数量、当前 index status 和 recommended action。当前切片只支持 markdown 诊断；PDF、Word、Excel、HTML、扫描件和图片会被报告为 `unsupported_format`，不会隐式引入 OCR、复杂 parser 或重型依赖。这个接口只读，不会创建 ingestion job、写 lifecycle store、重建索引、调用 embedding/Qdrant、执行检索或 GraphRAG。
 
+如果 provider 会暴露到本机以外的网络，建议配置轻量组件访问令牌：
+
+```powershell
+$env:PROVIDER_API_KEY="replace-with-a-random-token"
+```
+
+配置后，所有 `/api/*` 请求都需要携带以下任一 header：
+
+```text
+Authorization: Bearer <token>
+X-Provider-Api-Key: <token>
+```
+
+`GET /health` 保持公开，便于部署健康检查。这个 token 只是 provider 组件访问保护，不是用户身份、RBAC、审批、审计或 source-to-agent binding；这些仍由 MyPrivateAgent 或外部控制面负责。
+
 Preflight 支持控制面显式声明绑定要求：
 
 ```powershell
@@ -1524,6 +1539,8 @@ document.citation_anchor_count: <number>
 ```
 
 缺文件会建议 `restore_source_file_before_ingestion`，不支持格式会建议 `add_parser_support_before_ingestion`，空内容会建议 `repair_source_content_before_ingestion`，缺 citation anchors 会建议 `add_citation_anchors_before_ingestion`。这一步只做边界和诊断，不做 PDF/Word/Excel/OCR/table parser，也不改变 runtime retrieval 默认行为。
+
+第六十阶段 OpenSpec change `add-provider-api-key-guard` 增加默认关闭的 `/api/*` 访问保护。未设置 `PROVIDER_API_KEY` 时，本地开发和测试保持原行为；设置后，`/api/*` 会要求 `Authorization: Bearer <token>` 或 `X-Provider-Api-Key: <token>`，缺失或错误会返回 HTTP 401 和结构化 `PROVIDER_API_KEY_REQUIRED`。部署 readiness 只报告 `provider_api_key_configured=true/false`，不会输出 secret 值。
 
 ## 设计文档
 

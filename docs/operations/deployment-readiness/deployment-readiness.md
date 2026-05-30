@@ -2,7 +2,7 @@
 
 - Report: `deployment-readiness-v1`
 - Status: `review`
-- Generated At: `2026-05-30T08:02:30.747099+00:00`
+- Generated At: `2026-05-30T08:55:38.134299+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 
@@ -27,6 +27,7 @@
 | Qdrant URL | `http://localhost:6333` |
 | Qdrant Collection | `knowledge_chunks` |
 | Qdrant API Key Configured | `False` |
+| Provider API Key Configured | `False` |
 | Answer Composer | `deterministic` |
 
 ## Model Artifacts
@@ -44,3 +45,4 @@
 - Contract smoke evidence should be regenerated after configuration or dependency changes.
 - Embedding provider is mock; use a real local or hosted embedding candidate before production retrieval promotion.
 - Retrieval backend is not qdrant; vector-store deployment readiness remains a separate review.
+- Provider API key is not configured; set PROVIDER_API_KEY before exposing /api endpoints outside trusted local development.

@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Settings(BaseModel):
+    provider_api_key: str | None = Field(default=None)
     rag_retrieval_backend: str = Field(default="fixture")
     rag_index_dir: Path = Field(default=Path("app/data/indexes/llamaindex"))
     rag_source_dir: Path = Field(default=Path("app/data/sources"))
@@ -31,6 +32,7 @@ class Settings(BaseModel):
 
 def get_settings() -> Settings:
     return Settings(
+        provider_api_key=os.getenv("PROVIDER_API_KEY"),
         rag_retrieval_backend=os.getenv("RAG_RETRIEVAL_BACKEND", "fixture"),
         rag_index_dir=Path(os.getenv("RAG_INDEX_DIR", "app/data/indexes/llamaindex")),
         rag_source_dir=Path(os.getenv("RAG_SOURCE_DIR", "app/data/sources")),
