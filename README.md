@@ -78,7 +78,7 @@ GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，�
 
 Provider error envelope 保持 `ok=false`、`result=null`、`error.code` 和 `error.message` 的稳定形态，并额外提供可选 `error.details`。例如未知知识库会返回 `requested_source_ids` / `unknown_source_ids`，索引未就绪会返回 `not_ready_source_ids` 和 `retrieval_backend`，answer composer 配置错误会返回当前 composer/model 和支持的 composer 名称，GraphRAG planned error 会返回 graph id 与 capability id。上层控制面应优先读取这些结构化字段，而不是解析 message 文本。
 
-`GET /api/rag/sources/{source_id}/documents` 是 Phase 2 的轻量 source document manifest。它返回单个 RAG source 背后的 provider-owned 文档清单，包括 document id、repo-relative source path、format、version、chunking strategy、citation anchors 和当前 index readiness。该接口只用于调用方绑定前诊断、引用锚点审查和本地运维排查；它不会执行检索、answer composition、embedding、向量查询、ingestion job 或 GraphRAG。
+`GET /api/rag/sources/{source_id}/documents` 是 Phase 2 的轻量 source document manifest。它返回单个 RAG source 背后的 provider-owned 文档清单，包括 document id、repo-relative source path、format、version、chunking strategy、citation anchors、source 文件 fingerprint/drift diagnostics 和当前 index readiness。该接口只用于调用方绑定前诊断、引用锚点审查和本地运维排查；它不会执行检索、answer composition、embedding、向量查询、ingestion job 或 GraphRAG。
 
 `POST /api/rag/answer` 是 retrieval 之上的引用式回答编排入口。当前第一版使用确定性 extractive composer，不调用 Qwen、OpenAI 或本地大模型；它用于先稳定 answer envelope、citation、evidence 和 insufficient-evidence 合同。生产 LLM、流式回答、reranker、多 chunk synthesis 和 GraphRAG 多跳仍会按后续 OpenSpec change 单独评估。
 
@@ -1455,6 +1455,25 @@ docs/integration/provider-handoff-refresh/provider-handoff-refresh.md
 | `provider_handoff_bundle` | `review` | `review_evidence_notes` |
 
 结论：交付给 MyPrivateAgent 或部署审查前，优先运行这个 refresh 命令，避免 handoff bundle 读到旧证据。它只刷新本地证据文件，不会启动服务、添加 HTTP endpoint、创建 ingestion job、显式重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。
+
+第五十六阶段 OpenSpec change `add-source-document-fingerprint-diagnostics` 回到 roadmap Phase 2，给 source document manifest 增加本地文件 fingerprint / drift diagnostics。现在 `GET /api/rag/sources/{source_id}/documents` 的每个 document manifest 会额外返回：
+
+```text
+source_file_status
+content_sha256
+expected_content_sha256
+content_byte_size
+drift_status
+```
+
+当前默认 fixture 文档状态：
+
+| Source | Document | Drift Status |
+| --- | --- | --- |
+| `refund_policy_docs` | `refund_policy_2026` | `in_sync` |
+| `logistics_faq` | `logistics_faq_2026` | `in_sync` |
+
+结论：这个能力用于在调用方绑定、引用锚点审查或 reindex 前判断本地 source 文件是否已经变更。它只读取 manifest 中声明的文件并计算 sha256，不会扫描目录、解析复杂文档、创建 ingestion job、重建索引、调用 embedding/Qdrant 或执行 GraphRAG。
 
 ## 设计文档
 

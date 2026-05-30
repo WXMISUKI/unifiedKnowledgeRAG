@@ -94,3 +94,14 @@ The project SHALL treat local provider handoff refresh reports as Phase 6 operat
 #### Scenario: Handoff refresh does not imply control-plane ownership
 - **WHEN** the provider refreshes local handoff evidence
 - **THEN** it does not imply ownership of provider registration, heartbeat governance, audit policy, source-to-agent binding decisions, or final answer policy
+
+### Requirement: Source fingerprint diagnostics advance Phase 2 ingestion evidence
+The project SHALL treat source document fingerprint and drift diagnostics as Phase 2 document ingestion baseline evidence when they help operators verify local source freshness without changing retrieval behavior.
+
+#### Scenario: Fingerprint diagnostics are phase-aligned
+- **WHEN** an OpenSpec change adds read-only source document fingerprint diagnostics
+- **THEN** the change identifies Phase 2 as the roadmap phase it advances
+
+#### Scenario: Fingerprint diagnostics do not imply ingestion promotion
+- **WHEN** the provider reports source document drift
+- **THEN** it does not automatically create ingestion jobs, rebuild indexes, promote chunking strategies, or change retrieval defaults

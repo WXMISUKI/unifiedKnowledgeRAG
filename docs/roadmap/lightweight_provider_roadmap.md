@@ -77,6 +77,18 @@ Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on 
 
 This does not make the provider the final answer policy owner. MyPrivateAgent or another caller still owns user-facing response style, refusal policy, approval workflow, and final orchestration. The provider only exposes trustworthy evidence and diagnostics so callers can avoid hallucinating beyond returned citations.
 
+## Source Document Fingerprint Diagnostics
+
+Phase 2 document ingestion baseline evidence now includes lightweight source file drift diagnostics on `GET /api/rag/sources/{source_id}/documents`. Each local source document manifest can expose:
+
+- source file presence
+- current `sha256`
+- expected provider-owned `sha256`
+- byte size
+- drift status: `in_sync`, `changed`, `missing`, or `unchecked`
+
+This helps operators and external control planes see whether source files have changed before trusting citation anchors or deciding to reindex. It is intentionally read-only: it does not scan directories, parse complex document formats, create ingestion jobs, rebuild indexes, call embedding models, call Qdrant, or execute GraphRAG.
+
 ## Deployment Readiness Report
 
 Phase 6 deployment and operations evidence is now represented by a local `deployment-readiness-v1` export. It consolidates:

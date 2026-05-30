@@ -45,6 +45,25 @@ The document RAG source document manifest endpoint SHALL be discoverable through
 - **WHEN** source document manifest discovery metadata is added
 - **THEN** existing retrieve and answer request and response contracts remain unchanged
 
+### Requirement: Source document manifest includes fingerprint diagnostics
+The system SHALL include read-only content fingerprint diagnostics in source document manifests for configured local source documents.
+
+#### Scenario: Manifest reports in-sync source file
+- **WHEN** a caller requests `GET /api/rag/sources/{source_id}/documents` for a configured source whose document file exists and matches the provider-owned expected digest
+- **THEN** each document manifest includes `source_file_status=present`, `content_sha256`, `expected_content_sha256`, `content_byte_size`, and `drift_status=in_sync`
+
+#### Scenario: Manifest reports changed source file
+- **WHEN** a configured source document file exists but its current sha256 differs from the expected digest
+- **THEN** the document manifest reports `drift_status=changed` without modifying the file or index lifecycle state
+
+#### Scenario: Manifest reports missing source file
+- **WHEN** a configured source document file is missing
+- **THEN** the document manifest reports `source_file_status=missing` and `drift_status=missing`
+
+#### Scenario: Fingerprint diagnostics remain read-only
+- **WHEN** source document fingerprint diagnostics are generated
+- **THEN** the provider does not run retrieval, answer composition, ingestion jobs, index rebuilds, embedding models, vector databases, directory crawling, or graph queries
+
 ### Requirement: RAG retrieve returns compact evidence context
 
 The system SHALL return compact answer context and document evidence for matching document RAG queries while preserving the existing response contract across retrieval backends and enforcing explicit source index lifecycle readiness before backend retrieval work begins.

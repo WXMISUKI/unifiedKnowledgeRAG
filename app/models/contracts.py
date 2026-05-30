@@ -122,6 +122,11 @@ class SourceDocumentManifest(BaseModel):
     version: str
     chunking_strategy: str
     citation_anchors: list[str] = Field(default_factory=list)
+    source_file_status: str | None = None
+    content_sha256: str | None = None
+    expected_content_sha256: str | None = None
+    content_byte_size: int | None = None
+    drift_status: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 

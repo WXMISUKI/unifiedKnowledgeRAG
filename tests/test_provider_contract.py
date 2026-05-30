@@ -224,6 +224,15 @@ def test_rag_source_document_manifest_exposes_source_documents():
                 "refund_policy_2026#address-change",
                 "refund_policy_2026#appeal-review",
             ],
+            "source_file_status": "present",
+            "content_sha256": (
+                "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a"
+            ),
+            "expected_content_sha256": (
+                "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a"
+            ),
+            "content_byte_size": 1124,
+            "drift_status": "in_sync",
             "metadata": {
                 "language": "zh-CN",
                 "document_role": "local_contract_fixture",
