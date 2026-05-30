@@ -41,6 +41,20 @@ Invoke-RestMethod "http://127.0.0.1:8020/api/provider/preflight?required_contrac
 
 如果 `required_contract_version` 不匹配，或任一 `required_capability_ids` 不存在，接口会返回 `bindable=false`，并在 `checks` 中给出 `contract_version` 或 `required_capabilities` 的失败详情。未传参数时仍使用默认合同版本和默认知识能力集合。
 
+本仓库也提供了一个只读参考绑定探针，供 MyPrivateAgent 侧集成逻辑复用或照着实现：
+
+```python
+from fastapi.testclient import TestClient
+
+from app.main import create_app
+from app.services.provider_integration_client import probe_provider_binding
+
+report = probe_provider_binding(TestClient(create_app()))
+assert report.bindable is True
+```
+
+该探针按 `manifest -> preflight -> capabilities` 顺序读取 provider 元数据，返回 provider identity、contract version、preflight checks、capability invocation 和 `example_request` 覆盖情况。它默认不会执行 `/api/rag/retrieve`、`/api/rag/answer`、ingestion 或 `/api/graph/query`，适合作为外部控制面注册 provider 前的 fail-closed 检查。
+
 `GET /health` 会分别报告 document RAG retrieval readiness 和 answer composer readiness。若 `RAG_ANSWER_COMPOSER=hosted` 或 `local` 但对应 composer 尚未实现，服务会报告 `status=degraded`，并且 `knowledge.rag.answer` capability 也会显示 `degraded`；`knowledge.rag.retrieve` 不受该 composer 配置影响。
 
 GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，图数据库、ontology traversal、hybrid retrieval 将在后续 change 中实现。
