@@ -12,6 +12,7 @@ from app.models.contracts import (
 from app.config import get_settings
 from app.services.retrieval_backends import create_document_retriever
 from app.services.rag_answer_orchestrator import create_answer_composer
+from app.services.request_filter_context import normalize_request_filter_context
 from app.services.source_catalog import list_knowledge_bases
 
 router = APIRouter(prefix="/api/rag")
@@ -25,6 +26,7 @@ def sources() -> CatalogResponse:
 @router.post("/retrieve", response_model=RagRetrieveResponse)
 def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
     retriever = create_document_retriever(get_settings())
+    filter_context = normalize_request_filter_context(request.filters)
     unknown_sources = retriever.unknown_sources(request.knowledge_base_ids)
     if unknown_sources:
         return RagRetrieveResponse(
@@ -47,6 +49,7 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
         query=request.query,
         knowledge_base_ids=request.knowledge_base_ids,
         top_k=request.top_k,
+        filter_context=filter_context,
     )
     if unknown_sources:
         return RagRetrieveResponse(
@@ -62,6 +65,12 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
         result=RagRetrieveResult(
             answer_context=retriever.build_answer_context(documents),
             documents=documents,
+            metadata={
+                "request_filter_context": filter_context.metadata(
+                    backend=retriever.backend_name,
+                    enforced=retriever.filters_enforced(),
+                ),
+            },
         ),
     )
 
@@ -69,6 +78,7 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
 @router.post("/answer", response_model=RagAnswerResponse)
 def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
     settings = get_settings()
+    filter_context = normalize_request_filter_context(request.filters)
     composer, composer_error = create_answer_composer(settings)
     if composer_error is not None or composer is None:
         return RagAnswerResponse(ok=False, error=composer_error)
@@ -96,6 +106,7 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
         query=request.query,
         knowledge_base_ids=request.knowledge_base_ids,
         top_k=request.top_k,
+        filter_context=filter_context,
     )
     if unknown_sources:
         return RagAnswerResponse(
@@ -114,5 +125,9 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             retrieval_backend=retriever.backend_name,
             min_evidence_count=settings.rag_answer_min_evidence_count,
             min_top_score=settings.rag_answer_min_evidence_score,
+            request_filter_context=filter_context.metadata(
+                backend=retriever.backend_name,
+                enforced=retriever.filters_enforced(),
+            ),
         ),
     )

@@ -22,6 +22,7 @@ from app.services.qdrant_vector_store import (
 )
 from app.services.index_lifecycle import get_index_status
 from app.services.index_lifecycle_store import IndexLifecycleStore
+from app.services.request_filter_context import normalize_request_filter_context
 from app.services.retrieval_backends import create_document_retriever
 from app.services.retrieval_benchmark import qdrant_retrieval_candidate
 
@@ -764,6 +765,11 @@ def test_qdrant_retriever_uses_text_query_orchestration(monkeypatch):
         query="客户三天未发货能否退款？",
         knowledge_base_ids=["refund_policy_docs"],
         top_k=2,
+        filter_context=normalize_request_filter_context({
+            "tenant_id": "tenant-a",
+            "document_ids": ["refund_policy_2026"],
+            "acl_tags": ["after_sales"],
+        }),
     )
 
     assert unknown_sources == []
@@ -772,6 +778,9 @@ def test_qdrant_retriever_uses_text_query_orchestration(monkeypatch):
     assert captured["source_ids"] == ["refund_policy_docs"]
     assert captured["top_k"] == 2
     assert captured["embedding_adapter"].provider_name == "mock"
+    assert captured["tenant_id"] == "tenant-a"
+    assert captured["document_ids"] == ["refund_policy_2026"]
+    assert captured["acl_tags"] == ["after_sales"]
 
 
 def test_qdrant_retriever_readiness_degrades_when_embedding_not_ready(monkeypatch):

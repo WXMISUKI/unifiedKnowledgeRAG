@@ -124,6 +124,17 @@ def test_rag_retrieve_returns_compact_context_and_citations():
     assert "三天未发货" in body["result"]["answer_context"]
     assert body["result"]["documents"][0]["source_id"] == "refund_policy_docs"
     assert body["result"]["documents"][0]["citation"] == "refund_policy_2026#section-3"
+    filter_context = body["result"]["metadata"]["request_filter_context"]
+    assert filter_context == {
+        "tenant_id": None,
+        "document_ids": [],
+        "acl_tags": [],
+        "agent_id": "ecommerce_support",
+        "role": "after_sales_specialist",
+        "extra_filters": {},
+        "backend": "fixture",
+        "enforced": False,
+    }
 
 
 def test_rag_answer_returns_cited_answer_envelope():
@@ -153,6 +164,16 @@ def test_rag_answer_returns_cited_answer_envelope():
     assert body["result"]["metadata"]["composer"] == "deterministic-extractive-v1"
     assert body["result"]["metadata"]["composer_provider"] == "deterministic"
     assert body["result"]["metadata"]["composer_model"] == "deterministic-extractive-v1"
+    assert body["result"]["metadata"]["request_filter_context"] == {
+        "tenant_id": None,
+        "document_ids": [],
+        "acl_tags": [],
+        "agent_id": "ecommerce_support",
+        "role": "after_sales_specialist",
+        "extra_filters": {},
+        "backend": "fixture",
+        "enforced": False,
+    }
     assert body["result"]["metadata"]["evidence_gate"]["passed"] is True
     prompt_package = body["result"]["metadata"]["prompt_package"]
     assert prompt_package["id"] == "cited-answer-prompt-v1"
@@ -324,6 +345,18 @@ def test_rag_retrieve_empty_result_is_explicit_success():
         "result": {
             "answer_context": "",
             "documents": [],
+            "metadata": {
+                "request_filter_context": {
+                    "tenant_id": None,
+                    "document_ids": [],
+                    "acl_tags": [],
+                    "agent_id": "ecommerce_support",
+                    "role": None,
+                    "extra_filters": {},
+                    "backend": "fixture",
+                    "enforced": False,
+                },
+            },
         },
         "error": None,
     }
@@ -362,6 +395,16 @@ def test_rag_answer_empty_result_is_insufficient_evidence():
                     "top_score": None,
                 },
                 "retrieval_backend": "fixture",
+                "request_filter_context": {
+                    "tenant_id": None,
+                    "document_ids": [],
+                    "acl_tags": [],
+                    "agent_id": "ecommerce_support",
+                    "role": None,
+                    "extra_filters": {},
+                    "backend": "fixture",
+                    "enforced": False,
+                },
                 "answer_trace": body["result"]["metadata"]["answer_trace"],
             },
         },

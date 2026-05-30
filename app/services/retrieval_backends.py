@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from app.config import Settings
 from app.models.contracts import EvidenceDocument
 from app.services import document_retriever
+from app.services.request_filter_context import RequestFilterContext
 from app.services.source_catalog import knowledge_base_exists
 
 
@@ -15,6 +16,7 @@ class DocumentRetriever(ABC):
         query: str,
         knowledge_base_ids: list[str],
         top_k: int,
+        filter_context: RequestFilterContext | None = None,
     ) -> tuple[list[str], list[EvidenceDocument]]:
         raise NotImplementedError
 
@@ -34,6 +36,9 @@ class DocumentRetriever(ABC):
     def not_ready_sources(self, knowledge_base_ids: list[str]) -> list[str]:
         return []
 
+    def filters_enforced(self) -> bool:
+        return False
+
 
 class FixtureDocumentRetriever(DocumentRetriever):
     backend_name = "fixture"
@@ -43,6 +48,7 @@ class FixtureDocumentRetriever(DocumentRetriever):
         query: str,
         knowledge_base_ids: list[str],
         top_k: int,
+        filter_context: RequestFilterContext | None = None,
     ) -> tuple[list[str], list[EvidenceDocument]]:
         return document_retriever.retrieve(query, knowledge_base_ids, top_k)
 
@@ -58,6 +64,7 @@ class LlamaIndexDocumentRetriever(DocumentRetriever):
         query: str,
         knowledge_base_ids: list[str],
         top_k: int,
+        filter_context: RequestFilterContext | None = None,
     ) -> tuple[list[str], list[EvidenceDocument]]:
         from app.services.llamaindex_retriever import LlamaIndexLocalRetriever
 
@@ -89,6 +96,7 @@ class QdrantDocumentRetriever(DocumentRetriever):
         query: str,
         knowledge_base_ids: list[str],
         top_k: int,
+        filter_context: RequestFilterContext | None = None,
     ) -> tuple[list[str], list[EvidenceDocument]]:
         from app.services.embedding_adapters import create_embedding_adapter
         from app.services.qdrant_vector_store import (
@@ -107,6 +115,9 @@ class QdrantDocumentRetriever(DocumentRetriever):
             settings=self.settings,
             embedding_adapter=create_embedding_adapter(self.settings),
             top_k=top_k,
+            tenant_id=filter_context.tenant_id if filter_context else None,
+            document_ids=filter_context.document_ids if filter_context else None,
+            acl_tags=filter_context.acl_tags if filter_context else None,
         )
         return [], documents
 
@@ -134,6 +145,9 @@ class QdrantDocumentRetriever(DocumentRetriever):
         from app.services.index_lifecycle import not_ready_sources
 
         return not_ready_sources(knowledge_base_ids, self.settings)
+
+    def filters_enforced(self) -> bool:
+        return True
 
 
 def create_document_retriever(settings: Settings) -> DocumentRetriever:

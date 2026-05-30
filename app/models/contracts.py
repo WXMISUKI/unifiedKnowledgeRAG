@@ -92,6 +92,7 @@ class EvidenceDocument(BaseModel):
 class RagRetrieveResult(BaseModel):
     answer_context: str
     documents: list[EvidenceDocument]
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class RagAnswerRequest(RagRetrieveRequest):

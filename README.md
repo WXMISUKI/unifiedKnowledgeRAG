@@ -67,6 +67,8 @@ $env:RAG_ANSWER_MIN_EVIDENCE_SCORE="0.5"
 
 如果检索结果未达到门槛，接口会返回 `answer_status=insufficient_evidence`，`answer` 和 `citations` 为空，同时保留 `documents` 和 `metadata.evidence_gate` 供诊断。这个 gate 只是第一层确定性防线，不替代后续 reranker、evidence grading 或 LLM answer validation。
 
+RAG 请求的 `filters` 会被规范化为 provider-owned `request_filter_context`。`POST /api/rag/retrieve` 会在 `result.metadata.request_filter_context` 返回该上下文，`POST /api/rag/answer` 会在 answer metadata 中返回同一上下文。当前支持 `tenant_id`、`document_ids`、`acl_tags`、`agent_id` 和 `role`；Qdrant 后端会把 `tenant_id`、`document_ids`、`acl_tags` 传给 payload filter，fixture/LlamaIndex 后端保持兼容检索并标记 `enforced=false`。未知 filter key 会保留在 `extra_filters` 里用于诊断，不会被视为已强制执行的过滤条件。
+
 Answer composer 已经有 provider-neutral adapter 边界。默认 composer 是离线确定性的：
 
 ```powershell
