@@ -15,6 +15,7 @@ class HandoffEvidenceSpec:
     id: str
     category: str
     path: Path
+    required: bool = True
 
 
 @dataclass(frozen=True)
@@ -49,6 +50,14 @@ DEFAULT_EVIDENCE_SPECS = [
         id="reindex_readiness",
         category="operations",
         path=Path("docs/operations/reindex-readiness/reindex-readiness.json"),
+    ),
+    HandoffEvidenceSpec(
+        id="deployed_provider_smoke",
+        category="deployed-integration",
+        path=Path(
+            "docs/integration/deployed-provider-smoke/deployed-provider-smoke.json"
+        ),
+        required=False,
     ),
 ]
 
@@ -175,14 +184,24 @@ def _artifact_row(
 ) -> dict[str, Any]:
     path = base_dir / spec.path
     if not path.exists():
+        status = "missing" if spec.required else "review"
         return {
             "id": spec.id,
             "category": spec.category,
             "path": str(spec.path),
             "present": False,
-            "status": "missing",
-            "summary": "Evidence artifact is missing.",
-            "recommended_action": f"regenerate_{spec.id}",
+            "required": spec.required,
+            "status": status,
+            "summary": (
+                "Required evidence artifact is missing."
+                if spec.required
+                else "Optional deployed evidence is missing."
+            ),
+            "recommended_action": (
+                f"regenerate_{spec.id}"
+                if spec.required
+                else "run_deployed_provider_smoke_after_deployment"
+            ),
         }
     payload = json.loads(path.read_text(encoding="utf-8"))
     status, summary = _artifact_status_and_summary(spec.id, payload)
@@ -191,6 +210,7 @@ def _artifact_row(
         "category": spec.category,
         "path": str(spec.path),
         "present": True,
+        "required": spec.required,
         "status": status,
         "summary": summary,
         "recommended_action": _recommended_action(status),
@@ -225,6 +245,19 @@ def _artifact_status_and_summary(
             status if status in {"ready", "review", "blocked"} else "review",
             f"status={status}",
         )
+    if artifact_id == "deployed_provider_smoke":
+        status = payload.get("status", "review")
+        normalized_status = (
+            status if status in {"ready", "review", "blocked"} else "review"
+        )
+        return (
+            normalized_status,
+            (
+                f"status={status}; "
+                f"base_url={payload.get('base_url', 'unknown')}; "
+                f"handoff_status={(payload.get('handoff') or {}).get('status', 'unknown')}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -257,4 +290,11 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
         notes.append("At least one required evidence artifact is missing.")
     if any(artifact["status"] == "review" for artifact in artifact_rows):
         notes.append("At least one evidence artifact requires human review before promotion.")
+    if any(
+        artifact["id"] == "deployed_provider_smoke" and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding."
+        )
     return notes

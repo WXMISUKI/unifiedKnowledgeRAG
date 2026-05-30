@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-05-30T08:55:38.139469+00:00",
+  "generated_at": "2026-05-30T09:28:21.039983+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -19,6 +19,7 @@
       "category": "integration",
       "path": "docs\\integration\\provider-binding\\provider-integration-probe.json",
       "present": true,
+      "required": true,
       "status": "ready",
       "summary": "bindable=True; checks=6; capabilities=4",
       "recommended_action": "no_action_required"
@@ -28,6 +29,7 @@
       "category": "contract",
       "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
       "present": true,
+      "required": true,
       "status": "ready",
       "summary": "passed=True; checks=8/8",
       "recommended_action": "no_action_required"
@@ -37,6 +39,7 @@
       "category": "operations",
       "path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
       "present": true,
+      "required": true,
       "status": "review",
       "summary": "status=review",
       "recommended_action": "review_evidence_notes"
@@ -46,16 +49,28 @@
       "category": "operations",
       "path": "docs\\operations\\reindex-readiness\\reindex-readiness.json",
       "present": true,
+      "required": true,
       "status": "ready",
       "summary": "status=ready",
       "recommended_action": "no_action_required"
+    },
+    {
+      "id": "deployed_provider_smoke",
+      "category": "deployed-integration",
+      "path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json",
+      "present": false,
+      "required": false,
+      "status": "review",
+      "summary": "Optional deployed evidence is missing.",
+      "recommended_action": "run_deployed_provider_smoke_after_deployment"
     }
   ],
   "operation_notes": [
     "This bundle is a read-only handoff index over existing local evidence files.",
     "Regenerate prerequisite evidence reports after configuration, dependency, source, or index lifecycle changes.",
     "External control planes still own provider registration, heartbeat governance, audit policy, and source-to-agent binding decisions.",
-    "At least one evidence artifact requires human review before promotion."
+    "At least one evidence artifact requires human review before promotion.",
+    "Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding."
   ],
   "json_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
   "markdown_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"

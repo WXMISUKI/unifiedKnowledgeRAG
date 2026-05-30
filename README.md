@@ -155,6 +155,8 @@ docs/integration/deployed-provider-smoke/deployed-provider-smoke.md
 
 该 smoke 只调用 `GET /health`、`GET /api/provider/manifest`、`GET /api/provider/preflight` 和 `GET /api/provider/handoff`。它用于确认已经运行的 provider 组件可达、鉴权可用、handoff evidence 可审阅；不会执行 RAG 检索、回答生成、ingestion、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。若 endpoint 不可达、认证失败、manifest/preflight 不兼容或 handoff 为 `blocked`，脚本会保留证据并以非零状态退出。
 
+Provider handoff bundle 会把 deployed smoke 作为 optional evidence 汇总。未生成 deployed smoke 时，handoff bundle 会保持 `review` 并提示部署后运行；一旦存在 deployed smoke 且状态为 `blocked`，handoff bundle 也会阻塞。这样本地开发不依赖外部 URL，但真正交付给 MyPrivateAgent 或部署审查前仍能从同一个 handoff 入口看到 live URL 证据。
+
 ## 简单验证
 
 ```powershell
@@ -1607,6 +1609,8 @@ conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
 ```
 
 它从真实 HTTP base URL 只读验证 `/health`、provider manifest、preflight 和 handoff endpoint，并在 `docs/integration/deployed-provider-smoke/` 输出 JSON / Markdown。这个切片的价值是把“容器或网络服务是否真的可被外部控制面访问”变成可保存证据；它仍不负责 TLS、反向代理、托管密钥、注册、heartbeat、审计、source-to-agent binding 或最终 answer policy。
+
+第六十三阶段 OpenSpec change `include-deployed-smoke-in-handoff-bundle` 将 deployed smoke 纳入 handoff bundle 的 optional evidence。未运行部署 smoke 时，bundle 不会因为缺少外部 URL 证据而 blocked，而是显示 `review` 和 `run_deployed_provider_smoke_after_deployment`；如果已经生成的 deployed smoke 为 `blocked`，bundle 会阻塞，避免外部控制面误以为 live deployment 已可绑定。
 
 ## 设计文档
 

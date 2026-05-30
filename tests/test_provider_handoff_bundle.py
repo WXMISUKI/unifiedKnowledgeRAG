@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -23,7 +24,17 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["provider_contract_smoke"]["status"] == "ready"
     assert artifacts["deployment_readiness"]["status"] == "review"
     assert artifacts["reindex_readiness"]["status"] == "ready"
+    assert artifacts["deployed_provider_smoke"]["present"] is False
+    assert artifacts["deployed_provider_smoke"]["required"] is False
+    assert artifacts["deployed_provider_smoke"]["status"] == "review"
+    assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
+        "run_deployed_provider_smoke_after_deployment"
+    )
     assert any("read-only" in note for note in report.operation_notes)
+    assert any(
+        "Deployed provider smoke evidence is optional" in note
+        for note in report.operation_notes
+    )
 
 
 def test_provider_handoff_bundle_blocks_missing_evidence(tmp_path):
@@ -43,6 +54,7 @@ def test_provider_handoff_bundle_blocks_missing_evidence(tmp_path):
     assert report.status == "blocked"
     artifact = report.evidence_artifacts[0]
     assert artifact["present"] is False
+    assert artifact["required"] is True
     assert artifact["status"] == "missing"
     assert artifact["recommended_action"] == "regenerate_provider_contract_smoke"
 
@@ -78,6 +90,7 @@ def test_provider_handoff_bundle_blocks_failed_smoke(tmp_path):
     assert report.status == "blocked"
     artifact = report.evidence_artifacts[0]
     assert artifact["present"] is True
+    assert artifact["required"] is True
     assert artifact["status"] == "blocked"
     assert artifact["recommended_action"] == "resolve_failed_evidence"
 
@@ -139,6 +152,10 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["provider_contract_smoke"]["status"] == "ready"
     assert artifacts["deployment_readiness"]["status"] == "review"
     assert artifacts["reindex_readiness"]["status"] == "ready"
+    assert artifacts["deployed_provider_smoke"]["status"] == "review"
+    assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
+        "run_deployed_provider_smoke_after_deployment"
+    )
     assert body["json_path"] is None
     assert body["markdown_path"] is None
 
@@ -162,3 +179,74 @@ def test_provider_handoff_endpoint_is_side_effect_free(monkeypatch):
 
     assert response.status_code == 200
     assert response.json()["id"] == "provider-handoff-bundle-v1"
+
+
+def test_provider_handoff_bundle_summarizes_ready_deployed_smoke(tmp_path):
+    smoke_path = tmp_path / "deployed-smoke.json"
+    smoke_path.write_text(
+        json.dumps(
+            {
+                "status": "ready",
+                "base_url": "https://provider.example.com",
+                "handoff": {"status": "ready"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    specs = [
+        HandoffEvidenceSpec(
+            id="deployed_provider_smoke",
+            category="deployed-integration",
+            path=Path("deployed-smoke.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "ready"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is True
+    assert artifact["required"] is False
+    assert artifact["status"] == "ready"
+    assert artifact["summary"] == (
+        "status=ready; base_url=https://provider.example.com; handoff_status=ready"
+    )
+    assert artifact["recommended_action"] == "no_action_required"
+
+
+def test_provider_handoff_bundle_blocks_blocked_deployed_smoke(tmp_path):
+    smoke_path = tmp_path / "deployed-smoke.json"
+    smoke_path.write_text(
+        json.dumps(
+            {
+                "status": "blocked",
+                "base_url": "https://provider.example.com",
+                "handoff": {"status": "blocked"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    specs = [
+        HandoffEvidenceSpec(
+            id="deployed_provider_smoke",
+            category="deployed-integration",
+            path=Path("deployed-smoke.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "blocked"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is True
+    assert artifact["required"] is False
+    assert artifact["status"] == "blocked"
+    assert artifact["recommended_action"] == "resolve_failed_evidence"
