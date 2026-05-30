@@ -17,10 +17,11 @@ def test_provider_contract_smoke_passes_default_contract():
 
     assert payload["id"] == "provider-contract-smoke-v1"
     assert payload["passed"] is True
-    assert payload["summary"] == {"total": 6, "passed": 6, "failed": 0}
+    assert payload["summary"] == {"total": 7, "passed": 7, "failed": 0}
     assert [check["name"] for check in payload["checks"]] == [
         "health_readiness",
         "provider_integration_manifest",
+        "provider_preflight",
         "capability_invocation_metadata",
         "rag_retrieve_contract",
         "rag_answer_contract",
@@ -36,6 +37,12 @@ def test_provider_contract_smoke_covers_trace_filter_and_citations():
     assert manifest.details["contract_version"] == "knowledge-provider-contract-v1"
     assert manifest.details["component_role"] == "knowledge_data_plane"
     assert manifest.details["capability_count"] == 3
+
+    preflight = checks["provider_preflight"]
+    assert preflight.details["contract_version"] == "knowledge-provider-contract-v1"
+    assert preflight.details["bindable"] is True
+    assert preflight.details["check_count"] == 5
+    assert preflight.details["graph_status"] == "planned"
 
     retrieve = checks["rag_retrieve_contract"]
     assert retrieve.details["document_count"] > 0

@@ -54,6 +54,23 @@ class ProviderIntegrationManifest(BaseModel):
     boundaries: dict[str, str]
 
 
+class ProviderPreflightCheck(BaseModel):
+    name: str
+    passed: bool
+    status: str
+    details: dict[str, Any] = Field(default_factory=dict)
+    reason: str | None = None
+
+
+class ProviderPreflightResponse(BaseModel):
+    provider_id: str
+    contract_version: str
+    manifest_version: str
+    bindable: bool
+    control_plane_hint: str
+    checks: list[ProviderPreflightCheck]
+
+
 class KnowledgeBaseSource(BaseModel):
     id: str
     type: str = "rag"

@@ -29,6 +29,7 @@ def test_provider_manifest_references_integration_endpoints_and_evidence():
     assert body["endpoints"] == {
         "health": "/health",
         "manifest": "/api/provider/manifest",
+        "preflight": "/api/provider/preflight",
         "capabilities": "/api/capabilities",
         "openapi": "/openapi.json",
         "catalog": "/api/catalog",
@@ -81,3 +82,18 @@ def test_provider_manifest_service_is_side_effect_free(monkeypatch):
 
     assert manifest.provider_id == "unifiedKnowledgeProvider"
     assert manifest.endpoints["manifest"] == "/api/provider/manifest"
+    assert manifest.endpoints["preflight"] == "/api/provider/preflight"
+
+
+def test_provider_preflight_endpoint_is_advertised_from_manifest():
+    manifest_response = client.get("/api/provider/manifest")
+    response = client.get("/api/provider/preflight")
+
+    assert manifest_response.status_code == 200
+    assert manifest_response.json()["endpoints"]["preflight"] == (
+        "/api/provider/preflight"
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["provider_id"] == "unifiedKnowledgeProvider"
+    assert body["bindable"] is True

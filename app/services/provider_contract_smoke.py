@@ -41,6 +41,11 @@ def run_provider_contract_smoke(client: Any | None = None) -> ProviderContractSm
             lambda: _check_manifest(client),
         ),
         _run_check(
+            "provider_preflight",
+            "GET /api/provider/preflight",
+            lambda: _check_preflight(client),
+        ),
+        _run_check(
             "capability_invocation_metadata",
             "GET /api/capabilities",
             lambda: _check_capabilities(client),
@@ -217,6 +222,27 @@ def _check_manifest(client: Any) -> dict[str, Any]:
     }
 
 
+def _check_preflight(client: Any) -> dict[str, Any]:
+    response = client.get("/api/provider/preflight")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["provider_id"] == "unifiedKnowledgeProvider"
+    assert body["contract_version"] == "knowledge-provider-contract-v1"
+    assert body["bindable"] is True
+    checks = {check["name"]: check for check in body["checks"]}
+    assert checks["manifest_identity"]["passed"] is True
+    assert checks["health_readiness"]["passed"] is True
+    assert checks["required_capabilities"]["passed"] is True
+    assert checks["schema_references"]["passed"] is True
+    assert checks["graph_boundary"]["status"] == "planned"
+    return {
+        "contract_version": body["contract_version"],
+        "bindable": body["bindable"],
+        "check_count": len(body["checks"]),
+        "graph_status": checks["graph_boundary"]["status"],
+    }
+
+
 def _check_capabilities(client: Any) -> dict[str, Any]:
     response = client.get("/api/capabilities")
     assert response.status_code == 200
@@ -344,6 +370,8 @@ def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
             "contract_version",
             "component_role",
             "capability_count",
+            "check_count",
+            "graph_status",
         }
     }
     return f"`{json.dumps(compact, ensure_ascii=False)}`"

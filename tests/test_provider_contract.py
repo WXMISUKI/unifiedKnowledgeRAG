@@ -100,6 +100,21 @@ def test_provider_manifest_is_available_for_control_plane_preflight():
     ]
 
 
+def test_provider_preflight_is_available_for_control_plane_binding():
+    response = client.get("/api/provider/preflight")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["provider_id"] == "unifiedKnowledgeProvider"
+    assert body["contract_version"] == "knowledge-provider-contract-v1"
+    assert body["bindable"] is True
+    checks = {check["name"]: check for check in body["checks"]}
+    assert checks["required_capabilities"]["details"]["missing_capability_ids"] == []
+    assert checks["schema_references"]["details"][
+        "missing_schema_ref_capability_ids"
+    ] == []
+
+
 def test_catalog_exposes_knowledge_bases_and_graphs():
     response = client.get("/api/catalog")
 

@@ -10,6 +10,7 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 - `GET /health`
 - `GET /api/provider/manifest`
+- `GET /api/provider/preflight`
 - `GET /api/capabilities`
 - `GET /api/catalog`
 - `GET /api/rag/sources`
@@ -27,6 +28,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref` 和 `response_schema_ref`，便于上层控制面根据能力 id 找到调用入口并从 `/openapi.json` 解析请求/响应合同。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`。
 
 `GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
+
+`GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
 `GET /health` 会分别报告 document RAG retrieval readiness 和 answer composer readiness。若 `RAG_ANSWER_COMPOSER=hosted` 或 `local` 但对应 composer 尚未实现，服务会报告 `status=degraded`，并且 `knowledge.rag.answer` capability 也会显示 `degraded`；`knowledge.rag.retrieve` 不受该 composer 配置影响。
 

@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T02:47:42.321284+00:00",
+  "generated_at": "2026-05-30T03:06:55.327327+00:00",
   "passed": true,
   "checks": [
     {
@@ -25,6 +25,18 @@
         "contract_version": "knowledge-provider-contract-v1",
         "component_role": "knowledge_data_plane",
         "capability_count": 3
+      },
+      "error": null
+    },
+    {
+      "name": "provider_preflight",
+      "passed": true,
+      "endpoint": "GET /api/provider/preflight",
+      "details": {
+        "contract_version": "knowledge-provider-contract-v1",
+        "bindable": true,
+        "check_count": 5,
+        "graph_status": "planned"
       },
       "error": null
     },
@@ -89,8 +101,8 @@
     }
   ],
   "summary": {
-    "total": 6,
-    "passed": 6,
+    "total": 7,
+    "passed": 7,
     "failed": 0
   },
   "json_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
