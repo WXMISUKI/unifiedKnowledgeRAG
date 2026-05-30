@@ -1,4 +1,6 @@
+import json
 from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Any, Protocol
 
 
@@ -47,9 +49,11 @@ class ProviderIntegrationProbeReport:
     capability_bindings: list[ProviderCapabilityBinding] = field(default_factory=list)
     checks: list[dict[str, Any]] = field(default_factory=list)
     errors: list[dict[str, Any]] = field(default_factory=list)
+    json_path: Path | None = None
+    markdown_path: Path | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        return provider_integration_probe_report_to_dict(self)
 
 
 def probe_provider_binding(
@@ -119,6 +123,124 @@ def probe_provider_binding(
         checks=preflight.get("checks", []),
         errors=errors,
     )
+
+
+def provider_integration_probe_report_to_dict(
+    report: ProviderIntegrationProbeReport,
+) -> dict[str, Any]:
+    payload = asdict(report)
+    if report.json_path is not None:
+        payload["json_path"] = str(report.json_path)
+    if report.markdown_path is not None:
+        payload["markdown_path"] = str(report.markdown_path)
+    return payload
+
+
+def render_provider_integration_probe_markdown(
+    report: ProviderIntegrationProbeReport,
+) -> str:
+    status = "bindable" if report.bindable else "not-bindable"
+    lines = [
+        "# Provider Integration Probe Report",
+        "",
+        f"- Status: `{status}`",
+        f"- Provider: `{report.provider_id or 'unknown'}`",
+        f"- Provider Name: `{report.provider_name or 'unknown'}`",
+        f"- Contract Version: `{report.contract_version or 'unknown'}`",
+        f"- Manifest Version: `{report.manifest_version or 'unknown'}`",
+        f"- Requested Contract Version: `{report.requested_contract_version}`",
+        f"- Requested Capabilities: `{', '.join(report.requested_capability_ids)}`",
+        "",
+        "## Capability Bindings",
+        "",
+        "| Capability | Status | Path | Example Request |",
+        "|---|---|---|---|",
+    ]
+    for binding in report.capability_bindings:
+        invocation_path = binding.invocation.get("path", "")
+        example_status = "present" if binding.has_example_request else "missing"
+        lines.append(
+            f"| `{binding.id}` | `{binding.status}` | `{invocation_path}` | `{example_status}` |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Preflight Checks",
+            "",
+            "| Check | Status | Passed | Reason |",
+            "|---|---|---|---|",
+        ]
+    )
+    for check in report.checks:
+        lines.append(
+            "| "
+            f"`{check.get('name', '')}` | "
+            f"`{check.get('status', '')}` | "
+            f"`{check.get('passed')}` | "
+            f"`{check.get('reason') or ''}` |"
+        )
+
+    if report.errors:
+        lines.extend(["", "## Errors", "", "| Code | Message |", "|---|---|"])
+        for error in report.errors:
+            lines.append(
+                f"| `{error.get('code', '')}` | `{error.get('message', '')}` |"
+            )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def export_provider_integration_probe_report(
+    output_dir: Path = Path("docs/integration/provider-binding"),
+    *,
+    client: ReadOnlyHttpClient | None = None,
+    required_contract_version: str = "knowledge-provider-contract-v1",
+    required_capability_ids: list[str] | None = None,
+) -> ProviderIntegrationProbeReport:
+    if client is None:
+        from fastapi.testclient import TestClient
+
+        from app.main import create_app
+
+        client = TestClient(create_app())
+
+    report = probe_provider_binding(
+        client,
+        required_contract_version=required_contract_version,
+        required_capability_ids=required_capability_ids,
+    )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / "provider-integration-probe.json"
+    markdown_path = output_dir / "provider-integration-probe.md"
+    exported_report = ProviderIntegrationProbeReport(
+        bindable=report.bindable,
+        provider_id=report.provider_id,
+        provider_name=report.provider_name,
+        contract_version=report.contract_version,
+        manifest_version=report.manifest_version,
+        requested_contract_version=report.requested_contract_version,
+        requested_capability_ids=report.requested_capability_ids,
+        capability_bindings=report.capability_bindings,
+        checks=report.checks,
+        errors=report.errors,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+    json_path.write_text(
+        json.dumps(
+            provider_integration_probe_report_to_dict(exported_report),
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    markdown_path.write_text(
+        render_provider_integration_probe_markdown(exported_report),
+        encoding="utf-8",
+    )
+    return exported_report
 
 
 def _get_json(

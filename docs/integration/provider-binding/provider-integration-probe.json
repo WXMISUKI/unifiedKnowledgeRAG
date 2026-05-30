@@ -1,0 +1,180 @@
+{
+  "bindable": true,
+  "provider_id": "unifiedKnowledgeProvider",
+  "provider_name": "unifiedKnowledgeRAG",
+  "contract_version": "knowledge-provider-contract-v1",
+  "manifest_version": "provider-integration-manifest-v1",
+  "requested_contract_version": "knowledge-provider-contract-v1",
+  "requested_capability_ids": [
+    "knowledge.rag.retrieve",
+    "knowledge.rag.answer",
+    "knowledge.graph.query"
+  ],
+  "capability_bindings": [
+    {
+      "id": "knowledge.rag.retrieve",
+      "status": "ready",
+      "reason": null,
+      "invocation": {
+        "protocol": "http",
+        "method": "POST",
+        "path": "/api/rag/retrieve",
+        "request_schema_ref": "#/components/schemas/RagRetrieveRequest",
+        "response_schema_ref": "#/components/schemas/RagRetrieveResponse",
+        "example_request": {
+          "query": "客户三天未发货能否退款？",
+          "knowledge_base_ids": [
+            "refund_policy_docs"
+          ],
+          "top_k": 2,
+          "filters": {
+            "agent_id": "myprivateagent_probe",
+            "role": "after_sales_specialist"
+          }
+        }
+      },
+      "has_example_request": true
+    },
+    {
+      "id": "knowledge.rag.answer",
+      "status": "ready",
+      "reason": null,
+      "invocation": {
+        "protocol": "http",
+        "method": "POST",
+        "path": "/api/rag/answer",
+        "request_schema_ref": "#/components/schemas/RagAnswerRequest",
+        "response_schema_ref": "#/components/schemas/RagAnswerResponse",
+        "example_request": {
+          "query": "客户三天未发货能否退款？",
+          "knowledge_base_ids": [
+            "refund_policy_docs"
+          ],
+          "top_k": 2,
+          "filters": {
+            "agent_id": "myprivateagent_probe",
+            "role": "after_sales_specialist"
+          }
+        }
+      },
+      "has_example_request": true
+    },
+    {
+      "id": "knowledge.graph.query",
+      "status": "planned",
+      "reason": "Graph query execution is not implemented in this slice.",
+      "invocation": {
+        "protocol": "http",
+        "method": "POST",
+        "path": "/api/graph/query",
+        "request_schema_ref": "#/components/schemas/GraphQueryRequest",
+        "response_schema_ref": "#/components/schemas/GraphQueryResponse",
+        "example_request": {
+          "graph_id": "ecommerce_order_graph",
+          "query": "订单 order-1 的售后关系",
+          "entity_ids": [
+            "order-1"
+          ],
+          "relation_types": [
+            "has_refund"
+          ],
+          "filters": {
+            "agent_id": "myprivateagent_probe"
+          }
+        }
+      },
+      "has_example_request": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "manifest_identity",
+      "passed": true,
+      "status": "ready",
+      "details": {
+        "provider_id": "unifiedKnowledgeProvider",
+        "component_role": "knowledge_data_plane",
+        "compatible_control_planes": [
+          "MyPrivateAgent"
+        ],
+        "contract_version": "knowledge-provider-contract-v1"
+      },
+      "reason": null
+    },
+    {
+      "name": "contract_version",
+      "passed": true,
+      "status": "ready",
+      "details": {
+        "required_contract_version": "knowledge-provider-contract-v1",
+        "provider_contract_version": "knowledge-provider-contract-v1"
+      },
+      "reason": null
+    },
+    {
+      "name": "health_readiness",
+      "passed": true,
+      "status": "ok",
+      "details": {
+        "service": "unifiedKnowledgeProvider",
+        "rag_status": "ready",
+        "rag_backend": "fixture",
+        "rag_backend_status": "ready",
+        "rag_index_status": "ready",
+        "answer_status": "ready",
+        "answer_backend": "deterministic",
+        "graph_status": "planned"
+      },
+      "reason": null
+    },
+    {
+      "name": "required_capabilities",
+      "passed": true,
+      "status": "ready",
+      "details": {
+        "required_capability_ids": [
+          "knowledge.rag.retrieve",
+          "knowledge.rag.answer",
+          "knowledge.graph.query"
+        ],
+        "available_capability_ids": [
+          "knowledge.graph.query",
+          "knowledge.rag.answer",
+          "knowledge.rag.retrieve"
+        ],
+        "missing_capability_ids": []
+      },
+      "reason": null
+    },
+    {
+      "name": "schema_references",
+      "passed": true,
+      "status": "ready",
+      "details": {
+        "openapi_path": "/openapi.json",
+        "checked_capability_ids": [
+          "knowledge.rag.retrieve",
+          "knowledge.rag.answer",
+          "knowledge.graph.query"
+        ],
+        "missing_schema_ref_capability_ids": []
+      },
+      "reason": null
+    },
+    {
+      "name": "graph_boundary",
+      "passed": true,
+      "status": "planned",
+      "details": {
+        "capability_id": "knowledge.graph.query",
+        "capability_status": "planned",
+        "execution_status": "planned",
+        "reason": "Graph query execution is not implemented in this slice."
+      },
+      "reason": null
+    }
+  ],
+  "errors": [],
+  "json_path": "docs\\integration\\provider-binding\\provider-integration-probe.json",
+  "markdown_path": "docs\\integration\\provider-binding\\provider-integration-probe.md"
+}

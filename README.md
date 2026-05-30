@@ -55,6 +55,21 @@ assert report.bindable is True
 
 该探针按 `manifest -> preflight -> capabilities` 顺序读取 provider 元数据，返回 provider identity、contract version、preflight checks、capability invocation 和 `example_request` 覆盖情况。它默认不会执行 `/api/rag/retrieve`、`/api/rag/answer`、ingestion 或 `/api/graph/query`，适合作为外部控制面注册 provider 前的 fail-closed 检查。
 
+需要把绑定探针结果落成可审阅证据时，可以导出本地 JSON / Markdown 报告：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_integration_probe.py
+```
+
+默认输出：
+
+```text
+docs/integration/provider-binding/provider-integration-probe.json
+docs/integration/provider-binding/provider-integration-probe.md
+```
+
+导出报告仍只读取 manifest、preflight 和 capabilities；如果要求的 contract version 或 capability id 不兼容，脚本会保留失败证据文件并以非零状态退出。
+
 `GET /health` 会分别报告 document RAG retrieval readiness 和 answer composer readiness。若 `RAG_ANSWER_COMPOSER=hosted` 或 `local` 但对应 composer 尚未实现，服务会报告 `status=degraded`，并且 `knowledge.rag.answer` capability 也会显示 `degraded`；`knowledge.rag.retrieve` 不受该 composer 配置影响。
 
 GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，图数据库、ontology traversal、hybrid retrieval 将在后续 change 中实现。

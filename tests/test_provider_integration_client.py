@@ -1,7 +1,13 @@
+import json
+
 from fastapi.testclient import TestClient
 
 from app.main import create_app
-from app.services.provider_integration_client import probe_provider_binding
+from app.services.provider_integration_client import (
+    export_provider_integration_probe_report,
+    probe_provider_binding,
+    render_provider_integration_probe_markdown,
+)
 
 
 def test_provider_integration_probe_passes_default_provider():
@@ -145,3 +151,55 @@ def test_provider_integration_probe_reports_missing_examples():
             "details": {"capability_ids": ["knowledge.rag.retrieve"]},
         }
     ]
+
+
+def test_provider_integration_probe_export_writes_json_and_markdown(tmp_path):
+    report = export_provider_integration_probe_report(
+        output_dir=tmp_path / "binding",
+        client=TestClient(create_app()),
+    )
+
+    assert report.bindable is True
+    assert report.json_path is not None
+    assert report.markdown_path is not None
+    payload = json.loads(report.json_path.read_text(encoding="utf-8"))
+    markdown = report.markdown_path.read_text(encoding="utf-8")
+    assert payload["bindable"] is True
+    assert payload["json_path"] == str(report.json_path)
+    assert payload["markdown_path"] == str(report.markdown_path)
+    assert payload["capability_bindings"][0]["has_example_request"] is True
+    assert "# Provider Integration Probe Report" in markdown
+    assert "| `knowledge.rag.retrieve` | `ready` | `/api/rag/retrieve` | `present` |" in markdown
+
+
+def test_provider_integration_probe_export_writes_non_bindable_evidence(tmp_path):
+    report = export_provider_integration_probe_report(
+        output_dir=tmp_path / "binding",
+        client=TestClient(create_app()),
+        required_contract_version="knowledge-provider-contract-v2",
+        required_capability_ids=["knowledge.graph.traverse"],
+    )
+
+    assert report.bindable is False
+    assert report.json_path is not None
+    payload = json.loads(report.json_path.read_text(encoding="utf-8"))
+    markdown = report.markdown_path.read_text(encoding="utf-8")
+    assert payload["bindable"] is False
+    assert payload["errors"] == [
+        {
+            "code": "MISSING_CAPABILITY",
+            "message": "Required capabilities are missing from discovery.",
+            "details": {"capability_ids": ["knowledge.graph.traverse"]},
+        }
+    ]
+    assert "- Status: `not-bindable`" in markdown
+    assert "`MISSING_CAPABILITY`" in markdown
+
+
+def test_provider_integration_probe_markdown_omits_full_example_payload():
+    report = probe_provider_binding(TestClient(create_app()))
+
+    markdown = render_provider_integration_probe_markdown(report)
+
+    assert "`present`" in markdown
+    assert "客户三天未发货能否退款" not in markdown
