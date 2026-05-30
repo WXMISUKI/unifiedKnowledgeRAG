@@ -110,6 +110,7 @@ class RagAnswerResult(BaseModel):
 class ProviderError(BaseModel):
     code: str
     message: str
+    details: dict[str, Any] | None = None
 
 
 class IngestionJobRequest(BaseModel):

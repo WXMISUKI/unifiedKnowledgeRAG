@@ -29,6 +29,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，图数据库、ontology traversal、hybrid retrieval 将在后续 change 中实现。
 
+Provider error envelope 保持 `ok=false`、`result=null`、`error.code` 和 `error.message` 的稳定形态，并额外提供可选 `error.details`。例如未知知识库会返回 `requested_source_ids` / `unknown_source_ids`，索引未就绪会返回 `not_ready_source_ids` 和 `retrieval_backend`，answer composer 配置错误会返回当前 composer/model 和支持的 composer 名称，GraphRAG planned error 会返回 graph id 与 capability id。上层控制面应优先读取这些结构化字段，而不是解析 message 文本。
+
 `POST /api/rag/answer` 是 retrieval 之上的引用式回答编排入口。当前第一版使用确定性 extractive composer，不调用 Qwen、OpenAI 或本地大模型；它用于先稳定 answer envelope、citation、evidence 和 insufficient-evidence 合同。生产 LLM、流式回答、reranker、多 chunk synthesis 和 GraphRAG 多跳仍会按后续 OpenSpec change 单独评估。
 
 ## 本地运行

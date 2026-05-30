@@ -7,6 +7,7 @@ from app.services.answer_trace import attach_answer_trace
 
 
 DETERMINISTIC_COMPOSER_ID = "deterministic-extractive-v1"
+SUPPORTED_ANSWER_COMPOSERS = ["deterministic", "hosted", "local"]
 
 
 class AnswerComposer(ABC):
@@ -93,10 +94,20 @@ def create_answer_composer(settings: Settings) -> tuple[AnswerComposer | None, P
                 f"Answer composer '{provider}' is not implemented yet. "
                 "Use deterministic until a model provider change is approved."
             ),
+            details={
+                "configured_composer": provider,
+                "configured_model": settings.rag_answer_composer_model,
+                "supported_composers": SUPPORTED_ANSWER_COMPOSERS,
+            },
         )
     return None, ProviderError(
         code="UNSUPPORTED_ANSWER_COMPOSER",
         message=f"Unsupported RAG_ANSWER_COMPOSER: {settings.rag_answer_composer}",
+        details={
+            "configured_composer": provider,
+            "configured_model": settings.rag_answer_composer_model,
+            "supported_composers": SUPPORTED_ANSWER_COMPOSERS,
+        },
     )
 
 

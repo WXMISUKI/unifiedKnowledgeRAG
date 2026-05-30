@@ -234,6 +234,11 @@ def test_rag_answer_hosted_composer_fails_closed(monkeypatch):
     assert body["result"] is None
     assert body["error"]["code"] == "ANSWER_COMPOSER_NOT_IMPLEMENTED"
     assert "hosted" in body["error"]["message"]
+    assert body["error"]["details"] == {
+        "configured_composer": "hosted",
+        "configured_model": "deterministic-extractive-v1",
+        "supported_composers": ["deterministic", "hosted", "local"],
+    }
 
 
 def test_rag_answer_unknown_composer_returns_structured_error(monkeypatch):
@@ -255,6 +260,11 @@ def test_rag_answer_unknown_composer_returns_structured_error(monkeypatch):
     assert body["result"] is None
     assert body["error"]["code"] == "UNSUPPORTED_ANSWER_COMPOSER"
     assert "mystery" in body["error"]["message"]
+    assert body["error"]["details"] == {
+        "configured_composer": "mystery",
+        "configured_model": "deterministic-extractive-v1",
+        "supported_composers": ["deterministic", "hosted", "local"],
+    }
 
 
 def test_rag_answer_low_score_gate_returns_insufficient_evidence(monkeypatch):
@@ -434,6 +444,10 @@ def test_rag_retrieve_unknown_source_returns_structured_error():
     assert body["result"] is None
     assert body["error"]["code"] == "UNKNOWN_KNOWLEDGE_BASE"
     assert "missing_docs" in body["error"]["message"]
+    assert body["error"]["details"] == {
+        "requested_source_ids": ["missing_docs"],
+        "unknown_source_ids": ["missing_docs"],
+    }
 
 
 def test_rag_answer_unknown_source_returns_structured_error():
@@ -453,6 +467,10 @@ def test_rag_answer_unknown_source_returns_structured_error():
     assert body["result"] is None
     assert body["error"]["code"] == "UNKNOWN_KNOWLEDGE_BASE"
     assert "missing_docs" in body["error"]["message"]
+    assert body["error"]["details"] == {
+        "requested_source_ids": ["missing_docs"],
+        "unknown_source_ids": ["missing_docs"],
+    }
 
 
 def test_graph_schemas_expose_serializable_metadata():
@@ -482,3 +500,8 @@ def test_graph_query_returns_structured_not_implemented_error():
     assert body["ok"] is False
     assert body["result"] is None
     assert body["error"]["code"] == "GRAPH_NOT_IMPLEMENTED"
+    assert body["error"]["details"] == {
+        "graph_id": "ecommerce_order_graph",
+        "status": "planned",
+        "capability_id": "knowledge.graph.query",
+    }

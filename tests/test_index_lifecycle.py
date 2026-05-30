@@ -108,6 +108,11 @@ def test_retrieval_returns_index_not_ready_for_llamaindex(monkeypatch, tmp_path)
     body = response.json()
     assert body["ok"] is False
     assert body["error"]["code"] == "INDEX_NOT_READY"
+    assert body["error"]["details"] == {
+        "requested_source_ids": ["refund_policy_docs"],
+        "not_ready_source_ids": ["refund_policy_docs"],
+        "retrieval_backend": "llamaindex",
+    }
 
 
 def test_answer_returns_index_not_ready_for_llamaindex(monkeypatch, tmp_path):
@@ -135,6 +140,11 @@ def test_answer_returns_index_not_ready_for_llamaindex(monkeypatch, tmp_path):
     body = response.json()
     assert body["ok"] is False
     assert body["error"]["code"] == "INDEX_NOT_READY"
+    assert body["error"]["details"] == {
+        "requested_source_ids": ["refund_policy_docs"],
+        "not_ready_source_ids": ["refund_policy_docs"],
+        "retrieval_backend": "llamaindex",
+    }
 
 
 def test_retrieval_returns_index_not_ready_before_qdrant_query(monkeypatch, tmp_path):
@@ -171,6 +181,11 @@ def test_retrieval_returns_index_not_ready_before_qdrant_query(monkeypatch, tmp_
     body = response.json()
     assert body["ok"] is False
     assert body["error"]["code"] == "INDEX_NOT_READY"
+    assert body["error"]["details"] == {
+        "requested_source_ids": ["refund_policy_docs"],
+        "not_ready_source_ids": ["refund_policy_docs"],
+        "retrieval_backend": "qdrant",
+    }
 
 
 def test_retrieval_calls_qdrant_after_source_index_is_ready(monkeypatch, tmp_path):

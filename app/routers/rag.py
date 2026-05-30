@@ -34,6 +34,10 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             error=ProviderError(
                 code="UNKNOWN_KNOWLEDGE_BASE",
                 message=f"Unknown knowledge base id(s): {', '.join(unknown_sources)}",
+                details={
+                    "requested_source_ids": request.knowledge_base_ids,
+                    "unknown_source_ids": unknown_sources,
+                },
             ),
         )
     not_ready_sources = retriever.not_ready_sources(request.knowledge_base_ids)
@@ -43,6 +47,11 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             error=ProviderError(
                 code="INDEX_NOT_READY",
                 message=f"Source index is not ready: {', '.join(not_ready_sources)}",
+                details={
+                    "requested_source_ids": request.knowledge_base_ids,
+                    "not_ready_source_ids": not_ready_sources,
+                    "retrieval_backend": retriever.backend_name,
+                },
             ),
         )
     unknown_sources, documents = retriever.retrieve(
@@ -57,6 +66,10 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             error=ProviderError(
                 code="UNKNOWN_KNOWLEDGE_BASE",
                 message=f"Unknown knowledge base id(s): {', '.join(unknown_sources)}",
+                details={
+                    "requested_source_ids": request.knowledge_base_ids,
+                    "unknown_source_ids": unknown_sources,
+                },
             ),
         )
 
@@ -91,6 +104,10 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             error=ProviderError(
                 code="UNKNOWN_KNOWLEDGE_BASE",
                 message=f"Unknown knowledge base id(s): {', '.join(unknown_sources)}",
+                details={
+                    "requested_source_ids": request.knowledge_base_ids,
+                    "unknown_source_ids": unknown_sources,
+                },
             ),
         )
     not_ready_sources = retriever.not_ready_sources(request.knowledge_base_ids)
@@ -100,6 +117,11 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             error=ProviderError(
                 code="INDEX_NOT_READY",
                 message=f"Source index is not ready: {', '.join(not_ready_sources)}",
+                details={
+                    "requested_source_ids": request.knowledge_base_ids,
+                    "not_ready_source_ids": not_ready_sources,
+                    "retrieval_backend": retriever.backend_name,
+                },
             ),
         )
     unknown_sources, documents = retriever.retrieve(
@@ -114,6 +136,10 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             error=ProviderError(
                 code="UNKNOWN_KNOWLEDGE_BASE",
                 message=f"Unknown knowledge base id(s): {', '.join(unknown_sources)}",
+                details={
+                    "requested_source_ids": request.knowledge_base_ids,
+                    "unknown_source_ids": unknown_sources,
+                },
             ),
         )
 

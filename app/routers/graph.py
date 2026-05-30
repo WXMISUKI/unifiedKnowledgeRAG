@@ -23,5 +23,10 @@ def query_graph(request: GraphQueryRequest) -> GraphQueryResponse:
         error=ProviderError(
             code="GRAPH_NOT_IMPLEMENTED",
             message=f"Graph query execution is not implemented for graph_id '{request.graph_id}' in this slice.",
+            details={
+                "graph_id": request.graph_id,
+                "status": "planned",
+                "capability_id": "knowledge.graph.query",
+            },
         ),
     )
