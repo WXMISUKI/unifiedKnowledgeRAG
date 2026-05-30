@@ -11,6 +11,7 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /health`
 - `GET /api/provider/manifest`
 - `GET /api/provider/preflight`
+- `GET /api/provider/handoff`
 - `GET /api/capabilities`
 - `GET /api/catalog`
 - `GET /api/rag/sources`
@@ -34,6 +35,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 `GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。manifest 也会暴露 `rag_source_documents_template=/api/rag/sources/{source_id}/documents`，便于调用方发现 source document manifest 诊断入口。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
+
+`GET /api/provider/handoff` 是只读交接包 API。它返回当前 `provider-handoff-bundle-v1` 状态，包括 provider identity、contract version、集成证据、contract smoke、deployment readiness 和 reindex readiness 的汇总行与 recommended action。该接口读取当前本地 evidence artifacts，不会重新刷新证据、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG；需要刷新证据时仍应显式运行 `scripts/export_provider_handoff_refresh.py`。
 
 Preflight 支持控制面显式声明绑定要求：
 
@@ -1456,7 +1459,15 @@ docs/integration/provider-handoff-refresh/provider-handoff-refresh.md
 
 结论：交付给 MyPrivateAgent 或部署审查前，优先运行这个 refresh 命令，避免 handoff bundle 读到旧证据。它只刷新本地证据文件，不会启动服务、添加 HTTP endpoint、创建 ingestion job、显式重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。
 
-第五十六阶段 OpenSpec change `add-source-document-fingerprint-diagnostics` 回到 roadmap Phase 2，给 source document manifest 增加本地文件 fingerprint / drift diagnostics。现在 `GET /api/rag/sources/{source_id}/documents` 的每个 document manifest 会额外返回：
+第五十六阶段 OpenSpec change `expose-provider-handoff-endpoint` 将本地 handoff bundle 暴露为轻量只读 HTTP discovery：
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8020/api/provider/handoff
+```
+
+返回内容仍是当前 `provider-handoff-bundle-v1`，不会自动刷新前置证据。它的价值是让 MyPrivateAgent 或其他外部控制面可以通过 provider API 获取交接包状态，而不是直接读取本仓库的 JSON 文件。控制面仍然负责 provider 注册、heartbeat governance、审计、source-to-agent binding 和最终 answer policy。
+
+第五十七阶段 OpenSpec change `add-source-document-fingerprint-diagnostics` 回到 roadmap Phase 2，给 source document manifest 增加本地文件 fingerprint / drift diagnostics。现在 `GET /api/rag/sources/{source_id}/documents` 的每个 document manifest 会额外返回：
 
 ```text
 source_file_status
@@ -1475,7 +1486,7 @@ drift_status
 
 结论：这个能力用于在调用方绑定、引用锚点审查或 reindex 前判断本地 source 文件是否已经变更。它只读取 manifest 中声明的文件并计算 sha256，不会扫描目录、解析复杂文档、创建 ingestion job、重建索引、调用 embedding/Qdrant 或执行 GraphRAG。
 
-第五十七阶段 OpenSpec change `use-source-drift-in-reindex-readiness` 将 Phase 2 的 source fingerprint/drift diagnostics 接入 Phase 6 的 reindex readiness。现在 `reindex-readiness-v1` 的 source row 会包含：
+第五十八阶段 OpenSpec change `use-source-drift-in-reindex-readiness` 将 Phase 2 的 source fingerprint/drift diagnostics 接入 Phase 6 的 reindex readiness。现在 `reindex-readiness-v1` 的 source row 会包含：
 
 ```text
 source_fingerprint_status

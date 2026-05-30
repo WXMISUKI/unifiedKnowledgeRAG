@@ -34,6 +34,7 @@ def build_provider_integration_manifest() -> ProviderIntegrationManifest:
             "health": "/health",
             "manifest": "/api/provider/manifest",
             "preflight": "/api/provider/preflight",
+            "provider_handoff": "/api/provider/handoff",
             "capabilities": "/api/capabilities",
             "openapi": "/openapi.json",
             "catalog": "/api/catalog",

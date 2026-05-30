@@ -1,5 +1,8 @@
 import json
 
+from fastapi.testclient import TestClient
+
+from app.main import create_app
 from app.services.provider_handoff_bundle import (
     HandoffEvidenceSpec,
     build_provider_handoff_bundle_report,
@@ -119,3 +122,43 @@ def test_export_provider_handoff_bundle_writes_json_and_markdown(tmp_path):
     assert "# Provider Handoff Bundle" in markdown
     assert "| Artifact | Category | Present | Status | Summary | Recommended Action |" in markdown
     assert "provider_contract_smoke" in render_provider_handoff_bundle_markdown(report)
+
+
+def test_provider_handoff_endpoint_returns_current_bundle():
+    client = TestClient(create_app())
+
+    response = client.get("/api/provider/handoff")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["id"] == "provider-handoff-bundle-v1"
+    assert body["status"] == "review"
+    assert body["provider"]["provider_id"] == "unifiedKnowledgeProvider"
+    artifacts = {artifact["id"]: artifact for artifact in body["evidence_artifacts"]}
+    assert artifacts["provider_integration_probe"]["status"] == "ready"
+    assert artifacts["provider_contract_smoke"]["status"] == "ready"
+    assert artifacts["deployment_readiness"]["status"] == "review"
+    assert artifacts["reindex_readiness"]["status"] == "ready"
+    assert body["json_path"] is None
+    assert body["markdown_path"] is None
+
+
+def test_provider_handoff_endpoint_is_side_effect_free(monkeypatch):
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("handoff endpoint must only read handoff evidence")
+
+    monkeypatch.setattr(
+        "app.services.provider_handoff_refresh.refresh_provider_handoff_evidence",
+        fail_if_called,
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_backends.FixtureDocumentRetriever.retrieve",
+        fail_if_called,
+    )
+    monkeypatch.setattr("app.routers.graph.query_graph", fail_if_called)
+
+    client = TestClient(create_app())
+    response = client.get("/api/provider/handoff")
+
+    assert response.status_code == 200
+    assert response.json()["id"] == "provider-handoff-bundle-v1"

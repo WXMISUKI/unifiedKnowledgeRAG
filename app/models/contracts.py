@@ -74,6 +74,27 @@ class ProviderPreflightResponse(BaseModel):
     checks: list[ProviderPreflightCheck]
 
 
+class ProviderHandoffEvidenceArtifact(BaseModel):
+    id: str
+    category: str
+    path: str
+    present: bool
+    status: str
+    summary: str
+    recommended_action: str
+
+
+class ProviderHandoffBundleResponse(BaseModel):
+    id: str
+    generated_at: str
+    status: str
+    provider: dict[str, Any]
+    evidence_artifacts: list[ProviderHandoffEvidenceArtifact]
+    operation_notes: list[str] = Field(default_factory=list)
+    json_path: str | None = None
+    markdown_path: str | None = None
+
+
 class KnowledgeBaseSource(BaseModel):
     id: str
     type: str = "rag"

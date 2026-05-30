@@ -165,3 +165,15 @@ conda run -n GRAPHRAG python scripts/export_provider_handoff_refresh.py
 ```
 
 The refresh summary is written under `docs/integration/provider-handoff-refresh/`. It is intentionally local and bounded to evidence files. It does not start a server, add HTTP endpoints, create ingestion jobs, explicitly rebuild indexes, download models, call Qdrant, or execute GraphRAG. It is the preferred command before handing the provider evidence package to MyPrivateAgent or a deployment reviewer.
+
+## Provider Handoff API
+
+Phase 6 handoff evidence is also exposed through a lightweight read-only HTTP discovery endpoint:
+
+```text
+GET /api/provider/handoff
+```
+
+The endpoint returns the current `provider-handoff-bundle-v1` summary over existing local evidence artifacts. It does not regenerate prerequisite reports, start ingestion jobs, rebuild indexes, execute retrieval or answer composition, download models, call Qdrant, or execute GraphRAG.
+
+This gives MyPrivateAgent and other external control planes an API-native way to inspect the handoff bundle while preserving the provider boundary. Registration, heartbeat governance, audit policy, source-to-agent binding, and final answer policy remain caller-owned.

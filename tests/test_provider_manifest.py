@@ -30,6 +30,7 @@ def test_provider_manifest_references_integration_endpoints_and_evidence():
         "health": "/health",
         "manifest": "/api/provider/manifest",
         "preflight": "/api/provider/preflight",
+        "provider_handoff": "/api/provider/handoff",
         "capabilities": "/api/capabilities",
         "openapi": "/openapi.json",
         "catalog": "/api/catalog",
