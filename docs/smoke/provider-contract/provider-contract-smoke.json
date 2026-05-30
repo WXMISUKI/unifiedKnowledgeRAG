@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T03:06:55.327327+00:00",
+  "generated_at": "2026-05-30T03:26:40.416907+00:00",
   "passed": true,
   "checks": [
     {
@@ -35,7 +35,7 @@
       "details": {
         "contract_version": "knowledge-provider-contract-v1",
         "bindable": true,
-        "check_count": 5,
+        "check_count": 6,
         "graph_status": "planned"
       },
       "error": null

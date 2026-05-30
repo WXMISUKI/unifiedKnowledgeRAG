@@ -107,12 +107,34 @@ def test_provider_preflight_is_available_for_control_plane_binding():
     body = response.json()
     assert body["provider_id"] == "unifiedKnowledgeProvider"
     assert body["contract_version"] == "knowledge-provider-contract-v1"
+    assert body["requested_contract_version"] == "knowledge-provider-contract-v1"
     assert body["bindable"] is True
     checks = {check["name"]: check for check in body["checks"]}
     assert checks["required_capabilities"]["details"]["missing_capability_ids"] == []
     assert checks["schema_references"]["details"][
         "missing_schema_ref_capability_ids"
     ] == []
+
+
+def test_provider_preflight_rejects_incompatible_binding_requirements():
+    response = client.get(
+        "/api/provider/preflight",
+        params=[
+            ("required_contract_version", "knowledge-provider-contract-v2"),
+            ("required_capability_ids", "knowledge.rag.retrieve"),
+            ("required_capability_ids", "knowledge.graph.traverse"),
+        ],
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    checks = {check["name"]: check for check in body["checks"]}
+    assert body["bindable"] is False
+    assert checks["contract_version"]["passed"] is False
+    assert checks["required_capabilities"]["passed"] is False
+    assert checks["required_capabilities"]["details"]["missing_capability_ids"] == [
+        "knowledge.graph.traverse"
+    ]
 
 
 def test_catalog_exposes_knowledge_bases_and_graphs():

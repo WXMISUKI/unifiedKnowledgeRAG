@@ -31,6 +31,14 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
+Preflight 支持控制面显式声明绑定要求：
+
+```powershell
+Invoke-RestMethod "http://127.0.0.1:8020/api/provider/preflight?required_contract_version=knowledge-provider-contract-v1&required_capability_ids=knowledge.rag.retrieve&required_capability_ids=knowledge.rag.answer"
+```
+
+如果 `required_contract_version` 不匹配，或任一 `required_capability_ids` 不存在，接口会返回 `bindable=false`，并在 `checks` 中给出 `contract_version` 或 `required_capabilities` 的失败详情。未传参数时仍使用默认合同版本和默认知识能力集合。
+
 `GET /health` 会分别报告 document RAG retrieval readiness 和 answer composer readiness。若 `RAG_ANSWER_COMPOSER=hosted` 或 `local` 但对应 composer 尚未实现，服务会报告 `status=degraded`，并且 `knowledge.rag.answer` capability 也会显示 `degraded`；`knowledge.rag.retrieve` 不受该 composer 配置影响。
 
 GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，图数据库、ontology traversal、hybrid retrieval 将在后续 change 中实现。

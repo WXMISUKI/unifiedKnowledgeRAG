@@ -231,6 +231,7 @@ def _check_preflight(client: Any) -> dict[str, Any]:
     assert body["bindable"] is True
     checks = {check["name"]: check for check in body["checks"]}
     assert checks["manifest_identity"]["passed"] is True
+    assert checks["contract_version"]["passed"] is True
     assert checks["health_readiness"]["passed"] is True
     assert checks["required_capabilities"]["passed"] is True
     assert checks["schema_references"]["passed"] is True

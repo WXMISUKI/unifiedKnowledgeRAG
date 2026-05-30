@@ -66,6 +66,8 @@ class ProviderPreflightResponse(BaseModel):
     provider_id: str
     contract_version: str
     manifest_version: str
+    requested_contract_version: str
+    requested_capability_ids: list[str]
     bindable: bool
     control_plane_hint: str
     checks: list[ProviderPreflightCheck]

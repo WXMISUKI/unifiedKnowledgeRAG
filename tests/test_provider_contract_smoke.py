@@ -41,7 +41,7 @@ def test_provider_contract_smoke_covers_trace_filter_and_citations():
     preflight = checks["provider_preflight"]
     assert preflight.details["contract_version"] == "knowledge-provider-contract-v1"
     assert preflight.details["bindable"] is True
-    assert preflight.details["check_count"] == 5
+    assert preflight.details["check_count"] == 6
     assert preflight.details["graph_status"] == "planned"
 
     retrieve = checks["rag_retrieve_contract"]

@@ -14,18 +14,23 @@ REQUIRED_CAPABILITY_IDS = [
 
 def build_provider_preflight_response(
     settings: Settings | None = None,
+    required_contract_version: str | None = None,
+    required_capability_ids: list[str] | None = None,
 ) -> ProviderPreflightResponse:
     settings = settings or get_settings()
     manifest = build_provider_integration_manifest()
     health = build_health_response(settings)
     capabilities = build_capabilities_response(settings)
     capabilities_by_id = {capability.id: capability for capability in capabilities.capabilities}
+    requested_contract_version = required_contract_version or manifest.contract_version
+    requested_capability_ids = required_capability_ids or REQUIRED_CAPABILITY_IDS
 
     checks = [
         _manifest_check(manifest),
+        _contract_version_check(manifest, requested_contract_version),
         _health_check(health),
-        _required_capabilities_check(capabilities_by_id),
-        _schema_refs_check(capabilities_by_id),
+        _required_capabilities_check(capabilities_by_id, requested_capability_ids),
+        _schema_refs_check(capabilities_by_id, requested_capability_ids),
         _planned_graph_boundary_check(capabilities_by_id),
     ]
     bindable = all(check.passed for check in checks)
@@ -33,6 +38,8 @@ def build_provider_preflight_response(
         provider_id=manifest.provider_id,
         contract_version=manifest.contract_version,
         manifest_version=manifest.manifest_version,
+        requested_contract_version=requested_contract_version,
+        requested_capability_ids=requested_capability_ids,
         bindable=bindable,
         control_plane_hint="MyPrivateAgent",
         checks=checks,
@@ -59,6 +66,23 @@ def _manifest_check(manifest) -> ProviderPreflightCheck:
     )
 
 
+def _contract_version_check(
+    manifest,
+    required_contract_version: str,
+) -> ProviderPreflightCheck:
+    passed = manifest.contract_version == required_contract_version
+    return ProviderPreflightCheck(
+        name="contract_version",
+        passed=passed,
+        status="ready" if passed else "failed",
+        details={
+            "required_contract_version": required_contract_version,
+            "provider_contract_version": manifest.contract_version,
+        },
+        reason=None if passed else "Provider contract version is incompatible.",
+    )
+
+
 def _health_check(health) -> ProviderPreflightCheck:
     passed = health.status == "ok"
     return ProviderPreflightCheck(
@@ -79,10 +103,13 @@ def _health_check(health) -> ProviderPreflightCheck:
     )
 
 
-def _required_capabilities_check(capabilities_by_id) -> ProviderPreflightCheck:
+def _required_capabilities_check(
+    capabilities_by_id,
+    required_capability_ids: list[str],
+) -> ProviderPreflightCheck:
     missing = [
         capability_id
-        for capability_id in REQUIRED_CAPABILITY_IDS
+        for capability_id in required_capability_ids
         if capability_id not in capabilities_by_id
     ]
     passed = not missing
@@ -91,7 +118,7 @@ def _required_capabilities_check(capabilities_by_id) -> ProviderPreflightCheck:
         passed=passed,
         status="ready" if passed else "failed",
         details={
-            "required_capability_ids": REQUIRED_CAPABILITY_IDS,
+            "required_capability_ids": required_capability_ids,
             "available_capability_ids": sorted(capabilities_by_id),
             "missing_capability_ids": missing,
         },
@@ -99,10 +126,15 @@ def _required_capabilities_check(capabilities_by_id) -> ProviderPreflightCheck:
     )
 
 
-def _schema_refs_check(capabilities_by_id) -> ProviderPreflightCheck:
+def _schema_refs_check(
+    capabilities_by_id,
+    required_capability_ids: list[str],
+) -> ProviderPreflightCheck:
     missing_schema_refs = []
-    for capability_id in REQUIRED_CAPABILITY_IDS:
+    for capability_id in required_capability_ids:
         capability = capabilities_by_id.get(capability_id)
+        if capability is None:
+            continue
         invocation = capability.invocation if capability else None
         if (
             invocation is None
@@ -117,7 +149,11 @@ def _schema_refs_check(capabilities_by_id) -> ProviderPreflightCheck:
         status="ready" if passed else "failed",
         details={
             "openapi_path": "/openapi.json",
-            "checked_capability_ids": REQUIRED_CAPABILITY_IDS,
+            "checked_capability_ids": [
+                capability_id
+                for capability_id in required_capability_ids
+                if capability_id in capabilities_by_id
+            ],
             "missing_schema_ref_capability_ids": missing_schema_refs,
         },
         reason=None if passed else "Capability schema references are incomplete.",
