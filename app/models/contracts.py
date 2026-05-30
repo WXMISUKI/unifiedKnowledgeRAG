@@ -108,6 +108,42 @@ class CatalogResponse(BaseModel):
     graphs: list[GraphSource]
 
 
+class ProviderError(BaseModel):
+    code: str
+    message: str
+    details: dict[str, Any] | None = None
+
+
+class SourceDocumentManifest(BaseModel):
+    document_id: str
+    title: str
+    source_path: str
+    format: str
+    version: str
+    chunking_strategy: str
+    citation_anchors: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class SourceDocumentManifestResult(BaseModel):
+    source_id: str
+    status: str
+    owner: str
+    version: str
+    retrieval_backend: str
+    index_status: str
+    index_reason: str | None = None
+    indexed_at: str | None = None
+    latest_index_job_id: str | None = None
+    documents: list[SourceDocumentManifest]
+
+
+class SourceDocumentManifestResponse(BaseModel):
+    ok: bool
+    result: SourceDocumentManifestResult | None = None
+    error: ProviderError | None = None
+
+
 class RagRetrieveRequest(BaseModel):
     query: str = Field(min_length=1)
     knowledge_base_ids: list[str] = Field(min_length=1)
@@ -140,12 +176,6 @@ class RagAnswerResult(BaseModel):
     citations: list[str]
     documents: list[EvidenceDocument]
     metadata: dict[str, Any] = Field(default_factory=dict)
-
-
-class ProviderError(BaseModel):
-    code: str
-    message: str
-    details: dict[str, Any] | None = None
 
 
 class IngestionJobRequest(BaseModel):

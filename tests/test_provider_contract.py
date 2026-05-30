@@ -184,6 +184,78 @@ def test_rag_sources_are_available_separately():
     ]
 
 
+def test_rag_source_document_manifest_exposes_source_documents():
+    response = client.get("/api/rag/sources/refund_policy_docs/documents")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["error"] is None
+    assert body["result"]["source_id"] == "refund_policy_docs"
+    assert body["result"]["retrieval_backend"] == "fixture"
+    assert body["result"]["index_status"] == "ready"
+    assert body["result"]["documents"] == [
+        {
+            "document_id": "refund_policy_2026",
+            "title": "售后退款规则",
+            "source_path": "app/data/sources/refund_policy_docs.md",
+            "format": "markdown",
+            "version": "2026-05-28",
+            "chunking_strategy": "markdown-paragraph-v1",
+            "citation_anchors": [
+                "refund_policy_2026#section-3",
+                "refund_policy_2026#section-5",
+                "refund_policy_2026#exact-refund-code",
+                "refund_policy_2026#exception",
+                "refund_policy_2026#high-value-review",
+                "refund_policy_2026#address-change",
+                "refund_policy_2026#appeal-review",
+            ],
+            "metadata": {
+                "language": "zh-CN",
+                "document_role": "local_contract_fixture",
+            },
+        }
+    ]
+
+
+def test_rag_source_document_manifest_unknown_source_returns_structured_error():
+    response = client.get("/api/rag/sources/missing_docs/documents")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is False
+    assert body["result"] is None
+    assert body["error"] == {
+        "code": "UNKNOWN_KNOWLEDGE_BASE",
+        "message": "Unknown knowledge base id: missing_docs",
+        "details": {
+            "requested_source_id": "missing_docs",
+            "unknown_source_ids": ["missing_docs"],
+        },
+    }
+
+
+def test_rag_source_document_manifest_does_not_construct_retriever(monkeypatch):
+    def fail_if_retriever_is_constructed(settings):
+        raise AssertionError("manifest endpoint must not construct a retriever")
+
+    monkeypatch.setattr(
+        "app.services.retrieval_backends.create_document_retriever",
+        fail_if_retriever_is_constructed,
+    )
+
+    response = client.get("/api/rag/sources/logistics_faq/documents")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ok"] is True
+    assert body["result"]["source_id"] == "logistics_faq"
+    assert body["result"]["documents"][0]["citation_anchors"][0] == (
+        "logistics_faq_2026#delay"
+    )
+
+
 def test_rag_retrieve_returns_compact_context_and_citations():
     response = client.post(
         "/api/rag/retrieve",

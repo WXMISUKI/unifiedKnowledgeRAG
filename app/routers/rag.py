@@ -8,6 +8,7 @@ from app.models.contracts import (
     RagRetrieveRequest,
     RagRetrieveResponse,
     RagRetrieveResult,
+    SourceDocumentManifestResponse,
 )
 from app.config import get_settings
 from app.services.retrieval_backends import create_document_retriever
@@ -15,6 +16,7 @@ from app.services.rag_answer_orchestrator import create_answer_composer
 from app.services.request_filter_context import normalize_request_filter_context
 from app.services.retrieval_trace import build_retrieval_trace
 from app.services.source_catalog import list_knowledge_bases
+from app.services.source_document_manifest import get_source_document_manifest
 
 router = APIRouter(prefix="/api/rag")
 
@@ -22,6 +24,11 @@ router = APIRouter(prefix="/api/rag")
 @router.get("/sources", response_model=CatalogResponse)
 def sources() -> CatalogResponse:
     return CatalogResponse(knowledge_bases=list_knowledge_bases(), graphs=[])
+
+
+@router.get("/sources/{source_id}/documents", response_model=SourceDocumentManifestResponse)
+def source_documents(source_id: str) -> SourceDocumentManifestResponse:
+    return get_source_document_manifest(source_id)
 
 
 @router.post("/retrieve", response_model=RagRetrieveResponse)

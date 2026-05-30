@@ -12,6 +12,25 @@ The system SHALL expose document RAG source metadata through a dedicated endpoin
 - **WHEN** a caller requests `GET /api/rag/sources`
 - **THEN** the response includes configured knowledge base ids, readiness status, version, freshness metadata, retrieval backend, and backend readiness status
 
+### Requirement: RAG source document manifest is available
+
+The system SHALL expose a read-only document manifest for each configured document RAG source so callers can inspect source documents, citation anchors, chunking metadata, and index readiness without running retrieval.
+
+#### Scenario: Source document manifest is returned
+
+- **WHEN** a caller requests `GET /api/rag/sources/{source_id}/documents` for a configured RAG source
+- **THEN** the response has `ok=true`, the requested source id, current index readiness metadata, and document manifests with document id, title, source path, format, version, chunking strategy, and citation anchors
+
+#### Scenario: Unknown source returns structured error
+
+- **WHEN** a caller requests `GET /api/rag/sources/{source_id}/documents` for an unknown source
+- **THEN** the response has `ok=false` and an `error.code` that identifies the unknown source
+
+#### Scenario: Manifest does not execute retrieval work
+
+- **WHEN** a caller requests a source document manifest
+- **THEN** the provider does not run document retrieval, answer composition, embedding, vector search, ingestion, or graph execution
+
 ### Requirement: RAG retrieve returns compact evidence context
 
 The system SHALL return compact answer context and document evidence for matching document RAG queries while preserving the existing response contract across retrieval backends and enforcing explicit source index lifecycle readiness before backend retrieval work begins.
@@ -570,4 +589,3 @@ The system SHALL include compact retrieval trace metadata in successful document
 #### Scenario: Retrieval trace preserves existing contracts
 - **WHEN** retrieval trace metadata is added
 - **THEN** existing retrieval documents, answer context, answer trace, and request filter context fields remain compatible
-
