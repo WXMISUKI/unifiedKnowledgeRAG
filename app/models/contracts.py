@@ -39,6 +39,21 @@ class CapabilitiesResponse(BaseModel):
     capabilities: list[Capability]
 
 
+class ProviderIntegrationManifest(BaseModel):
+    provider_id: str
+    provider_name: str
+    provider_version: str
+    manifest_version: str
+    contract_version: str
+    component_role: str
+    compatible_control_planes: list[str]
+    description: str
+    endpoints: dict[str, str]
+    capability_ids: list[str]
+    evidence: dict[str, str]
+    boundaries: dict[str, str]
+
+
 class KnowledgeBaseSource(BaseModel):
     id: str
     type: str = "rag"

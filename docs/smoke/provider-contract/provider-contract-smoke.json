@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-30T02:28:50.215522+00:00",
+  "generated_at": "2026-05-30T02:47:42.321284+00:00",
   "passed": true,
   "checks": [
     {
@@ -12,6 +12,19 @@
         "rag_status": "ready",
         "answer_status": "ready",
         "graph_status": "planned"
+      },
+      "error": null
+    },
+    {
+      "name": "provider_integration_manifest",
+      "passed": true,
+      "endpoint": "GET /api/provider/manifest",
+      "details": {
+        "provider_id": "unifiedKnowledgeProvider",
+        "manifest_version": "provider-integration-manifest-v1",
+        "contract_version": "knowledge-provider-contract-v1",
+        "component_role": "knowledge_data_plane",
+        "capability_count": 3
       },
       "error": null
     },
@@ -76,8 +89,8 @@
     }
   ],
   "summary": {
-    "total": 5,
-    "passed": 5,
+    "total": 6,
+    "passed": 6,
     "failed": 0
   },
   "json_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",

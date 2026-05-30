@@ -9,6 +9,7 @@ OpenSpec change：`add-knowledge-provider-v1`
 本阶段规格纳入 RAG + GraphRAG 的合同边界，但运行时第一阶段只实现 document RAG：
 
 - `GET /health`
+- `GET /api/provider/manifest`
 - `GET /api/capabilities`
 - `GET /api/catalog`
 - `GET /api/rag/sources`
@@ -24,6 +25,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `knowledge.graph.query`：GraphRAG 查询合同边界，当前仍是 planned。
 
 每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref` 和 `response_schema_ref`，便于上层控制面根据能力 id 找到调用入口并从 `/openapi.json` 解析请求/响应合同。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`。
+
+`GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 
 `GET /health` 会分别报告 document RAG retrieval readiness 和 answer composer readiness。若 `RAG_ANSWER_COMPOSER=hosted` 或 `local` 但对应 composer 尚未实现，服务会报告 `status=degraded`，并且 `knowledge.rag.answer` capability 也会显示 `degraded`；`knowledge.rag.retrieve` 不受该 composer 配置影响。
 

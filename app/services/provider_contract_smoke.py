@@ -36,6 +36,11 @@ def run_provider_contract_smoke(client: Any | None = None) -> ProviderContractSm
     checks = [
         _run_check("health_readiness", "GET /health", lambda: _check_health(client)),
         _run_check(
+            "provider_integration_manifest",
+            "GET /api/provider/manifest",
+            lambda: _check_manifest(client),
+        ),
+        _run_check(
             "capability_invocation_metadata",
             "GET /api/capabilities",
             lambda: _check_capabilities(client),
@@ -182,6 +187,36 @@ def _check_health(client: Any) -> dict[str, Any]:
     }
 
 
+def _check_manifest(client: Any) -> dict[str, Any]:
+    response = client.get("/api/provider/manifest")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["provider_id"] == "unifiedKnowledgeProvider"
+    assert body["manifest_version"] == "provider-integration-manifest-v1"
+    assert body["contract_version"] == "knowledge-provider-contract-v1"
+    assert body["component_role"] == "knowledge_data_plane"
+    assert "MyPrivateAgent" in body["compatible_control_planes"]
+    assert body["endpoints"]["health"] == "/health"
+    assert body["endpoints"]["capabilities"] == "/api/capabilities"
+    assert body["endpoints"]["openapi"] == "/openapi.json"
+    assert body["endpoints"]["rag_retrieve"] == "/api/rag/retrieve"
+    assert body["endpoints"]["rag_answer"] == "/api/rag/answer"
+    assert body["endpoints"]["graph_query"] == "/api/graph/query"
+    assert "knowledge.rag.retrieve" in body["capability_ids"]
+    assert "knowledge.rag.answer" in body["capability_ids"]
+    assert "knowledge.graph.query" in body["capability_ids"]
+    assert body["evidence"]["provider_contract_smoke_json"].endswith(
+        "provider-contract-smoke.json"
+    )
+    return {
+        "provider_id": body["provider_id"],
+        "manifest_version": body["manifest_version"],
+        "contract_version": body["contract_version"],
+        "component_role": body["component_role"],
+        "capability_count": len(body["capability_ids"]),
+    }
+
+
 def _check_capabilities(client: Any) -> dict[str, Any]:
     response = client.get("/api/capabilities")
     assert response.status_code == 200
@@ -302,6 +337,13 @@ def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
         for key, value in check.details.items()
         if key.endswith("_status")
         or key.endswith("_version")
-        or key in {"document_count", "citation_count", "error_code"}
+        or key in {
+            "document_count",
+            "citation_count",
+            "error_code",
+            "contract_version",
+            "component_role",
+            "capability_count",
+        }
     }
     return f"`{json.dumps(compact, ensure_ascii=False)}`"

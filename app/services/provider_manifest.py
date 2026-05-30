@@ -1,0 +1,68 @@
+from app.models.contracts import ProviderIntegrationManifest
+
+
+PROVIDER_ID = "unifiedKnowledgeProvider"
+PROVIDER_NAME = "unifiedKnowledgeRAG"
+PROVIDER_VERSION = "0.1.0"
+MANIFEST_VERSION = "provider-integration-manifest-v1"
+CONTRACT_VERSION = "knowledge-provider-contract-v1"
+COMPONENT_ROLE = "knowledge_data_plane"
+COMPATIBLE_CONTROL_PLANES = ["MyPrivateAgent"]
+SUPPORTED_CAPABILITY_IDS = [
+    "knowledge.rag.retrieve",
+    "knowledge.rag.answer",
+    "knowledge.graph.query",
+]
+
+
+def build_provider_integration_manifest() -> ProviderIntegrationManifest:
+    return ProviderIntegrationManifest(
+        provider_id=PROVIDER_ID,
+        provider_name=PROVIDER_NAME,
+        provider_version=PROVIDER_VERSION,
+        manifest_version=MANIFEST_VERSION,
+        contract_version=CONTRACT_VERSION,
+        component_role=COMPONENT_ROLE,
+        compatible_control_planes=COMPATIBLE_CONTROL_PLANES,
+        description=(
+            "External knowledge data-plane provider for MyPrivateAgent. "
+            "The provider owns knowledge ingestion, indexing, retrieval, "
+            "citation evidence, and GraphRAG contract boundaries."
+        ),
+        endpoints={
+            "health": "/health",
+            "manifest": "/api/provider/manifest",
+            "capabilities": "/api/capabilities",
+            "openapi": "/openapi.json",
+            "catalog": "/api/catalog",
+            "rag_sources": "/api/rag/sources",
+            "rag_retrieve": "/api/rag/retrieve",
+            "rag_answer": "/api/rag/answer",
+            "graph_schemas": "/api/graph/schemas",
+            "graph_query": "/api/graph/query",
+            "ingestion_jobs": "/api/ingestion/jobs",
+            "index_status_template": "/api/indexes/{source_id}/status",
+        },
+        capability_ids=SUPPORTED_CAPABILITY_IDS,
+        evidence={
+            "provider_contract_smoke_json": (
+                "docs/smoke/provider-contract/provider-contract-smoke.json"
+            ),
+            "provider_contract_smoke_markdown": (
+                "docs/smoke/provider-contract/provider-contract-smoke.md"
+            ),
+            "production_indexing_decision": (
+                "docs/architecture/production_indexing_architecture.md"
+            ),
+        },
+        boundaries={
+            "control_plane_owner": "MyPrivateAgent",
+            "provider_owner": "unifiedKnowledgeRAG",
+            "rag_status": "implemented",
+            "graph_status": "contract_boundary_planned_execution",
+            "implementation_internals": (
+                "Embedding models, vector stores, queues, rerankers, and graph "
+                "stores are provider internals, not MyPrivateAgent binding contracts."
+            ),
+        },
+    )

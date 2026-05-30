@@ -1,6 +1,15 @@
 from fastapi import FastAPI
 
-from app.routers import capabilities, catalog, graph, health, indexes, ingestion, rag
+from app.routers import (
+    capabilities,
+    catalog,
+    graph,
+    health,
+    indexes,
+    ingestion,
+    provider,
+    rag,
+)
 
 
 def create_app() -> FastAPI:
@@ -8,6 +17,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(capabilities.router)
     app.include_router(catalog.router)
+    app.include_router(provider.router)
     app.include_router(ingestion.router)
     app.include_router(indexes.router)
     app.include_router(rag.router)

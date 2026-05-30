@@ -82,6 +82,24 @@ def test_capabilities_report_degraded_answer_composer(monkeypatch):
     assert "not implemented" in capabilities["knowledge.rag.answer"]["reason"]
 
 
+def test_provider_manifest_is_available_for_control_plane_preflight():
+    response = client.get("/api/provider/manifest")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["provider_id"] == "unifiedKnowledgeProvider"
+    assert body["component_role"] == "knowledge_data_plane"
+    assert body["contract_version"] == "knowledge-provider-contract-v1"
+    assert body["compatible_control_planes"] == ["MyPrivateAgent"]
+    assert body["endpoints"]["capabilities"] == "/api/capabilities"
+    assert body["endpoints"]["openapi"] == "/openapi.json"
+    assert body["capability_ids"] == [
+        "knowledge.rag.retrieve",
+        "knowledge.rag.answer",
+        "knowledge.graph.query",
+    ]
+
+
 def test_catalog_exposes_knowledge_bases_and_graphs():
     response = client.get("/api/catalog")
 
