@@ -1403,6 +1403,32 @@ docs/operations/reindex-readiness/reindex-readiness.md
 
 结论：这个报告是只读操作计划，不会创建 ingestion job、重建索引、压缩历史、下载模型、调用 Qdrant 或执行 GraphRAG。它的价值是把“是否需要备份/重建/先修 source 文件”的判断前置，避免内网或企业级部署时直接盲目 reindex。
 
+第五十四阶段 OpenSpec change `add-provider-handoff-bundle` 继续推进 roadmap Phase 6，新增本地 provider handoff bundle，把分散的集成与运维证据汇总成一个交接包，方便 MyPrivateAgent 或部署审查方快速判断“能否绑定、还需复核什么”。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_handoff_bundle.py
+```
+
+导出文件：
+
+```text
+docs/integration/provider-handoff/provider-handoff-bundle.json
+docs/integration/provider-handoff/provider-handoff-bundle.md
+```
+
+当前默认 bundle 状态为 `review`，核心证据汇总为：
+
+| Artifact | Status | Recommended Action |
+| --- | --- | --- |
+| `provider_integration_probe` | `ready` | `no_action_required` |
+| `provider_contract_smoke` | `ready` | `no_action_required` |
+| `deployment_readiness` | `review` | `review_evidence_notes` |
+| `reindex_readiness` | `ready` | `no_action_required` |
+
+结论：这个交接包是只读索引，不会重新生成前置报告、调用 HTTP endpoint、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。它把当前 provider 作为外接模块交给 MyPrivateAgent 前最该看的证据集中到一个入口。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

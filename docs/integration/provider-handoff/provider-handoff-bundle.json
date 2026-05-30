@@ -1,0 +1,62 @@
+{
+  "id": "provider-handoff-bundle-v1",
+  "generated_at": "2026-05-30T06:48:33.026740+00:00",
+  "status": "review",
+  "provider": {
+    "provider_id": "unifiedKnowledgeProvider",
+    "provider_name": "unifiedKnowledgeRAG",
+    "provider_version": "0.1.0",
+    "contract_version": "knowledge-provider-contract-v1",
+    "manifest_version": "provider-integration-manifest-v1",
+    "component_role": "knowledge_data_plane",
+    "compatible_control_planes": [
+      "MyPrivateAgent"
+    ]
+  },
+  "evidence_artifacts": [
+    {
+      "id": "provider_integration_probe",
+      "category": "integration",
+      "path": "docs\\integration\\provider-binding\\provider-integration-probe.json",
+      "present": true,
+      "status": "ready",
+      "summary": "bindable=True; checks=6; capabilities=4",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "provider_contract_smoke",
+      "category": "contract",
+      "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+      "present": true,
+      "status": "ready",
+      "summary": "passed=True; checks=8/8",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "deployment_readiness",
+      "category": "operations",
+      "path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
+      "present": true,
+      "status": "review",
+      "summary": "status=review",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "reindex_readiness",
+      "category": "operations",
+      "path": "docs\\operations\\reindex-readiness\\reindex-readiness.json",
+      "present": true,
+      "status": "ready",
+      "summary": "status=ready",
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "operation_notes": [
+    "This bundle is a read-only handoff index over existing local evidence files.",
+    "Regenerate prerequisite evidence reports after configuration, dependency, source, or index lifecycle changes.",
+    "External control planes still own provider registration, heartbeat governance, audit policy, and source-to-agent binding decisions.",
+    "At least one evidence artifact requires human review before promotion."
+  ],
+  "json_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
+  "markdown_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"
+}

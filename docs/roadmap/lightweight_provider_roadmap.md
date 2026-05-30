@@ -114,3 +114,22 @@ conda run -n GRAPHRAG python scripts/export_reindex_readiness.py
 ```
 
 The report is intentionally read-only. It does not create ingestion jobs, rebuild indexes, compact job history, download embedding models, call Qdrant, or execute GraphRAG. It is a review artifact for local/public-network/private-network deployment planning before an operator chooses whether to back up indexes or run explicit ingestion.
+
+## Provider Handoff Bundle
+
+Phase 6 integration and operations evidence is now consolidated by a local `provider-handoff-bundle-v1` export. It gives MyPrivateAgent or a deployment reviewer one review entry point over:
+
+- provider identity and contract version
+- provider integration probe evidence
+- provider contract smoke evidence
+- deployment readiness evidence
+- reindex readiness evidence
+- per-artifact presence, status, summary, and recommended action
+
+The default local bundle can be regenerated with:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_handoff_bundle.py
+```
+
+The bundle is intentionally read-only. It does not regenerate prerequisite reports, call provider HTTP endpoints, execute retrieval or answer composition, start ingestion jobs, rebuild indexes, download models, call Qdrant, or execute GraphRAG. External control planes still own provider registration, heartbeat governance, audit policy, source-to-agent binding, and final answer policy.
