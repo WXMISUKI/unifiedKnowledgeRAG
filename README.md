@@ -1396,10 +1396,10 @@ docs/operations/reindex-readiness/reindex-readiness.md
 
 当前默认报告状态为 `ready`，核心 source 建议为：
 
-| Source | File | Index Status | Latest Job | Recommended Action |
-| --- | --- | --- | --- | --- |
-| `refund_policy_docs` | present | `ready` | none | `reindex_optional` |
-| `logistics_faq` | present | `ready` | none | `reindex_optional` |
+| Source | File | Index Status | Fingerprint | Latest Job | Recommended Action |
+| --- | --- | --- | --- | --- | --- |
+| `refund_policy_docs` | present | `ready` | `in_sync` | none | `reindex_optional` |
+| `logistics_faq` | present | `ready` | `in_sync` | none | `reindex_optional` |
 
 结论：这个报告是只读操作计划，不会创建 ingestion job、重建索引、压缩历史、下载模型、调用 Qdrant 或执行 GraphRAG。它的价值是把“是否需要备份/重建/先修 source 文件”的判断前置，避免内网或企业级部署时直接盲目 reindex。
 
@@ -1474,6 +1474,24 @@ drift_status
 | `logistics_faq` | `logistics_faq_2026` | `in_sync` |
 
 结论：这个能力用于在调用方绑定、引用锚点审查或 reindex 前判断本地 source 文件是否已经变更。它只读取 manifest 中声明的文件并计算 sha256，不会扫描目录、解析复杂文档、创建 ingestion job、重建索引、调用 embedding/Qdrant 或执行 GraphRAG。
+
+第五十七阶段 OpenSpec change `use-source-drift-in-reindex-readiness` 将 Phase 2 的 source fingerprint/drift diagnostics 接入 Phase 6 的 reindex readiness。现在 `reindex-readiness-v1` 的 source row 会包含：
+
+```text
+source_fingerprint_status
+document_fingerprints[]
+```
+
+推荐动作规则：
+
+| Drift Status | Recommended Action |
+| --- | --- |
+| `in_sync` + index `ready` | `reindex_optional` |
+| `changed` | `run_ingestion_job` |
+| `unchecked` | `review_source_fingerprint` |
+| source file missing | `restore_source_file_before_reindex` |
+
+结论：如果 source 文件已经变更，即使 index lifecycle 仍显示 ready，运维报告也会提示需要重新 ingestion。这个判断仍然只读，不会自动创建 job、重建索引、调用 embedding/Qdrant 或改变检索默认行为。
 
 ## 设计文档
 

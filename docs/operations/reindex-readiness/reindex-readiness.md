@@ -2,17 +2,17 @@
 
 - Report: `reindex-readiness-v1`
 - Status: `ready`
-- Generated At: `2026-05-30T07:32:00.458216+00:00`
+- Generated At: `2026-05-30T08:02:30.750639+00:00`
 - Retrieval Backend: `fixture`
 - Source Dir: `app\data\sources`
 - Index Dir: `app\data\indexes\llamaindex`
 
 ## Sources
 
-| Source | Source File | Index Status | Latest Job | Recommended Action |
-|---|---|---|---|---|
-| `refund_policy_docs` | `present` | `ready` | `none` | `reindex_optional` |
-| `logistics_faq` | `present` | `ready` | `none` | `reindex_optional` |
+| Source | Source File | Index Status | Fingerprint | Latest Job | Recommended Action |
+|---|---|---|---|---|---|
+| `refund_policy_docs` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
+| `logistics_faq` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
 
 ## Job Summary
 

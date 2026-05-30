@@ -10,6 +10,7 @@ from app.models.contracts import IndexLifecycleJob
 from app.services.index_lifecycle import get_index_status
 from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.source_catalog import KNOWLEDGE_BASES
+from app.services.source_document_manifest import get_source_document_manifest
 
 
 REINDEX_READINESS_REPORT_ID = "reindex-readiness-v1"
@@ -79,8 +80,8 @@ def render_reindex_readiness_markdown(report: ReindexReadinessReport) -> str:
         "",
         "## Sources",
         "",
-        "| Source | Source File | Index Status | Latest Job | Recommended Action |",
-        "|---|---|---|---|---|",
+        "| Source | Source File | Index Status | Fingerprint | Latest Job | Recommended Action |",
+        "|---|---|---|---|---|---|",
     ]
     for source in report.sources:
         latest_job = source["latest_job"] or {}
@@ -91,7 +92,8 @@ def render_reindex_readiness_markdown(report: ReindexReadinessReport) -> str:
         )
         lines.append(
             f"| `{source['source_id']}` | `{source['source_file_status']}` | "
-            f"`{source['index_status']}` | `{latest_job_label}` | "
+            f"`{source['index_status']}` | `{source['source_fingerprint_status']}` | "
+            f"`{latest_job_label}` | "
             f"`{source['recommended_action']}` |"
         )
     counts = report.job_summary["status_counts"]
@@ -158,16 +160,21 @@ def _source_row(
     source_file = settings.rag_source_dir / f"{source_id}.md"
     index_status = get_index_status(source_id, settings)
     source_file_exists = source_file.exists()
+    document_fingerprints = _document_fingerprints(source_id, settings)
+    source_fingerprint_status = _source_fingerprint_status(document_fingerprints)
     return {
         "source_id": source_id,
         "source_file": str(source_file),
         "source_file_status": "present" if source_file_exists else "missing",
+        "source_fingerprint_status": source_fingerprint_status,
+        "document_fingerprints": document_fingerprints,
         "index_status": index_status.status,
         "index_reason": index_status.reason,
         "indexed_at": index_status.indexed_at,
         "latest_job": _job_payload(latest_job),
         "recommended_action": _recommended_action(
             source_file_exists=source_file_exists,
+            source_fingerprint_status=source_fingerprint_status,
             index_status=index_status.status,
         ),
     }
@@ -185,14 +192,70 @@ def _job_payload(job: IndexLifecycleJob | None) -> dict[str, Any] | None:
     }
 
 
-def _recommended_action(source_file_exists: bool, index_status: str) -> str:
+def _recommended_action(
+    *,
+    source_file_exists: bool,
+    source_fingerprint_status: str,
+    index_status: str,
+) -> str:
     if not source_file_exists:
         return "restore_source_file_before_reindex"
+    if source_fingerprint_status in {"changed", "mixed_changed"}:
+        return "run_ingestion_job"
+    if source_fingerprint_status in {"unchecked", "mixed_unchecked", "unknown"}:
+        return "review_source_fingerprint"
     if index_status in {"not_indexed", "failed", "canceled", "unknown"}:
         return "run_ingestion_job"
     if index_status == "ready":
         return "reindex_optional"
     return "review_index_status"
+
+
+def _document_fingerprints(
+    source_id: str,
+    settings: Settings,
+) -> list[dict[str, Any]]:
+    manifest = get_source_document_manifest(source_id, settings)
+    if not manifest.ok or manifest.result is None:
+        return []
+    return [
+        {
+            "document_id": document.document_id,
+            "source_path": document.source_path,
+            "source_file_status": document.source_file_status,
+            "drift_status": document.drift_status,
+            "content_sha256": document.content_sha256,
+            "expected_content_sha256": document.expected_content_sha256,
+            "content_byte_size": document.content_byte_size,
+        }
+        for document in manifest.result.documents
+    ]
+
+
+def _source_fingerprint_status(
+    document_fingerprints: list[dict[str, Any]],
+) -> str:
+    statuses = {
+        fingerprint.get("drift_status") or "unknown"
+        for fingerprint in document_fingerprints
+    }
+    if not statuses:
+        return "unknown"
+    if statuses == {"in_sync"}:
+        return "in_sync"
+    if statuses == {"changed"}:
+        return "changed"
+    if "changed" in statuses:
+        return "mixed_changed"
+    if statuses == {"missing"}:
+        return "missing"
+    if "missing" in statuses:
+        return "mixed_missing"
+    if statuses == {"unchecked"}:
+        return "unchecked"
+    if "unchecked" in statuses:
+        return "mixed_unchecked"
+    return "unknown"
 
 
 def _job_summary(jobs: list[IndexLifecycleJob]) -> dict[str, Any]:
@@ -224,4 +287,6 @@ def _operation_notes(
         notes.append("Fixture backend does not require persisted source indexes.")
     if any(source["latest_job"] is None for source in sources):
         notes.append("Some sources have no recorded ingestion job history.")
+    if any(source["source_fingerprint_status"] != "in_sync" for source in sources):
+        notes.append("Some source document fingerprints require review or reindex planning.")
     return notes

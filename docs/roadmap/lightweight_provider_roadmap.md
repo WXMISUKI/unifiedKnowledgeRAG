@@ -127,6 +127,8 @@ conda run -n GRAPHRAG python scripts/export_reindex_readiness.py
 
 The report is intentionally read-only. It does not create ingestion jobs, rebuild indexes, compact job history, download embedding models, call Qdrant, or execute GraphRAG. It is a review artifact for local/public-network/private-network deployment planning before an operator chooses whether to back up indexes or run explicit ingestion.
 
+Reindex readiness now consumes source document fingerprint diagnostics. A source with `drift_status=changed` is reported as needing `run_ingestion_job`; a source with `drift_status=unchecked` asks for `review_source_fingerprint`. This connects Phase 2 source freshness evidence to Phase 6 operations planning while still leaving actual ingestion and reindex execution explicit.
+
 ## Provider Handoff Bundle
 
 Phase 6 integration and operations evidence is now consolidated by a local `provider-handoff-bundle-v1` export. It gives MyPrivateAgent or a deployment reviewer one review entry point over:

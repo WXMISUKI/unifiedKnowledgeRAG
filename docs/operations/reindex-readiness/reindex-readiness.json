@@ -1,6 +1,6 @@
 {
   "id": "reindex-readiness-v1",
-  "generated_at": "2026-05-30T07:32:00.458216+00:00",
+  "generated_at": "2026-05-30T08:02:30.750639+00:00",
   "status": "ready",
   "retrieval_backend": "fixture",
   "source_dir": "app\\data\\sources",
@@ -10,6 +10,18 @@
       "source_id": "refund_policy_docs",
       "source_file": "app\\data\\sources\\refund_policy_docs.md",
       "source_file_status": "present",
+      "source_fingerprint_status": "in_sync",
+      "document_fingerprints": [
+        {
+          "document_id": "refund_policy_2026",
+          "source_path": "app/data/sources/refund_policy_docs.md",
+          "source_file_status": "present",
+          "drift_status": "in_sync",
+          "content_sha256": "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a",
+          "expected_content_sha256": "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a",
+          "content_byte_size": 1124
+        }
+      ],
       "index_status": "ready",
       "index_reason": "Fixture backend does not require an explicit persisted index.",
       "indexed_at": null,
@@ -20,6 +32,18 @@
       "source_id": "logistics_faq",
       "source_file": "app\\data\\sources\\logistics_faq.md",
       "source_file_status": "present",
+      "source_fingerprint_status": "in_sync",
+      "document_fingerprints": [
+        {
+          "document_id": "logistics_faq_2026",
+          "source_path": "app/data/sources/logistics_faq.md",
+          "source_file_status": "present",
+          "drift_status": "in_sync",
+          "content_sha256": "5f4b0a293bf6307eceb2648df1bb4a97fd7650c8b3b89d069e06a64bdebfbb37",
+          "expected_content_sha256": "5f4b0a293bf6307eceb2648df1bb4a97fd7650c8b3b89d069e06a64bdebfbb37",
+          "content_byte_size": 1131
+        }
+      ],
       "index_status": "ready",
       "index_reason": "Fixture backend does not require an explicit persisted index.",
       "indexed_at": null,
