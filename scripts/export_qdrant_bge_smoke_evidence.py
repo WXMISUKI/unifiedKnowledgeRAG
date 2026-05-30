@@ -15,6 +15,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_gating_candidate_evidence,
     export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence,
+    export_qdrant_bge_hybrid_relation_aggregation_grading_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -172,6 +173,25 @@ def main() -> None:
         )
         return
 
+    if args.hybrid_relation_aggregation_grading:
+        report = export_qdrant_bge_hybrid_relation_aggregation_grading_evidence(
+            output_dir=args.output_dir,
+            cases_path=args.cases_path,
+            empty_cases_path=args.empty_cases_path,
+            source_ids=args.source_id,
+            case_ids=args.case_id,
+            settings=settings,
+        )
+        print(
+            "Qdrant BGE-M3 hybrid relation aggregation grading evidence ready: "
+            f"{report.json_path}"
+        )
+        print(
+            "Qdrant BGE-M3 hybrid relation aggregation grading evidence ready: "
+            f"{report.markdown_path}"
+        )
+        return
+
     report = export_qdrant_bge_smoke_evidence(
         output_dir=args.output_dir,
         cases_path=args.cases_path,
@@ -300,6 +320,14 @@ def _parse_args() -> argparse.Namespace:
         help=(
             "Export evaluation-only Qdrant+BGE hybrid source-document "
             "multi-chunk aggregation evidence."
+        ),
+    )
+    parser.add_argument(
+        "--hybrid-relation-aggregation-grading",
+        action="store_true",
+        help=(
+            "Export evaluation-only relation-aware grading evidence for "
+            "Qdrant+BGE hybrid multi-chunk aggregation outputs."
         ),
     )
     parser.add_argument("--min-hit-rate", type=float, default=1.0)

@@ -263,3 +263,5 @@ The next retrieval-quality slice evaluated `source-document-identifier-coverage-
 This confirms aggregation is a promising next candidate, but it does not approve runtime aggregation. The next highest-value evidence should add expected-empty group cases and noisy same-document cases, because the main risk is now over-broad grouping rather than pure recall.
 
 The next slice added a same-document expected-empty negative control. The combined report now shows the useful tension clearly: split-chunk recovery passes, but empty handling fails because source-document grouping also keeps evidence for an unsupported relationship between identifiers. That makes relation-aware grading, reranking, graph checks, or stricter parent/section constraints more valuable than promoting simple grouping.
+
+The next slice evaluated `relation-aware-aggregation-grader-v1`. It keeps aggregation evidence visible but labels the unsupported relationship case as `relation_unsupported`, giving a lightweight review signal before heavier reranker, LLM grader, or GraphRAG relation checks are introduced.

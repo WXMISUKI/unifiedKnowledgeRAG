@@ -376,6 +376,15 @@ The negative-control report combines the split-chunk positive case with an expec
 
 This blocks runtime aggregation promotion. Source-document grouping alone is too broad; a production path needs relation-aware evidence grading, reranking, graph relation checks, or stricter parent/section constraints before aggregation can be considered safe.
 
+Relation-aware aggregation grading evidence now lives under:
+
+- `docs/benchmark/chinese-seed/relation-aware-aggregation-grading/relation-aware-aggregation-grading.json`
+- `docs/benchmark/chinese-seed/relation-aware-aggregation-grading/relation-aware-aggregation-grading.md`
+
+The `relation-aware-aggregation-grader-v1` candidate does not change retrieval output. It grades the existing aggregation results and labels the unsupported relationship case as `relation_unsupported` rather than answer-bearing. On the current two-case local fixture it reports answer-bearing rate `1.0000`, relation-unsupported count `1`, unexpected evidence count `0`, and expected-empty pass rate `1.0000`.
+
+This is a useful intermediate gate, not production semantic reasoning. Runtime promotion still needs broader relation fixtures, noisy top-k evidence, latency review, and a decision between deterministic relation rules, reranking, LLM grading, and GraphRAG relation checks.
+
 ## Candidate Evaluation Workflow
 
 Candidate evaluation lives in `app.services.retrieval_benchmark` and intentionally remains service-only. It lets each candidate carry a stable id, backend, description, and optional metadata such as embedding model, vector store, reranker, or notes.

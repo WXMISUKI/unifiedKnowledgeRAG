@@ -30,6 +30,7 @@ from app.services.retrieval_benchmark import (
     export_qdrant_bge_hybrid_exact_term_smoke_evidence,
     export_qdrant_bge_hybrid_gating_candidate_evidence,
     export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence,
+    export_qdrant_bge_hybrid_relation_aggregation_grading_evidence,
     export_qdrant_bge_smoke_evidence,
     export_qdrant_bge_threshold_sweep_evidence,
     export_qdrant_threshold_recommendation,
@@ -53,6 +54,7 @@ from app.services.retrieval_benchmark import (
     identifier_alias_governance_to_dict,
     load_identifier_alias_catalog,
     query_rewrite_candidate_evaluation_to_dict,
+    relation_aware_aggregation_grading_candidates,
     RetrievalCandidate,
     run_retrieval_benchmark,
     ThresholdRecommendationGates,
@@ -355,6 +357,16 @@ def test_default_evidence_grading_candidates_include_strict_and_source_policies(
     assert by_id["citation-match-grader-v1"].implementation_status == "candidate"
     assert by_id["source-match-grader-v1"].grading_policy == "source_match"
     assert by_id["source-match-grader-v1"].implementation_status == "candidate"
+
+
+def test_relation_aware_aggregation_grading_candidate_is_local_only():
+    candidates = relation_aware_aggregation_grading_candidates()
+
+    assert [candidate.id for candidate in candidates] == [
+        "relation-aware-aggregation-grader-v1"
+    ]
+    assert candidates[0].grading_policy == "relation_aware_identifier"
+    assert "Does not call an LLM" in candidates[0].risk_notes[1]
 
 
 def test_evidence_grading_candidate_labels_expected_empty_cases():
@@ -1892,6 +1904,120 @@ def test_export_qdrant_bge_hybrid_multi_chunk_aggregation_records_negative_contr
         "split_refund_policy_2026#policy-code",
         "split_refund_policy_2026#form-code",
     ]
+
+
+def test_export_qdrant_bge_hybrid_relation_aggregation_grading_labels_unsupported_relation(
+    monkeypatch,
+    tmp_path,
+):
+    from tests.test_qdrant_vector_store import FakeQdrantClient
+
+    source_dir = tmp_path / "sources"
+    source_dir.mkdir()
+    (source_dir / "split_refund_policy_docs.md").write_text(
+        "# 拆分退款编号规则\n\n"
+        "政策编号 RFD-2026-003 适用于三天未发货退款复核。\n\n"
+        "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+        encoding="utf-8",
+    )
+    cases_path = tmp_path / "split-cases.json"
+    cases_path.write_text(
+        """
+[
+  {
+    "id": "split-chunk-refund-policy-and-form",
+    "category": "split-chunk-identifier",
+    "difficulty": "hard",
+    "query": "RFD-2026-003 和 AF-REFUND-02 在同一个退款复核流程中分别要求什么？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation": "split_refund_policy_2026#form-code",
+    "expect_empty": false
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    empty_cases_path = tmp_path / "empty-cases.json"
+    empty_cases_path.write_text(
+        """
+[
+  {
+    "id": "multi-chunk-empty-unsupported-form-policy-link",
+    "category": "multi-chunk-aggregation-empty",
+    "difficulty": "hard",
+    "query": "AF-REFUND-02 是否可以直接覆盖 RFD-2026-003 的订单状态核验要求？",
+    "knowledge_base_ids": ["split_refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  }
+]
+""",
+        encoding="utf-8",
+    )
+    fake_client = FakeQdrantClient(
+        collection_exists=False,
+        hits=[
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "政策编号 RFD-2026-003 适用于三天未发货退款复核。",
+                    "citation": "split_refund_policy_2026#policy-code",
+                },
+            },
+            {
+                "score": 1.0,
+                "payload": {
+                    "source_id": "split_refund_policy_docs",
+                    "document_id": "split_refund_policy_2026",
+                    "title": "拆分退款编号规则",
+                    "text": "复核材料需要填写表单 AF-REFUND-02，并关联付款凭证。",
+                    "citation": "split_refund_policy_2026#form-code",
+                },
+            },
+        ],
+    )
+    monkeypatch.setattr(
+        "app.services.retrieval_benchmark.create_qdrant_client",
+        lambda settings: fake_client,
+    )
+    settings = Settings(
+        rag_retrieval_backend="qdrant",
+        rag_source_dir=source_dir,
+        rag_index_dir=tmp_path / "index",
+        qdrant_url=":memory:",
+        embedding_provider="mock",
+        embedding_vector_size=3,
+        qdrant_vector_size=3,
+    )
+
+    evaluation = export_qdrant_bge_hybrid_relation_aggregation_grading_evidence(
+        output_dir=tmp_path / "evidence",
+        cases_path=cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=["split_refund_policy_docs"],
+        settings=settings,
+    )
+
+    result = evaluation.results[0]
+    assert result.candidate.id == "relation-aware-aggregation-grader-v1"
+    assert result.total_cases == 2
+    assert result.answer_bearing_rate == 1.0
+    assert result.relation_unsupported_count == 1
+    assert result.unexpected_evidence_count == 0
+    assert result.expected_empty_pass_rate == 1.0
+    assert [case.grading_label for case in result.cases] == [
+        "answer_bearing",
+        "relation_unsupported",
+    ]
+    assert evaluation.json_path == tmp_path / "evidence" / "relation-aware-aggregation-grading.json"
+    assert evaluation.markdown_path == tmp_path / "evidence" / "relation-aware-aggregation-grading.md"
 
 
 def test_export_qdrant_bge_threshold_sweep_evidence(monkeypatch, tmp_path):

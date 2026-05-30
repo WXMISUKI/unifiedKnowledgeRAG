@@ -321,6 +321,7 @@ class EvidenceGradingCandidateResult:
     total_cases: int
     answer_bearing_rate: float
     related_insufficient_count: int
+    relation_unsupported_count: int
     missing_evidence_count: int
     unexpected_evidence_count: int
     expected_empty_pass_rate: float
@@ -1168,6 +1169,7 @@ def export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence(
     settings: Settings | None = None,
     chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
     sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+    write_files: bool = True,
 ) -> QdrantHybridGatingEvidenceReport:
     settings = settings or get_settings()
     source_ids = source_ids or ["split_refund_policy_docs"]
@@ -1226,20 +1228,71 @@ def export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence(
         metadata=metadata,
         indexed_sources=indexed_sources,
     )
-    json_path = export_qdrant_hybrid_gating_evidence_json(
-        aggregation_report,
-        output_dir / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
-    )
-    markdown_path = export_qdrant_hybrid_gating_evidence_markdown(
-        aggregation_report,
-        output_dir / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.md",
-    )
+    json_path = None
+    markdown_path = None
+    if write_files:
+        json_path = export_qdrant_hybrid_gating_evidence_json(
+            aggregation_report,
+            output_dir / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
+        )
+        markdown_path = export_qdrant_hybrid_gating_evidence_markdown(
+            aggregation_report,
+            output_dir / "qdrant-bge-m3-hybrid-multi-chunk-aggregation.md",
+        )
     return QdrantHybridGatingEvidenceReport(
         candidate=aggregation_report.candidate,
         report=aggregation_report.report,
         cases=aggregation_report.cases,
         metadata=aggregation_report.metadata,
         indexed_sources=aggregation_report.indexed_sources,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+
+
+def export_qdrant_bge_hybrid_relation_aggregation_grading_evidence(
+    output_dir: Path,
+    cases_path: Path = Path("tests/fixtures/split_chunk_identifier_cases.json"),
+    empty_cases_path: Path = Path("tests/fixtures/multi_chunk_aggregation_negative_cases.json"),
+    source_ids: list[str] | None = None,
+    case_ids: list[str] | None = None,
+    settings: Settings | None = None,
+    chunking_strategy: str = QDRANT_CHUNKING_STRATEGY,
+    sparse_vector_name: str = QDRANT_SPARSE_VECTOR_NAME,
+) -> EvidenceGradingCandidateEvaluation:
+    cases = [
+        *load_benchmark_cases(cases_path),
+        *load_benchmark_cases(empty_cases_path),
+    ]
+    if case_ids is not None:
+        allowed = set(case_ids)
+        cases = [case for case in cases if case.id in allowed]
+
+    aggregation_report = export_qdrant_bge_hybrid_multi_chunk_aggregation_evidence(
+        output_dir=output_dir,
+        cases_path=cases_path,
+        empty_cases_path=empty_cases_path,
+        source_ids=source_ids,
+        case_ids=case_ids,
+        settings=settings,
+        chunking_strategy=chunking_strategy,
+        sparse_vector_name=sparse_vector_name,
+        write_files=False,
+    )
+    evaluation = evaluate_relation_aware_aggregation_grading(
+        cases=cases,
+        aggregation_report=aggregation_report,
+    )
+    json_path = export_evidence_grading_candidate_evaluation_json(
+        evaluation,
+        output_dir / "relation-aware-aggregation-grading.json",
+    )
+    markdown_path = export_evidence_grading_candidate_evaluation_markdown(
+        evaluation,
+        output_dir / "relation-aware-aggregation-grading.md",
+    )
+    return EvidenceGradingCandidateEvaluation(
+        results=evaluation.results,
         json_path=json_path,
         markdown_path=markdown_path,
     )
@@ -1623,6 +1676,26 @@ def default_evidence_grading_candidates() -> list[EvidenceGradingCandidate]:
     ]
 
 
+def relation_aware_aggregation_grading_candidates() -> list[EvidenceGradingCandidate]:
+    return [
+        EvidenceGradingCandidate(
+            id="relation-aware-aggregation-grader-v1",
+            description=(
+                "Deterministic local grader for multi-chunk aggregation outputs "
+                "that separates unsupported relationship questions from "
+                "answer-bearing evidence."
+            ),
+            implementation_status="candidate",
+            grading_policy="relation_aware_identifier",
+            risk_notes=[
+                "Uses narrow local relation markers and is not a production semantic grader.",
+                "Does not call an LLM, reranker, or graph store.",
+                "Runtime retrieval and answer behavior remain unchanged.",
+            ],
+        )
+    ]
+
+
 def evaluate_evidence_grading_candidates(
     cases: list[RetrievalBenchmarkCase],
     candidates: list[EvidenceGradingCandidate] | None = None,
@@ -1639,6 +1712,30 @@ def evaluate_evidence_grading_candidates(
     )
     results = [
         _evaluate_evidence_grading_candidate(candidate, cases, report)
+        for candidate in candidates
+    ]
+    return EvidenceGradingCandidateEvaluation(results=results)
+
+
+def evaluate_relation_aware_aggregation_grading(
+    cases: list[RetrievalBenchmarkCase],
+    aggregation_report: QdrantHybridGatingEvidenceReport,
+    candidates: list[EvidenceGradingCandidate] | None = None,
+) -> EvidenceGradingCandidateEvaluation:
+    candidates = candidates or relation_aware_aggregation_grading_candidates()
+    _validate_candidate_ids(candidates, "relation-aware aggregation grading candidate")
+    case_by_id = {case.id: case for case in cases}
+    ordered_cases = [
+        case_by_id[result.id]
+        for result in aggregation_report.report.cases
+        if result.id in case_by_id
+    ]
+    results = [
+        _evaluate_evidence_grading_candidate(
+            candidate,
+            ordered_cases,
+            aggregation_report.report,
+        )
         for candidate in candidates
     ]
     return EvidenceGradingCandidateEvaluation(results=results)
@@ -1850,6 +1947,7 @@ def evidence_grading_candidate_evaluation_to_dict(
                 "total_cases": result.total_cases,
                 "answer_bearing_rate": result.answer_bearing_rate,
                 "related_insufficient_count": result.related_insufficient_count,
+                "relation_unsupported_count": result.relation_unsupported_count,
                 "missing_evidence_count": result.missing_evidence_count,
                 "unexpected_evidence_count": result.unexpected_evidence_count,
                 "expected_empty_pass_rate": result.expected_empty_pass_rate,
@@ -2539,14 +2637,15 @@ def render_evidence_grading_candidate_evaluation_markdown(
         "",
         "## Summary",
         "",
-        "| Candidate | Status | Total Cases | Answer-bearing Rate | Related-insufficient | Missing Evidence | Unexpected Evidence | Expected-empty Pass Rate |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Candidate | Status | Total Cases | Answer-bearing Rate | Related-insufficient | Relation-unsupported | Missing Evidence | Unexpected Evidence | Expected-empty Pass Rate |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for result in evaluation.results:
         lines.append(
             f"| {result.candidate.id} | {result.candidate.implementation_status} | "
             f"{result.total_cases} | {result.answer_bearing_rate:.4f} | "
             f"{result.related_insufficient_count} | "
+            f"{result.relation_unsupported_count} | "
             f"{result.missing_evidence_count} | "
             f"{result.unexpected_evidence_count} | "
             f"{result.expected_empty_pass_rate:.4f} |"
@@ -3525,20 +3624,26 @@ def _evaluate_evidence_grading_candidate(
         if case.expected_source_id is None and case.expected_citation is None
     ]
     related_insufficient_count = labels.count("related_insufficient")
+    relation_unsupported_count = labels.count("relation_unsupported")
     missing_evidence_count = labels.count("missing_evidence")
     unexpected_evidence_count = labels.count("unexpected_evidence")
     return EvidenceGradingCandidateResult(
         candidate=candidate,
         total_cases=len(case_results),
         answer_bearing_rate=_rate([
-            label in {"answer_bearing", "no_evidence_expected"}
+            label in {
+                "answer_bearing",
+                "no_evidence_expected",
+                "relation_unsupported",
+            }
             for label in labels
         ]),
         related_insufficient_count=related_insufficient_count,
+        relation_unsupported_count=relation_unsupported_count,
         missing_evidence_count=missing_evidence_count,
         unexpected_evidence_count=unexpected_evidence_count,
         expected_empty_pass_rate=_rate([
-            label == "no_evidence_expected"
+            label in {"no_evidence_expected", "relation_unsupported"}
             for label in empty_labels
         ]),
         report=report,
@@ -3546,6 +3651,7 @@ def _evaluate_evidence_grading_candidate(
         decision_notes=_evidence_grading_decision_notes(
             candidate,
             related_insufficient_count,
+            relation_unsupported_count,
             missing_evidence_count,
             unexpected_evidence_count,
         ),
@@ -3577,6 +3683,25 @@ def _evidence_grading_label(
     case: RetrievalBenchmarkCase,
     result: RetrievalBenchmarkCaseResult,
 ) -> tuple[str, str]:
+    if candidate.grading_policy == "relation_aware_identifier":
+        if case.expect_empty:
+            if not (result.returned_citations or result.returned_source_ids):
+                return "no_evidence_expected", "Expected-empty case returned no evidence."
+            if _query_asks_unsupported_relation(case.query):
+                return (
+                    "relation_unsupported",
+                    "Returned evidence contains identifiers but does not prove the requested relationship.",
+                )
+            return "unexpected_evidence", "Expected-empty case returned evidence."
+        if case.expected_citation in result.returned_citations:
+            return "answer_bearing", "Expected citation was returned."
+        if case.expected_source_id in result.returned_source_ids:
+            return (
+                "related_insufficient",
+                "Expected source was returned but expected citation was missing.",
+            )
+        return "missing_evidence", "Expected source and citation were not returned."
+
     if case.expect_empty:
         if result.returned_citations or result.returned_source_ids:
             return "unexpected_evidence", "Expected-empty case returned evidence."
@@ -3610,6 +3735,7 @@ def _evidence_grading_label(
 def _evidence_grading_decision_notes(
     candidate: EvidenceGradingCandidate,
     related_insufficient_count: int,
+    relation_unsupported_count: int,
     missing_evidence_count: int,
     unexpected_evidence_count: int,
 ) -> list[str]:
@@ -3621,6 +3747,10 @@ def _evidence_grading_decision_notes(
         notes.append(
             f"{related_insufficient_count} case(s) returned related but insufficient evidence."
         )
+    if relation_unsupported_count:
+        notes.append(
+            f"{relation_unsupported_count} expected-empty relation case(s) were labeled unsupported rather than answer-bearing."
+        )
     if missing_evidence_count:
         notes.append(f"{missing_evidence_count} case(s) missed expected evidence.")
     if unexpected_evidence_count:
@@ -3629,11 +3759,26 @@ def _evidence_grading_decision_notes(
         )
     if not (
         related_insufficient_count
+        or relation_unsupported_count
         or missing_evidence_count
         or unexpected_evidence_count
     ):
         notes.append("Current seed evidence has no grading failures for this policy.")
     return notes
+
+
+def _query_asks_unsupported_relation(query: str) -> bool:
+    relation_markers = (
+        "覆盖",
+        "替代",
+        "取代",
+        "免除",
+        "豁免",
+        "override",
+        "replace",
+    )
+    normalized = query.lower()
+    return any(marker in normalized for marker in relation_markers)
 
 
 def _load_section_candidate_chunks(source_id: str, settings: Settings):

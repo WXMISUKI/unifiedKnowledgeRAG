@@ -1,0 +1,158 @@
+{
+  "results": [
+    {
+      "candidate": {
+        "id": "relation-aware-aggregation-grader-v1",
+        "description": "Deterministic local grader for multi-chunk aggregation outputs that separates unsupported relationship questions from answer-bearing evidence.",
+        "implementation_status": "candidate",
+        "grading_policy": "relation_aware_identifier",
+        "risk_notes": [
+          "Uses narrow local relation markers and is not a production semantic grader.",
+          "Does not call an LLM, reranker, or graph store.",
+          "Runtime retrieval and answer behavior remain unchanged."
+        ]
+      },
+      "total_cases": 2,
+      "answer_bearing_rate": 1.0,
+      "related_insufficient_count": 0,
+      "relation_unsupported_count": 1,
+      "missing_evidence_count": 0,
+      "unexpected_evidence_count": 0,
+      "expected_empty_pass_rate": 1.0,
+      "report": {
+        "summary": {
+          "backend": "qdrant-hybrid:source-document-identifier-coverage-v1",
+          "total_cases": 2,
+          "hit_rate": 0.5,
+          "citation_match_rate": 0.5,
+          "empty_handling_rate": 0.0,
+          "category_summaries": {
+            "multi-chunk-aggregation-empty": {
+              "total_cases": 1,
+              "hit_rate": 0.0,
+              "citation_match_rate": 0.0,
+              "empty_handling_rate": 0.0
+            },
+            "split-chunk-identifier": {
+              "total_cases": 1,
+              "hit_rate": 1.0,
+              "citation_match_rate": 1.0,
+              "empty_handling_rate": 0.0
+            }
+          }
+        },
+        "cases": [
+          {
+            "id": "split-chunk-refund-policy-and-form",
+            "category": "split-chunk-identifier",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 334.371,
+            "returned_citations": [
+              "split_refund_policy_2026#form-code",
+              "split_refund_policy_2026#policy-code"
+            ],
+            "returned_source_ids": [
+              "split_refund_policy_docs",
+              "split_refund_policy_docs"
+            ]
+          },
+          {
+            "id": "multi-chunk-empty-unsupported-form-policy-link",
+            "category": "multi-chunk-aggregation-empty",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": false,
+            "latency_ms": 325.931,
+            "returned_citations": [
+              "split_refund_policy_2026#form-code",
+              "split_refund_policy_2026#policy-code"
+            ],
+            "returned_source_ids": [
+              "split_refund_policy_docs",
+              "split_refund_policy_docs"
+            ]
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "split-chunk-refund-policy-and-form",
+          "category": "split-chunk-identifier",
+          "difficulty": "hard",
+          "expected_source_id": "split_refund_policy_docs",
+          "expected_citation": "split_refund_policy_2026#form-code",
+          "returned_source_ids": [
+            "split_refund_policy_docs",
+            "split_refund_policy_docs"
+          ],
+          "returned_citations": [
+            "split_refund_policy_2026#form-code",
+            "split_refund_policy_2026#policy-code"
+          ],
+          "grading_label": "answer_bearing",
+          "grading_reason": "Expected citation was returned.",
+          "result": {
+            "id": "split-chunk-refund-policy-and-form",
+            "category": "split-chunk-identifier",
+            "difficulty": "hard",
+            "hit_at_k": true,
+            "citation_match": true,
+            "empty_query_handling": null,
+            "latency_ms": 334.371,
+            "returned_citations": [
+              "split_refund_policy_2026#form-code",
+              "split_refund_policy_2026#policy-code"
+            ],
+            "returned_source_ids": [
+              "split_refund_policy_docs",
+              "split_refund_policy_docs"
+            ]
+          }
+        },
+        {
+          "case_id": "multi-chunk-empty-unsupported-form-policy-link",
+          "category": "multi-chunk-aggregation-empty",
+          "difficulty": "hard",
+          "expected_source_id": null,
+          "expected_citation": null,
+          "returned_source_ids": [
+            "split_refund_policy_docs",
+            "split_refund_policy_docs"
+          ],
+          "returned_citations": [
+            "split_refund_policy_2026#form-code",
+            "split_refund_policy_2026#policy-code"
+          ],
+          "grading_label": "relation_unsupported",
+          "grading_reason": "Returned evidence contains identifiers but does not prove the requested relationship.",
+          "result": {
+            "id": "multi-chunk-empty-unsupported-form-policy-link",
+            "category": "multi-chunk-aggregation-empty",
+            "difficulty": "hard",
+            "hit_at_k": false,
+            "citation_match": false,
+            "empty_query_handling": false,
+            "latency_ms": 325.931,
+            "returned_citations": [
+              "split_refund_policy_2026#form-code",
+              "split_refund_policy_2026#policy-code"
+            ],
+            "returned_source_ids": [
+              "split_refund_policy_docs",
+              "split_refund_policy_docs"
+            ]
+          }
+        }
+      ],
+      "decision_notes": [
+        "This evaluation is local evidence only and does not filter runtime answers.",
+        "Policy: relation_aware_identifier.",
+        "1 expected-empty relation case(s) were labeled unsupported rather than answer-bearing."
+      ]
+    }
+  ]
+}

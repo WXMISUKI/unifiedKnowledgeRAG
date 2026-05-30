@@ -1284,6 +1284,37 @@ docs/benchmark/chinese-seed/multi-chunk-aggregation-negative-controls/qdrant-bge
 
 结论：multi-chunk aggregation 现在明确是“有召回价值但过宽”的候选，不能推广为 runtime 默认。下一步如果继续这条线，应评估 relation-aware evidence grading、reranker 或更细粒度 parent/section 约束，而不是单靠 source-document grouping。
 
+第四十九阶段 OpenSpec change `evaluate-relation-aware-aggregation-grading` 增加 evaluation-only relation-aware grading 候选。它不改 aggregation 输出，而是对 aggregation result 做离线标注：正例仍标为 `answer_bearing`，unsupported relationship 负例标为 `relation_unsupported`。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_qdrant_bge_smoke_evidence.py `
+  --hybrid-relation-aggregation-grading `
+  --output-dir docs/benchmark/chinese-seed/relation-aware-aggregation-grading `
+  --cases-path tests/fixtures/split_chunk_identifier_cases.json `
+  --empty-cases-path tests/fixtures/multi_chunk_aggregation_negative_cases.json `
+  --source-id split_refund_policy_docs `
+  --embedding-model-path models/bge-m3 `
+  --embedding-local-files-only `
+  --rag-score-threshold 0.7
+```
+
+导出文件：
+
+```text
+docs/benchmark/chinese-seed/relation-aware-aggregation-grading/relation-aware-aggregation-grading.json
+docs/benchmark/chinese-seed/relation-aware-aggregation-grading/relation-aware-aggregation-grading.md
+```
+
+当前 relation-aware grading evidence 显示：
+
+| Candidate | Cases | Answer-bearing Rate | Relation-unsupported | Unexpected Evidence | Expected-empty Pass Rate |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `relation-aware-aggregation-grader-v1` | 2 | 1.0000 | 1 | 0 | 1.0000 |
+
+结论：relation-aware grader 能把“检索到相关编号，但不能证明请求关系”的负例从 `unexpected_evidence` 中分离出来；但它仍是本地 deterministic 候选，不是生产语义判断。后续若要进入 runtime，需要扩展更多关系词、真实语料和 noisy top-k，并再讨论 reranker、LLM grader 或 GraphRAG 关系检查。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)
