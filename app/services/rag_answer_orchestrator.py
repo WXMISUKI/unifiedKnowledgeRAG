@@ -23,6 +23,7 @@ class AnswerComposer(ABC):
         min_evidence_count: int,
         min_top_score: float,
         request_filter_context: dict[str, object] | None = None,
+        retrieval_trace: dict[str, object] | None = None,
     ) -> RagAnswerResult:
         raise NotImplementedError
 
@@ -41,6 +42,7 @@ class DeterministicAnswerComposer(AnswerComposer):
         min_evidence_count: int,
         min_top_score: float,
         request_filter_context: dict[str, object] | None = None,
+        retrieval_trace: dict[str, object] | None = None,
     ) -> RagAnswerResult:
         gate = _evaluate_evidence_gate(
             documents=documents,
@@ -57,6 +59,8 @@ class DeterministicAnswerComposer(AnswerComposer):
         }
         if request_filter_context is not None:
             metadata["request_filter_context"] = request_filter_context
+        if retrieval_trace is not None:
+            metadata["retrieval_trace"] = retrieval_trace
         if not gate["passed"]:
             metadata = attach_answer_trace(
                 final_status="insufficient_evidence",

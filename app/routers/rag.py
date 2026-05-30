@@ -13,6 +13,7 @@ from app.config import get_settings
 from app.services.retrieval_backends import create_document_retriever
 from app.services.rag_answer_orchestrator import create_answer_composer
 from app.services.request_filter_context import normalize_request_filter_context
+from app.services.retrieval_trace import build_retrieval_trace
 from app.services.source_catalog import list_knowledge_bases
 
 router = APIRouter(prefix="/api/rag")
@@ -73,16 +74,25 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             ),
         )
 
+    filter_metadata = filter_context.metadata(
+        backend=retriever.backend_name,
+        enforced=retriever.filters_enforced(),
+    )
+    retrieval_trace = build_retrieval_trace(
+        backend=retriever.backend_name,
+        requested_source_ids=request.knowledge_base_ids,
+        top_k=request.top_k,
+        documents=documents,
+        filter_context=filter_metadata,
+    )
     return RagRetrieveResponse(
         ok=True,
         result=RagRetrieveResult(
             answer_context=retriever.build_answer_context(documents),
             documents=documents,
             metadata={
-                "request_filter_context": filter_context.metadata(
-                    backend=retriever.backend_name,
-                    enforced=retriever.filters_enforced(),
-                ),
+                "request_filter_context": filter_metadata,
+                "retrieval_trace": retrieval_trace,
             },
         ),
     )
@@ -143,6 +153,17 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             ),
         )
 
+    filter_metadata = filter_context.metadata(
+        backend=retriever.backend_name,
+        enforced=retriever.filters_enforced(),
+    )
+    retrieval_trace = build_retrieval_trace(
+        backend=retriever.backend_name,
+        requested_source_ids=request.knowledge_base_ids,
+        top_k=request.top_k,
+        documents=documents,
+        filter_context=filter_metadata,
+    )
     return RagAnswerResponse(
         ok=True,
         result=composer.compose(
@@ -151,9 +172,7 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             retrieval_backend=retriever.backend_name,
             min_evidence_count=settings.rag_answer_min_evidence_count,
             min_top_score=settings.rag_answer_min_evidence_score,
-            request_filter_context=filter_context.metadata(
-                backend=retriever.backend_name,
-                enforced=retriever.filters_enforced(),
-            ),
+            request_filter_context=filter_metadata,
+            retrieval_trace=retrieval_trace,
         ),
     )
