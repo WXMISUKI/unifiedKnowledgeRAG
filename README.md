@@ -1379,6 +1379,30 @@ docs/operations/deployment-readiness/deployment-readiness.md
 
 结论：这个报告适合在本机测试、公网试验和后续内网部署前做一次只读检查。它会汇总配置和模型路径诊断，但不会下载模型、启动 Qdrant、重建索引或执行 GraphRAG。
 
+第五十三阶段 OpenSpec change `add-reindex-readiness-plan` 继续推进 roadmap Phase 6，新增本地 reindex readiness 计划，用来在操作者真正重建索引前审查 source、index status 和 ingestion job history。
+
+导出命令：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_reindex_readiness.py
+```
+
+导出文件：
+
+```text
+docs/operations/reindex-readiness/reindex-readiness.json
+docs/operations/reindex-readiness/reindex-readiness.md
+```
+
+当前默认报告状态为 `ready`，核心 source 建议为：
+
+| Source | File | Index Status | Latest Job | Recommended Action |
+| --- | --- | --- | --- | --- |
+| `refund_policy_docs` | present | `ready` | none | `reindex_optional` |
+| `logistics_faq` | present | `ready` | none | `reindex_optional` |
+
+结论：这个报告是只读操作计划，不会创建 ingestion job、重建索引、压缩历史、下载模型、调用 Qdrant 或执行 GraphRAG。它的价值是把“是否需要备份/重建/先修 source 文件”的判断前置，避免内网或企业级部署时直接盲目 reindex。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

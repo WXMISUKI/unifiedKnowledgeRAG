@@ -1,0 +1,42 @@
+{
+  "id": "reindex-readiness-v1",
+  "generated_at": "2026-05-30T06:36:46.443024+00:00",
+  "status": "ready",
+  "retrieval_backend": "fixture",
+  "source_dir": "app\\data\\sources",
+  "index_dir": "app\\data\\indexes\\llamaindex",
+  "sources": [
+    {
+      "source_id": "refund_policy_docs",
+      "source_file": "app\\data\\sources\\refund_policy_docs.md",
+      "source_file_status": "present",
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "indexed_at": null,
+      "latest_job": null,
+      "recommended_action": "reindex_optional"
+    },
+    {
+      "source_id": "logistics_faq",
+      "source_file": "app\\data\\sources\\logistics_faq.md",
+      "source_file_status": "present",
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "indexed_at": null,
+      "latest_job": null,
+      "recommended_action": "reindex_optional"
+    }
+  ],
+  "job_summary": {
+    "total_latest_jobs": 0,
+    "status_counts": {}
+  },
+  "operation_notes": [
+    "This plan is read-only and does not trigger ingestion or index rebuilds.",
+    "Back up the index directory before production reindex operations.",
+    "Fixture backend does not require persisted source indexes.",
+    "Some sources have no recorded ingestion job history."
+  ],
+  "json_path": "docs\\operations\\reindex-readiness\\reindex-readiness.json",
+  "markdown_path": "docs\\operations\\reindex-readiness\\reindex-readiness.md"
+}

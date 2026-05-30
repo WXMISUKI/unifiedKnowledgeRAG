@@ -95,3 +95,22 @@ conda run -n GRAPHRAG python scripts/export_deployment_readiness.py
 ```
 
 The report is intentionally read-only. It does not start ingestion jobs, rebuild indexes, download models, call embedding services, call Qdrant, or execute graph queries. External control planes still own registration, heartbeat governance, audit policy, and source-to-agent binding decisions.
+
+## Reindex Readiness Plan
+
+Phase 6 backup and reindex evidence is now also represented by a local `reindex-readiness-v1` export. It consolidates:
+
+- configured source catalog entries
+- source file presence under `RAG_SOURCE_DIR`
+- persisted source index status
+- latest logical ingestion job metadata
+- lifecycle job status counts
+- per-source recommended operator action
+
+The default local report can be regenerated with:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_reindex_readiness.py
+```
+
+The report is intentionally read-only. It does not create ingestion jobs, rebuild indexes, compact job history, download embedding models, call Qdrant, or execute GraphRAG. It is a review artifact for local/public-network/private-network deployment planning before an operator chooses whether to back up indexes or run explicit ingestion.
