@@ -8,6 +8,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 本阶段规格纳入 RAG + GraphRAG 的合同边界，但运行时第一阶段只实现 document RAG：
 
+- `GET /live`
+- `GET /ready`
 - `GET /health`
 - `GET /api/provider/manifest`
 - `GET /api/provider/preflight`
@@ -35,9 +37,11 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 `example_request` 是 provider-owned 的集成提示，不是生产基础设施选型。它不会声明 embedding 模型、向量数据库、reranker、图数据库或 answer composer 实现细节；这些仍需通过后续 OpenSpec change 和架构证据单独确认。
 
+`GET /live` 和 `GET /ready` 是轻量高可用探针。`/live` 只表示 provider 进程还能响应 HTTP，不构造 retriever、不检查索引、不调用 answer readiness，也不触发 ingestion/vector DB/GraphRAG；`/ready` 返回与 `/health` 相同的 readiness 合同，用于判断实例是否适合接收 provider 流量。`/health` 保留兼容现有调用。
+
 `GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。manifest 也会暴露 `rag_source_documents_template=/api/rag/sources/{source_id}/documents`，便于调用方发现 source document manifest 诊断入口。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 
-Manifest 还会返回机器可读的 `access` 元数据，说明 `/health` 是公开 health check、`/api/*` 是可选 API key 保护范围、支持 `Authorization: Bearer <token>` 和 `X-Provider-Api-Key: <token>`。它只报告 `provider_api_key_configured=true/false`，不会输出 secret 值。这个 token 仍只是组件访问保护，不代表用户身份、RBAC、审批、审计或 source-to-agent binding。
+Manifest 还会返回机器可读的 `access` 元数据，说明 `/live`、`/ready`、`/health` 是公开 operational probes，`/api/*` 是可选 API key 保护范围、支持 `Authorization: Bearer <token>` 和 `X-Provider-Api-Key: <token>`。它只报告 `provider_api_key_configured=true/false`，不会输出 secret 值。这个 token 仍只是组件访问保护，不代表用户身份、RBAC、审批、审计或 source-to-agent binding。
 
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
@@ -62,7 +66,7 @@ Authorization: Bearer <token>
 X-Provider-Api-Key: <token>
 ```
 
-`GET /health` 保持公开，便于部署健康检查。这个 token 只是 provider 组件访问保护，不是用户身份、RBAC、审批、审计或 source-to-agent binding；这些仍由 MyPrivateAgent 或外部控制面负责。
+`GET /live`、`GET /ready`、`GET /health` 保持公开，便于部署健康检查。这个 token 只是 provider 组件访问保护，不是用户身份、RBAC、审批、审计或 source-to-agent binding；这些仍由 MyPrivateAgent 或外部控制面负责。
 
 Preflight 支持控制面显式声明绑定要求：
 
@@ -1647,6 +1651,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 第六十六阶段 OpenSpec change `advertise-provider-access-metadata` 将组件访问规则写入 manifest 的 `access` 字段。外部控制面现在可以从 manifest 直接读取 public/protected path、accepted headers、API key 是否已配置，以及“组件访问不等于用户身份/策略”的边界说明，不需要从 README 文本推断。
 
 第六十七阶段 OpenSpec change `promote-source-binding-capability` 将 source binding summary 提升为正式 capability：`knowledge.provider.source_bindings`。外部控制面现在可以通过 capability catalog、manifest capability ids 和 preflight required capability 统一发现并校验绑定前审查入口，而不需要只从 endpoint 字典或 README 推断。该能力仍然只读，真正 source-to-agent binding 的创建、审批、审计和策略执行继续由 MyPrivateAgent 或外部控制面负责。
+
+第六十八阶段 OpenSpec change `add-live-ready-probes` 增加轻量高可用探针：`/live` 用于进程 liveness，`/ready` 用于接流量前 readiness，`/health` 保持兼容。Docker Compose healthcheck 已切到 `/ready`，manifest 也会暴露 `live` 和 `ready` 路径。该阶段不引入监控平台、编排系统、告警策略或指标采集。
 
 ## 设计文档
 

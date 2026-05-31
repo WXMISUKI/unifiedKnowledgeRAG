@@ -36,6 +36,8 @@ def build_provider_integration_manifest(
             "citation evidence, and GraphRAG contract boundaries."
         ),
         endpoints={
+            "live": "/live",
+            "ready": "/ready",
             "health": "/health",
             "manifest": "/api/provider/manifest",
             "preflight": "/api/provider/preflight",
@@ -71,7 +73,7 @@ def build_provider_integration_manifest(
         access={
             "type": "component_api_key",
             "provider_api_key_configured": bool(settings.provider_api_key),
-            "public_paths": ["/health"],
+            "public_paths": ["/live", "/ready", "/health"],
             "protected_path_patterns": ["/api/*"],
             "accepted_header_schemes": [
                 "Authorization: Bearer <token>",

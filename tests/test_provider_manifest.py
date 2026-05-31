@@ -28,6 +28,8 @@ def test_provider_manifest_references_integration_endpoints_and_evidence():
     assert response.status_code == 200
     body = response.json()
     assert body["endpoints"] == {
+        "live": "/live",
+        "ready": "/ready",
         "health": "/health",
         "manifest": "/api/provider/manifest",
         "preflight": "/api/provider/preflight",
@@ -86,7 +88,7 @@ def test_provider_manifest_advertises_component_access_metadata():
     assert access == {
         "type": "component_api_key",
         "provider_api_key_configured": False,
-        "public_paths": ["/health"],
+        "public_paths": ["/live", "/ready", "/health"],
         "protected_path_patterns": ["/api/*"],
         "accepted_header_schemes": [
             "Authorization: Bearer <token>",
@@ -140,3 +142,13 @@ def test_provider_preflight_endpoint_is_advertised_from_manifest():
     body = response.json()
     assert body["provider_id"] == "unifiedKnowledgeProvider"
     assert body["bindable"] is True
+
+
+def test_provider_manifest_advertises_live_and_ready_probe_paths():
+    response = client.get("/api/provider/manifest")
+
+    assert response.status_code == 200
+    endpoints = response.json()["endpoints"]
+    assert endpoints["live"] == "/live"
+    assert endpoints["ready"] == "/ready"
+    assert endpoints["health"] == "/health"

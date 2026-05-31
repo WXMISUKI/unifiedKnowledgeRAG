@@ -108,6 +108,18 @@ conda run -n GRAPHRAG python scripts/export_deployment_readiness.py
 
 The report is intentionally read-only. It does not start ingestion jobs, rebuild indexes, download models, call embedding services, call Qdrant, or execute graph queries. External control planes still own registration, heartbeat governance, audit policy, and source-to-agent binding decisions.
 
+## Liveness And Readiness Probes
+
+Phase 6 high-availability deployment work now separates process liveness from traffic readiness:
+
+```text
+GET /live
+GET /ready
+GET /health
+```
+
+`/live` is a side-effect-free process probe and does not construct retrieval backends, inspect index lifecycle, run answer readiness, call embedding/vector stores, create ingestion jobs, or execute GraphRAG. `/ready` returns the provider readiness contract used to decide whether the instance should receive traffic. `/health` remains compatible with existing callers. This is intentionally lightweight; orchestration, alert routing, autoscaling policy, heartbeat governance, registration, and audit policy remain outside this provider.
+
 ## Reindex Readiness Plan
 
 Phase 6 backup and reindex evidence is now also represented by a local `reindex-readiness-v1` export. It consolidates:

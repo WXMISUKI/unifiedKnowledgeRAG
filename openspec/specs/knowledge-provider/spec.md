@@ -148,6 +148,25 @@ The system SHALL expose a read-only provider integration manifest for external c
 - **WHEN** a caller requests `GET /api/provider/manifest`
 - **THEN** the provider does not start ingestion jobs, rebuild indexes, call embedding models, call vector databases, or execute graph queries
 
+### Requirement: Provider exposes separate liveness and readiness probes
+The system SHALL expose lightweight liveness and readiness probes for high-availability deployments while keeping `/health` compatible.
+
+#### Scenario: Liveness probe is side-effect free
+- **WHEN** a caller requests `GET /live`
+- **THEN** the response reports the provider process as live without constructing retrieval backends, checking indexes, running answer readiness, executing ingestion, calling vector stores, or executing GraphRAG
+
+#### Scenario: Readiness probe reports traffic readiness
+- **WHEN** a caller requests `GET /ready`
+- **THEN** the response includes the same machine-readable readiness details as `/health` for service, RAG, answer, and graph status
+
+#### Scenario: Health endpoint remains compatible
+- **WHEN** a caller requests `GET /health`
+- **THEN** the endpoint continues to return the existing readiness response shape
+
+#### Scenario: Manifest advertises operational probes
+- **WHEN** a caller requests `GET /api/provider/manifest`
+- **THEN** the manifest endpoints include `live` and `ready` paths for external discovery
+
 ### Requirement: Provider exposes binding preflight
 The system SHALL expose a read-only provider preflight endpoint that summarizes whether the provider is currently bindable by an external control plane using the provider manifest, health readiness, capability coverage, and schema-reference coverage.
 

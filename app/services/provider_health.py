@@ -1,9 +1,13 @@
 from app.config import Settings, get_settings
-from app.models.contracts import ComponentStatus, HealthResponse
+from app.models.contracts import ComponentStatus, HealthResponse, LivenessResponse
 from app.services.index_lifecycle import not_ready_sources
 from app.services.rag_answer_orchestrator import answer_composer_readiness
 from app.services.retrieval_backends import create_document_retriever
 from app.services.source_catalog import KNOWLEDGE_BASES
+
+
+def build_liveness_response() -> LivenessResponse:
+    return LivenessResponse(status="live", service="unifiedKnowledgeProvider")
 
 
 def build_health_response(settings: Settings | None = None) -> HealthResponse:

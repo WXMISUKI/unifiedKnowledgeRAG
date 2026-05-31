@@ -19,6 +19,11 @@ class HealthResponse(BaseModel):
     graph: ComponentStatus
 
 
+class LivenessResponse(BaseModel):
+    status: str
+    service: str
+
+
 class CapabilityInvocation(BaseModel):
     protocol: str = "http"
     method: str

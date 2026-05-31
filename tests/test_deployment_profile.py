@@ -23,14 +23,14 @@ def test_dockerignore_excludes_runtime_state_and_generated_evidence():
     assert "tests/" in dockerignore
 
 
-def test_compose_profile_mounts_runtime_state_and_keeps_health_public():
+def test_compose_profile_mounts_runtime_state_and_uses_readiness_probe():
     compose = (ROOT / "docker-compose.example.yml").read_text(encoding="utf-8")
 
     assert "8020:8020" in compose
     assert "./app/data/sources:/app/app/data/sources:ro" in compose
     assert "./app/data/indexes:/app/app/data/indexes" in compose
     assert "./models:/models:ro" in compose
-    assert "http://127.0.0.1:8020/health" in compose
+    assert "http://127.0.0.1:8020/ready" in compose
     assert "qdrant:" not in compose
 
 

@@ -62,6 +62,17 @@ The project SHALL treat local readiness reports, model artifact diagnostics, bac
 - **WHEN** the provider exports readiness or operation notes
 - **THEN** the roadmap boundary still states that external control planes own registration, heartbeat governance, audit policy, and agent binding decisions
 
+### Requirement: Liveness and readiness probes advance Phase 6 high availability
+The project SHALL treat liveness/readiness probe separation as Phase 6 deployment and operations work when it improves component availability without adding platform ownership.
+
+#### Scenario: Probe split is phase-aligned
+- **WHEN** an OpenSpec change adds separate liveness and readiness probes
+- **THEN** the roadmap records it as lightweight Phase 6 high-availability work
+
+#### Scenario: Probe split preserves provider boundary
+- **WHEN** liveness and readiness probes are exposed
+- **THEN** the provider still does not own orchestration, alert routing, autoscaling policy, registration, heartbeat governance, audit policy, or final answer workflow
+
 ### Requirement: Reindex planning evidence advances Phase 6 operations
 The project SHALL treat local reindex readiness plans and backup/reindex notes as Phase 6 operations evidence when they help operators review provider component state without changing runtime behavior.
 

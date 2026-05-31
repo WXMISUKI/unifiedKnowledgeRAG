@@ -206,6 +206,8 @@ def _check_manifest(client: Any) -> dict[str, Any]:
     assert body["contract_version"] == "knowledge-provider-contract-v1"
     assert body["component_role"] == "knowledge_data_plane"
     assert "MyPrivateAgent" in body["compatible_control_planes"]
+    assert body["endpoints"]["live"] == "/live"
+    assert body["endpoints"]["ready"] == "/ready"
     assert body["endpoints"]["health"] == "/health"
     assert body["endpoints"]["capabilities"] == "/api/capabilities"
     assert body["endpoints"]["openapi"] == "/openapi.json"

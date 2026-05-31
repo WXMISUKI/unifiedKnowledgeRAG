@@ -76,3 +76,16 @@ def test_health_remains_public_when_provider_api_key_is_set(monkeypatch):
 
     assert response.status_code == 200
     assert response.json()["service"] == "unifiedKnowledgeProvider"
+
+
+def test_live_and_ready_remain_public_when_provider_api_key_is_set(monkeypatch):
+    monkeypatch.setenv("PROVIDER_API_KEY", "secret-token")
+    client = TestClient(create_app())
+
+    live_response = client.get("/live")
+    ready_response = client.get("/ready")
+
+    assert live_response.status_code == 200
+    assert live_response.json()["status"] == "live"
+    assert ready_response.status_code == 200
+    assert ready_response.json()["service"] == "unifiedKnowledgeProvider"

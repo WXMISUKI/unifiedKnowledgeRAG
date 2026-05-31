@@ -6,6 +6,41 @@ from app.main import create_app
 client = TestClient(create_app())
 
 
+def test_liveness_reports_process_without_readiness_side_effects(monkeypatch):
+    def fail_if_readiness_runs(*_args, **_kwargs):
+        raise AssertionError("liveness must not run readiness checks")
+
+    monkeypatch.setattr(
+        "app.services.provider_health.create_document_retriever",
+        fail_if_readiness_runs,
+    )
+    monkeypatch.setattr(
+        "app.services.provider_health.answer_composer_readiness",
+        fail_if_readiness_runs,
+    )
+    monkeypatch.setattr(
+        "app.services.provider_health.not_ready_sources",
+        fail_if_readiness_runs,
+    )
+
+    response = client.get("/live")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "live",
+        "service": "unifiedKnowledgeProvider",
+    }
+
+
+def test_readiness_matches_health_contract():
+    health_response = client.get("/health")
+    ready_response = client.get("/ready")
+
+    assert health_response.status_code == 200
+    assert ready_response.status_code == 200
+    assert ready_response.json() == health_response.json()
+
+
 def test_health_reports_machine_readable_readiness():
     response = client.get("/health")
 
