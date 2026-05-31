@@ -30,6 +30,17 @@
   - two cross-domain expected-empty trap cases (`empty`)
 - Current empty-case count in baseline fixture: 9.
 
+## Phase 3 Evidence Refresh
+
+- Refresh change: `refresh-phase3-seed-evidence-after-fixture-expansion`
+- Refreshed artifact:
+  - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json`
+  - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.md`
+- Refreshed baseline summary:
+  - `total_cases=24`
+  - `empty.total_cases=9`
+  - `policy-nuance.total_cases=1`
+
 ## Pending
 
 - Keep deployment readiness review notes actionable until non-mock embedding/retrieval candidates are promoted by evidence.
