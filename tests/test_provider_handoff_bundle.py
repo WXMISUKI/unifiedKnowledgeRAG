@@ -316,6 +316,53 @@ def test_provider_handoff_bundle_summarizes_source_binding_evidence(tmp_path):
     )
 
 
+def test_provider_handoff_bundle_prefers_source_binding_aggregate_counts(tmp_path):
+    source_binding_path = tmp_path / "source-bindings.json"
+    source_binding_path.write_text(
+        json.dumps(
+            {
+                "status": "ready",
+                "total_source_count": 3,
+                "bindable_source_count": 2,
+                "status_counts": {"ready": 2, "review": 1},
+                "recommended_action_counts": {
+                    "bind_source_from_control_plane": 2,
+                    "review_source_fingerprint_before_binding": 1,
+                },
+                "sources": [
+                    {
+                        "source_id": "stale_row",
+                        "status": "blocked",
+                        "bindable": False,
+                        "recommended_action": "run_ingestion_job_before_binding",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    specs = [
+        HandoffEvidenceSpec(
+            id="source_binding_summary",
+            category="source-binding",
+            path=Path("source-bindings.json"),
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    artifact = report.evidence_artifacts[0]
+    assert artifact["summary"] == (
+        "status=ready; bindable_sources=2/3; "
+        "source_statuses=ready:2, review:1; "
+        "recommended_actions=bind_source_from_control_plane:2, "
+        "review_source_fingerprint_before_binding:1"
+    )
+
+
 def test_provider_handoff_bundle_summarizes_source_binding_actions(tmp_path):
     source_binding_path = tmp_path / "source-bindings.json"
     source_binding_path.write_text(

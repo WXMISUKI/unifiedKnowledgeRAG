@@ -81,6 +81,48 @@ def test_deployed_provider_smoke_is_ready_when_handoff_is_ready():
     }
 
 
+def test_deployed_provider_smoke_prefers_source_binding_aggregate_counts():
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = _payload_for(request.url.path)
+        if request.url.path == "/api/provider/source-bindings":
+            payload["total_source_count"] = 3
+            payload["bindable_source_count"] = 2
+            payload["status_counts"] = {"ready": 2, "review": 1}
+            payload["recommended_action_counts"] = {
+                "bind_source_from_control_plane": 2,
+                "review_source_fingerprint_before_binding": 1,
+            }
+            payload["sources"] = [
+                {
+                    "source_id": "stale_row",
+                    "status": "blocked",
+                    "bindable": False,
+                    "recommended_action": "run_ingestion_job_before_binding",
+                }
+            ]
+        return httpx.Response(200, json=payload)
+
+    client = httpx.Client(
+        transport=httpx.MockTransport(handler),
+        base_url="http://provider.test",
+    )
+
+    report = run_deployed_provider_smoke("http://provider.test", client=client)
+    checks = {check.name: check for check in report.checks}
+
+    assert checks["provider_source_bindings"].details == {
+        "id": "provider-source-binding-summary-v1",
+        "status": "ready",
+        "source_count": 3,
+        "bindable_source_count": 2,
+        "source_status_counts": {"ready": 2, "review": 1},
+        "recommended_action_counts": {
+            "bind_source_from_control_plane": 2,
+            "review_source_fingerprint_before_binding": 1,
+        },
+    }
+
+
 def test_deployed_provider_smoke_fails_closed_on_unreachable_endpoint():
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/api/provider/preflight":

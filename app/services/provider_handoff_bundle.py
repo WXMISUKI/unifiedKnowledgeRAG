@@ -254,17 +254,30 @@ def _artifact_status_and_summary(
     if artifact_id == "source_binding_summary":
         status = payload.get("status", "review")
         sources = payload.get("sources", [])
-        bindable_count = sum(
-            1
-            for source in sources
-            if isinstance(source, dict) and source.get("bindable") is True
+        source_count = _int_value(
+            payload.get("total_source_count"),
+            fallback=len(sources),
         )
-        source_status_counts = _count_source_values(sources, "status")
-        action_counts = _count_source_values(sources, "recommended_action")
+        bindable_count = _int_value(
+            payload.get("bindable_source_count"),
+            fallback=sum(
+                1
+                for source in sources
+                if isinstance(source, dict) and source.get("bindable") is True
+            ),
+        )
+        source_status_counts = _dict_counts(
+            payload.get("status_counts"),
+            fallback=_count_source_values(sources, "status"),
+        )
+        action_counts = _dict_counts(
+            payload.get("recommended_action_counts"),
+            fallback=_count_source_values(sources, "recommended_action"),
+        )
         return (
             status if status in {"ready", "review", "blocked"} else "review",
             (
-                f"status={status}; bindable_sources={bindable_count}/{len(sources)}; "
+                f"status={status}; bindable_sources={bindable_count}/{source_count}; "
                 f"source_statuses={_format_counts(source_status_counts)}; "
                 f"recommended_actions={_format_counts(action_counts)}"
             ),
@@ -295,6 +308,27 @@ def _count_source_values(
         if isinstance(source, dict) and source.get(field_name)
     )
     return dict(sorted(counts.items()))
+
+
+def _dict_counts(value: Any, *, fallback: dict[str, int]) -> dict[str, int]:
+    if not isinstance(value, dict):
+        return fallback
+    counts: dict[str, int] = {}
+    for key, count in value.items():
+        if not isinstance(key, str):
+            continue
+        normalized_count = _int_value(count, fallback=0)
+        if normalized_count > 0:
+            counts[key] = normalized_count
+    return dict(sorted(counts.items()))
+
+
+def _int_value(value: Any, *, fallback: int) -> int:
+    if isinstance(value, bool):
+        return fallback
+    if isinstance(value, int) and value >= 0:
+        return value
+    return fallback
 
 
 def _format_counts(counts: dict[str, int]) -> str:

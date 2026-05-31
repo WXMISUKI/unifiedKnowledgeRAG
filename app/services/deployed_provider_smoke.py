@@ -439,21 +439,34 @@ def _handoff_summary(payload: dict[str, Any]) -> dict[str, Any]:
 
 def _source_bindings_summary(payload: dict[str, Any]) -> dict[str, Any]:
     sources = payload.get("sources", [])
-    source_count = len(sources) if isinstance(sources, list) else 0
-    bindable_count = sum(
-        1
-        for source in sources
-        if isinstance(source, dict) and source.get("bindable") is True
+    source_rows = sources if isinstance(sources, list) else []
+    source_count = _int_value(
+        payload.get("total_source_count"),
+        fallback=len(source_rows),
+    )
+    bindable_count = _int_value(
+        payload.get("bindable_source_count"),
+        fallback=sum(
+            1
+            for source in source_rows
+            if isinstance(source, dict) and source.get("bindable") is True
+        ),
     )
     return {
         "id": payload.get("id"),
         "status": payload.get("status"),
         "source_count": source_count,
         "bindable_source_count": bindable_count,
-        "source_status_counts": _count_source_values(sources, "status"),
-        "recommended_action_counts": _count_source_values(
-            sources,
-            "recommended_action",
+        "source_status_counts": _dict_counts(
+            payload.get("status_counts"),
+            fallback=_count_source_values(source_rows, "status"),
+        ),
+        "recommended_action_counts": _dict_counts(
+            payload.get("recommended_action_counts"),
+            fallback=_count_source_values(
+                source_rows,
+                "recommended_action",
+            ),
         ),
     }
 
@@ -468,6 +481,27 @@ def _count_source_values(
         if isinstance(source, dict) and source.get(field_name)
     )
     return dict(sorted(counts.items()))
+
+
+def _dict_counts(value: Any, *, fallback: dict[str, int]) -> dict[str, int]:
+    if not isinstance(value, dict):
+        return fallback
+    counts: dict[str, int] = {}
+    for key, count in value.items():
+        if not isinstance(key, str):
+            continue
+        normalized_count = _int_value(count, fallback=0)
+        if normalized_count > 0:
+            counts[key] = normalized_count
+    return dict(sorted(counts.items()))
+
+
+def _int_value(value: Any, *, fallback: int) -> int:
+    if isinstance(value, bool):
+        return fallback
+    if isinstance(value, int) and value >= 0:
+        return value
+    return fallback
 
 
 def _operation_notes(*, provider_api_key: str | None) -> list[str]:
