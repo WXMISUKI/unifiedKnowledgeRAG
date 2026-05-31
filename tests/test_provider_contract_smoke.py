@@ -17,12 +17,13 @@ def test_provider_contract_smoke_passes_default_contract():
 
     assert payload["id"] == "provider-contract-smoke-v1"
     assert payload["passed"] is True
-    assert payload["summary"] == {"total": 8, "passed": 8, "failed": 0}
+    assert payload["summary"] == {"total": 9, "passed": 9, "failed": 0}
     assert [check["name"] for check in payload["checks"]] == [
         "health_readiness",
         "provider_integration_manifest",
         "provider_preflight",
         "capability_invocation_metadata",
+        "graph_schema_discovery",
         "rag_retrieve_contract",
         "rag_answer_contract",
         "rag_insufficient_evidence_pack_contract",
@@ -44,6 +45,16 @@ def test_provider_contract_smoke_covers_trace_filter_and_citations():
     assert preflight.details["bindable"] is True
     assert preflight.details["check_count"] == 6
     assert preflight.details["graph_status"] == "planned"
+
+    graph_schema = checks["graph_schema_discovery"]
+    assert graph_schema.details == {
+        "graph_count": 1,
+        "graph_ids": ["ecommerce_order_graph"],
+        "graph_status": "planned",
+        "graph_store": "neo4j_planned",
+        "entity_type_count": 4,
+        "relation_type_count": 3,
+    }
 
     retrieve = checks["rag_retrieve_contract"]
     assert retrieve.details["document_count"] > 0
@@ -99,6 +110,8 @@ def test_provider_contract_smoke_export_writes_json_and_markdown(tmp_path):
     assert payload["markdown_path"] == str(report.markdown_path)
     assert "# Provider Contract Smoke Report" in markdown
     assert "`rag_answer_contract`" in markdown
+    assert "`graph_schema_discovery`" in markdown
+    assert '"graph_count": 1' in markdown
     assert "`rag_insufficient_evidence_pack_contract`" in markdown
     assert '"retrieval_pack_status": "insufficient_evidence"' in markdown
     assert '"error_code": "GRAPH_NOT_IMPLEMENTED"' in markdown

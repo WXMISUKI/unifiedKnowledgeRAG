@@ -114,6 +114,25 @@ The system SHALL provide a local executable smoke report that validates the prov
 - **WHEN** a caller runs the provider contract smoke export command
 - **THEN** the system writes machine-readable JSON and human-readable Markdown evidence files without changing provider HTTP API contracts
 
+### Requirement: Provider contract smoke validates graph schema discovery
+
+The system SHALL validate graph schema discovery in provider contract smoke separately from planned graph query execution.
+
+#### Scenario: Contract smoke checks graph schemas
+
+- **WHEN** provider contract smoke runs
+- **THEN** it calls `GET /api/graph/schemas` and records configured graph ids and graph metadata counts
+
+#### Scenario: Contract smoke preserves planned graph query boundary
+
+- **WHEN** provider contract smoke validates graph schema discovery
+- **THEN** it still validates `POST /api/graph/query` as a planned not-implemented boundary rather than executable GraphRAG
+
+#### Scenario: Graph schema contract smoke remains read-only
+
+- **WHEN** provider contract smoke checks graph schemas
+- **THEN** it does not execute graph queries, connect to graph stores, create ingestion jobs, extract entities, build ontology workflows, rebuild indexes, execute retrieval, or compose answers
+
 ### Requirement: Provider smoke covers insufficient-evidence evidence packs
 The provider contract smoke report SHALL validate that RAG retrieval and cited answer envelopes fail closed with machine-readable evidence pack diagnostics when no supporting evidence is returned.
 
@@ -705,3 +724,23 @@ The system SHALL include compact source status and recommended action rollups wh
 
 - **WHEN** source binding status and action counts are summarized in deployed provider smoke evidence
 - **THEN** the probe does not create source-to-agent bindings, create ingestion jobs, rebuild indexes, execute retrieval or answer composition, call embedding models, call vector databases, or execute GraphRAG
+
+### Requirement: Source binding summary exposes compact aggregate counts
+
+The system SHALL include compact aggregate counts in the source binding summary response so external control planes can quickly review binding readiness without recomputing common totals from source rows.
+
+#### Scenario: Source binding response includes aggregate counts
+
+- **WHEN** a caller requests `GET /api/provider/source-bindings`
+- **THEN** the response includes `total_source_count`, `bindable_source_count`, `status_counts`, and `recommended_action_counts` derived from the returned source rows
+
+#### Scenario: Source binding aggregate counts remain evidence-only
+
+- **WHEN** the provider builds source binding aggregate counts
+- **THEN** it does not create source-to-agent bindings, run approvals, write audit records, create ingestion jobs, rebuild indexes, execute retrieval, compose answers, or execute GraphRAG
+
+#### Scenario: Source binding export includes aggregate counts
+
+- **WHEN** a caller exports source binding evidence
+- **THEN** the JSON and Markdown outputs include the compact aggregate counts alongside the detailed source rows
+

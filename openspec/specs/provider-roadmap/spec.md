@@ -54,6 +54,20 @@ The project SHALL treat graph namespace summaries in provider preflight as Phase
 - **WHEN** provider preflight summarizes graph namespaces
 - **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
 
+### Requirement: Graph schema contract smoke advances lightweight GraphRAG boundary evidence
+
+The project SHALL treat graph schema discovery smoke evidence as Phase 5 boundary work when it validates graph namespace metadata without adding graph execution or graph-store dependencies.
+
+#### Scenario: Graph schema smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds local contract smoke coverage for `GET /api/graph/schemas`
+- **THEN** the roadmap records it as lightweight Phase 5 graph boundary evidence rather than GraphRAG execution promotion
+
+#### Scenario: Graph schema smoke preserves graph gate
+
+- **WHEN** provider contract smoke validates graph schema discovery
+- **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
+
 ### Requirement: Evidence packaging changes advance Phase 4 without changing provider scope
 The project SHALL treat retrieval evidence packs, citation policy metadata, and insufficient-evidence diagnostics as Phase 4 roadmap work when they help callers answer safely without moving final answer policy into the provider.
 
@@ -384,3 +398,18 @@ The project SHALL treat source binding status and recommended action rollups in 
 
 - **WHEN** provider handoff evidence summarizes source binding statuses or recommended actions
 - **THEN** source-to-agent binding policy, approvals, audit, registration, ingestion execution, retrieval execution, answer composition, and final answer workflow remain owned outside this provider
+
+### Requirement: Source binding compact summaries stay lightweight
+
+The project SHALL treat source binding aggregate counts as lightweight Phase 2 and Phase 6 evidence when they summarize existing source readiness rows without changing binding policy or executing provider capabilities.
+
+#### Scenario: Source binding compact summary is phase-aligned
+
+- **WHEN** an OpenSpec change adds compact counts to source binding evidence
+- **THEN** the roadmap records it as source readiness and handoff evidence rather than source-to-agent binding execution
+
+#### Scenario: Source binding compact summary preserves provider boundary
+
+- **WHEN** source binding compact counts are generated
+- **THEN** binding policy, approvals, audit, registration, final answer workflow, ingestion execution, retrieval execution, and GraphRAG execution remain outside this provider
+

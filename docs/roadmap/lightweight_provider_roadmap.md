@@ -69,6 +69,8 @@ Phase 5 graph work remains use-case driven, but provider preflight now summarize
 
 This does not implement GraphRAG execution. It does not connect to Neo4j, extract entities, build ontology workflows, create graph indexes, execute graph queries, or change runtime retrieval behavior. Graph execution still requires a separate relationship-heavy use case, source evidence rules, benchmark evidence, and operational ownership.
 
+Provider contract smoke also validates `GET /api/graph/schemas` as graph boundary evidence. It records graph ids, graph count, graph status, graph store labels, and entity/relation type counts while preserving `POST /api/graph/query` as a planned not-implemented boundary.
+
 ## Retrieval Evidence Pack
 
 Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on successful RAG retrieve and answer envelopes. The pack is retrieval-owned and deterministic; it gives callers a stable bundle with:
@@ -298,3 +300,5 @@ Source binding coverage counts are informational evidence. They reuse existing s
 Source binding package context is also informational evidence. It reuses existing `source_package` metadata such as domain, language, sensitivity, supported formats, and citation granularity so external control planes can review business fit before binding. It does not implement sensitivity-based approval, authorization policy, audit, parser expansion, ingestion execution, retrieval execution, answer composition, or GraphRAG.
 
 Provider handoff evidence now summarizes source binding status counts and recommended action counts from the existing source binding report. This gives MyPrivateAgent or another external control plane a compact view of whether sources are ready, reviewable, or blocked before opening the full binding evidence. It remains read-only and does not create bindings, change binding policy, regenerate evidence, run ingestion, execute retrieval, compose answers, or execute GraphRAG.
+
+The source binding endpoint itself now exposes the same compact aggregate counts: total source count, bindable source count, source status counts, and recommended action counts. These counts are derived from existing source binding rows so callers can make a quick integration decision without duplicating row aggregation logic. They remain evidence-only and do not create bindings, change binding policy, run approvals, write audit records, run ingestion, execute retrieval, compose answers, or execute GraphRAG.

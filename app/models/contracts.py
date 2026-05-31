@@ -135,6 +135,10 @@ class ProviderSourceBindingSummaryResponse(BaseModel):
     generated_at: str
     status: str
     provider: dict[str, Any]
+    total_source_count: int = 0
+    bindable_source_count: int = 0
+    status_counts: dict[str, int] = Field(default_factory=dict)
+    recommended_action_counts: dict[str, int] = Field(default_factory=dict)
     sources: list[SourceBindingSummaryRow]
     operation_notes: list[str] = Field(default_factory=list)
     json_path: str | None = None

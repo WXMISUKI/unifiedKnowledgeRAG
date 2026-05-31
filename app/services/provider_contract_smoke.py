@@ -51,6 +51,11 @@ def run_provider_contract_smoke(client: Any | None = None) -> ProviderContractSm
             lambda: _check_capabilities(client),
         ),
         _run_check(
+            "graph_schema_discovery",
+            "GET /api/graph/schemas",
+            lambda: _check_graph_schemas(client),
+        ),
+        _run_check(
             "rag_retrieve_contract",
             "POST /api/rag/retrieve",
             lambda: _check_retrieve(client),
@@ -314,6 +319,28 @@ def _check_capabilities(client: Any) -> dict[str, Any]:
     }
 
 
+def _check_graph_schemas(client: Any) -> dict[str, Any]:
+    response = client.get("/api/graph/schemas")
+    assert response.status_code == 200
+    body = response.json()
+    graphs = body["graphs"]
+    assert graphs
+    graph = graphs[0]
+    assert graph["id"] == "ecommerce_order_graph"
+    assert graph["status"] == "planned"
+    assert graph["graph_store"] == "neo4j_planned"
+    assert graph["entity_types"]
+    assert graph["relation_types"]
+    return {
+        "graph_count": len(graphs),
+        "graph_ids": [item["id"] for item in graphs],
+        "graph_status": graph["status"],
+        "graph_store": graph["graph_store"],
+        "entity_type_count": len(graph["entity_types"]),
+        "relation_type_count": len(graph["relation_types"]),
+    }
+
+
 def _check_retrieve(client: Any) -> dict[str, Any]:
     response = client.post(
         "/api/rag/retrieve",
@@ -495,7 +522,11 @@ def _compact_markdown_details(check: ProviderContractSmokeCheck) -> str:
             "capability_count",
             "check_count",
             "example_request_count",
+            "graph_count",
             "graph_status",
+            "graph_store",
+            "entity_type_count",
+            "relation_type_count",
             "evidence_pack_status",
             "retrieval_pack_status",
             "retrieval_pack_reason",

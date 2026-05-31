@@ -26,6 +26,11 @@ def build_provider_source_binding_summary(
         _source_binding_row(source, settings)
         for source in list_knowledge_bases(settings)
     ]
+    status_counts = _count_source_values(sources, "status")
+    recommended_action_counts = _count_source_values(
+        sources,
+        "recommended_action",
+    )
     return ProviderSourceBindingSummaryResponse(
         id=SOURCE_BINDING_SUMMARY_ID,
         generated_at=datetime.now(UTC).isoformat(),
@@ -38,6 +43,10 @@ def build_provider_source_binding_summary(
             "manifest_version": manifest.manifest_version,
             "component_role": manifest.component_role,
         },
+        total_source_count=len(sources),
+        bindable_source_count=sum(1 for source in sources if source.bindable),
+        status_counts=status_counts,
+        recommended_action_counts=recommended_action_counts,
         sources=sources,
         operation_notes=_operation_notes(sources),
     )
@@ -60,6 +69,13 @@ def render_provider_source_binding_summary_markdown(
         f"- Generated At: `{report.generated_at}`",
         f"- Provider: `{report.provider['provider_id']}`",
         f"- Contract: `{report.provider['contract_version']}`",
+        f"- Total Sources: `{report.total_source_count}`",
+        f"- Bindable Sources: `{report.bindable_source_count}`",
+        f"- Status Counts: `{_format_counts(report.status_counts)}`",
+        (
+            f"- Recommended Action Counts: "
+            f"`{_format_counts(report.recommended_action_counts)}`"
+        ),
         "",
         "## Sources",
         "",
@@ -277,6 +293,23 @@ def _overall_status(rows: list[SourceBindingSummaryRow]) -> str:
     if statuses - {"ready"}:
         return "review"
     return "ready"
+
+
+def _count_source_values(
+    rows: list[SourceBindingSummaryRow],
+    field_name: str,
+) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for row in rows:
+        value = getattr(row, field_name)
+        counts[value] = counts.get(value, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def _format_counts(counts: dict[str, int]) -> str:
+    if not counts:
+        return "none"
+    return ", ".join(f"{key}={value}" for key, value in counts.items())
 
 
 def _operation_notes(rows: list[SourceBindingSummaryRow]) -> list[str]:
