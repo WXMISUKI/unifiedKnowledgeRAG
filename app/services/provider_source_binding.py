@@ -64,15 +64,21 @@ def render_provider_source_binding_summary_markdown(
         "## Sources",
         "",
         (
-            "| Source | Status | Bindable | Backend | Index | Documents | "
+            "| Source | Status | Bindable | Domain | Language | Sensitivity | "
+            "Formats | Citation Granularity | Backend | Index | Documents | "
             "Citations | Chunks | Parser Ready | Unsupported | Drift | "
             "Preflight | Recommended Action |"
         ),
-        "|---|---|---|---|---|---:|---:|---:|---:|---:|---|---|---|",
+        "|---|---|---|---|---|---|---|---|---|---|---:|---:|---:|---:|---:|---|---|---|",
     ]
     for source in report.sources:
         lines.append(
             f"| `{source.source_id}` | `{source.status}` | `{source.bindable}` | "
+            f"`{source.source_domain or 'unknown'}` | "
+            f"`{source.language or 'unknown'}` | "
+            f"`{source.sensitivity or 'unknown'}` | "
+            f"`{', '.join(source.supported_formats) or 'unknown'}` | "
+            f"`{source.citation_granularity or 'unknown'}` | "
             f"`{source.backend_status or 'unknown'}` | `{source.index_status}` | "
             f"{source.document_count} | {source.citation_anchor_count} | "
             f"{source.chunk_manifest_count} | {source.parser_ready_document_count} | "
@@ -139,6 +145,7 @@ def _source_binding_row(
 
     manifest = manifest_response.result
     preflight = preflight_response.result
+    source_package = manifest.source_package
     drift_statuses = sorted(
         {
             document.drift_status or "unchecked"
@@ -162,6 +169,15 @@ def _source_binding_row(
         source_status=source.status,
         status=status,
         bindable=bindable,
+        source_domain=source_package.domain if source_package else None,
+        language=source_package.language if source_package else None,
+        sensitivity=source_package.sensitivity if source_package else None,
+        supported_formats=source_package.supported_formats if source_package else [],
+        citation_granularity=(
+            source_package.citation_granularity
+            if source_package
+            else None
+        ),
         retrieval_backend=source.retrieval_backend or settings.rag_retrieval_backend,
         backend_status=source.backend_status,
         backend_reason=source.backend_reason,
@@ -238,6 +254,11 @@ def _blocked_row(
         source_status=source.status,
         status="blocked",
         bindable=False,
+        source_domain=None,
+        language=None,
+        sensitivity=None,
+        supported_formats=[],
+        citation_granularity=None,
         retrieval_backend=source.retrieval_backend or "unknown",
         backend_status=source.backend_status,
         backend_reason=source.backend_reason,

@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from app.config import Settings
 from app.main import create_app
 from app.models.contracts import SourceDocumentManifest
-from app.services import ingestion_preflight, source_document_manifest
+from app.services import ingestion_preflight, source_document_manifest, source_package
 from app.services.provider_source_binding import (
     build_provider_source_binding_summary,
     export_provider_source_binding_summary,
@@ -25,6 +25,11 @@ def test_provider_source_binding_summary_marks_default_sources_bindable():
     for row in rows.values():
         assert row.status == "ready"
         assert row.bindable is True
+        assert row.source_domain in {"after_sales_policy", "logistics_support"}
+        assert row.language == "zh-CN"
+        assert row.sensitivity == "internal"
+        assert row.supported_formats == ["markdown"]
+        assert row.citation_granularity == "section"
         assert row.retrieval_backend == "fixture"
         assert row.backend_status == "ready"
         assert row.index_status == "ready"
@@ -66,6 +71,11 @@ def test_provider_source_binding_endpoint_and_manifest_discovery():
     assert refund_source["chunk_manifest_count"] == 7
     assert refund_source["parser_ready_document_count"] == 1
     assert refund_source["unsupported_document_count"] == 0
+    assert refund_source["source_domain"] == "after_sales_policy"
+    assert refund_source["language"] == "zh-CN"
+    assert refund_source["sensitivity"] == "internal"
+    assert refund_source["supported_formats"] == ["markdown"]
+    assert refund_source["citation_granularity"] == "section"
 
 
 def test_provider_source_binding_blocks_drifted_source(monkeypatch, tmp_path):
@@ -148,9 +158,39 @@ def test_provider_source_binding_coverage_counts_are_informational(
 
     assert row.status == "ready"
     assert row.bindable is True
+    assert row.source_domain == "after_sales_policy"
+    assert row.sensitivity == "internal"
     assert row.citation_anchor_count == 1
     assert row.chunk_manifest_count == 1
     assert row.parser_ready_document_count == 1
+
+
+def test_provider_source_binding_package_context_is_informational(monkeypatch):
+    monkeypatch.setitem(
+        source_package.SOURCE_PACKAGES,
+        "refund_policy_docs",
+        {
+            "domain": "finance_policy",
+            "language": "zh-CN",
+            "sensitivity": "restricted",
+            "supported_formats": ["markdown"],
+            "default_chunking_strategy": "markdown-paragraph-v1",
+            "citation_granularity": "section",
+            "allowed_parser_statuses": ["ready"],
+        },
+    )
+
+    report = build_provider_source_binding_summary()
+    row = next(
+        source
+        for source in report.sources
+        if source.source_id == "refund_policy_docs"
+    )
+
+    assert row.status == "ready"
+    assert row.bindable is True
+    assert row.source_domain == "finance_policy"
+    assert row.sensitivity == "restricted"
 
 
 def test_provider_source_binding_blocks_not_ready_index(tmp_path):
@@ -198,9 +238,13 @@ def test_provider_source_binding_export_writes_json_and_markdown(tmp_path):
     payload = json_path.read_text(encoding="utf-8")
     markdown = markdown_path.read_text(encoding="utf-8")
     assert "provider-source-binding-summary-v1" in payload
+    assert "source_domain" in payload
+    assert "sensitivity" in payload
     assert "citation_anchor_count" in payload
     assert "chunk_manifest_count" in payload
     assert "# Provider Source Binding Summary" in markdown
+    assert "Domain" in markdown
+    assert "Sensitivity" in markdown
     assert "Citations" in markdown
     assert "Chunks" in markdown
     assert "bind_source_from_control_plane" in markdown
@@ -211,6 +255,7 @@ def test_provider_source_binding_markdown_summarizes_sources():
 
     markdown = render_provider_source_binding_summary_markdown(report)
 
-    assert "| Source | Status | Bindable | Backend | Index | Documents | Citations | Chunks | Parser Ready | Unsupported | Drift | Preflight | Recommended Action |" in markdown
+    assert "| Source | Status | Bindable | Domain | Language | Sensitivity | Formats | Citation Granularity | Backend | Index | Documents | Citations | Chunks | Parser Ready | Unsupported | Drift | Preflight | Recommended Action |" in markdown
     assert "`refund_policy_docs`" in markdown
+    assert "`after_sales_policy`" in markdown
     assert "`bind_source_from_control_plane`" in markdown

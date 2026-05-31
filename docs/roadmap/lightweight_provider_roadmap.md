@@ -270,7 +270,7 @@ Phase 2 and Phase 6 now connect through a read-only source binding summary:
 GET /api/provider/source-bindings
 ```
 
-The summary combines configured source catalog facts, retrieval backend readiness, index lifecycle status, source document fingerprint drift, ingestion preflight status, citation anchor count, chunk manifest count, parser-ready document count, unsupported document count, and deterministic recommended actions. It helps MyPrivateAgent or another external control plane decide whether a source is ready for binding without reading several provider diagnostics separately.
+The summary combines configured source catalog facts, source package context, retrieval backend readiness, index lifecycle status, source document fingerprint drift, ingestion preflight status, citation anchor count, chunk manifest count, parser-ready document count, unsupported document count, and deterministic recommended actions. It helps MyPrivateAgent or another external control plane decide whether a source is ready for binding without reading several provider diagnostics separately.
 
 This remains provider-owned evidence, not binding policy. The provider does not create source-to-agent bindings, run approvals, write audit records, create ingestion jobs, rebuild indexes, execute retrieval or answer composition, call embedding/vector stores, or execute GraphRAG from this endpoint.
 
@@ -285,3 +285,5 @@ conda run -n GRAPHRAG python scripts/export_provider_source_bindings.py
 The handoff refresh workflow regenerates this evidence before the final provider handoff bundle, and the handoff bundle treats it as required local evidence. This makes source bindability visible in the same evidence package used for MyPrivateAgent review while still leaving actual source-to-agent binding policy outside this provider.
 
 Source binding coverage counts are informational evidence. They reuse existing source manifest and ingestion preflight diagnostics, do not change binding decisions by themselves, and do not add parsers, indexing execution, retrieval execution, answer composition, or GraphRAG.
+
+Source binding package context is also informational evidence. It reuses existing `source_package` metadata such as domain, language, sensitivity, supported formats, and citation granularity so external control planes can review business fit before binding. It does not implement sensitivity-based approval, authorization policy, audit, parser expansion, ingestion execution, retrieval execution, answer composition, or GraphRAG.

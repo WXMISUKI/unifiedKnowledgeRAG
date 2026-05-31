@@ -107,6 +107,11 @@ class SourceBindingSummaryRow(BaseModel):
     source_status: str
     status: str
     bindable: bool
+    source_domain: str | None = None
+    language: str | None = None
+    sensitivity: str | None = None
+    supported_formats: list[str] = Field(default_factory=list)
+    citation_granularity: str | None = None
     retrieval_backend: str
     backend_status: str | None = None
     backend_reason: str | None = None

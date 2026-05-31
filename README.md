@@ -47,7 +47,7 @@ Manifest 还会返回机器可读的 `access` 元数据，说明 `/live`、`/rea
 
 `GET /api/provider/handoff` 是只读交接包 API。它返回当前 `provider-handoff-bundle-v1` 状态，包括 provider identity、contract version、集成证据、contract smoke、deployment readiness 和 reindex readiness 的汇总行与 recommended action。该接口读取当前本地 evidence artifacts，不会重新刷新证据、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG；需要刷新证据时仍应显式运行 `scripts/export_provider_handoff_refresh.py`。
 
-`GET /api/provider/source-bindings` 是只读 source binding summary。它会把 catalog、retrieval backend readiness、index lifecycle、source document fingerprint、ingestion preflight、citation anchor count、chunk manifest count 和 parser coverage 汇总成每个 source 的 `bindable`、`status`、`recommended_action` 和诊断原因，便于 MyPrivateAgent 或外部控制面在做 source-to-agent binding 前先审查 provider-owned 事实。覆盖度字段只做证据提示，不直接替代外部绑定策略。该接口不会创建绑定、创建 ingestion job、重建索引、执行检索/answer、调用 embedding/Qdrant 或执行 GraphRAG；真正的绑定策略、审批、审计和 agent 归属仍由外部控制面负责。
+`GET /api/provider/source-bindings` 是只读 source binding summary。它会把 catalog、source package context、retrieval backend readiness、index lifecycle、source document fingerprint、ingestion preflight、citation anchor count、chunk manifest count 和 parser coverage 汇总成每个 source 的 `bindable`、`status`、`recommended_action` 和诊断原因，便于 MyPrivateAgent 或外部控制面在做 source-to-agent binding 前先审查 provider-owned 事实。package context 和覆盖度字段只做证据提示，不直接替代外部绑定策略、敏感级别审批或审计。该接口不会创建绑定、创建 ingestion job、重建索引、执行检索/answer、调用 embedding/Qdrant 或执行 GraphRAG；真正的绑定策略、审批、审计和 agent 归属仍由外部控制面负责。
 
 `knowledge.provider.source_bindings` 现在是正式 provider capability，会出现在 `/api/capabilities`、manifest 的 `capability_ids` 和默认 preflight required capabilities 中。它只表示“可读取绑定前审查证据”，不表示 provider 拥有 source-to-agent binding 的创建、审批、审计或策略执行权。
 
@@ -1666,6 +1666,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 第七十一阶段 OpenSpec change `define-source-package-and-chunk-manifest` 继续推进 Phase 2 企业文档 ingestion baseline。`GET /api/rag/sources/{source_id}/documents` 和 `GET /api/ingestion/sources/{source_id}/preflight` 现在都会暴露轻量 `source_package`，并在 markdown source 可读时返回 `chunk_manifest`，用于在真正 ingestion 前审查 source 业务归属、语言、敏感级别、默认 chunking strategy、citation 粒度和稳定 chunk/citation 预览。该阶段仍不引入 OCR、复杂 parser、生产向量库默认、自动重建索引或 GraphRAG。
 
 第七十二阶段 OpenSpec change `add-source-binding-coverage-summary` 在 source binding summary 中补充轻量覆盖度字段：`citation_anchor_count`、`chunk_manifest_count`、`parser_ready_document_count` 和 `unsupported_document_count`。这些字段复用现有 source manifest 与 ingestion preflight 诊断，让外部控制面能在一个绑定审查入口看到引用锚点、分块清单和 parser readiness 的数量概况；它不新增 parser、不改变 bindable 判定、不触发 ingestion/reindex，也不把绑定审批或策略执行移入 provider。
+
+第七十三阶段 OpenSpec change `add-source-binding-package-context` 将已有 `source_package` 的关键上下文字段摘要到 source binding summary：`source_domain`、`language`、`sensitivity`、`supported_formats` 和 `citation_granularity`。这些字段用于帮助外部控制面在绑定前识别 source 的业务域、语言、敏感级别和引用粒度；它们不等于授权策略，不改变 bindable 判定，也不会新增 parser、触发 ingestion/reindex 或接管审批审计。
 
 ## 设计文档
 

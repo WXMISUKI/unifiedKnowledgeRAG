@@ -433,17 +433,22 @@ The system SHALL expose the current provider handoff bundle through a read-only 
 
 ### Requirement: Provider exposes source binding summary
 
-The system SHALL expose a read-only source binding summary for external control planes to review configured knowledge source bindability and binding evidence coverage before making source-to-agent binding decisions.
+The system SHALL expose a read-only source binding summary for external control planes to review configured knowledge source bindability, source package context, and binding evidence coverage before making source-to-agent binding decisions.
 
 #### Scenario: Source binding summary lists configured sources
 
 - **WHEN** a caller requests `GET /api/provider/source-bindings`
-- **THEN** the response includes each configured knowledge base with source id, owner, source status, retrieval backend, backend status, index status, document count, citation anchor count, chunk manifest count, parser-ready document count, unsupported document count, drift statuses, bindability, and recommended action
+- **THEN** the response includes each configured knowledge base with source id, owner, source status, source domain, language, sensitivity, supported formats, citation granularity, retrieval backend, backend status, index status, document count, citation anchor count, chunk manifest count, parser-ready document count, unsupported document count, drift statuses, bindability, and recommended action
 
 #### Scenario: Ready source is bindable
 
 - **WHEN** a source has ready catalog status, ready retrieval backend, ready index status, in-sync document fingerprints, and ready ingestion preflight
 - **THEN** the source binding row marks `bindable=true`, `status=ready`, and recommends `bind_source_from_control_plane`
+
+#### Scenario: Package context fields are informational
+
+- **WHEN** a source binding row includes domain, language, sensitivity, supported formats, and citation granularity
+- **THEN** those fields summarize existing source package diagnostics without changing binding decisions by themselves
 
 #### Scenario: Coverage fields are informational
 
@@ -467,12 +472,12 @@ The system SHALL expose a read-only source binding summary for external control 
 
 ### Requirement: Source binding summary evidence can be exported
 
-The system SHALL provide a local export command for source binding summary evidence so deployment reviewers and external control planes can inspect source bindability and binding evidence coverage from persisted handoff artifacts.
+The system SHALL provide a local export command for source binding summary evidence so deployment reviewers and external control planes can inspect source bindability, source package context, and binding evidence coverage from persisted handoff artifacts.
 
 #### Scenario: Source binding evidence export writes artifacts
 
 - **WHEN** a caller runs the source binding evidence export command
-- **THEN** the system writes machine-readable JSON and human-readable Markdown files containing source bindability status, coverage counts, recommended actions, and operation notes
+- **THEN** the system writes machine-readable JSON and human-readable Markdown files containing source bindability status, source package context, coverage counts, recommended actions, and operation notes
 
 #### Scenario: Source binding evidence participates in handoff bundle
 

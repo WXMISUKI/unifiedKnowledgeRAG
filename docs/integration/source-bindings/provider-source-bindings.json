@@ -1,6 +1,6 @@
 {
   "id": "provider-source-binding-summary-v1",
-  "generated_at": "2026-05-31T04:35:15.344825+00:00",
+  "generated_at": "2026-05-31T04:56:38.819392+00:00",
   "status": "ready",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -17,6 +17,13 @@
       "source_status": "ready",
       "status": "ready",
       "bindable": true,
+      "source_domain": "after_sales_policy",
+      "language": "zh-CN",
+      "sensitivity": "internal",
+      "supported_formats": [
+        "markdown"
+      ],
+      "citation_granularity": "section",
       "retrieval_backend": "fixture",
       "backend_status": "ready",
       "backend_reason": null,
@@ -44,6 +51,13 @@
       "source_status": "ready",
       "status": "ready",
       "bindable": true,
+      "source_domain": "logistics_support",
+      "language": "zh-CN",
+      "sensitivity": "internal",
+      "supported_formats": [
+        "markdown"
+      ],
+      "citation_granularity": "section",
       "retrieval_backend": "fixture",
       "backend_status": "ready",
       "backend_reason": null,
