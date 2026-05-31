@@ -1,0 +1,69 @@
+{
+  "id": "phase5-graph-use-case-readiness-v1",
+  "generated_at": "2026-05-31T14:10:10.274982+00:00",
+  "status": "ready",
+  "decision": "keep_graph_query_planned",
+  "contract_path": "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness-contract.md",
+  "preflight_path": "/api/provider/preflight",
+  "smoke_report_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+  "summary": {
+    "total_artifacts": 3,
+    "ready_artifacts": 3,
+    "review_artifacts": 0,
+    "blocked_artifacts": 0,
+    "required_artifacts": 3,
+    "required_ready_artifacts": 3,
+    "graph_schema_count": 1,
+    "graph_ids": [
+      "ecommerce_order_graph"
+    ],
+    "graph_stores": {
+      "ecommerce_order_graph": "neo4j_planned"
+    },
+    "graph_query_status": "planned",
+    "graph_query_planned": true,
+    "preflight_graph_boundary_ready": true,
+    "smoke_checks_passed": true,
+    "smoke_check_count": 9,
+    "smoke_graph_check_passed": true
+  },
+  "supporting_evidence": [
+    {
+      "id": "graph_use_case_contract_doc",
+      "category": "contract",
+      "path": "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness-contract.md",
+      "status": "ready",
+      "summary": "contract_doc_present=True",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "provider_preflight_graph_boundary",
+      "category": "runtime-snapshot",
+      "path": "/api/provider/preflight",
+      "status": "ready",
+      "summary": "graph_schema_count=1; graph_ids=[\"ecommerce_order_graph\"]; graph_stores={\"ecommerce_order_graph\": \"neo4j_planned\"}; graph_query_status=planned; execution_status=planned",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "provider_contract_smoke",
+      "category": "smoke",
+      "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+      "status": "ready",
+      "summary": "passed=True; checks=9/9; failed_checks=0; graph_check_status=passed; graph_query_status=planned; graph_error_code=GRAPH_NOT_IMPLEMENTED",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only evidence for Phase 5 graph boundary review.",
+    "It consolidates the graph use-case contract, provider preflight graph boundary, and provider contract smoke evidence.",
+    "It does not change runtime defaults, add graph execution, or introduce graph-store dependencies."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness.md"
+}

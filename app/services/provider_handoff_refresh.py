@@ -5,8 +5,20 @@ from pathlib import Path
 from typing import Any, Callable
 
 from app.services.deployment_readiness import export_deployment_readiness_report
+from app.services.phase4_evidence_pack_readiness import (
+    export_phase4_evidence_pack_readiness_report,
+)
+from app.services.phase4_caller_consumption_smoke import (
+    export_phase4_caller_consumption_smoke_report,
+)
+from app.services.phase5_graph_use_case_readiness import (
+    export_phase5_graph_use_case_readiness_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
+from app.services.phase3_retrieval_promotion_readiness import (
+    export_phase3_retrieval_promotion_readiness_report,
+)
 from app.services.phase3_fp_fn_review import export_phase3_fp_fn_review_report
 from app.services.provider_integration_client import export_provider_integration_probe_report
 from app.services.provider_source_binding import export_provider_source_binding_summary
@@ -94,6 +106,49 @@ def default_handoff_refresh_steps(
                 output_dir=output_dir,
             ),
             status_reader=_phase3_fp_fn_step_status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase3_retrieval_promotion_readiness",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir
+            / "docs/benchmark/chinese-seed/retrieval-promotion-readiness",
+            exporter=lambda output_dir: export_phase3_retrieval_promotion_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase4_evidence_pack_readiness",
+            category="evidence-packaging",
+            output_dir=artifact_base_dir
+            / "docs/benchmark/chinese-seed/evidence-pack-readiness",
+            exporter=lambda output_dir: export_phase4_evidence_pack_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase4_caller_consumption_smoke",
+            category="caller-consumption",
+            output_dir=artifact_base_dir / "docs/smoke/evidence-pack-consumption",
+            exporter=lambda output_dir: export_phase4_caller_consumption_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase5_graph_use_case_readiness",
+            category="graph-readiness",
+            output_dir=artifact_base_dir
+            / "docs/benchmark/chinese-seed/graph-use-case-readiness",
+            exporter=lambda output_dir: export_phase5_graph_use_case_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
             id="provider_handoff_bundle",

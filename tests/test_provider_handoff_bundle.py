@@ -32,11 +32,35 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["phase3_seed_retrieval_baseline"]["present"] is True
     assert artifacts["phase3_seed_retrieval_baseline"]["required"] is False
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
-    assert "total_cases=26" in artifacts["phase3_seed_retrieval_baseline"]["summary"]
+    assert "total_cases=29" in artifacts["phase3_seed_retrieval_baseline"]["summary"]
     assert artifacts["phase3_fp_fn_review"]["present"] is True
     assert artifacts["phase3_fp_fn_review"]["required"] is False
     assert artifacts["phase3_fp_fn_review"]["status"] == "ready"
-    assert "false_positive_count=1" in artifacts["phase3_fp_fn_review"]["summary"]
+    assert "false_positive_count=2" in artifacts["phase3_fp_fn_review"]["summary"]
+    assert artifacts["phase3_retrieval_promotion_readiness"]["present"] is True
+    assert artifacts["phase3_retrieval_promotion_readiness"]["required"] is False
+    assert artifacts["phase3_retrieval_promotion_readiness"]["status"] == "review"
+    assert "decision=keep_runtime_defaults" in artifacts[
+        "phase3_retrieval_promotion_readiness"
+    ]["summary"]
+    assert artifacts["phase4_evidence_pack_readiness"]["present"] is True
+    assert artifacts["phase4_evidence_pack_readiness"]["required"] is False
+    assert artifacts["phase4_evidence_pack_readiness"]["status"] == "ready"
+    assert "decision=keep_caller_ownership" in artifacts[
+        "phase4_evidence_pack_readiness"
+    ]["summary"]
+    assert artifacts["phase4_caller_consumption_smoke"]["present"] is True
+    assert artifacts["phase4_caller_consumption_smoke"]["required"] is False
+    assert artifacts["phase4_caller_consumption_smoke"]["status"] == "ready"
+    assert "passed_checks=3/3" in artifacts[
+        "phase4_caller_consumption_smoke"
+    ]["summary"]
+    assert artifacts["phase5_graph_use_case_readiness"]["present"] is True
+    assert artifacts["phase5_graph_use_case_readiness"]["required"] is False
+    assert artifacts["phase5_graph_use_case_readiness"]["status"] == "ready"
+    assert "decision=keep_graph_query_planned" in artifacts[
+        "phase5_graph_use_case_readiness"
+    ]["summary"]
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
@@ -168,6 +192,10 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["source_binding_summary"]["status"] == "ready"
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
     assert artifacts["phase3_fp_fn_review"]["status"] == "ready"
+    assert artifacts["phase3_retrieval_promotion_readiness"]["status"] == "review"
+    assert artifacts["phase4_evidence_pack_readiness"]["status"] == "ready"
+    assert artifacts["phase4_caller_consumption_smoke"]["status"] == "ready"
+    assert artifacts["phase5_graph_use_case_readiness"]["status"] == "ready"
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"
@@ -477,4 +505,31 @@ def test_provider_handoff_bundle_keeps_missing_phase3_fp_fn_evidence_reviewable(
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
         "regenerate_phase3_fp_fn_review"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase3_readiness_evidence_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase3_retrieval_promotion_readiness",
+            category="retrieval-evidence",
+            path=Path("missing-phase3-readiness.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase3_retrieval_promotion_readiness"
     )

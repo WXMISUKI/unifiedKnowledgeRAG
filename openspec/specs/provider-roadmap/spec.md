@@ -69,14 +69,17 @@ The project SHALL treat graph schema discovery smoke evidence as Phase 5 boundar
 - **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
 
 ### Requirement: Evidence packaging changes advance Phase 4 without changing provider scope
-The project SHALL treat retrieval evidence packs, citation policy metadata, and insufficient-evidence diagnostics as Phase 4 roadmap work when they help callers answer safely without moving final answer policy into the provider.
+
+The project SHALL treat retrieval evidence packs, citation policy metadata, insufficient-evidence diagnostics, caller consumption contracts, caller-consumption smoke, and readiness exports as Phase 4 roadmap work when they help callers answer safely without moving final answer policy into the provider.
 
 #### Scenario: Evidence packaging is phase-aligned
-- **WHEN** an OpenSpec change adds evidence pack metadata for RAG retrieve or answer envelopes
+
+- **WHEN** an OpenSpec change adds evidence pack metadata, a caller consumption contract, a caller-consumption smoke, or a readiness export for RAG retrieve or answer envelopes
 - **THEN** the change identifies Phase 4 as the roadmap phase it advances
 
 #### Scenario: Evidence packaging does not imply answer policy ownership
-- **WHEN** the provider exposes evidence status or allowed citations
+
+- **WHEN** the provider exposes evidence status, allowed citations, caller consumption rules, or readiness summaries
 - **THEN** the roadmap boundary still states that the caller owns final user-facing answer style, refusal policy, and workflow decisions
 
 ### Requirement: Evidence provenance advances Phase 4 packaging
@@ -431,10 +434,10 @@ The project SHALL treat reuse of source binding aggregate counts in handoff and 
 
 The project SHALL treat customer-like benchmark fixture expansion as Phase 3 retrieval evidence work when it improves promotion review quality without changing runtime defaults.
 
-#### Scenario: Phase 3 FP/FN review export is phase-aligned
+#### Scenario: Customer-like expansion remains evidence-only
 
-- **WHEN** an OpenSpec change adds local FP/FN review exports based on existing benchmark evidence
-- **THEN** the roadmap records it as Phase 3 evidence review ergonomics work without runtime retrieval promotion
+- **WHEN** an OpenSpec change expands customer-like benchmark fixtures
+- **THEN** the roadmap records the work as evidence-only Phase 3 review coverage rather than runtime promotion
 
 ### Requirement: Phase 3 evidence refresh preserves lightweight promotion boundaries
 
@@ -500,4 +503,88 @@ The project SHALL keep deployment readiness guidance in operator-facing document
 
 - **WHEN** deployment readiness guidance is published
 - **THEN** it does not introduce runtime promotion logic, deployment automation, or governance ownership changes
+
+### Requirement: Deployment readiness guidance includes a configuration reference
+
+The project SHALL provide a deployment configuration reference that maps runtime environment variables, mount points, and evidence refresh commands to the current deployment readiness state.
+
+#### Scenario: Operators can identify deployment inputs
+
+- **WHEN** an operator reviews deployment readiness guidance
+- **THEN** the configuration reference shows which environment variables and mounted paths are relevant for deployment preparation
+
+#### Scenario: Configuration reference remains documentation-only
+
+- **WHEN** the configuration reference is published
+- **THEN** it does not change runtime defaults, deployment automation, or provider governance boundaries
+
+### Requirement: Deployment readiness guidance includes a sequential runbook
+
+The project SHALL provide a deployment readiness runbook that sequences the existing operator guide, config reference, evidence exports, and smoke checks into an ordered path for deployment preparation.
+
+#### Scenario: Runbook gives an execution order
+
+- **WHEN** an operator prepares a deployment candidate
+- **THEN** the runbook presents the steps in order from current evidence review through refresh and optional deployed smoke
+
+#### Scenario: Runbook remains documentation-only
+
+- **WHEN** the runbook is published
+- **THEN** it does not add deployment automation, runtime promotion logic, or governance ownership changes
+
+### Requirement: Phase 3 retrieval promotion gap matrix is lightweight review ergonomics
+
+The project SHALL treat a local Phase 3 retrieval promotion gap matrix as lightweight evidence review work when it consolidates current candidate evidence and open promotion gaps without changing runtime defaults.
+
+#### Scenario: Gap matrix is published
+
+- **WHEN** an OpenSpec change adds or refreshes the Phase 3 retrieval promotion gap matrix
+- **THEN** the roadmap records it as Phase 3 evidence review work rather than runtime promotion
+
+#### Scenario: Gap matrix is read-only
+
+- **WHEN** the gap matrix is reviewed
+- **THEN** it does not change retrieval defaults, provider HTTP contracts, or promotion gates
+
+### Requirement: Phase 3 readiness export is lightweight review visibility
+
+The project SHALL treat a local Phase 3 retrieval promotion readiness export as lightweight Phase 3 evidence visibility work when it consolidates current promotion gaps without changing runtime defaults.
+
+#### Scenario: Readiness export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes the Phase 3 readiness export
+- **THEN** the roadmap records it as Phase 3 evidence visibility rather than runtime promotion
+
+#### Scenario: Readiness export preserves provider boundary
+
+- **WHEN** the readiness export is reviewed
+- **THEN** it does not change retrieval defaults, provider HTTP contracts, or promotion gates
+
+### Requirement: Graph use-case readiness contracts advance Phase 5 without executing GraphRAG
+
+The project SHALL treat a local graph use-case readiness contract as Phase 5 boundary work when it explains which questions are graph-worthy and which should remain in document RAG without adding graph execution or graph-store dependencies.
+
+#### Scenario: Graph use-case readiness contract is phase-aligned
+
+- **WHEN** an OpenSpec change adds a graph use-case readiness contract document
+- **THEN** the roadmap records it as lightweight Phase 5 GraphRAG boundary/readiness work rather than graph execution promotion
+
+#### Scenario: Graph use-case readiness contract preserves graph gate
+
+- **WHEN** the contract documents relationship-heavy cases, document-RAG-only cases, or source evidence rules
+- **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
+
+### Requirement: Graph use-case readiness exports advance Phase 5 without executing GraphRAG
+
+The project SHALL treat a local graph use-case readiness export as Phase 5 boundary work when it consolidates graph use-case contract evidence and planned graph query boundaries without adding graph execution or graph-store dependencies.
+
+#### Scenario: Graph use-case readiness export is phase-aligned
+
+- **WHEN** an OpenSpec change adds a graph use-case readiness export
+- **THEN** the roadmap records it as lightweight Phase 5 GraphRAG boundary/readiness work rather than graph execution promotion
+
+#### Scenario: Graph use-case readiness export preserves graph gate
+
+- **WHEN** the export summarizes graph schema discovery, graph statuses, or planned query boundaries
+- **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
 

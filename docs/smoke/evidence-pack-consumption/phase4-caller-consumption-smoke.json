@@ -1,0 +1,63 @@
+{
+  "id": "phase4-caller-consumption-smoke-v1",
+  "generated_at": "2026-05-31T14:10:10.273055+00:00",
+  "status": "ready",
+  "checks": [
+    {
+      "name": "caller_allowlist_rule",
+      "passed": true,
+      "scenario": "build_evidence_pack(answerable)",
+      "details": {
+        "version": "evidence-pack-v1",
+        "status": "answerable",
+        "reason": "documents_returned",
+        "citation_policy": "use_only_returned_citations",
+        "allowed_citations": [
+          "refund_policy_2026#section-3",
+          "logistics_2026#section-2"
+        ],
+        "evidence_count": 2
+      },
+      "error": null
+    },
+    {
+      "name": "caller_fail_closed_rule",
+      "passed": true,
+      "scenario": "build_evidence_pack(insufficient_evidence)",
+      "details": {
+        "version": "evidence-pack-v1",
+        "status": "insufficient_evidence",
+        "reason": "no_documents",
+        "allowed_citations": 0,
+        "evidence_count": 0
+      },
+      "error": null
+    },
+    {
+      "name": "caller_contract_artifact",
+      "passed": true,
+      "scenario": "docs/benchmark/chinese-seed/evidence-pack-consumption-contract",
+      "details": {
+        "present": true,
+        "contract_path": "docs\\benchmark\\chinese-seed\\evidence-pack-consumption-contract\\phase4-evidence-pack-consumption-contract.md"
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "answerable_checks": 1,
+    "insufficient_checks": 1,
+    "contract_doc_present": 1
+  },
+  "contract_path": "docs\\benchmark\\chinese-seed\\evidence-pack-consumption-contract\\phase4-evidence-pack-consumption-contract.md",
+  "notes": [
+    "This smoke is local, read-only caller-consumption evidence.",
+    "It exercises build_evidence_pack directly instead of re-running provider HTTP flow.",
+    "It complements the provider contract smoke and the Phase 4 readiness export."
+  ],
+  "json_path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json",
+  "markdown_path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.md"
+}

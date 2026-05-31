@@ -63,6 +63,24 @@ The current provider already has Phase 0 mostly complete. The most valuable next
 4. Promote Qdrant/BGE-M3/hybrid behavior only after customer-like benchmark evidence supports it.
 5. Keep GraphRAG as a later, use-case-driven phase rather than a default dependency.
 
+## Phase 3 Gap Matrix
+
+Phase 3 promotion review is now easier to read as a single local gap matrix:
+
+`docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md`
+
+The matrix is a lightweight review artifact. It consolidates current evidence for Qdrant, BGE-M3, hybrid retrieval, hybrid gating, multi-chunk aggregation, relation-aware grading, and deployed smoke so reviewers can see the open promotion gaps without changing runtime defaults.
+
+## Phase 3 Readiness Export
+
+The same promotion picture is also exported as machine-readable evidence:
+
+`docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-readiness.json`
+
+`docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-readiness.md`
+
+The readiness export is read-only and local. Provider handoff and handoff refresh can surface it as optional review evidence so reviewers do not have to stitch the gap matrix together by hand.
+
 ## Graph Boundary Preflight
 
 Phase 5 graph work remains use-case driven, but provider preflight now summarizes the graph boundary that already exists: graph schema count, graph ids, graph statuses, and graph store labels. This lets MyPrivateAgent or another control plane discover that graph namespaces are present while still seeing `execution_status=planned`.
@@ -70,6 +88,24 @@ Phase 5 graph work remains use-case driven, but provider preflight now summarize
 This does not implement GraphRAG execution. It does not connect to Neo4j, extract entities, build ontology workflows, create graph indexes, execute graph queries, or change runtime retrieval behavior. Graph execution still requires a separate relationship-heavy use case, source evidence rules, benchmark evidence, and operational ownership.
 
 Provider contract smoke also validates `GET /api/graph/schemas` as graph boundary evidence. It records graph ids, graph count, graph status, graph store labels, and entity/relation type counts while preserving `POST /api/graph/query` as a planned not-implemented boundary.
+
+## Phase 5 Graph Use-Case Readiness Contract
+
+Phase 5 now also has a local graph use-case readiness contract that says which questions are graph-worthy and which should stay in document RAG:
+
+`docs/benchmark/chinese-seed/graph-use-case-readiness/phase5-graph-use-case-readiness-contract.md`
+
+The contract is intentionally read-only and review-oriented. It names concrete relationship-heavy cases, keeps single-source citation lookups in document RAG, and leaves GraphRAG execution, graph storage, and ontology workflows behind separate evidence-backed changes.
+
+## Phase 5 Graph Use-Case Readiness Export
+
+Phase 5 now also has a machine-readable readiness export that consolidates the graph use-case contract, provider preflight graph boundary, and provider contract smoke evidence into a local review artifact:
+
+`docs/benchmark/chinese-seed/graph-use-case-readiness/phase5-graph-use-case-readiness.json`
+
+`docs/benchmark/chinese-seed/graph-use-case-readiness/phase5-graph-use-case-readiness.md`
+
+The export is intentionally read-only. It lets reviewers and handoff consumers inspect the current GraphRAG boundary without changing runtime defaults, adding graph execution, or introducing graph-store dependencies.
 
 ## Retrieval Evidence Pack
 
@@ -88,6 +124,30 @@ Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on 
 This provenance is intentionally attached to `metadata.evidence_pack.evidence[]` instead of the top-level returned `documents` list, so caller integrations keep a compact document envelope while still receiving enough traceability for grounding and retrieval debugging.
 
 This does not make the provider the final answer policy owner. MyPrivateAgent or another caller still owns user-facing response style, refusal policy, approval workflow, and final orchestration. The provider only exposes trustworthy evidence and diagnostics so callers can avoid hallucinating beyond returned citations.
+
+## Phase 4 Consumption Contract
+
+Phase 4 now also has a read-only caller consumption contract that explains how to use the existing evidence pack fields safely:
+
+`docs/benchmark/chinese-seed/evidence-pack-consumption-contract/phase4-evidence-pack-consumption-contract.md`
+
+The contract is intentionally local and review-oriented. It translates the existing `answerable` and `insufficient_evidence` evidence pack semantics into caller-facing rules without changing runtime behavior or final answer ownership.
+
+## Phase 4 Readiness Export
+
+Phase 4 now also has a machine-readable readiness export that consolidates the consumption contract, provider contract smoke, and supporting evidence into a local review artifact:
+
+`docs/benchmark/chinese-seed/evidence-pack-readiness/phase4-evidence-pack-readiness.md`
+
+The export is intentionally read-only. It helps reviewers and handoff consumers inspect current evidence-pack readiness without changing runtime defaults, caller ownership, or provider HTTP contracts.
+
+## Phase 4 Caller Consumption Smoke
+
+Phase 4 now also has a caller-consumption smoke that directly exercises `build_evidence_pack` for the answerable and insufficient-evidence branches:
+
+`docs/smoke/evidence-pack-consumption/phase4-caller-consumption-smoke.md`
+
+The smoke is intentionally local and read-only. It confirms the caller-facing allowlist and fail-closed behavior without duplicating provider HTTP flow or changing runtime defaults.
 
 ## Source Document Fingerprint Diagnostics
 

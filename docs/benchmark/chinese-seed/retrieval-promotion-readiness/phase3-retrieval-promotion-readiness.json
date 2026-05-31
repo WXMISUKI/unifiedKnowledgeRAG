@@ -1,0 +1,159 @@
+{
+  "id": "phase3-retrieval-promotion-readiness-v1",
+  "generated_at": "2026-05-31T14:10:10.269513+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "gap_matrix_path": "docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md",
+  "summary": {
+    "total_gates": 7,
+    "ready_gates": 0,
+    "review_gates": 3,
+    "candidate_gates": 4,
+    "blocked_gates": 0,
+    "supporting_evidence_ready": 2,
+    "open_gates": 7
+  },
+  "gates": [
+    {
+      "id": "qdrant_vector_store",
+      "title": "Qdrant vector store",
+      "status": "candidate",
+      "evidence_paths": [
+        "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-smoke.json",
+        "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-threshold-recommendation.json"
+      ],
+      "evidence_present": true,
+      "summary": "backend=qdrant; total_cases=21; hit_rate=0.7619; citation_match_rate=0.7619; empty_handling_rate=0.2857; threshold=0.7; approval_status=local_seed_recommendation",
+      "open_gap": "Customer-like corpus benchmark, deployment latency, backup/restore review, private-network deployment evidence",
+      "next_evidence": "Export customer-like Qdrant benchmark and deployment review evidence",
+      "promotion_position": "Keep opt-in; do not change runtime default",
+      "recommended_action": "collect_customer_like_qdrant_evidence"
+    },
+    {
+      "id": "bge_m3_local_embedding",
+      "title": "BGE-M3 local embedding",
+      "status": "review",
+      "evidence_paths": [
+        "docs\\benchmark\\chinese-seed\\embedding-candidates\\bge-m3-local-candidate.json"
+      ],
+      "evidence_present": true,
+      "summary": "readiness_status=review_required; criteria_coverage=chinese_heavy_suitable=true, data_residency=true, language_profile=true, operational_complexity=true, private_network_supported=true, reranker_compatibility=true, vector_dimension=true",
+      "open_gap": "Artifact validation, private-network deployment, quality/latency comparison, deployment readiness evidence",
+      "next_evidence": "Validate the downloaded local model artifact and compare latency in a private network",
+      "promotion_position": "Keep opt-in; do not change runtime default",
+      "recommended_action": "validate_bge_m3_artifact_and_latency"
+    },
+    {
+      "id": "hybrid_retrieval",
+      "title": "Hybrid retrieval",
+      "status": "candidate",
+      "evidence_paths": [
+        "docs\\benchmark\\chinese-seed\\exact-term-candidates\\qdrant-bge-m3-hybrid-exact-term-smoke.json",
+        "docs\\benchmark\\chinese-seed\\hybrid-empty-stress\\qdrant-bge-m3-hybrid-empty-stress.json"
+      ],
+      "evidence_present": true,
+      "summary": "exact_term=backend=qdrant-hybrid; total_cases=4; hit_rate=1.0000; citation_match_rate=1.0000; empty_handling_rate=0.0000; empty_stress=backend=qdrant-hybrid; total_cases=4; hit_rate=0.0000; citation_match_rate=0.0000; empty_handling_rate=0.0000",
+      "open_gap": "Broader customer-like false-positive and false-negative review, score/fusion calibration, deploy review",
+      "next_evidence": "Expand customer-like hybrid benchmark coverage and compare score/fusion strategies",
+      "promotion_position": "Not default",
+      "recommended_action": "collect_hybrid_promotion_evidence"
+    },
+    {
+      "id": "hybrid_gating",
+      "title": "Hybrid gating",
+      "status": "candidate",
+      "evidence_paths": [
+        "docs\\benchmark\\chinese-seed\\hybrid-gating-candidates\\qdrant-bge-m3-hybrid-exact-identifier-gate.json",
+        "docs\\benchmark\\chinese-seed\\noisy-identifier-gating-candidates\\qdrant-bge-m3-hybrid-alias-identifier-gate.json",
+        "docs\\benchmark\\chinese-seed\\split-chunk-gating-candidates\\qdrant-bge-m3-hybrid-exact-identifier-gate.json"
+      ],
+      "evidence_present": true,
+      "summary": "exact_gate=backend=qdrant-hybrid:exact-identifier-containment-gate-v1; total_cases=8; hit_rate=1.0000; citation_match_rate=1.0000; empty_handling_rate=1.0000; alias_gate=backend=qdrant-hybrid:alias-aware-identifier-gate-v1; total_cases=8; hit_rate=1.0000; citation_match_rate=1.0000; empty_handling_rate=1.0000; split_gate=backend=qdrant-hybrid:exact-identifier-containment-gate-v1; total_cases=1; hit_rate=0.0000; citation_match_rate=0.0000; empty_handling_rate=0.0000",
+      "open_gap": "Broader alias/noisy identifier coverage, split-chunk false-negative review, gating policy ownership",
+      "next_evidence": "Expand gating fixtures with additional alias, OCR-noise, and split-chunk cases",
+      "promotion_position": "Evaluation only",
+      "recommended_action": "collect_hybrid_gating_evidence"
+    },
+    {
+      "id": "multi_chunk_aggregation",
+      "title": "Multi-chunk aggregation",
+      "status": "review",
+      "evidence_paths": [
+        "docs\\benchmark\\chinese-seed\\multi-chunk-aggregation-candidates\\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
+        "docs\\benchmark\\chinese-seed\\multi-chunk-aggregation-negative-controls\\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
+        "docs\\benchmark\\chinese-seed\\relation-aware-aggregation-grading\\relation-aware-aggregation-grading.json"
+      ],
+      "evidence_present": true,
+      "summary": "aggregation=backend=qdrant-hybrid:source-document-identifier-coverage-v1; total_cases=1; hit_rate=1.0000; citation_match_rate=1.0000; empty_handling_rate=0.0000; negative_control=backend=qdrant-hybrid:source-document-identifier-coverage-v1; total_cases=2; hit_rate=0.5000; citation_match_rate=0.5000; empty_handling_rate=0.0000; relation=candidate=relation-aware-aggregation-grader-v1; total_cases=2; answer_bearing_rate=1.0000; related_insufficient_count=0; relation_unsupported_count=1; missing_evidence_count=0; unexpected_evidence_count=0; expected_empty_pass_rate=1.0000",
+      "open_gap": "More relation-heavy customer-like cases, noisy top-k review, latency and citation granularity review",
+      "next_evidence": "Expand same-document negative controls and relation-aware coverage before promoting aggregation",
+      "promotion_position": "Keep review-only",
+      "recommended_action": "collect_aggregation_evidence"
+    },
+    {
+      "id": "relation_aware_grading",
+      "title": "Relation-aware grading",
+      "status": "candidate",
+      "evidence_paths": [
+        "docs\\benchmark\\chinese-seed\\relation-aware-aggregation-grading\\relation-aware-aggregation-grading.json"
+      ],
+      "evidence_present": true,
+      "summary": "candidate=relation-aware-aggregation-grader-v1; total_cases=2; answer_bearing_rate=1.0000; related_insufficient_count=0; relation_unsupported_count=1; missing_evidence_count=0; unexpected_evidence_count=0; expected_empty_pass_rate=1.0000",
+      "open_gap": "Broader relation fixture coverage and production semantics review",
+      "next_evidence": "Expand relation fixtures and decide whether deterministic grading remains sufficient",
+      "promotion_position": "Evaluation only",
+      "recommended_action": "expand_relation_grading_fixture"
+    },
+    {
+      "id": "deployed_smoke",
+      "title": "Deployed smoke",
+      "status": "review",
+      "evidence_paths": [
+        "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+      ],
+      "evidence_present": false,
+      "summary": "Optional deployed smoke evidence is missing.",
+      "open_gap": "Live deployed URL evidence is missing in local development",
+      "next_evidence": "Run deployed smoke against the deployed provider URL after deployment",
+      "promotion_position": "Run after deployment; do not block local iteration",
+      "recommended_action": "run_deployed_provider_smoke_after_deployment"
+    }
+  ],
+  "supporting_evidence": [
+    {
+      "id": "phase3_seed_retrieval_baseline",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
+      "status": "ready",
+      "summary": "total_cases=29; hit_rate=0.9310; citation_match_rate=0.9310; empty_handling_rate=0.8182",
+      "present": true,
+      "required": false,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_fp_fn_review",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json",
+      "status": "ready",
+      "summary": "false_positive_count=2; false_negative_count=0; false_positive_rate=0.0690; false_negative_rate=0.0000",
+      "present": true,
+      "required": false,
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "open_gates": [
+    "qdrant_vector_store",
+    "bge_m3_local_embedding",
+    "hybrid_retrieval",
+    "hybrid_gating",
+    "multi_chunk_aggregation",
+    "relation_aware_grading",
+    "deployed_smoke"
+  ],
+  "notes": [
+    "This report is local, read-only evidence for Phase 3 promotion review.",
+    "It complements the human-readable gap matrix and does not change runtime defaults."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.md"
+}

@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-05-31T07:52:28.898066+00:00",
+  "generated_at": "2026-05-31T14:10:10.278929+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -81,7 +81,7 @@
       "present": true,
       "required": false,
       "status": "ready",
-      "summary": "total_cases=26; hit_rate=0.9615; citation_match_rate=0.9615; empty_handling_rate=0.9000",
+      "summary": "total_cases=29; hit_rate=0.9310; citation_match_rate=0.9310; empty_handling_rate=0.8182",
       "recommended_action": "no_action_required"
     },
     {
@@ -91,7 +91,47 @@
       "present": true,
       "required": false,
       "status": "ready",
-      "summary": "false_positive_count=1; false_negative_count=0; false_positive_rate=0.0385; false_negative_rate=0.0000",
+      "summary": "false_positive_count=2; false_negative_count=0; false_positive_rate=0.0690; false_negative_rate=0.0000",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_retrieval_promotion_readiness",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; open_gates=7; ready_gates=0; review_gates=3; candidate_gates=4",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase4_evidence_pack_readiness",
+      "category": "evidence-packaging",
+      "path": "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_caller_ownership; smoke_passed=True; ready_artifacts=5/5; required_ready=2/2",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase4_caller_consumption_smoke",
+      "category": "caller-consumption",
+      "path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; passed_checks=3/3; answerable_checks=1; insufficient_checks=1; contract_doc_present=True",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase5_graph_use_case_readiness",
+      "category": "graph-readiness",
+      "path": "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_graph_query_planned; graph_schema_count=1; graph_query_status=planned; graph_query_planned=True; preflight_graph_boundary_ready=True; smoke_graph_check_passed=True; smoke_checks_passed=True",
       "recommended_action": "no_action_required"
     }
   ],

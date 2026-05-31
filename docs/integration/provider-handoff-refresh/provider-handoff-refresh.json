@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-05-31T07:52:28.899496+00:00",
+  "generated_at": "2026-05-31T14:10:10.280113+00:00",
   "status": "review",
   "steps": [
     {
@@ -73,6 +73,54 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review",
+      "error": null
+    },
+    {
+      "id": "phase3_retrieval_promotion_readiness",
+      "category": "retrieval-evidence",
+      "status": "review",
+      "output_paths": [
+        "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.json",
+        "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_gates\": 0, \"candidate_gates\": 4, \"open_gates\": 7, \"ready_gates\": 0, \"review_gates\": 3, \"supporting_evidence_ready\": 2, \"total_gates\": 7}",
+      "error": null
+    },
+    {
+      "id": "phase4_evidence_pack_readiness",
+      "category": "evidence-packaging",
+      "status": "ready",
+      "output_paths": [
+        "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.json",
+        "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"evidence_pack_checks_passed\": true, \"ready_artifacts\": 5, \"required_artifacts\": 2, \"required_ready_artifacts\": 2, \"review_artifacts\": 0, \"smoke_passed\": true, \"total_artifacts\": 5}",
+      "error": null
+    },
+    {
+      "id": "phase4_caller_consumption_smoke",
+      "category": "caller-consumption",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json",
+        "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"answerable_checks\": 1, \"contract_doc_present\": 1, \"failed\": 0, \"insufficient_checks\": 1, \"passed\": 3, \"total\": 3}",
+      "error": null
+    },
+    {
+      "id": "phase5_graph_use_case_readiness",
+      "category": "graph-readiness",
+      "status": "ready",
+      "output_paths": [
+        "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness.json",
+        "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"graph_ids\": [\"ecommerce_order_graph\"], \"graph_query_planned\": true, \"graph_query_status\": \"planned\", \"graph_schema_count\": 1, \"graph_stores\": {\"ecommerce_order_graph\": \"neo4j_planned\"}, \"preflight_graph_boundary_ready\": true, \"ready_artifacts\": 3, \"required_artifacts\": 3, \"required_ready_artifacts\": 3, \"review_artifacts\": 0, \"smoke_check_count\": 9, \"smoke_checks_passed\": true, \"smoke_graph_check_passed\": true, \"total_artifacts\": 3}",
       "error": null
     },
     {

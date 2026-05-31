@@ -727,17 +727,17 @@ The system SHALL provide an evaluation-only relation-aware grading path for mult
 
 ### Requirement: Phase 3 benchmark fixtures include customer-like gate cases
 
-The system SHALL maintain a lightweight customer-like fixture extension for retrieval benchmark evaluation so Phase 3 promotion reviews can inspect false-positive and false-negative behavior beyond baseline seed phrasing.
+The system SHALL maintain a lightweight customer-like fixture expansion for retrieval benchmark evaluation so Phase 3 promotion reviews can inspect borderline false-positive and false-negative behavior beyond the baseline seed phrasing.
 
-#### Scenario: Customer-like fixture includes false-negative review cases
-
-- **WHEN** benchmark cases are loaded from the canonical retrieval benchmark fixture
-- **THEN** customer-like additions include at least one non-empty case that targets false-negative risk in refund/logistics support workflows
-
-#### Scenario: Customer-like fixture includes false-positive review cases
+#### Scenario: Customer-like fixture includes additional promotion-review cases
 
 - **WHEN** benchmark cases are loaded from the canonical retrieval benchmark fixture
-- **THEN** customer-like additions include at least one expected-empty case that targets lexical-overlap false-positive risk in refund/logistics support workflows
+- **THEN** the customer-like additions include a bounded set of support-like cases that cover noisy identifiers, policy nuance phrasing, or expected-empty traps
+
+#### Scenario: Customer-like fixture stays evaluation-only
+
+- **WHEN** the benchmark fixture is refreshed after expansion
+- **THEN** the generated evidence still documents evaluation-only retrieval behavior and does not change runtime defaults
 
 ### Requirement: Seed evidence exports stay synchronized with canonical fixture revisions
 
@@ -752,4 +752,104 @@ The system SHALL regenerate Chinese-seed benchmark evidence after canonical fixt
 
 - **WHEN** Chinese-seed evidence is regenerated
 - **THEN** runtime retrieval defaults and production promotion gates remain unchanged unless separate gate evidence explicitly approves promotion
+
+### Requirement: Phase 3 retrieval promotion gap matrix summarizes current gate evidence
+
+The system SHALL maintain a local read-only retrieval promotion gap matrix that summarizes current Qdrant, BGE-M3, hybrid, aggregation, and relation-aware grading evidence.
+
+#### Scenario: Gap matrix includes key gate families
+
+- **WHEN** the gap matrix is published
+- **THEN** it includes rows for Qdrant, BGE-M3, hybrid retrieval, hybrid gating, multi-chunk aggregation, and relation-aware grading
+
+#### Scenario: Gap matrix references current evidence paths
+
+- **WHEN** the gap matrix is reviewed
+- **THEN** it points to the current local benchmark and review artifacts that support each row
+
+#### Scenario: Gap matrix remains evaluation-only
+
+- **WHEN** the gap matrix is updated
+- **THEN** it does not change runtime retrieval defaults, provider HTTP contracts, or promotion gates
+
+### Requirement: Phase 3 retrieval promotion readiness can be exported
+
+The system SHALL export a local Phase 3 retrieval promotion readiness report that summarizes current promotion gates, open gaps, and the next evidence needed for review.
+
+#### Scenario: Readiness report is exported
+
+- **WHEN** the Phase 3 readiness export is run
+- **THEN** the system writes JSON and Markdown evidence files under `docs/benchmark/chinese-seed/retrieval-promotion-readiness/`
+
+#### Scenario: Readiness report summarizes current gates
+
+- **WHEN** the export completes
+- **THEN** the report summarizes Qdrant, BGE-M3, hybrid retrieval, hybrid gating, multi-chunk aggregation, relation-aware grading, and deployed smoke
+
+#### Scenario: Readiness export remains read-only
+
+- **WHEN** the readiness report is exported
+- **THEN** runtime retrieval defaults, provider HTTP contracts, and promotion gates remain unchanged
+
+### Requirement: Phase 4 evidence pack readiness can be exported
+
+The system SHALL export a local Phase 4 evidence pack readiness report that summarizes the stable `evidence_pack-v1` contract coverage, provider contract smoke coverage, and the next evidence needed for caller-consumption review.
+
+#### Scenario: Readiness report is exported
+
+- **WHEN** the Phase 4 readiness export is run
+- **THEN** the system writes JSON and Markdown evidence files under `docs/benchmark/chinese-seed/evidence-pack-readiness/`
+
+#### Scenario: Readiness report summarizes current evidence
+
+- **WHEN** the export completes
+- **THEN** the report summarizes the contract document, provider contract smoke status, and the existing fail-closed evidence-pack semantics
+
+#### Scenario: Readiness export remains read-only
+
+- **WHEN** the readiness report is exported
+- **THEN** runtime retrieval defaults, caller ownership, and provider HTTP contracts remain unchanged
+
+### Requirement: Phase 4 caller-consumption smoke can be exported
+
+The system SHALL export a local Phase 4 caller-consumption smoke report that validates the caller-facing `evidence_pack-v1` allowlist and fail-closed rules using the shared evidence-pack helper.
+
+#### Scenario: Caller-consumption smoke is exported
+
+- **WHEN** the Phase 4 caller-consumption smoke export is run
+- **THEN** the system writes JSON and Markdown evidence files under `docs/smoke/evidence-pack-consumption/`
+
+#### Scenario: Caller-consumption smoke covers answerable evidence
+
+- **WHEN** the smoke completes its answerable-case check
+- **THEN** it confirms that `allowed_citations` matches the returned evidence set and that the citation policy remains `use_only_returned_citations`
+
+#### Scenario: Caller-consumption smoke covers fail-closed evidence
+
+- **WHEN** the smoke completes its empty-evidence check
+- **THEN** it confirms that the evidence pack stays `insufficient_evidence` with `reason=no_documents` and no allowed citations
+
+#### Scenario: Caller-consumption smoke remains read-only
+
+- **WHEN** the caller-consumption smoke is exported
+- **THEN** runtime retrieval defaults, caller ownership, and provider HTTP contracts remain unchanged
+
+### Requirement: Phase 5 graph use-case readiness can be exported
+
+The system SHALL export a local Phase 5 graph use-case readiness report that summarizes the graph use-case contract, provider preflight graph boundary evidence, and the next evidence needed for GraphRAG boundary review.
+
+#### Scenario: Readiness report is exported
+
+- **WHEN** the Phase 5 graph readiness export is run
+- **THEN** the system writes JSON and Markdown evidence files under `docs/benchmark/chinese-seed/graph-use-case-readiness/`
+
+#### Scenario: Readiness report summarizes current evidence
+
+- **WHEN** the export completes
+- **THEN** the report summarizes the graph use-case contract, graph schema discovery, and the planned graph query boundary
+
+#### Scenario: Readiness export remains read-only
+
+- **WHEN** the readiness report is exported
+- **THEN** runtime retrieval defaults, caller ownership, and provider HTTP contracts remain unchanged
 

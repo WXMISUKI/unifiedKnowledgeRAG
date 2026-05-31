@@ -1,0 +1,77 @@
+{
+  "id": "phase4-evidence-pack-readiness-v1",
+  "generated_at": "2026-05-31T14:10:10.271355+00:00",
+  "status": "ready",
+  "decision": "keep_caller_ownership",
+  "contract_path": "docs\\benchmark\\chinese-seed\\evidence-pack-consumption-contract\\phase4-evidence-pack-consumption-contract.md",
+  "smoke_report_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+  "summary": {
+    "total_artifacts": 5,
+    "ready_artifacts": 5,
+    "review_artifacts": 0,
+    "blocked_artifacts": 0,
+    "required_artifacts": 2,
+    "required_ready_artifacts": 2,
+    "smoke_passed": true,
+    "evidence_pack_checks_passed": true
+  },
+  "supporting_evidence": [
+    {
+      "id": "evidence_pack_contract_doc",
+      "category": "contract",
+      "path": "docs\\benchmark\\chinese-seed\\evidence-pack-consumption-contract\\phase4-evidence-pack-consumption-contract.md",
+      "status": "ready",
+      "summary": "contract_doc_present=True",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "provider_contract_smoke",
+      "category": "smoke",
+      "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+      "status": "ready",
+      "summary": "passed=True; checks=9/9; failed_checks=0; evidence_pack_checks=3",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "test-evidence-pack",
+      "category": "test",
+      "path": "tests\\test_evidence_pack.py",
+      "status": "ready",
+      "summary": "present=True",
+      "present": true,
+      "required": false,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "test-provider-contract",
+      "category": "test",
+      "path": "tests\\test_provider_contract.py",
+      "status": "ready",
+      "summary": "present=True",
+      "present": true,
+      "required": false,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "test-provider-contract-smoke",
+      "category": "test",
+      "path": "tests\\test_provider_contract_smoke.py",
+      "status": "ready",
+      "summary": "present=True",
+      "present": true,
+      "required": false,
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only evidence for Phase 4 caller-consumption review.",
+    "It complements the evidence pack consumption contract and provider contract smoke report.",
+    "It does not change runtime defaults, caller ownership, or provider HTTP contracts."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.md"
+}

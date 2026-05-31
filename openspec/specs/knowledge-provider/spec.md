@@ -782,3 +782,74 @@ The system SHALL include optional Phase 3 retrieval evidence rows in provider ha
 - **WHEN** the optional FP/FN review artifact is missing
 - **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
 
+### Requirement: Provider handoff includes compact Phase 3 readiness export evidence
+
+The system SHALL include optional Phase 3 retrieval promotion readiness evidence in provider handoff so reviewers can inspect the current promotion gap picture without opening the export files separately.
+
+#### Scenario: Handoff summarizes readiness export
+
+- **WHEN** provider handoff reads the Phase 3 readiness export
+- **THEN** it summarizes the report status, decision, and open gates in a compact row
+
+#### Scenario: Missing readiness export remains non-blocking
+
+- **WHEN** the optional Phase 3 readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+### Requirement: Provider publishes evidence pack consumption contract
+The system SHALL maintain a read-only local evidence pack consumption contract artifact that explains the stable `evidence_pack-v1` fields, caller rules, and fail-closed behavior.
+
+#### Scenario: Contract artifact is discoverable
+- **WHEN** the Phase 4 evidence pack consumption contract is reviewed
+- **THEN** it points at the local contract document under `docs/benchmark/chinese-seed/evidence-pack-consumption-contract/`
+
+#### Scenario: Contract artifact stays local and read-only
+- **WHEN** the contract document is published or refreshed
+- **THEN** it remains a local review artifact and does not change runtime retrieval defaults, final answer policy, or provider HTTP contracts
+
+#### Scenario: Contract artifact describes caller ownership
+- **WHEN** the contract document is reviewed
+- **THEN** it explains that `allowed_citations` is the caller allowlist, `insufficient_evidence` is a valid fail-closed envelope, and diagnostic fields remain diagnostic
+
+### Requirement: Provider handoff includes compact Phase 4 evidence pack readiness export evidence
+
+The system SHALL include optional Phase 4 evidence pack readiness export evidence in provider handoff so reviewers can inspect the current evidence-pack contract coverage without opening the export files separately.
+
+#### Scenario: Handoff summarizes readiness export
+
+- **WHEN** provider handoff reads the Phase 4 readiness export
+- **THEN** it summarizes the report status, decision, and contract coverage in a compact row
+
+#### Scenario: Missing readiness export remains non-blocking
+
+- **WHEN** the optional Phase 4 readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+### Requirement: Provider handoff includes compact Phase 4 caller-consumption smoke evidence
+
+The system SHALL include optional Phase 4 caller-consumption smoke evidence in provider handoff so reviewers can inspect the caller-facing evidence-pack contract coverage without opening the smoke files separately.
+
+#### Scenario: Handoff summarizes caller-consumption smoke
+
+- **WHEN** provider handoff reads the Phase 4 caller-consumption smoke
+- **THEN** it summarizes the report status, key checks, and caller allowlist/fail-closed coverage in a compact row
+
+#### Scenario: Missing caller-consumption smoke remains non-blocking
+
+- **WHEN** the optional caller-consumption smoke is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+### Requirement: Provider handoff includes compact Phase 5 graph use-case readiness export evidence
+
+The system SHALL include optional Phase 5 graph use-case readiness export evidence in provider handoff so reviewers can inspect the current GraphRAG boundary without opening the export files separately.
+
+#### Scenario: Handoff summarizes graph readiness export
+
+- **WHEN** provider handoff reads the Phase 5 graph readiness export
+- **THEN** it summarizes the report status, decision, and graph boundary evidence in a compact row
+
+#### Scenario: Missing graph readiness export remains non-blocking
+
+- **WHEN** the optional Phase 5 graph readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+

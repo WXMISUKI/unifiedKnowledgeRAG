@@ -79,6 +79,42 @@ DEFAULT_EVIDENCE_SPECS = [
         path=Path("docs/benchmark/chinese-seed/fp-fn-review/phase3-fp-fn-review.json"),
         required=False,
     ),
+    HandoffEvidenceSpec(
+        id="phase3_retrieval_promotion_readiness",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/benchmark/chinese-seed/retrieval-promotion-readiness/"
+            "phase3-retrieval-promotion-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase4_evidence_pack_readiness",
+        category="evidence-packaging",
+        path=Path(
+            "docs/benchmark/chinese-seed/evidence-pack-readiness/"
+            "phase4-evidence-pack-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase4_caller_consumption_smoke",
+        category="caller-consumption",
+        path=Path(
+            "docs/smoke/evidence-pack-consumption/"
+            "phase4-caller-consumption-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase5_graph_use_case_readiness",
+        category="graph-readiness",
+        path=Path(
+            "docs/benchmark/chinese-seed/graph-use-case-readiness/"
+            "phase5-graph-use-case-readiness.json"
+        ),
+        required=False,
+    ),
 ]
 
 
@@ -347,6 +383,62 @@ def _artifact_status_and_summary(
                 f"false_negative_rate={fn_rate:.4f}"
             ),
         )
+    if artifact_id == "phase3_retrieval_promotion_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gates = payload.get("open_gates", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"open_gates={_int_value(summary.get('open_gates'), fallback=len(open_gates))}; "
+                f"ready_gates={_int_value(summary.get('ready_gates'), fallback=0)}; "
+                f"review_gates={_int_value(summary.get('review_gates'), fallback=0)}; "
+                f"candidate_gates={_int_value(summary.get('candidate_gates'), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase4_evidence_pack_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_caller_ownership')}; "
+                f"smoke_passed={bool(summary.get('smoke_passed', False))}; "
+                f"ready_artifacts={_int_value(summary.get('ready_artifacts'), fallback=0)}/"
+                f"{_int_value(summary.get('total_artifacts'), fallback=0)}; "
+                f"required_ready={_int_value(summary.get('required_ready_artifacts'), fallback=0)}/"
+                f"{_int_value(summary.get('required_artifacts'), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase4_caller_consumption_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; passed_checks={_int_value(summary.get('passed'), fallback=0)}/"
+                f"{_int_value(summary.get('total'), fallback=0)}; "
+                f"answerable_checks={_int_value(summary.get('answerable_checks'), fallback=0)}; "
+                f"insufficient_checks={_int_value(summary.get('insufficient_checks'), fallback=0)}; "
+                f"contract_doc_present={bool(summary.get('contract_doc_present', False))}"
+            ),
+        )
+    if artifact_id == "phase5_graph_use_case_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_graph_query_planned')}; "
+                f"graph_schema_count={_int_value(summary.get('graph_schema_count'), fallback=0)}; "
+                f"graph_query_status={summary.get('graph_query_status', 'unknown')}; "
+                f"graph_query_planned={bool(summary.get('graph_query_planned', False))}; "
+                f"preflight_graph_boundary_ready={bool(summary.get('preflight_graph_boundary_ready', False))}; "
+                f"smoke_graph_check_passed={bool(summary.get('smoke_graph_check_passed', False))}; "
+                f"smoke_checks_passed={bool(summary.get('smoke_checks_passed', False))}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -417,6 +509,14 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 3 retrieval baseline evidence is missing."
     if artifact_id == "phase3_fp_fn_review":
         return "Optional Phase 3 FP/FN review evidence is missing."
+    if artifact_id == "phase3_retrieval_promotion_readiness":
+        return "Optional Phase 3 readiness export is missing."
+    if artifact_id == "phase4_evidence_pack_readiness":
+        return "Optional Phase 4 evidence pack readiness export is missing."
+    if artifact_id == "phase4_caller_consumption_smoke":
+        return "Optional Phase 4 caller-consumption smoke evidence is missing."
+    if artifact_id == "phase5_graph_use_case_readiness":
+        return "Optional Phase 5 graph readiness export is missing."
     return "Optional evidence artifact is missing."
 
 
@@ -427,6 +527,14 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase3_seed_retrieval_baseline"
     if artifact_id == "phase3_fp_fn_review":
         return "regenerate_phase3_fp_fn_review"
+    if artifact_id == "phase3_retrieval_promotion_readiness":
+        return "regenerate_phase3_retrieval_promotion_readiness"
+    if artifact_id == "phase4_evidence_pack_readiness":
+        return "regenerate_phase4_evidence_pack_readiness"
+    if artifact_id == "phase4_caller_consumption_smoke":
+        return "regenerate_phase4_caller_consumption_smoke"
+    if artifact_id == "phase5_graph_use_case_readiness":
+        return "regenerate_phase5_graph_use_case_readiness"
     return "review_evidence_notes"
 
 
@@ -455,5 +563,29 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding."
+        )
+    if any(
+        artifact["id"] == "phase4_evidence_pack_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 4 evidence pack readiness export is optional before caller review; regenerate it after the contract or contract-smoke evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase4_caller_consumption_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 4 caller-consumption smoke is optional before caller review; regenerate it after the evidence-pack contract or readiness export changes."
+        )
+    if any(
+        artifact["id"] == "phase5_graph_use_case_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 5 graph use-case readiness export is optional before graph review; regenerate it after the graph contract or graph boundary evidence changes."
         )
     return notes
