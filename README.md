@@ -12,6 +12,7 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /api/provider/manifest`
 - `GET /api/provider/preflight`
 - `GET /api/provider/handoff`
+- `GET /api/provider/source-bindings`
 - `GET /api/capabilities`
 - `GET /api/catalog`
 - `GET /api/ingestion/sources/{source_id}/preflight`
@@ -38,6 +39,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
 `GET /api/provider/handoff` 是只读交接包 API。它返回当前 `provider-handoff-bundle-v1` 状态，包括 provider identity、contract version、集成证据、contract smoke、deployment readiness 和 reindex readiness 的汇总行与 recommended action。该接口读取当前本地 evidence artifacts，不会重新刷新证据、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG；需要刷新证据时仍应显式运行 `scripts/export_provider_handoff_refresh.py`。
+
+`GET /api/provider/source-bindings` 是只读 source binding summary。它会把 catalog、retrieval backend readiness、index lifecycle、source document fingerprint 和 ingestion preflight 汇总成每个 source 的 `bindable`、`status`、`recommended_action` 和诊断原因，便于 MyPrivateAgent 或外部控制面在做 source-to-agent binding 前先审查 provider-owned 事实。该接口不会创建绑定、创建 ingestion job、重建索引、执行检索/answer、调用 embedding/Qdrant 或执行 GraphRAG；真正的绑定策略、审批、审计和 agent 归属仍由外部控制面负责。
 
 `GET /api/ingestion/sources/{source_id}/preflight` 是企业文档导入前置诊断入口。它会读取当前 source manifest 和本地文件，返回文件存在性、格式支持、parser 状态、chunk count、chunk preview、citation anchor 数量、当前 index status 和 recommended action。当前切片只支持 markdown 诊断；PDF、Word、Excel、HTML、扫描件和图片会被报告为 `unsupported_format`，不会隐式引入 OCR、复杂 parser 或重型依赖。这个接口只读，不会创建 ingestion job、写 lifecycle store、重建索引、调用 embedding/Qdrant、执行检索或 GraphRAG。
 
@@ -1611,6 +1614,14 @@ conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
 它从真实 HTTP base URL 只读验证 `/health`、provider manifest、preflight 和 handoff endpoint，并在 `docs/integration/deployed-provider-smoke/` 输出 JSON / Markdown。这个切片的价值是把“容器或网络服务是否真的可被外部控制面访问”变成可保存证据；它仍不负责 TLS、反向代理、托管密钥、注册、heartbeat、审计、source-to-agent binding 或最终 answer policy。
 
 第六十三阶段 OpenSpec change `include-deployed-smoke-in-handoff-bundle` 将 deployed smoke 纳入 handoff bundle 的 optional evidence。未运行部署 smoke 时，bundle 不会因为缺少外部 URL 证据而 blocked，而是显示 `review` 和 `run_deployed_provider_smoke_after_deployment`；如果已经生成的 deployed smoke 为 `blocked`，bundle 会阻塞，避免外部控制面误以为 live deployment 已可绑定。
+
+第六十四阶段 OpenSpec change `add-source-binding-summary` 增加 source binding summary：
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8020/api/provider/source-bindings
+```
+
+这个接口把每个 source 的 catalog readiness、retrieval backend、index status、fingerprint drift、ingestion preflight 和 recommended action 汇总为一个绑定审查视图。默认 fixture source 会返回 `bindable=true` 和 `bind_source_from_control_plane`；如果 source 文件 changed/missing 或 index 未 ready，则返回 `bindable=false` 和修复/重建建议。它只提供事实和建议，不负责 source-to-agent binding 决策。
 
 ## 设计文档
 

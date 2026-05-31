@@ -117,6 +117,20 @@ The project SHALL allow Phase 2 source freshness evidence to inform Phase 6 rein
 - **WHEN** the provider reports that changed source documents should be reindexed
 - **THEN** it does not automatically create ingestion jobs, rebuild indexes, or change retrieval defaults
 
+### Requirement: Source binding summary bridges Phase 2 and Phase 6
+
+The project SHALL treat source binding summary evidence as a lightweight bridge between Phase 2 document ingestion diagnostics and Phase 6 provider integration operations.
+
+#### Scenario: Source binding summary is phase-aligned
+
+- **WHEN** an OpenSpec change adds a read-only summary of source bindability for external control planes
+- **THEN** the roadmap treats it as Phase 2 and Phase 6 work rather than source-to-agent control-plane ownership
+
+#### Scenario: Source binding summary preserves provider boundary
+
+- **WHEN** the provider reports source bindability facts and recommended actions
+- **THEN** MyPrivateAgent or another external control plane still owns source-to-agent binding decisions, policy, approvals, audit, and final answer workflow
+
 ### Requirement: Phase 6 handoff evidence may be exposed through read-only HTTP discovery
 
 The project SHALL allow Phase 6 integration and operations evidence to be exposed through lightweight read-only HTTP discovery when it helps external control planes bind the provider without taking over provider internals.

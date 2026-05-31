@@ -31,6 +31,7 @@ def test_provider_manifest_references_integration_endpoints_and_evidence():
         "manifest": "/api/provider/manifest",
         "preflight": "/api/provider/preflight",
         "provider_handoff": "/api/provider/handoff",
+        "source_bindings": "/api/provider/source-bindings",
         "capabilities": "/api/capabilities",
         "openapi": "/openapi.json",
         "catalog": "/api/catalog",

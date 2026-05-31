@@ -95,6 +95,35 @@ class ProviderHandoffBundleResponse(BaseModel):
     markdown_path: str | None = None
 
 
+class SourceBindingSummaryRow(BaseModel):
+    source_id: str
+    owner: str
+    source_status: str
+    status: str
+    bindable: bool
+    retrieval_backend: str
+    backend_status: str | None = None
+    backend_reason: str | None = None
+    index_status: str
+    index_reason: str | None = None
+    latest_index_job_id: str | None = None
+    document_count: int = 0
+    drift_statuses: list[str] = Field(default_factory=list)
+    parser_statuses: list[str] = Field(default_factory=list)
+    ingestion_preflight_status: str | None = None
+    recommended_action: str
+    reasons: list[str] = Field(default_factory=list)
+
+
+class ProviderSourceBindingSummaryResponse(BaseModel):
+    id: str
+    generated_at: str
+    status: str
+    provider: dict[str, Any]
+    sources: list[SourceBindingSummaryRow]
+    operation_notes: list[str] = Field(default_factory=list)
+
+
 class KnowledgeBaseSource(BaseModel):
     id: str
     type: str = "rag"

@@ -4,6 +4,7 @@ from app.models.contracts import (
     ProviderHandoffBundleResponse,
     ProviderIntegrationManifest,
     ProviderPreflightResponse,
+    ProviderSourceBindingSummaryResponse,
 )
 from app.services.provider_handoff_bundle import (
     build_provider_handoff_bundle_report,
@@ -11,6 +12,7 @@ from app.services.provider_handoff_bundle import (
 )
 from app.services.provider_manifest import build_provider_integration_manifest
 from app.services.provider_preflight import build_provider_preflight_response
+from app.services.provider_source_binding import build_provider_source_binding_summary
 
 router = APIRouter(prefix="/api/provider")
 
@@ -24,6 +26,11 @@ def manifest() -> ProviderIntegrationManifest:
 def handoff() -> dict:
     report = build_provider_handoff_bundle_report()
     return provider_handoff_bundle_report_to_dict(report)
+
+
+@router.get("/source-bindings", response_model=ProviderSourceBindingSummaryResponse)
+def source_bindings() -> ProviderSourceBindingSummaryResponse:
+    return build_provider_source_binding_summary()
 
 
 @router.get("/preflight", response_model=ProviderPreflightResponse)

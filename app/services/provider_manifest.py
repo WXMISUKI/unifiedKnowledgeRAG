@@ -35,6 +35,7 @@ def build_provider_integration_manifest() -> ProviderIntegrationManifest:
             "manifest": "/api/provider/manifest",
             "preflight": "/api/provider/preflight",
             "provider_handoff": "/api/provider/handoff",
+            "source_bindings": "/api/provider/source-bindings",
             "capabilities": "/api/capabilities",
             "openapi": "/openapi.json",
             "catalog": "/api/catalog",

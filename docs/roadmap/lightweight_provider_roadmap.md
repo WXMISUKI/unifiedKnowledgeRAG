@@ -241,3 +241,15 @@ It supports an optional provider API key through `PROVIDER_API_KEY` or `--provid
 It remains a lightweight provider-component smoke, not platform certification. It does not execute retrieval, answer composition, ingestion, index rebuilds, embedding models, vector databases, model downloads, GraphRAG, TLS termination, reverse proxy policy, managed secrets, registration, heartbeat governance, audit policy, source-to-agent binding, or final answer policy.
 
 The provider handoff bundle summarizes deployed smoke as optional Phase 6 evidence. Missing deployed smoke keeps the bundle in `review` with `run_deployed_provider_smoke_after_deployment`; present `ready` or `review` deployed evidence is surfaced directly, and present `blocked` deployed evidence blocks the bundle. This keeps local development lightweight while making live URL evidence visible from the same handoff entry point used by external control planes.
+
+## Source Binding Summary
+
+Phase 2 and Phase 6 now connect through a read-only source binding summary:
+
+```text
+GET /api/provider/source-bindings
+```
+
+The summary combines configured source catalog facts, retrieval backend readiness, index lifecycle status, source document fingerprint drift, ingestion preflight status, and deterministic recommended actions. It helps MyPrivateAgent or another external control plane decide whether a source is ready for binding without reading several provider diagnostics separately.
+
+This remains provider-owned evidence, not binding policy. The provider does not create source-to-agent bindings, run approvals, write audit records, create ingestion jobs, rebuild indexes, execute retrieval or answer composition, call embedding/vector stores, or execute GraphRAG from this endpoint.

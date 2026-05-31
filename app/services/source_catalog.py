@@ -40,8 +40,8 @@ GRAPHS = [
 ]
 
 
-def list_knowledge_bases() -> list[KnowledgeBaseSource]:
-    settings = get_settings()
+def list_knowledge_bases(settings=None) -> list[KnowledgeBaseSource]:
+    settings = settings or get_settings()
     backend_status, backend_reason = _document_backend_readiness()
     from app.services.index_lifecycle import get_index_status
 
