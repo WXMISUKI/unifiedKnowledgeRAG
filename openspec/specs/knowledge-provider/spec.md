@@ -159,6 +159,10 @@ The system SHALL expose lightweight liveness and readiness probes for high-avail
 - **WHEN** a caller requests `GET /ready`
 - **THEN** the response includes the same machine-readable readiness details as `/health` for service, RAG, answer, and graph status
 
+#### Scenario: Degraded readiness fails HTTP
+- **WHEN** a caller requests `GET /ready` and the readiness body has `status=degraded`
+- **THEN** the endpoint returns HTTP 503 with the same readiness response body for diagnostics
+
 #### Scenario: Health endpoint remains compatible
 - **WHEN** a caller requests `GET /health`
 - **THEN** the endpoint continues to return the existing readiness response shape

@@ -118,7 +118,7 @@ GET /ready
 GET /health
 ```
 
-`/live` is a side-effect-free process probe and does not construct retrieval backends, inspect index lifecycle, run answer readiness, call embedding/vector stores, create ingestion jobs, or execute GraphRAG. `/ready` returns the provider readiness contract used to decide whether the instance should receive traffic. `/health` remains compatible with existing callers. This is intentionally lightweight; orchestration, alert routing, autoscaling policy, heartbeat governance, registration, and audit policy remain outside this provider.
+`/live` is a side-effect-free process probe and does not construct retrieval backends, inspect index lifecycle, run answer readiness, call embedding/vector stores, create ingestion jobs, or execute GraphRAG. `/ready` returns the provider readiness contract used to decide whether the instance should receive traffic: HTTP 200 when `status=ok`, and HTTP 503 when `status=degraded` while preserving the same diagnostic body. `/health` remains compatible with existing callers and returns HTTP 200 with the readiness body. This is intentionally lightweight; orchestration, alert routing, autoscaling policy, heartbeat governance, registration, and audit policy remain outside this provider.
 
 ## Reindex Readiness Plan
 

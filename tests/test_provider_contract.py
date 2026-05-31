@@ -41,6 +41,19 @@ def test_readiness_matches_health_contract():
     assert ready_response.json() == health_response.json()
 
 
+def test_readiness_returns_503_when_provider_is_degraded(monkeypatch):
+    monkeypatch.setenv("RAG_ANSWER_COMPOSER", "hosted")
+    scoped_client = TestClient(create_app())
+
+    health_response = scoped_client.get("/health")
+    ready_response = scoped_client.get("/ready")
+
+    assert health_response.status_code == 200
+    assert health_response.json()["status"] == "degraded"
+    assert ready_response.status_code == 503
+    assert ready_response.json() == health_response.json()
+
+
 def test_health_reports_machine_readable_readiness():
     response = client.get("/health")
 

@@ -37,7 +37,7 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 `example_request` 是 provider-owned 的集成提示，不是生产基础设施选型。它不会声明 embedding 模型、向量数据库、reranker、图数据库或 answer composer 实现细节；这些仍需通过后续 OpenSpec change 和架构证据单独确认。
 
-`GET /live` 和 `GET /ready` 是轻量高可用探针。`/live` 只表示 provider 进程还能响应 HTTP，不构造 retriever、不检查索引、不调用 answer readiness，也不触发 ingestion/vector DB/GraphRAG；`/ready` 返回与 `/health` 相同的 readiness 合同，用于判断实例是否适合接收 provider 流量。`/health` 保留兼容现有调用。
+`GET /live` 和 `GET /ready` 是轻量高可用探针。`/live` 只表示 provider 进程还能响应 HTTP，不构造 retriever、不检查索引、不调用 answer readiness，也不触发 ingestion/vector DB/GraphRAG；`/ready` 返回与 `/health` 相同的 readiness 合同，用于判断实例是否适合接收 provider 流量。`/ready` 在 `status=ok` 时返回 HTTP 200，在 `status=degraded` 时返回 HTTP 503 且保留同样的诊断 body；`/health` 保留兼容现有调用，即 degraded 时仍返回 HTTP 200。
 
 `GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。manifest 也会暴露 `rag_source_documents_template=/api/rag/sources/{source_id}/documents`，便于调用方发现 source document manifest 诊断入口。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 
@@ -1653,6 +1653,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 第六十七阶段 OpenSpec change `promote-source-binding-capability` 将 source binding summary 提升为正式 capability：`knowledge.provider.source_bindings`。外部控制面现在可以通过 capability catalog、manifest capability ids 和 preflight required capability 统一发现并校验绑定前审查入口，而不需要只从 endpoint 字典或 README 推断。该能力仍然只读，真正 source-to-agent binding 的创建、审批、审计和策略执行继续由 MyPrivateAgent 或外部控制面负责。
 
 第六十八阶段 OpenSpec change `add-live-ready-probes` 增加轻量高可用探针：`/live` 用于进程 liveness，`/ready` 用于接流量前 readiness，`/health` 保持兼容。Docker Compose healthcheck 已切到 `/ready`，manifest 也会暴露 `live` 和 `ready` 路径。该阶段不引入监控平台、编排系统、告警策略或指标采集。
+
+第六十九阶段 OpenSpec change `fail-unready-readiness-probe` 让 `/ready` 的 HTTP 状态码具备摘流量语义：ready 时返回 HTTP 200，degraded 时返回 HTTP 503，同时保留 readiness body 供诊断。`/health` 继续作为兼容诊断端点，degraded 时仍返回 HTTP 200。
 
 ## 设计文档
 
