@@ -7,11 +7,16 @@ from app.models.contracts import (
     IngestionSourcePreflightResponse,
     IngestionSourcePreflightResult,
     ProviderError,
+    SourceChunkManifest,
     SourceDocumentManifest,
 )
 from app.services.index_lifecycle import get_index_status
 from app.services.source_catalog import get_knowledge_base
-from app.services.source_document_manifest import SOURCE_DOCUMENT_MANIFESTS
+from app.services.source_document_manifest import (
+    SOURCE_DOCUMENT_MANIFESTS,
+    build_chunk_manifest,
+)
+from app.services.source_package import get_source_package
 
 
 SUPPORTED_FORMATS = {"markdown"}
@@ -53,6 +58,7 @@ def get_ingestion_source_preflight(
             index_status=index_status.status,
             index_reason=index_status.reason,
             latest_index_job_id=index_status.latest_job_id,
+            source_package=get_source_package(source_id),
             documents=documents,
             operation_notes=_operation_notes(status, documents),
             recommended_action=_source_recommended_action(status, documents),
@@ -84,6 +90,7 @@ def _preflight_document(document: SourceDocumentManifest) -> IngestionDocumentPr
 
     text = source_path.read_text(encoding="utf-8")
     chunks = _markdown_chunks(text)
+    chunk_manifest = build_chunk_manifest(document, source_path)
     if not chunks:
         return _document_result(
             document=document,
@@ -101,6 +108,7 @@ def _preflight_document(document: SourceDocumentManifest) -> IngestionDocumentPr
             parser_status="missing_citation_anchors",
             chunk_count=len(chunks),
             chunk_preview=_chunk_preview(chunks),
+            chunk_manifest=chunk_manifest,
             recommended_action="add_citation_anchors_before_ingestion",
             reason="Document manifest has no citation anchors.",
         )
@@ -111,6 +119,7 @@ def _preflight_document(document: SourceDocumentManifest) -> IngestionDocumentPr
         parser_status="ready",
         chunk_count=len(chunks),
         chunk_preview=_chunk_preview(chunks),
+        chunk_manifest=chunk_manifest,
         recommended_action="run_ingestion_job",
     )
 
@@ -125,6 +134,7 @@ def _document_result(
     reason: str | None = None,
     chunk_count: int = 0,
     chunk_preview: list[IngestionDocumentChunkPreview] | None = None,
+    chunk_manifest: list[SourceChunkManifest] | None = None,
 ) -> IngestionDocumentPreflight:
     return IngestionDocumentPreflight(
         document_id=document.document_id,
@@ -137,6 +147,7 @@ def _document_result(
         chunking_strategy=document.chunking_strategy,
         chunk_count=chunk_count,
         chunk_preview=chunk_preview or [],
+        chunk_manifest=chunk_manifest or [],
         citation_anchor_count=len(document.citation_anchors),
         recommended_action=recommended_action,
         reason=reason,
@@ -144,11 +155,21 @@ def _document_result(
 
 
 def _markdown_chunks(text: str) -> list[str]:
-    return [
-        block.strip()
-        for block in text.split("\n\n")
-        if block.strip()
-    ]
+    chunks: list[str] = []
+    current_lines: list[str] = []
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            if current_lines:
+                chunks.append(" ".join(current_lines))
+                current_lines = []
+            continue
+        if line.startswith("#"):
+            continue
+        current_lines.append(line)
+    if current_lines:
+        chunks.append(" ".join(current_lines))
+    return chunks
 
 
 def _chunk_preview(chunks: list[str]) -> list[IngestionDocumentChunkPreview]:

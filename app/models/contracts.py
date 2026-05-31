@@ -172,6 +172,29 @@ class ProviderError(BaseModel):
     details: dict[str, Any] | None = None
 
 
+class SourcePackageMetadata(BaseModel):
+    source_id: str
+    owner: str
+    version: str
+    domain: str
+    language: str
+    sensitivity: str
+    supported_formats: list[str] = Field(default_factory=list)
+    default_chunking_strategy: str
+    citation_granularity: str
+    allowed_parser_statuses: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class SourceChunkManifest(BaseModel):
+    chunk_id: str
+    citation: str
+    chunking_strategy: str
+    source_path: str
+    char_count: int
+    text_preview: str
+
+
 class SourceDocumentManifest(BaseModel):
     document_id: str
     title: str
@@ -185,6 +208,7 @@ class SourceDocumentManifest(BaseModel):
     expected_content_sha256: str | None = None
     content_byte_size: int | None = None
     drift_status: str | None = None
+    chunk_manifest: list[SourceChunkManifest] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -198,6 +222,7 @@ class SourceDocumentManifestResult(BaseModel):
     index_reason: str | None = None
     indexed_at: str | None = None
     latest_index_job_id: str | None = None
+    source_package: SourcePackageMetadata | None = None
     documents: list[SourceDocumentManifest]
 
 
@@ -338,6 +363,7 @@ class IngestionDocumentPreflight(BaseModel):
     chunking_strategy: str
     chunk_count: int = 0
     chunk_preview: list[IngestionDocumentChunkPreview] = Field(default_factory=list)
+    chunk_manifest: list[SourceChunkManifest] = Field(default_factory=list)
     citation_anchor_count: int = 0
     recommended_action: str
     reason: str | None = None
@@ -350,6 +376,7 @@ class IngestionSourcePreflightResult(BaseModel):
     index_status: str
     index_reason: str | None = None
     latest_index_job_id: str | None = None
+    source_package: SourcePackageMetadata | None = None
     documents: list[IngestionDocumentPreflight] = Field(default_factory=list)
     operation_notes: list[str] = Field(default_factory=list)
     recommended_action: str

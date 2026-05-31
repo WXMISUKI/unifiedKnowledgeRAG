@@ -4,12 +4,14 @@ from pathlib import Path
 from app.config import Settings, get_settings
 from app.models.contracts import (
     ProviderError,
+    SourceChunkManifest,
     SourceDocumentManifest,
     SourceDocumentManifestResponse,
     SourceDocumentManifestResult,
 )
 from app.services.index_lifecycle import get_index_status
 from app.services.source_catalog import get_knowledge_base
+from app.services.source_package import get_source_package
 
 
 SOURCE_DOCUMENT_MANIFESTS = {
@@ -99,6 +101,7 @@ def get_source_document_manifest(
             index_reason=index_status.reason,
             indexed_at=index_status.indexed_at,
             latest_index_job_id=index_status.latest_job_id,
+            source_package=get_source_package(source.id),
             documents=[
                 _with_fingerprint_diagnostics(document)
                 for document in SOURCE_DOCUMENT_MANIFESTS.get(source_id, [])
@@ -131,6 +134,7 @@ def _with_fingerprint_diagnostics(
             "content_sha256": current_sha256,
             "content_byte_size": len(content),
             "drift_status": drift_status,
+            "chunk_manifest": build_chunk_manifest(document, source_path),
         }
     )
 
@@ -141,3 +145,49 @@ def _drift_status(current_sha256: str, expected_sha256: str | None) -> str:
     if current_sha256 == expected_sha256.lower():
         return "in_sync"
     return "changed"
+
+
+def build_chunk_manifest(
+    document: SourceDocumentManifest,
+    source_path: Path | None = None,
+) -> list[SourceChunkManifest]:
+    source_path = source_path or Path(document.source_path)
+    if document.format.lower() != "markdown" or not source_path.exists():
+        return []
+
+    chunks = _markdown_chunks(source_path.read_text(encoding="utf-8"))
+    return [
+        SourceChunkManifest(
+            chunk_id=f"chunk-{index}",
+            citation=_chunk_citation(document, index),
+            chunking_strategy=document.chunking_strategy,
+            source_path=document.source_path,
+            char_count=len(chunk),
+            text_preview=chunk[:160],
+        )
+        for index, chunk in enumerate(chunks, start=1)
+    ]
+
+
+def _markdown_chunks(text: str) -> list[str]:
+    chunks: list[str] = []
+    current_lines: list[str] = []
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            if current_lines:
+                chunks.append(" ".join(current_lines))
+                current_lines = []
+            continue
+        if line.startswith("#"):
+            continue
+        current_lines.append(line)
+    if current_lines:
+        chunks.append(" ".join(current_lines))
+    return chunks
+
+
+def _chunk_citation(document: SourceDocumentManifest, index: int) -> str:
+    if index <= len(document.citation_anchors):
+        return document.citation_anchors[index - 1]
+    return f"{document.document_id}#chunk-{index}"

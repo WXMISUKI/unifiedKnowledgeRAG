@@ -208,6 +208,8 @@ This boundary is intentionally lightweight. Markdown is the only supported parse
 
 The next parser-related work should be driven by real corpus demand and separate evidence-backed OpenSpec changes, not by adding every document parser dependency up front.
 
+Phase 2 source onboarding now also includes source package and chunk manifest diagnostics on the existing source document and ingestion preflight surfaces. `source_package` records lightweight business and parsing expectations such as domain, language, sensitivity, supported formats, default chunking strategy, citation granularity, and allowed parser statuses. `chunk_manifest` records deterministic markdown chunk ids, citations, chunking strategy, source path, character count, and capped preview text. These fields help operators review enterprise source readiness before ingestion while keeping parser expansion, indexing, embedding, vector-store promotion, and GraphRAG behind separate gates.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

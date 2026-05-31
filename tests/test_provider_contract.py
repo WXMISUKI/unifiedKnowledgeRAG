@@ -271,38 +271,59 @@ def test_rag_source_document_manifest_exposes_source_documents():
     assert body["result"]["source_id"] == "refund_policy_docs"
     assert body["result"]["retrieval_backend"] == "fixture"
     assert body["result"]["index_status"] == "ready"
-    assert body["result"]["documents"] == [
-        {
-            "document_id": "refund_policy_2026",
-            "title": "售后退款规则",
-            "source_path": "app/data/sources/refund_policy_docs.md",
-            "format": "markdown",
-            "version": "2026-05-28",
-            "chunking_strategy": "markdown-paragraph-v1",
-            "citation_anchors": [
-                "refund_policy_2026#section-3",
-                "refund_policy_2026#section-5",
-                "refund_policy_2026#exact-refund-code",
-                "refund_policy_2026#exception",
-                "refund_policy_2026#high-value-review",
-                "refund_policy_2026#address-change",
-                "refund_policy_2026#appeal-review",
-            ],
-            "source_file_status": "present",
-            "content_sha256": (
-                "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a"
-            ),
-            "expected_content_sha256": (
-                "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a"
-            ),
-            "content_byte_size": 1124,
-            "drift_status": "in_sync",
-            "metadata": {
-                "language": "zh-CN",
-                "document_role": "local_contract_fixture",
-            },
-        }
+    assert body["result"]["source_package"] == {
+        "source_id": "refund_policy_docs",
+        "owner": "customer_service",
+        "version": "2026-05-28",
+        "domain": "after_sales_policy",
+        "language": "zh-CN",
+        "sensitivity": "internal",
+        "supported_formats": ["markdown"],
+        "default_chunking_strategy": "markdown-paragraph-v1",
+        "citation_granularity": "section",
+        "allowed_parser_statuses": ["ready"],
+        "metadata": {
+            "business_use": "refund_policy_support",
+            "package_role": "local_enterprise_onboarding_fixture",
+        },
+    }
+    document = body["result"]["documents"][0]
+    assert document["document_id"] == "refund_policy_2026"
+    assert document["title"] == "售后退款规则"
+    assert document["source_path"] == "app/data/sources/refund_policy_docs.md"
+    assert document["format"] == "markdown"
+    assert document["version"] == "2026-05-28"
+    assert document["chunking_strategy"] == "markdown-paragraph-v1"
+    assert document["citation_anchors"] == [
+        "refund_policy_2026#section-3",
+        "refund_policy_2026#section-5",
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#exception",
+        "refund_policy_2026#high-value-review",
+        "refund_policy_2026#address-change",
+        "refund_policy_2026#appeal-review",
     ]
+    assert document["source_file_status"] == "present"
+    assert document["content_sha256"] == (
+        "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a"
+    )
+    assert document["expected_content_sha256"] == (
+        "959c49adc2bcc512f33e62d751fc3f19c5993f1f19fc7ad99183ebdc96be6f6a"
+    )
+    assert document["content_byte_size"] == 1124
+    assert document["drift_status"] == "in_sync"
+    assert document["metadata"] == {
+        "language": "zh-CN",
+        "document_role": "local_contract_fixture",
+    }
+    assert len(document["chunk_manifest"]) == 7
+    first_chunk = document["chunk_manifest"][0]
+    assert first_chunk["chunk_id"] == "chunk-1"
+    assert first_chunk["citation"] == "refund_policy_2026#section-3"
+    assert first_chunk["chunking_strategy"] == "markdown-paragraph-v1"
+    assert first_chunk["source_path"] == "app/data/sources/refund_policy_docs.md"
+    assert first_chunk["char_count"] > 0
+    assert first_chunk["text_preview"]
 
 
 def test_rag_source_document_manifest_unknown_source_returns_structured_error():

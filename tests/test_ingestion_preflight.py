@@ -34,12 +34,33 @@ def test_ingestion_preflight_reports_ready_markdown(monkeypatch, tmp_path):
     result = body["result"]
     assert result["status"] == "ready"
     assert result["recommended_action"] == "run_ingestion_job"
+    assert result["source_package"]["source_id"] == "refund_policy_docs"
+    assert result["source_package"]["domain"] == "after_sales_policy"
+    assert result["source_package"]["default_chunking_strategy"] == "markdown-paragraph-v1"
     document = result["documents"][0]
     assert document["format_supported"] is True
     assert document["file_status"] == "present"
     assert document["parser_status"] == "ready"
-    assert document["chunk_count"] == 3
-    assert len(document["chunk_preview"]) == 3
+    assert document["chunk_count"] == 2
+    assert len(document["chunk_preview"]) == 2
+    assert document["chunk_manifest"] == [
+        {
+            "chunk_id": "chunk-1",
+            "citation": "refund_policy_2026#section-1",
+            "chunking_strategy": "markdown-paragraph-v1",
+            "source_path": str(source_file),
+            "char_count": 6,
+            "text_preview": "第一段内容。",
+        },
+        {
+            "chunk_id": "chunk-2",
+            "citation": "refund_policy_2026#chunk-2",
+            "chunking_strategy": "markdown-paragraph-v1",
+            "source_path": str(source_file),
+            "char_count": 6,
+            "text_preview": "第二段内容。",
+        },
+    ]
     assert document["citation_anchor_count"] == 1
     assert document["recommended_action"] == "run_ingestion_job"
 
@@ -73,6 +94,7 @@ def test_ingestion_preflight_reports_missing_file(monkeypatch, tmp_path):
     document = result["documents"][0]
     assert document["file_status"] == "missing"
     assert document["parser_status"] == "missing_source_file"
+    assert document["chunk_manifest"] == []
     assert document["recommended_action"] == "restore_source_file_before_ingestion"
 
 
@@ -105,6 +127,7 @@ def test_ingestion_preflight_reports_unsupported_format(monkeypatch, tmp_path):
     assert document["format_supported"] is False
     assert document["parser_status"] == "unsupported_format"
     assert document["chunk_count"] == 0
+    assert document["chunk_manifest"] == []
 
 
 def test_ingestion_preflight_rejects_unknown_source():

@@ -111,7 +111,7 @@ GraphRAG 当前只暴露 schema 和结构化 `GRAPH_NOT_IMPLEMENTED` 错误，�
 
 Provider error envelope 保持 `ok=false`、`result=null`、`error.code` 和 `error.message` 的稳定形态，并额外提供可选 `error.details`。例如未知知识库会返回 `requested_source_ids` / `unknown_source_ids`，索引未就绪会返回 `not_ready_source_ids` 和 `retrieval_backend`，answer composer 配置错误会返回当前 composer/model 和支持的 composer 名称，GraphRAG planned error 会返回 graph id 与 capability id。上层控制面应优先读取这些结构化字段，而不是解析 message 文本。
 
-`GET /api/rag/sources/{source_id}/documents` 是 Phase 2 的轻量 source document manifest。它返回单个 RAG source 背后的 provider-owned 文档清单，包括 document id、repo-relative source path、format、version、chunking strategy、citation anchors、source 文件 fingerprint/drift diagnostics 和当前 index readiness。该接口只用于调用方绑定前诊断、引用锚点审查和本地运维排查；它不会执行检索、answer composition、embedding、向量查询、ingestion job 或 GraphRAG。
+`GET /api/rag/sources/{source_id}/documents` 是 Phase 2 的轻量 source document manifest。它返回单个 RAG source 背后的 provider-owned source package、文档清单和 chunk manifest，包括 source domain/language/sensitivity、document id、repo-relative source path、format、version、chunking strategy、citation anchors、source 文件 fingerprint/drift diagnostics、稳定 chunk id/citation/preview 和当前 index readiness。该接口只用于调用方绑定前诊断、引用锚点审查和本地运维排查；它不会执行检索、answer composition、embedding、向量查询、ingestion job 或 GraphRAG。
 
 `POST /api/rag/answer` 是 retrieval 之上的引用式回答编排入口。当前第一版使用确定性 extractive composer，不调用 Qwen、OpenAI 或本地大模型；它用于先稳定 answer envelope、citation、evidence 和 insufficient-evidence 合同。生产 LLM、流式回答、reranker、多 chunk synthesis 和 GraphRAG 多跳仍会按后续 OpenSpec change 单独评估。
 
@@ -1599,6 +1599,8 @@ recommended_action: run_ingestion_job
 document.parser_status: ready
 document.chunk_count: <number>
 document.citation_anchor_count: <number>
+source_package.default_chunking_strategy: markdown-paragraph-v1
+document.chunk_manifest[]: chunk_id / citation / char_count / preview
 ```
 
 缺文件会建议 `restore_source_file_before_ingestion`，不支持格式会建议 `add_parser_support_before_ingestion`，空内容会建议 `repair_source_content_before_ingestion`，缺 citation anchors 会建议 `add_citation_anchors_before_ingestion`。这一步只做边界和诊断，不做 PDF/Word/Excel/OCR/table parser，也不改变 runtime retrieval 默认行为。
@@ -1660,6 +1662,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 第六十九阶段 OpenSpec change `fail-unready-readiness-probe` 让 `/ready` 的 HTTP 状态码具备摘流量语义：ready 时返回 HTTP 200，degraded 时返回 HTTP 503，同时保留 readiness body 供诊断。`/health` 继续作为兼容诊断端点，degraded 时仍返回 HTTP 200。
 
 第七十阶段 OpenSpec change `add-evidence-provenance-pack` 回到核心数据面，给 `evidence_pack-v1` 的每条 evidence 增加轻量 provenance：`source_path`、`chunk_id`、`chunking_strategy` 和 `citation_anchor`。这让外部调用方能在不额外调用诊断接口的情况下判断证据来源和切分粒度；顶层 `documents` 继续保持稳定紧凑，不把 provider 内部 metadata 扩散成新的公共合同。
+
+第七十一阶段 OpenSpec change `define-source-package-and-chunk-manifest` 继续推进 Phase 2 企业文档 ingestion baseline。`GET /api/rag/sources/{source_id}/documents` 和 `GET /api/ingestion/sources/{source_id}/preflight` 现在都会暴露轻量 `source_package`，并在 markdown source 可读时返回 `chunk_manifest`，用于在真正 ingestion 前审查 source 业务归属、语言、敏感级别、默认 chunking strategy、citation 粒度和稳定 chunk/citation 预览。该阶段仍不引入 OCR、复杂 parser、生产向量库默认、自动重建索引或 GraphRAG。
 
 ## 设计文档
 

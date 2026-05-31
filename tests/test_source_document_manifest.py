@@ -27,11 +27,24 @@ def test_source_document_manifest_reports_changed_file(monkeypatch, tmp_path):
     response = get_source_document_manifest("refund_policy_docs")
 
     document = response.result.documents[0]
+    assert response.result.source_package.source_id == "refund_policy_docs"
+    assert response.result.source_package.domain == "after_sales_policy"
+    assert response.result.source_package.language == "zh-CN"
     assert document.source_file_status == "present"
     assert document.content_sha256 is not None
     assert document.expected_content_sha256 == "0" * 64
     assert document.content_byte_size == len("changed source".encode("utf-8"))
     assert document.drift_status == "changed"
+    assert [chunk.model_dump() for chunk in document.chunk_manifest] == [
+        {
+            "chunk_id": "chunk-1",
+            "citation": "refund_policy_2026#chunk-1",
+            "chunking_strategy": "markdown-paragraph-v1",
+            "source_path": str(source_file),
+            "char_count": len("changed source"),
+            "text_preview": "changed source",
+        }
+    ]
 
 
 def test_source_document_manifest_reports_missing_file(monkeypatch, tmp_path):
@@ -59,6 +72,7 @@ def test_source_document_manifest_reports_missing_file(monkeypatch, tmp_path):
     assert document.content_sha256 is None
     assert document.content_byte_size is None
     assert document.drift_status == "missing"
+    assert document.chunk_manifest == []
 
 
 def test_source_document_manifest_reports_unchecked_without_expected_hash(
