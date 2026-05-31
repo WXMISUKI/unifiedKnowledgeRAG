@@ -16,15 +16,18 @@
 - Phase 6 operations baseline: deployment readiness, reindex readiness, handoff bundle, handoff refresh, handoff API.
 - Phase 6 optional live-url evidence: deployed provider smoke and source-binding checks.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
-- Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`), with baseline fixture expanded to 24 cases.
+- Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 handoff evidence summary completed and archived (`2026-05-31-add-phase3-evidence-summary-to-handoff`), adding optional baseline metric rollup to provider handoff bundle.
 - Phase 3 false-positive/false-negative customer-like extension completed and archived (`2026-05-31-expand-phase3-fp-fn-customer-like-cases`), with baseline fixture expanded to 26 cases and one expected-empty false-positive risk explicitly exposed.
 - Phase 3 FP/FN review export completed and archived (`2026-05-31-add-phase3-fp-fn-review-export`), adding a read-only summary artifact over benchmark evidence (`false_positive_count=1`, `false_negative_count=0`).
 - Phase 3 FP/FN review integrated into handoff/refresh and archived (`2026-05-31-add-phase3-fp-fn-review-into-handoff-refresh`), with optional handoff summary row and non-blocking refresh step.
+- Deployment readiness operator guide added for Phase 6 operations documentation, translating `review` evidence into operator steps without changing runtime behavior.
 
 ## In Progress
 
 - Keep local evidence artifacts aligned with current code/spec state after each accepted slice.
+- Evidence refresh stage is now operationalized and should be maintained through:
+  `python scripts/export_provider_handoff_refresh.py`
 
 ## Benchmark Fixture Scope
 
@@ -53,6 +56,9 @@
   - `empty_handling_rate=0.9000`
   - `empty.total_cases=10`
   - `policy-nuance.total_cases=2`
+- Maintenance rule:
+  - Treat the above artifacts as current only after rerunning:
+    `python scripts/export_provider_handoff_refresh.py`
 
 ## Pending
 
@@ -86,5 +92,6 @@
 ## Current Gaps To Close
 
 - Deployment readiness remains `review` because embedding is still `mock`, retrieval backend is still `fixture`, model artifacts are not configured, and provider API key is not configured.
+- The new deployment readiness operator guide documents the current `review` state and the required pre-deployment actions; it does not change the underlying readiness state.
 - Handoff bundle remains `review` because deployment readiness is `review` and optional deployed smoke evidence is not present for a live URL.
 - Runtime promotion gates remain open for Phase 3 and GraphRAG execution; current evidence is candidate-level, not production approval.

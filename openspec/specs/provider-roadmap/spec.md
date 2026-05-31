@@ -473,3 +473,31 @@ The project SHALL treat integration of local FP/FN review evidence into handoff 
 - **WHEN** an OpenSpec change integrates FP/FN review evidence into handoff bundle or refresh workflow
 - **THEN** runtime retrieval defaults and promotion gates remain unchanged
 
+### Requirement: Evidence refresh maintenance command remains explicit
+
+The project SHALL keep the local evidence refresh maintenance command explicit in roadmap-adjacent tracking docs so current evidence state is reproducible and not confused with historical milestones.
+
+#### Scenario: Tracker distinguishes historical and current benchmark baseline
+
+- **WHEN** benchmark baseline size changes across archived Phase 3 slices
+- **THEN** tracker wording marks older counts as historical and keeps the current canonical count explicit
+
+#### Scenario: Tracker documents maintenance command
+
+- **WHEN** reviewers need to refresh local handoff evidence
+- **THEN** tracker documents `python scripts/export_provider_handoff_refresh.py` as the standard maintenance command
+
+### Requirement: Deployment readiness guidance stays operator-facing
+
+The project SHALL keep deployment readiness guidance in operator-facing documentation so review-state evidence can be turned into concrete deployment steps without changing runtime behavior.
+
+#### Scenario: Operator guide maps review state to actions
+
+- **WHEN** deployment readiness reports `review`
+- **THEN** the guide explains the current blockers and the next operator actions required before deployment
+
+#### Scenario: Operator guide preserves provider boundary
+
+- **WHEN** deployment readiness guidance is published
+- **THEN** it does not introduce runtime promotion logic, deployment automation, or governance ownership changes
+
