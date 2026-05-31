@@ -13,6 +13,7 @@ SUPPORTED_CAPABILITY_IDS = [
     "knowledge.rag.source_documents",
     "knowledge.rag.retrieve",
     "knowledge.rag.answer",
+    "knowledge.provider.source_bindings",
     "knowledge.graph.query",
 ]
 

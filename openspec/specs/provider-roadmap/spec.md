@@ -145,6 +145,20 @@ The project SHALL include source binding evidence in Phase 6 handoff artifacts w
 - **WHEN** source binding evidence is included in the handoff bundle
 - **THEN** MyPrivateAgent or another external control plane still owns source-to-agent binding decisions, policy, approvals, audit, and final answer workflow
 
+### Requirement: Source binding capability promotion advances Phase 6 integration
+
+The project SHALL treat source binding review capability promotion as Phase 6 integration work when it helps external control planes discover provider-owned binding evidence without making the provider a policy engine.
+
+#### Scenario: Source binding capability is phase-aligned
+
+- **WHEN** an OpenSpec change promotes source binding summary to a formal provider capability
+- **THEN** the roadmap records it as lightweight Phase 6 integration work
+
+#### Scenario: Source binding capability preserves external ownership
+
+- **WHEN** source binding review is discoverable through provider capabilities
+- **THEN** source-to-agent binding policy, approvals, audit, and execution remain owned by MyPrivateAgent or another external control plane
+
 ### Requirement: Phase 6 handoff evidence may be exposed through read-only HTTP discovery
 
 The project SHALL allow Phase 6 integration and operations evidence to be exposed through lightweight read-only HTTP discovery when it helps external control planes bind the provider without taking over provider internals.

@@ -218,6 +218,7 @@ def _check_manifest(client: Any) -> dict[str, Any]:
     assert "knowledge.rag.source_documents" in body["capability_ids"]
     assert "knowledge.rag.retrieve" in body["capability_ids"]
     assert "knowledge.rag.answer" in body["capability_ids"]
+    assert "knowledge.provider.source_bindings" in body["capability_ids"]
     assert "knowledge.graph.query" in body["capability_ids"]
     assert body["evidence"]["provider_contract_smoke_json"].endswith(
         "provider-contract-smoke.json"
@@ -264,6 +265,10 @@ def _check_capabilities(client: Any) -> dict[str, Any]:
         ),
         "knowledge.rag.retrieve": ("POST", "/api/rag/retrieve"),
         "knowledge.rag.answer": ("POST", "/api/rag/answer"),
+        "knowledge.provider.source_bindings": (
+            "GET",
+            "/api/provider/source-bindings",
+        ),
         "knowledge.graph.query": ("POST", "/api/graph/query"),
     }
     for capability_id, (method, path) in expected_invocations.items():
@@ -288,7 +293,11 @@ def _check_capabilities(client: Any) -> dict[str, Any]:
     graph_example = capabilities["knowledge.graph.query"]["invocation"][
         "example_request"
     ]
+    source_bindings_example = capabilities["knowledge.provider.source_bindings"][
+        "invocation"
+    ]["example_request"]
     assert source_documents_example["source_id"] == "refund_policy_docs"
+    assert source_bindings_example["scope"] == "all_configured_sources"
     assert rag_example["knowledge_base_ids"] == ["refund_policy_docs"]
     assert rag_example["top_k"] == 2
     assert graph_example["graph_id"] == "ecommerce_order_graph"

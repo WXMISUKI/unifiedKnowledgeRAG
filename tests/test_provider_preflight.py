@@ -19,6 +19,7 @@ def test_provider_preflight_passes_default_local_provider():
         "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
+        "knowledge.provider.source_bindings",
         "knowledge.graph.query",
     ]
     assert body["control_plane_hint"] == "MyPrivateAgent"
@@ -130,6 +131,30 @@ def test_provider_preflight_accepts_get_diagnostic_capability_without_request_sc
     ] == []
 
 
+def test_provider_preflight_accepts_source_binding_capability():
+    client = TestClient(create_app())
+
+    response = client.get(
+        "/api/provider/preflight",
+        params=[
+            ("required_capability_ids", "knowledge.provider.source_bindings"),
+        ],
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    checks = {check["name"]: check for check in body["checks"]}
+    assert body["bindable"] is True
+    assert body["requested_capability_ids"] == [
+        "knowledge.provider.source_bindings"
+    ]
+    assert checks["required_capabilities"]["passed"] is True
+    assert checks["schema_references"]["passed"] is True
+    assert checks["schema_references"]["details"]["checked_capability_ids"] == [
+        "knowledge.provider.source_bindings"
+    ]
+
+
 def test_provider_preflight_fails_closed_on_missing_required_capability():
     client = TestClient(create_app())
 
@@ -191,6 +216,7 @@ def test_provider_preflight_preserves_planned_graph_boundary():
     }
     required = checks["required_capabilities"]["details"]["required_capability_ids"]
     assert "knowledge.rag.source_documents" in required
+    assert "knowledge.provider.source_bindings" in required
     assert "knowledge.graph.query" in required
 
 

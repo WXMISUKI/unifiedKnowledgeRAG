@@ -70,6 +70,7 @@ def test_provider_manifest_lists_capability_ids_without_internal_bindings():
         "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
+        "knowledge.provider.source_bindings",
         "knowledge.graph.query",
     ]
     boundary_text = body["boundaries"]["implementation_internals"]

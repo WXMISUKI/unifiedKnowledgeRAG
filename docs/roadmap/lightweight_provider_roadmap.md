@@ -256,6 +256,8 @@ The summary combines configured source catalog facts, retrieval backend readines
 
 This remains provider-owned evidence, not binding policy. The provider does not create source-to-agent bindings, run approvals, write audit records, create ingestion jobs, rebuild indexes, execute retrieval or answer composition, call embedding/vector stores, or execute GraphRAG from this endpoint.
 
+Source binding summary is also promoted as a formal provider capability: `knowledge.provider.source_bindings`. This makes binding readiness evidence discoverable through `/api/capabilities`, provider manifest capability ids, and default provider preflight requirements while preserving external ownership of actual source-to-agent binding decisions.
+
 Source binding summary can also be exported as handoff evidence:
 
 ```powershell

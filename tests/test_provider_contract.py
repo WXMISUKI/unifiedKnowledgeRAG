@@ -45,6 +45,7 @@ def test_capabilities_include_rag_and_graph_boundaries():
     assert "knowledge.rag.source_documents" in capability_ids
     assert "knowledge.rag.retrieve" in capability_ids
     assert "knowledge.rag.answer" in capability_ids
+    assert "knowledge.provider.source_bindings" in capability_ids
     assert "knowledge.graph.query" in capability_ids
     capabilities = {item["id"]: item for item in body["capabilities"]}
     assert capabilities["knowledge.rag.source_documents"]["invocation"] == {
@@ -90,6 +91,20 @@ def test_capabilities_include_rag_and_graph_boundaries():
     }
     assert capabilities["knowledge.rag.answer"]["status"] == "ready"
     assert capabilities["knowledge.rag.answer"]["reason"] is None
+    assert capabilities["knowledge.provider.source_bindings"]["invocation"] == {
+        "protocol": "http",
+        "method": "GET",
+        "path": "/api/provider/source-bindings",
+        "request_schema_ref": None,
+        "response_schema_ref": (
+            "#/components/schemas/ProviderSourceBindingSummaryResponse"
+        ),
+        "example_request": {"scope": "all_configured_sources"},
+    }
+    assert (
+        "Binding policy"
+        in capabilities["knowledge.provider.source_bindings"]["description"]
+    )
     assert capabilities["knowledge.graph.query"]["status"] == "planned"
     assert "not implemented" in capabilities["knowledge.graph.query"]["reason"]
     assert capabilities["knowledge.graph.query"]["invocation"]["example_request"] == {
@@ -134,6 +149,7 @@ def test_provider_manifest_is_available_for_control_plane_preflight():
         "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
+        "knowledge.provider.source_bindings",
         "knowledge.graph.query",
     ]
 

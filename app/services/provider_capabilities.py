@@ -58,6 +58,24 @@ def build_capabilities_response(
                 ),
             ),
             Capability(
+                id="knowledge.provider.source_bindings",
+                status="ready",
+                description=(
+                    "Review provider-owned source bindability evidence before an "
+                    "external control plane creates source-to-agent bindings. "
+                    "Binding policy, approvals, audit, and execution remain "
+                    "external responsibilities."
+                ),
+                invocation=CapabilityInvocation(
+                    method="GET",
+                    path="/api/provider/source-bindings",
+                    response_schema_ref=(
+                        "#/components/schemas/ProviderSourceBindingSummaryResponse"
+                    ),
+                    example_request={"scope": "all_configured_sources"},
+                ),
+            ),
+            Capability(
                 id="knowledge.graph.query",
                 status="planned",
                 description="Graph query contract boundary; execution is deferred.",

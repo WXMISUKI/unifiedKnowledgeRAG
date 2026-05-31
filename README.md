@@ -23,14 +23,15 @@ OpenSpec change：`add-knowledge-provider-v1`
 - `GET /api/graph/schemas`
 - `POST /api/graph/query`
 
-`GET /api/capabilities` 当前暴露四个稳定能力 id：
+`GET /api/capabilities` 当前暴露五个稳定能力 id：
 
 - `knowledge.rag.source_documents`：返回单个 RAG source 的文档清单诊断入口。
 - `knowledge.rag.retrieve`：返回引用证据和紧凑 answer context。
 - `knowledge.rag.answer`：执行引用式回答编排、evidence gate 和 composer boundary。
+- `knowledge.provider.source_bindings`：返回绑定前 source readiness 审查证据。
 - `knowledge.graph.query`：GraphRAG 查询合同边界，当前仍是 planned。
 
-每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref`、`response_schema_ref` 和 `example_request`，便于上层控制面根据能力 id 找到调用入口、从 `/openapi.json` 解析请求/响应合同，并构造第一轮绑定探测请求。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`，同时携带可直接用于本地合同验证的中文示例 payload；`knowledge.rag.source_documents` 对应 `GET /api/rag/sources/{source_id}/documents`，使用 `example_request.source_id` 表示路径参数，不需要请求体 schema。
+每个 capability 会携带可选 `reason` 和 `invocation` 元数据。`reason` 用于解释 `degraded` 或 `planned` 状态；`invocation` 当前包括 `protocol`、`method`、`path`、`request_schema_ref`、`response_schema_ref` 和 `example_request`，便于上层控制面根据能力 id 找到调用入口、从 `/openapi.json` 解析请求/响应合同，并构造第一轮绑定探测请求。例如 `knowledge.rag.answer` 对应 `POST /api/rag/answer` 和 `#/components/schemas/RagAnswerRequest`，同时携带可直接用于本地合同验证的中文示例 payload；`knowledge.rag.source_documents` 对应 `GET /api/rag/sources/{source_id}/documents`，使用 `example_request.source_id` 表示路径参数，不需要请求体 schema；`knowledge.provider.source_bindings` 对应 `GET /api/provider/source-bindings`，用于绑定前审查 provider-owned source readiness 证据。
 
 `example_request` 是 provider-owned 的集成提示，不是生产基础设施选型。它不会声明 embedding 模型、向量数据库、reranker、图数据库或 answer composer 实现细节；这些仍需通过后续 OpenSpec change 和架构证据单独确认。
 
@@ -43,6 +44,8 @@ Manifest 还会返回机器可读的 `access` 元数据，说明 `/health` 是�
 `GET /api/provider/handoff` 是只读交接包 API。它返回当前 `provider-handoff-bundle-v1` 状态，包括 provider identity、contract version、集成证据、contract smoke、deployment readiness 和 reindex readiness 的汇总行与 recommended action。该接口读取当前本地 evidence artifacts，不会重新刷新证据、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG；需要刷新证据时仍应显式运行 `scripts/export_provider_handoff_refresh.py`。
 
 `GET /api/provider/source-bindings` 是只读 source binding summary。它会把 catalog、retrieval backend readiness、index lifecycle、source document fingerprint 和 ingestion preflight 汇总成每个 source 的 `bindable`、`status`、`recommended_action` 和诊断原因，便于 MyPrivateAgent 或外部控制面在做 source-to-agent binding 前先审查 provider-owned 事实。该接口不会创建绑定、创建 ingestion job、重建索引、执行检索/answer、调用 embedding/Qdrant 或执行 GraphRAG；真正的绑定策略、审批、审计和 agent 归属仍由外部控制面负责。
+
+`knowledge.provider.source_bindings` 现在是正式 provider capability，会出现在 `/api/capabilities`、manifest 的 `capability_ids` 和默认 preflight required capabilities 中。它只表示“可读取绑定前审查证据”，不表示 provider 拥有 source-to-agent binding 的创建、审批、审计或策略执行权。
 
 `GET /api/ingestion/sources/{source_id}/preflight` 是企业文档导入前置诊断入口。它会读取当前 source manifest 和本地文件，返回文件存在性、格式支持、parser 状态、chunk count、chunk preview、citation anchor 数量、当前 index status 和 recommended action。当前切片只支持 markdown 诊断；PDF、Word、Excel、HTML、扫描件和图片会被报告为 `unsupported_format`，不会隐式引入 OCR、复杂 parser 或重型依赖。这个接口只读，不会创建 ingestion job、写 lifecycle store、重建索引、调用 embedding/Qdrant、执行检索或 GraphRAG。
 
@@ -1642,6 +1645,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 `provider-handoff-refresh-v1` 现在会在生成最终 handoff bundle 前刷新 source binding evidence；`provider-handoff-bundle-v1` 也会把 `source_binding_summary` 作为 required 本地证据汇总。若 source binding evidence blocked，handoff bundle 会 fail-closed，提醒外部控制面不要直接绑定问题 source。
 
 第六十六阶段 OpenSpec change `advertise-provider-access-metadata` 将组件访问规则写入 manifest 的 `access` 字段。外部控制面现在可以从 manifest 直接读取 public/protected path、accepted headers、API key 是否已配置，以及“组件访问不等于用户身份/策略”的边界说明，不需要从 README 文本推断。
+
+第六十七阶段 OpenSpec change `promote-source-binding-capability` 将 source binding summary 提升为正式 capability：`knowledge.provider.source_bindings`。外部控制面现在可以通过 capability catalog、manifest capability ids 和 preflight required capability 统一发现并校验绑定前审查入口，而不需要只从 endpoint 字典或 README 推断。该能力仍然只读，真正 source-to-agent binding 的创建、审批、审计和策略执行继续由 MyPrivateAgent 或外部控制面负责。
 
 ## 设计文档
 

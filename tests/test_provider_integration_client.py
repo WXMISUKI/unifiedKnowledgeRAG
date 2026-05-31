@@ -24,6 +24,7 @@ def test_provider_integration_probe_passes_default_provider():
         "knowledge.rag.source_documents",
         "knowledge.rag.retrieve",
         "knowledge.rag.answer",
+        "knowledge.provider.source_bindings",
         "knowledge.graph.query",
     ]
     assert payload["errors"] == []
@@ -39,6 +40,13 @@ def test_provider_integration_probe_passes_default_provider():
     )
     assert bindings["knowledge.rag.retrieve"]["has_example_request"] is True
     assert bindings["knowledge.rag.answer"]["has_example_request"] is True
+    assert bindings["knowledge.provider.source_bindings"]["status"] == "ready"
+    assert bindings["knowledge.provider.source_bindings"]["invocation"]["path"] == (
+        "/api/provider/source-bindings"
+    )
+    assert bindings["knowledge.provider.source_bindings"][
+        "has_example_request"
+    ] is True
     assert bindings["knowledge.graph.query"]["status"] == "planned"
     assert bindings["knowledge.graph.query"]["has_example_request"] is True
     assert {check["name"] for check in payload["checks"]} == {
