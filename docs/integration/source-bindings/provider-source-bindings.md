@@ -2,16 +2,16 @@
 
 - Report: `provider-source-binding-summary-v1`
 - Status: `ready`
-- Generated At: `2026-05-31T02:12:10.079493+00:00`
+- Generated At: `2026-05-31T04:35:15.344825+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 
 ## Sources
 
-| Source | Status | Bindable | Backend | Index | Drift | Preflight | Recommended Action |
-|---|---|---|---|---|---|---|---|
-| `refund_policy_docs` | `ready` | `True` | `ready` | `ready` | `in_sync` | `ready` | `bind_source_from_control_plane` |
-| `logistics_faq` | `ready` | `True` | `ready` | `ready` | `in_sync` | `ready` | `bind_source_from_control_plane` |
+| Source | Status | Bindable | Backend | Index | Documents | Citations | Chunks | Parser Ready | Unsupported | Drift | Preflight | Recommended Action |
+|---|---|---|---|---|---:|---:|---:|---:|---:|---|---|---|
+| `refund_policy_docs` | `ready` | `True` | `ready` | `ready` | 1 | 7 | 7 | 1 | 0 | `in_sync` | `ready` | `bind_source_from_control_plane` |
+| `logistics_faq` | `ready` | `True` | `ready` | `ready` | 1 | 6 | 6 | 1 | 0 | `in_sync` | `ready` | `bind_source_from_control_plane` |
 
 ## Operation Notes
 

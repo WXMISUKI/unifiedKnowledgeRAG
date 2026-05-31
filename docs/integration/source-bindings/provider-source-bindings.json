@@ -1,6 +1,6 @@
 {
   "id": "provider-source-binding-summary-v1",
-  "generated_at": "2026-05-31T02:12:10.079493+00:00",
+  "generated_at": "2026-05-31T04:35:15.344825+00:00",
   "status": "ready",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -24,6 +24,10 @@
       "index_reason": "Fixture backend does not require an explicit persisted index.",
       "latest_index_job_id": null,
       "document_count": 1,
+      "citation_anchor_count": 7,
+      "chunk_manifest_count": 7,
+      "parser_ready_document_count": 1,
+      "unsupported_document_count": 0,
       "drift_statuses": [
         "in_sync"
       ],
@@ -47,6 +51,10 @@
       "index_reason": "Fixture backend does not require an explicit persisted index.",
       "latest_index_job_id": null,
       "document_count": 1,
+      "citation_anchor_count": 6,
+      "chunk_manifest_count": 6,
+      "parser_ready_document_count": 1,
+      "unsupported_document_count": 0,
       "drift_statuses": [
         "in_sync"
       ],

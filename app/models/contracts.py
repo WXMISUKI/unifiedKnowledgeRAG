@@ -114,6 +114,10 @@ class SourceBindingSummaryRow(BaseModel):
     index_reason: str | None = None
     latest_index_job_id: str | None = None
     document_count: int = 0
+    citation_anchor_count: int = 0
+    chunk_manifest_count: int = 0
+    parser_ready_document_count: int = 0
+    unsupported_document_count: int = 0
     drift_statuses: list[str] = Field(default_factory=list)
     parser_statuses: list[str] = Field(default_factory=list)
     ingestion_preflight_status: str | None = None

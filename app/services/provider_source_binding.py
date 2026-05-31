@@ -63,13 +63,20 @@ def render_provider_source_binding_summary_markdown(
         "",
         "## Sources",
         "",
-        "| Source | Status | Bindable | Backend | Index | Drift | Preflight | Recommended Action |",
-        "|---|---|---|---|---|---|---|---|",
+        (
+            "| Source | Status | Bindable | Backend | Index | Documents | "
+            "Citations | Chunks | Parser Ready | Unsupported | Drift | "
+            "Preflight | Recommended Action |"
+        ),
+        "|---|---|---|---|---|---:|---:|---:|---:|---:|---|---|---|",
     ]
     for source in report.sources:
         lines.append(
             f"| `{source.source_id}` | `{source.status}` | `{source.bindable}` | "
             f"`{source.backend_status or 'unknown'}` | `{source.index_status}` | "
+            f"{source.document_count} | {source.citation_anchor_count} | "
+            f"{source.chunk_manifest_count} | {source.parser_ready_document_count} | "
+            f"{source.unsupported_document_count} | "
             f"`{', '.join(source.drift_statuses) or 'none'}` | "
             f"`{source.ingestion_preflight_status or 'unknown'}` | "
             f"`{source.recommended_action}` |"
@@ -162,6 +169,24 @@ def _source_binding_row(
         index_reason=source.index_reason,
         latest_index_job_id=source.latest_index_job_id,
         document_count=len(manifest.documents),
+        citation_anchor_count=sum(
+            len(document.citation_anchors)
+            for document in manifest.documents
+        ),
+        chunk_manifest_count=sum(
+            len(document.chunk_manifest)
+            for document in manifest.documents
+        ),
+        parser_ready_document_count=sum(
+            1
+            for document in preflight.documents
+            if document.parser_status == "ready"
+        ),
+        unsupported_document_count=sum(
+            1
+            for document in preflight.documents
+            if not document.format_supported
+        ),
         drift_statuses=drift_statuses,
         parser_statuses=parser_statuses,
         ingestion_preflight_status=preflight.status,

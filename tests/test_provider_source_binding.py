@@ -1,3 +1,4 @@
+from hashlib import sha256
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -27,6 +28,11 @@ def test_provider_source_binding_summary_marks_default_sources_bindable():
         assert row.retrieval_backend == "fixture"
         assert row.backend_status == "ready"
         assert row.index_status == "ready"
+        assert row.document_count == 1
+        assert row.citation_anchor_count > 0
+        assert row.chunk_manifest_count == row.citation_anchor_count
+        assert row.parser_ready_document_count == 1
+        assert row.unsupported_document_count == 0
         assert row.drift_statuses == ["in_sync"]
         assert row.ingestion_preflight_status == "ready"
         assert row.recommended_action == "bind_source_from_control_plane"
@@ -51,6 +57,15 @@ def test_provider_source_binding_endpoint_and_manifest_discovery():
         "refund_policy_docs",
         "logistics_faq",
     }
+    refund_source = next(
+        source
+        for source in body["sources"]
+        if source["source_id"] == "refund_policy_docs"
+    )
+    assert refund_source["citation_anchor_count"] == 7
+    assert refund_source["chunk_manifest_count"] == 7
+    assert refund_source["parser_ready_document_count"] == 1
+    assert refund_source["unsupported_document_count"] == 0
 
 
 def test_provider_source_binding_blocks_drifted_source(monkeypatch, tmp_path):
@@ -88,8 +103,54 @@ def test_provider_source_binding_blocks_drifted_source(monkeypatch, tmp_path):
     assert row.status == "blocked"
     assert row.bindable is False
     assert row.drift_statuses == ["changed"]
+    assert row.citation_anchor_count == 1
+    assert row.chunk_manifest_count == 1
+    assert row.parser_ready_document_count == 1
+    assert row.unsupported_document_count == 0
     assert row.recommended_action == "run_ingestion_job_before_binding"
     assert "fingerprint changed" in row.reasons[0]
+
+
+def test_provider_source_binding_coverage_counts_are_informational(
+    monkeypatch,
+    tmp_path,
+):
+    source_file = tmp_path / "refund.md"
+    content = "# Refund\n\nupdated policy"
+    source_file.write_text(content, encoding="utf-8")
+    manifest = SourceDocumentManifest(
+        document_id="refund_policy_2026",
+        title="售后退款规则",
+        source_path=str(source_file),
+        format="markdown",
+        version="2026-05-28",
+        chunking_strategy="markdown-paragraph-v1",
+        citation_anchors=["refund_policy_2026#section-1"],
+        expected_content_sha256=sha256(source_file.read_bytes()).hexdigest(),
+    )
+    monkeypatch.setitem(
+        source_document_manifest.SOURCE_DOCUMENT_MANIFESTS,
+        "refund_policy_docs",
+        [manifest],
+    )
+    monkeypatch.setitem(
+        ingestion_preflight.SOURCE_DOCUMENT_MANIFESTS,
+        "refund_policy_docs",
+        [manifest],
+    )
+
+    report = build_provider_source_binding_summary()
+    row = next(
+        source
+        for source in report.sources
+        if source.source_id == "refund_policy_docs"
+    )
+
+    assert row.status == "ready"
+    assert row.bindable is True
+    assert row.citation_anchor_count == 1
+    assert row.chunk_manifest_count == 1
+    assert row.parser_ready_document_count == 1
 
 
 def test_provider_source_binding_blocks_not_ready_index(tmp_path):
@@ -137,7 +198,11 @@ def test_provider_source_binding_export_writes_json_and_markdown(tmp_path):
     payload = json_path.read_text(encoding="utf-8")
     markdown = markdown_path.read_text(encoding="utf-8")
     assert "provider-source-binding-summary-v1" in payload
+    assert "citation_anchor_count" in payload
+    assert "chunk_manifest_count" in payload
     assert "# Provider Source Binding Summary" in markdown
+    assert "Citations" in markdown
+    assert "Chunks" in markdown
     assert "bind_source_from_control_plane" in markdown
 
 
@@ -146,6 +211,6 @@ def test_provider_source_binding_markdown_summarizes_sources():
 
     markdown = render_provider_source_binding_summary_markdown(report)
 
-    assert "| Source | Status | Bindable | Backend | Index | Drift | Preflight | Recommended Action |" in markdown
+    assert "| Source | Status | Bindable | Backend | Index | Documents | Citations | Chunks | Parser Ready | Unsupported | Drift | Preflight | Recommended Action |" in markdown
     assert "`refund_policy_docs`" in markdown
     assert "`bind_source_from_control_plane`" in markdown
