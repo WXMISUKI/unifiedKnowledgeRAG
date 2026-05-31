@@ -262,5 +262,27 @@
     "expected_source_id": null,
     "expected_citation": null,
     "expect_empty": true
+  },
+  {
+    "id": "refund-high-value-review-audit-trace-customer-like",
+    "category": "policy-nuance",
+    "difficulty": "hard",
+    "query": "高价值退款复核除了主管审批外，是否还要求把复核意见写入工单记录？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#high-value-review",
+    "expect_empty": false
+  },
+  {
+    "id": "empty-refund-high-value-auto-compensation",
+    "category": "empty",
+    "difficulty": "hard",
+    "query": "高价值退款复核通过后是否自动发放会员积分补偿？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
   }
 ]

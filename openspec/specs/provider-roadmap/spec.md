@@ -431,15 +431,10 @@ The project SHALL treat reuse of source binding aggregate counts in handoff and 
 
 The project SHALL treat customer-like benchmark fixture expansion as Phase 3 retrieval evidence work when it improves promotion review quality without changing runtime defaults.
 
-#### Scenario: Customer-like fixture expansion is phase-aligned
+#### Scenario: Customer-like expansion includes false-positive/false-negative review
 
-- **WHEN** an OpenSpec change adds customer-like benchmark cases for retrieval gates
-- **THEN** the roadmap records it as evidence expansion rather than runtime retrieval promotion
-
-#### Scenario: Customer-like fixture expansion preserves lightweight scope
-
-- **WHEN** customer-like benchmark fixtures are expanded
-- **THEN** retrieval defaults, provider contracts, control-plane ownership, and GraphRAG execution boundaries remain unchanged
+- **WHEN** an OpenSpec change expands customer-like benchmark fixtures
+- **THEN** the roadmap records explicit false-positive and false-negative review coverage as evidence-only Phase 3 work
 
 ### Requirement: Phase 3 evidence refresh preserves lightweight promotion boundaries
 

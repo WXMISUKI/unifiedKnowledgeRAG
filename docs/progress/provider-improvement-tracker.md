@@ -18,6 +18,7 @@
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`), with baseline fixture expanded to 24 cases.
 - Phase 3 handoff evidence summary completed and archived (`2026-05-31-add-phase3-evidence-summary-to-handoff`), adding optional baseline metric rollup to provider handoff bundle.
+- Phase 3 false-positive/false-negative customer-like extension completed and archived (`2026-05-31-expand-phase3-fp-fn-customer-like-cases`), with baseline fixture expanded to 26 cases and one expected-empty false-positive risk explicitly exposed.
 
 ## In Progress
 
@@ -25,22 +26,27 @@
 
 ## Benchmark Fixture Scope
 
-- Baseline retrieval fixture `tests/fixtures/retrieval_benchmark_cases.json` is expanded to 24 cases.
+- Baseline retrieval fixture `tests/fixtures/retrieval_benchmark_cases.json` is expanded to 26 cases.
 - Customer-like additions in this round:
   - one nuanced high-value refund review case (`policy-nuance`)
   - two cross-domain expected-empty trap cases (`empty`)
-- Current empty-case count in baseline fixture: 9.
+- Current empty-case count in baseline fixture: 10.
 
 ## Phase 3 Evidence Refresh
 
-- Refresh change: `refresh-phase3-seed-evidence-after-fixture-expansion`
+- Refresh changes:
+  - `refresh-phase3-seed-evidence-after-fixture-expansion`
+  - `2026-05-31-expand-phase3-fp-fn-customer-like-cases` follow-up refresh
 - Refreshed artifact:
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json`
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.md`
 - Refreshed baseline summary:
-  - `total_cases=24`
-  - `empty.total_cases=9`
-  - `policy-nuance.total_cases=1`
+  - `total_cases=26`
+  - `hit_rate=0.9615`
+  - `citation_match_rate=0.9615`
+  - `empty_handling_rate=0.9000`
+  - `empty.total_cases=10`
+  - `policy-nuance.total_cases=2`
 
 ## Pending
 

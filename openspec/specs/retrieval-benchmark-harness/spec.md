@@ -734,20 +734,15 @@ The system SHALL provide an evaluation-only relation-aware grading path for mult
 
 The system SHALL maintain a lightweight customer-like fixture extension for retrieval benchmark evaluation so Phase 3 promotion reviews can inspect false-positive and false-negative behavior beyond baseline seed phrasing.
 
-#### Scenario: Customer-like fixture cases are loadable
+#### Scenario: Customer-like fixture includes false-negative review cases
 
 - **WHEN** benchmark cases are loaded from the canonical retrieval benchmark fixture
-- **THEN** the fixture includes additional customer-like cases with stable ids, categories, and expected outcomes
+- **THEN** customer-like additions include at least one non-empty case that targets false-negative risk in refund/logistics support workflows
 
-#### Scenario: Customer-like fixture cases remain evaluation-only
+#### Scenario: Customer-like fixture includes false-positive review cases
 
-- **WHEN** customer-like benchmark cases are added
-- **THEN** runtime retrieval defaults and provider HTTP contracts remain unchanged until separate gate evidence approves promotion
-
-#### Scenario: Category summaries include customer-like cases
-
-- **WHEN** benchmark evaluation runs over the updated fixture
-- **THEN** summary totals and category-level metrics include the added customer-like cases
+- **WHEN** benchmark cases are loaded from the canonical retrieval benchmark fixture
+- **THEN** customer-like additions include at least one expected-empty case that targets lexical-overlap false-positive risk in refund/logistics support workflows
 
 ### Requirement: Seed evidence exports stay synchronized with canonical fixture revisions
 
