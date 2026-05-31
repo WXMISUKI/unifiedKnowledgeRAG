@@ -29,6 +29,10 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
         "status=ready; bindable_sources=2/2; source_statuses=ready:2; "
         "recommended_actions=bind_source_from_control_plane:2"
     )
+    assert artifacts["phase3_seed_retrieval_baseline"]["present"] is True
+    assert artifacts["phase3_seed_retrieval_baseline"]["required"] is False
+    assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
+    assert "total_cases=24" in artifacts["phase3_seed_retrieval_baseline"]["summary"]
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
@@ -158,6 +162,7 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["deployment_readiness"]["status"] == "review"
     assert artifacts["reindex_readiness"]["status"] == "ready"
     assert artifacts["source_binding_summary"]["status"] == "ready"
+    assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"
@@ -417,4 +422,29 @@ def test_provider_handoff_bundle_summarizes_source_binding_actions(tmp_path):
         "recommended_actions=bind_source_from_control_plane:1, "
         "review_source_fingerprint_before_binding:1, "
         "run_ingestion_job_before_binding:1"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase3_evidence_reviewable(tmp_path):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase3_seed_retrieval_baseline",
+            category="retrieval-evidence",
+            path=Path("missing-phase3-baseline.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "run_deployed_provider_smoke_after_deployment"
     )

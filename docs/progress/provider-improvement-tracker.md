@@ -17,6 +17,7 @@
 - Phase 6 optional live-url evidence: deployed provider smoke and source-binding checks.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`), with baseline fixture expanded to 24 cases.
+- Phase 3 handoff evidence summary completed and archived (`2026-05-31-add-phase3-evidence-summary-to-handoff`), adding optional baseline metric rollup to provider handoff bundle.
 
 ## In Progress
 
@@ -47,6 +48,7 @@
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
+- Continue next smallest Phase 3 slice on false-positive/false-negative customer-like benchmark coverage (evidence only, no runtime default promotion).
 
 ## Next Step Plan
 

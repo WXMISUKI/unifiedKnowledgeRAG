@@ -65,6 +65,14 @@ DEFAULT_EVIDENCE_SPECS = [
         ),
         required=False,
     ),
+    HandoffEvidenceSpec(
+        id="phase3_seed_retrieval_baseline",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json"
+        ),
+        required=False,
+    ),
 ]
 
 
@@ -295,6 +303,30 @@ def _artifact_status_and_summary(
                 f"handoff_status={(payload.get('handoff') or {}).get('status', 'unknown')}"
             ),
         )
+    if artifact_id == "phase3_seed_retrieval_baseline":
+        report = payload.get("report")
+        summary = report.get("summary") if isinstance(report, dict) else {}
+        if not isinstance(summary, dict):
+            return "review", "phase3_summary=unavailable"
+        total_cases = _int_value(summary.get("total_cases"), fallback=0)
+        hit_rate = _float_value(summary.get("hit_rate"), fallback=0.0)
+        citation_match_rate = _float_value(
+            summary.get("citation_match_rate"),
+            fallback=0.0,
+        )
+        empty_handling_rate = _float_value(
+            summary.get("empty_handling_rate"),
+            fallback=0.0,
+        )
+        return (
+            "ready",
+            (
+                f"total_cases={total_cases}; "
+                f"hit_rate={hit_rate:.4f}; "
+                f"citation_match_rate={citation_match_rate:.4f}; "
+                f"empty_handling_rate={empty_handling_rate:.4f}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -328,6 +360,14 @@ def _int_value(value: Any, *, fallback: int) -> int:
         return fallback
     if isinstance(value, int) and value >= 0:
         return value
+    return fallback
+
+
+def _float_value(value: Any, *, fallback: float) -> float:
+    if isinstance(value, bool):
+        return fallback
+    if isinstance(value, int | float):
+        return float(value)
     return fallback
 
 
