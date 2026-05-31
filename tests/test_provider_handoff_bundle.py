@@ -26,7 +26,8 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["reindex_readiness"]["status"] == "ready"
     assert artifacts["source_binding_summary"]["status"] == "ready"
     assert artifacts["source_binding_summary"]["summary"] == (
-        "status=ready; bindable_sources=2/2"
+        "status=ready; bindable_sources=2/2; source_statuses=ready:2; "
+        "recommended_actions=bind_source_from_control_plane:2"
     )
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
@@ -309,4 +310,64 @@ def test_provider_handoff_bundle_summarizes_source_binding_evidence(tmp_path):
     assert report.status == "ready"
     artifact = report.evidence_artifacts[0]
     assert artifact["status"] == "ready"
-    assert artifact["summary"] == "status=ready; bindable_sources=2/2"
+    assert artifact["summary"] == (
+        "status=ready; bindable_sources=2/2; source_statuses=none; "
+        "recommended_actions=none"
+    )
+
+
+def test_provider_handoff_bundle_summarizes_source_binding_actions(tmp_path):
+    source_binding_path = tmp_path / "source-bindings.json"
+    source_binding_path.write_text(
+        json.dumps(
+            {
+                "status": "blocked",
+                "sources": [
+                    {
+                        "source_id": "ready_docs",
+                        "status": "ready",
+                        "bindable": True,
+                        "recommended_action": "bind_source_from_control_plane",
+                    },
+                    {
+                        "source_id": "review_docs",
+                        "status": "review",
+                        "bindable": False,
+                        "recommended_action": (
+                            "review_source_fingerprint_before_binding"
+                        ),
+                    },
+                    {
+                        "source_id": "blocked_docs",
+                        "status": "blocked",
+                        "bindable": False,
+                        "recommended_action": "run_ingestion_job_before_binding",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    specs = [
+        HandoffEvidenceSpec(
+            id="source_binding_summary",
+            category="source-binding",
+            path=Path("source-bindings.json"),
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "blocked"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["status"] == "blocked"
+    assert artifact["summary"] == (
+        "status=blocked; bindable_sources=1/3; "
+        "source_statuses=blocked:1, ready:1, review:1; "
+        "recommended_actions=bind_source_from_control_plane:1, "
+        "review_source_fingerprint_before_binding:1, "
+        "run_ingestion_job_before_binding:1"
+    )

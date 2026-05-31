@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -258,9 +259,15 @@ def _artifact_status_and_summary(
             for source in sources
             if isinstance(source, dict) and source.get("bindable") is True
         )
+        source_status_counts = _count_source_values(sources, "status")
+        action_counts = _count_source_values(sources, "recommended_action")
         return (
             status if status in {"ready", "review", "blocked"} else "review",
-            f"status={status}; bindable_sources={bindable_count}/{len(sources)}",
+            (
+                f"status={status}; bindable_sources={bindable_count}/{len(sources)}; "
+                f"source_statuses={_format_counts(source_status_counts)}; "
+                f"recommended_actions={_format_counts(action_counts)}"
+            ),
         )
     if artifact_id == "deployed_provider_smoke":
         status = payload.get("status", "review")
@@ -276,6 +283,27 @@ def _artifact_status_and_summary(
             ),
         )
     return "review", "Unknown evidence artifact shape."
+
+
+def _count_source_values(
+    sources: list[Any],
+    field_name: str,
+) -> dict[str, int]:
+    counts = Counter(
+        source.get(field_name)
+        for source in sources
+        if isinstance(source, dict) and source.get(field_name)
+    )
+    return dict(sorted(counts.items()))
+
+
+def _format_counts(counts: dict[str, int]) -> str:
+    if not counts:
+        return "none"
+    return ", ".join(
+        f"{value}:{count}"
+        for value, count in counts.items()
+    )
 
 
 def _recommended_action(status: str) -> str:
