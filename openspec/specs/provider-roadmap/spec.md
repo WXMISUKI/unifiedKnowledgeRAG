@@ -303,17 +303,31 @@ The project SHALL treat container and compose deployment profiles as Phase 6 dep
 
 ### Requirement: Deployed provider smoke advances Phase 6 operations
 
-The project SHALL treat deployed provider HTTP smoke evidence as Phase 6 deployment and operations work when it helps verify an already-running provider component before external binding.
+The project SHALL treat deployed provider HTTP smoke evidence as Phase 6 deployment and operations work when it helps verify an already-running provider component and live binding-review surfaces before external binding.
 
 #### Scenario: Deployed smoke is phase-aligned
 
-- **WHEN** an OpenSpec change adds a deployed HTTP smoke probe for provider discovery and handoff endpoints
+- **WHEN** an OpenSpec change adds a deployed HTTP smoke probe for provider discovery, source binding review, and handoff endpoints
 - **THEN** the roadmap treats it as Phase 6 deployment and operations evidence rather than retrieval, GraphRAG, or platform-control work
 
 #### Scenario: Deployed smoke preserves provider boundary
 
 - **WHEN** deployed provider smoke evidence is exported
 - **THEN** it does not imply ownership of TLS termination, reverse proxy policy, managed secrets, registration, heartbeat governance, audit policy, source-to-agent binding, or final answer policy
+
+### Requirement: Source binding deployed smoke advances Phase 6 integration evidence
+
+The project SHALL treat deployed source binding endpoint smoke as Phase 6 integration and operations evidence when it verifies that live provider binding-review surfaces are reachable without executing retrieval, ingestion, answer composition, or GraphRAG.
+
+#### Scenario: Source binding deployed smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds `GET /api/provider/source-bindings` to deployed smoke
+- **THEN** the roadmap records it as lightweight Phase 6 deployed integration evidence
+
+#### Scenario: Source binding deployed smoke preserves provider boundary
+
+- **WHEN** deployed smoke validates source binding review over HTTP
+- **THEN** source-to-agent binding creation, approvals, audit, heartbeat governance, registration, and final answer policy remain outside this provider
 
 ### Requirement: Handoff evidence may include optional deployed smoke
 

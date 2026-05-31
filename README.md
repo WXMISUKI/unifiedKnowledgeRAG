@@ -165,7 +165,7 @@ docs/integration/deployed-provider-smoke/deployed-provider-smoke.json
 docs/integration/deployed-provider-smoke/deployed-provider-smoke.md
 ```
 
-该 smoke 只调用 `GET /health`、`GET /api/provider/manifest`、`GET /api/provider/preflight` 和 `GET /api/provider/handoff`。它用于确认已经运行的 provider 组件可达、鉴权可用、handoff evidence 可审阅；不会执行 RAG 检索、回答生成、ingestion、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。若 endpoint 不可达、认证失败、manifest/preflight 不兼容或 handoff 为 `blocked`，脚本会保留证据并以非零状态退出。
+该 smoke 只调用 `GET /health`、`GET /api/provider/manifest`、`GET /api/provider/preflight`、`GET /api/provider/source-bindings` 和 `GET /api/provider/handoff`。它用于确认已经运行的 provider 组件可达、鉴权可用、source binding review 可达、handoff evidence 可审阅；不会执行 RAG 检索、回答生成、ingestion、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG。若 endpoint 不可达、认证失败、manifest/preflight 不兼容、source binding evidence 为 `blocked` 或 handoff 为 `blocked`，脚本会保留证据并以非零状态退出。
 
 Provider handoff bundle 会把 deployed smoke 作为 optional evidence 汇总。未生成 deployed smoke 时，handoff bundle 会保持 `review` 并提示部署后运行；一旦存在 deployed smoke 且状态为 `blocked`，handoff bundle 也会阻塞。这样本地开发不依赖外部 URL，但真正交付给 MyPrivateAgent 或部署审查前仍能从同一个 handoff 入口看到 live URL 证据。
 
@@ -1625,7 +1625,7 @@ conda run -n GRAPHRAG python scripts/export_deployed_provider_smoke.py `
   --base-url http://127.0.0.1:8020
 ```
 
-它从真实 HTTP base URL 只读验证 `/health`、provider manifest、preflight 和 handoff endpoint，并在 `docs/integration/deployed-provider-smoke/` 输出 JSON / Markdown。这个切片的价值是把“容器或网络服务是否真的可被外部控制面访问”变成可保存证据；它仍不负责 TLS、反向代理、托管密钥、注册、heartbeat、审计、source-to-agent binding 或最终 answer policy。
+它从真实 HTTP base URL 只读验证 `/health`、provider manifest、preflight、source bindings 和 handoff endpoint，并在 `docs/integration/deployed-provider-smoke/` 输出 JSON / Markdown。这个切片的价值是把“容器或网络服务是否真的可被外部控制面访问”变成可保存证据；它仍不负责 TLS、反向代理、托管密钥、注册、heartbeat、审计、source-to-agent binding 或最终 answer policy。
 
 第六十三阶段 OpenSpec change `include-deployed-smoke-in-handoff-bundle` 将 deployed smoke 纳入 handoff bundle 的 optional evidence。未运行部署 smoke 时，bundle 不会因为缺少外部 URL 证据而 blocked，而是显示 `review` 和 `run_deployed_provider_smoke_after_deployment`；如果已经生成的 deployed smoke 为 `blocked`，bundle 会阻塞，避免外部控制面误以为 live deployment 已可绑定。
 
@@ -1668,6 +1668,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 第七十二阶段 OpenSpec change `add-source-binding-coverage-summary` 在 source binding summary 中补充轻量覆盖度字段：`citation_anchor_count`、`chunk_manifest_count`、`parser_ready_document_count` 和 `unsupported_document_count`。这些字段复用现有 source manifest 与 ingestion preflight 诊断，让外部控制面能在一个绑定审查入口看到引用锚点、分块清单和 parser readiness 的数量概况；它不新增 parser、不改变 bindable 判定、不触发 ingestion/reindex，也不把绑定审批或策略执行移入 provider。
 
 第七十三阶段 OpenSpec change `add-source-binding-package-context` 将已有 `source_package` 的关键上下文字段摘要到 source binding summary：`source_domain`、`language`、`sensitivity`、`supported_formats` 和 `citation_granularity`。这些字段用于帮助外部控制面在绑定前识别 source 的业务域、语言、敏感级别和引用粒度；它们不等于授权策略，不改变 bindable 判定，也不会新增 parser、触发 ingestion/reindex 或接管审批审计。
+
+第七十四阶段 OpenSpec change `include-source-bindings-in-deployed-smoke` 将 `GET /api/provider/source-bindings` 纳入 deployed smoke。部署后的 smoke evidence 现在会验证 live source binding review endpoint 是否可达，并汇总 source count 与 bindable source count；它仍是只读部署证据，不创建绑定、不执行审批审计、不触发 retrieval/answer/ingestion/reindex/GraphRAG。
 
 ## 设计文档
 

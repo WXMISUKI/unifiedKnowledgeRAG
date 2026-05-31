@@ -33,11 +33,18 @@ def test_deployed_provider_smoke_passes_reviewable_handoff_and_auth_headers():
     assert report.provider["provider_id"] == "unifiedKnowledgeProvider"
     assert report.provider["contract_version"] == "knowledge-provider-contract-v1"
     assert report.handoff["status"] == "review"
-    assert [request.method for request in requests] == ["GET", "GET", "GET", "GET"]
+    assert [request.method for request in requests] == [
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+        "GET",
+    ]
     assert [request.url.path for request in requests] == [
         "/health",
         "/api/provider/manifest",
         "/api/provider/preflight",
+        "/api/provider/source-bindings",
         "/api/provider/handoff",
     ]
     assert "authorization" not in requests[0].headers
@@ -63,6 +70,13 @@ def test_deployed_provider_smoke_is_ready_when_handoff_is_ready():
 
     assert report.status == "ready"
     assert {check.status for check in report.checks} == {"ready"}
+    checks = {check.name: check for check in report.checks}
+    assert checks["provider_source_bindings"].details == {
+        "id": "provider-source-binding-summary-v1",
+        "status": "ready",
+        "source_count": 2,
+        "bindable_source_count": 2,
+    }
 
 
 def test_deployed_provider_smoke_fails_closed_on_unreachable_endpoint():
@@ -107,6 +121,32 @@ def test_deployed_provider_smoke_fails_closed_on_incompatible_manifest():
     )
 
 
+def test_deployed_provider_smoke_fails_closed_on_blocked_source_bindings():
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = _payload_for(request.url.path)
+        if request.url.path == "/api/provider/source-bindings":
+            payload["status"] = "blocked"
+            payload["sources"][0]["bindable"] = False
+        return httpx.Response(200, json=payload)
+
+    client = httpx.Client(
+        transport=httpx.MockTransport(handler),
+        base_url="http://provider.test",
+    )
+
+    report = run_deployed_provider_smoke("http://provider.test", client=client)
+    checks = {check.name: check for check in report.checks}
+
+    assert report.status == "blocked"
+    assert checks["provider_source_bindings"].status == "blocked"
+    assert checks["provider_source_bindings"].passed is False
+    assert checks["provider_source_bindings"].details["source_count"] == 2
+    assert checks["provider_source_bindings"].details["bindable_source_count"] == 1
+    assert checks["provider_source_bindings"].error == (
+        "Provider source binding evidence is blocked or invalid."
+    )
+
+
 def test_deployed_provider_smoke_export_writes_json_and_markdown_without_secret(
     tmp_path,
 ):
@@ -136,6 +176,8 @@ def test_deployed_provider_smoke_export_writes_json_and_markdown_without_secret(
     assert payload["markdown_path"] == str(report.markdown_path)
     assert "# Deployed Provider Smoke Report" in markdown
     assert "- Status: `review`" in markdown
+    assert "provider_source_bindings" in json_text
+    assert "provider_source_bindings" in markdown
     assert "secret-token" not in json_text
     assert "secret-token" not in markdown
 
@@ -182,6 +224,16 @@ def _payload_for(path: str) -> dict:
             "contract_version": "knowledge-provider-contract-v1",
             "bindable": True,
             "checks": [{"name": "manifest_identity", "passed": True}],
+        }
+    if path == "/api/provider/source-bindings":
+        return {
+            "id": "provider-source-binding-summary-v1",
+            "status": "ready",
+            "provider": {"provider_id": "unifiedKnowledgeProvider"},
+            "sources": [
+                {"source_id": "refund_policy_docs", "bindable": True},
+                {"source_id": "logistics_faq", "bindable": True},
+            ],
         }
     if path == "/api/provider/handoff":
         return {

@@ -614,10 +614,25 @@ The system SHALL provide a read-only deployed provider smoke probe that validate
 - **WHEN** the deployed smoke probe runs against a reachable provider base URL
 - **THEN** it requests `GET /health` without provider API credentials and records the provider health status in the exported evidence
 
-#### Scenario: Deployed smoke validates authenticated discovery
+#### Scenario: Deployed smoke calls required discovery endpoints
+
+- **WHEN** a caller runs the deployed provider smoke export against a running provider base URL
+- **THEN** the probe calls `GET /health`, `GET /api/provider/manifest`, `GET /api/provider/preflight`, `GET /api/provider/source-bindings`, and `GET /api/provider/handoff`
+
+#### Scenario: Deployed smoke supports provider API credentials
 
 - **WHEN** the deployed smoke probe runs with a provider API key
-- **THEN** it sends provider API credentials to `GET /api/provider/manifest`, `GET /api/provider/preflight`, and `GET /api/provider/handoff`
+- **THEN** it sends provider API credentials to `GET /api/provider/manifest`, `GET /api/provider/preflight`, `GET /api/provider/source-bindings`, and `GET /api/provider/handoff` without writing the secret value to evidence reports
+
+#### Scenario: Deployed smoke validates source binding review
+
+- **WHEN** the deployed source binding summary endpoint returns `status=ready` or `status=review`
+- **THEN** the smoke report marks the source binding check as passing and summarizes source count and bindable source count
+
+#### Scenario: Deployed smoke blocks invalid source binding evidence
+
+- **WHEN** the deployed source binding summary endpoint is unreachable, returns non-200, returns invalid JSON, or reports `status=blocked`
+- **THEN** the smoke report marks the source binding check as `blocked` and the overall smoke status as `blocked`
 
 #### Scenario: Deployed smoke writes review artifacts
 
@@ -626,10 +641,10 @@ The system SHALL provide a read-only deployed provider smoke probe that validate
 
 #### Scenario: Deployed smoke fails closed
 
-- **WHEN** the provider base URL is unreachable, returns a non-200 discovery response, returns invalid JSON, exposes an incompatible manifest or preflight, or reports blocked handoff evidence
+- **WHEN** the provider base URL is unreachable, returns a non-200 discovery response, returns invalid JSON, exposes an incompatible manifest or preflight, reports blocked source binding evidence, or reports blocked handoff evidence
 - **THEN** the deployed smoke report marks status `blocked` and the export command exits with a failure status after writing evidence when possible
 
 #### Scenario: Deployed smoke remains read-only
 
 - **WHEN** deployed smoke runs
-- **THEN** it does not execute document retrieval, answer composition, ingestion jobs, index rebuilds, embedding models, vector databases, model downloads, or GraphRAG
+- **THEN** it does not execute document retrieval, answer composition, ingestion jobs, index rebuilds, embedding models, vector databases, model downloads, graph queries, provider registration, heartbeat governance, audit policy, source-to-agent binding, or final answer policy

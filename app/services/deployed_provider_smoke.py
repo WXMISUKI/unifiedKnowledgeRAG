@@ -171,6 +171,11 @@ def _run_smoke_with_client(
         "/api/provider/preflight",
         headers=auth_headers,
     )
+    source_bindings_check, source_bindings = _get_json(
+        client,
+        "/api/provider/source-bindings",
+        headers=auth_headers,
+    )
     handoff_check, handoff = _get_json(
         client,
         "/api/provider/handoff",
@@ -181,6 +186,7 @@ def _run_smoke_with_client(
         _validate_health(health_check, health),
         _validate_manifest(manifest_check, manifest),
         _validate_preflight(preflight_check, preflight),
+        _validate_source_bindings(source_bindings_check, source_bindings),
         _validate_handoff(handoff_check, handoff),
     ]
     return DeployedProviderSmokeReport(
@@ -356,6 +362,32 @@ def _validate_handoff(
     )
 
 
+def _validate_source_bindings(
+    check: DeployedProviderSmokeCheck,
+    payload: dict[str, Any],
+) -> DeployedProviderSmokeCheck:
+    if not check.passed:
+        return check
+    source_binding_status = payload.get("status")
+    passed = source_binding_status in {"ready", "review"}
+    status = (
+        source_binding_status
+        if source_binding_status in {"ready", "review"}
+        else "blocked"
+    )
+    return _replace_check(
+        check,
+        status=status,
+        passed=passed,
+        details=_source_bindings_summary(payload),
+        error=(
+            None
+            if passed
+            else "Provider source binding evidence is blocked or invalid."
+        ),
+    )
+
+
 def _replace_check(
     check: DeployedProviderSmokeCheck,
     *,
@@ -404,10 +436,26 @@ def _handoff_summary(payload: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _source_bindings_summary(payload: dict[str, Any]) -> dict[str, Any]:
+    sources = payload.get("sources", [])
+    source_count = len(sources) if isinstance(sources, list) else 0
+    bindable_count = sum(
+        1
+        for source in sources
+        if isinstance(source, dict) and source.get("bindable") is True
+    )
+    return {
+        "id": payload.get("id"),
+        "status": payload.get("status"),
+        "source_count": source_count,
+        "bindable_source_count": bindable_count,
+    }
+
+
 def _operation_notes(*, provider_api_key: str | None) -> list[str]:
     notes = [
         "This probe validates an already-running provider over HTTP.",
-        "It only calls health, manifest, preflight, and handoff discovery endpoints.",
+        "It only calls health, manifest, preflight, source binding, and handoff discovery endpoints.",
         "External deployment owners still manage TLS, reverse proxy policy, managed secrets, registration, heartbeat governance, audit policy, and source-to-agent binding.",
     ]
     if provider_api_key:
@@ -442,6 +490,7 @@ def _check_name(path: str) -> str:
         "/health": "health_readiness",
         "/api/provider/manifest": "provider_manifest",
         "/api/provider/preflight": "provider_preflight",
+        "/api/provider/source-bindings": "provider_source_bindings",
         "/api/provider/handoff": "provider_handoff",
     }.get(path, path.strip("/").replace("/", "_") or "root")
 

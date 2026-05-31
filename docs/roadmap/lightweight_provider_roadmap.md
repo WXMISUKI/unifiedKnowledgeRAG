@@ -254,13 +254,16 @@ The probe calls only:
 - `GET /health`
 - `GET /api/provider/manifest`
 - `GET /api/provider/preflight`
+- `GET /api/provider/source-bindings`
 - `GET /api/provider/handoff`
 
-It supports an optional provider API key through `PROVIDER_API_KEY` or `--provider-api-key` and writes evidence under `docs/integration/deployed-provider-smoke/`. This validates network reachability, component access guard compatibility, provider identity, bindability, and handoff evidence status after deployment.
+It supports an optional provider API key through `PROVIDER_API_KEY` or `--provider-api-key` and writes evidence under `docs/integration/deployed-provider-smoke/`. This validates network reachability, component access guard compatibility, provider identity, bindability, live source binding review reachability, and handoff evidence status after deployment.
 
 It remains a lightweight provider-component smoke, not platform certification. It does not execute retrieval, answer composition, ingestion, index rebuilds, embedding models, vector databases, model downloads, GraphRAG, TLS termination, reverse proxy policy, managed secrets, registration, heartbeat governance, audit policy, source-to-agent binding, or final answer policy.
 
 The provider handoff bundle summarizes deployed smoke as optional Phase 6 evidence. Missing deployed smoke keeps the bundle in `review` with `run_deployed_provider_smoke_after_deployment`; present `ready` or `review` deployed evidence is surfaced directly, and present `blocked` deployed evidence blocks the bundle. This keeps local development lightweight while making live URL evidence visible from the same handoff entry point used by external control planes.
+
+Deployed smoke now includes source binding review as a protected API check. It summarizes source count and bindable source count, and fails closed when source binding evidence is blocked or invalid. This validates live binding-review reachability without creating source-to-agent bindings or executing retrieval, ingestion, answer composition, or GraphRAG.
 
 ## Source Binding Summary
 
