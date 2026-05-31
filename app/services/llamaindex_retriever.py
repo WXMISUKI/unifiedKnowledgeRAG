@@ -109,6 +109,9 @@ class LlamaIndexLocalRetriever:
                         "document_id": _document_id_for(source_id),
                         "title": _title_for(source_id),
                         "citation": _citation_for(source_id),
+                        "source_path": str(source_path),
+                        "chunk_id": _chunk_id_for(source_id),
+                        "chunking_strategy": "llamaindex-document-v1",
                         "source_status": source.status if source else "unknown",
                     },
                 )
@@ -138,6 +141,12 @@ class LlamaIndexLocalRetriever:
             snippet=node.node.get_content(metadata_mode="none"),
             score=float(self._node_score(node)),
             citation=metadata["citation"],
+            metadata={
+                "source_path": metadata.get("source_path"),
+                "chunk_id": metadata.get("chunk_id"),
+                "chunking_strategy": metadata.get("chunking_strategy"),
+                "citation_anchor": metadata.get("citation"),
+            },
         )
 
     def _node_score(self, node) -> float:
@@ -162,4 +171,11 @@ def _citation_for(source_id: str) -> str:
     return {
         "refund_policy_docs": "refund_policy_2026#section-3",
         "logistics_faq": "logistics_faq_2026#delay",
+    }.get(source_id, source_id)
+
+
+def _chunk_id_for(source_id: str) -> str:
+    return {
+        "refund_policy_docs": "section-3",
+        "logistics_faq": "delay",
     }.get(source_id, source_id)

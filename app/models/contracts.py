@@ -221,6 +221,7 @@ class EvidenceDocument(BaseModel):
     snippet: str
     score: float
     citation: str
+    metadata: dict[str, Any] = Field(default_factory=dict, exclude=True)
 
 
 class RagRetrieveResult(BaseModel):

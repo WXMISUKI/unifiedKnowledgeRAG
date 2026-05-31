@@ -606,6 +606,12 @@ def _hit_to_evidence_document(hit, min_score: float) -> EvidenceDocument | None:
         snippet=payload["text"],
         score=float(score),
         citation=payload["citation"],
+        metadata={
+            "source_path": payload.get("source_path"),
+            "chunk_id": payload.get("chunk_id"),
+            "chunking_strategy": payload.get("chunking_strategy"),
+            "citation_anchor": payload.get("citation"),
+        },
     )
 
 

@@ -393,6 +393,13 @@ def test_rag_retrieve_returns_compact_context_and_citations():
     ]
     assert evidence_pack["evidence_count"] == len(body["result"]["documents"])
     assert evidence_pack["filter_context"] == filter_context
+    assert "metadata" not in body["result"]["documents"][0]
+    assert evidence_pack["evidence"][0]["provenance"] == {
+        "source_path": "app/data/sources/refund_policy_docs.md",
+        "chunk_id": "section-3",
+        "chunking_strategy": "fixture-evidence-v1",
+        "citation_anchor": "refund_policy_2026#section-3",
+    }
 
 
 def test_rag_answer_returns_cited_answer_envelope():
@@ -444,6 +451,12 @@ def test_rag_answer_returns_cited_answer_envelope():
         set(evidence_pack["allowed_citations"])
     )
     assert evidence_pack["evidence_count"] == len(body["result"]["documents"])
+    assert evidence_pack["evidence"][0]["provenance"] == {
+        "source_path": "app/data/sources/refund_policy_docs.md",
+        "chunk_id": "section-3",
+        "chunking_strategy": "fixture-evidence-v1",
+        "citation_anchor": "refund_policy_2026#section-3",
+    }
     assert body["result"]["metadata"]["evidence_gate"]["passed"] is True
     prompt_package = body["result"]["metadata"]["prompt_package"]
     assert prompt_package["id"] == "cited-answer-prompt-v1"

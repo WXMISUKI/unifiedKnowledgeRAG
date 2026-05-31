@@ -10,6 +10,12 @@ def _document(citation: str = "refund_policy_2026#section-3") -> EvidenceDocumen
         snippet="客户三天未发货可以申请退款。",
         score=0.91,
         citation=citation,
+        metadata={
+            "source_path": "app/data/sources/refund_policy_docs.md",
+            "chunk_id": "section-3",
+            "chunking_strategy": "fixture-evidence-v1",
+            "citation_anchor": citation,
+        },
     )
 
 
@@ -34,6 +40,12 @@ def test_evidence_pack_marks_answerable_documents():
     assert pack["score_summary"] == {"max_score": 0.91, "min_score": 0.91}
     assert pack["evidence"][0]["citation"] == document.citation
     assert pack["evidence"][0]["snippet"] == document.snippet
+    assert pack["evidence"][0]["provenance"] == {
+        "source_path": "app/data/sources/refund_policy_docs.md",
+        "chunk_id": "section-3",
+        "chunking_strategy": "fixture-evidence-v1",
+        "citation_anchor": "refund_policy_2026#section-3",
+    }
 
 
 def test_evidence_pack_marks_empty_retrieval_as_insufficient():

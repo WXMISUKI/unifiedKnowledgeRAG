@@ -40,7 +40,7 @@ def build_evidence_pack(
 
 
 def _document_to_pack_entry(document: EvidenceDocument) -> dict[str, Any]:
-    return {
+    entry = {
         "source_id": document.source_id,
         "document_id": document.document_id,
         "title": document.title,
@@ -48,6 +48,21 @@ def _document_to_pack_entry(document: EvidenceDocument) -> dict[str, Any]:
         "score": document.score,
         "snippet": document.snippet,
     }
+    provenance = _document_provenance(document)
+    if provenance:
+        entry["provenance"] = provenance
+    return entry
+
+
+def _document_provenance(document: EvidenceDocument) -> dict[str, Any]:
+    provenance = {
+        "source_path": document.metadata.get("source_path"),
+        "chunk_id": document.metadata.get("chunk_id"),
+        "chunking_strategy": document.metadata.get("chunking_strategy"),
+        "citation_anchor": document.metadata.get("citation_anchor")
+        or document.citation,
+    }
+    return {key: value for key, value in provenance.items() if value}
 
 
 def _score_summary(documents: list[EvidenceDocument]) -> dict[str, float | None]:

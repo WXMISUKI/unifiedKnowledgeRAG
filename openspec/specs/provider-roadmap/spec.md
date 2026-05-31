@@ -51,6 +51,17 @@ The project SHALL treat retrieval evidence packs, citation policy metadata, and 
 - **WHEN** the provider exposes evidence status or allowed citations
 - **THEN** the roadmap boundary still states that the caller owns final user-facing answer style, refusal policy, and workflow decisions
 
+### Requirement: Evidence provenance advances Phase 4 packaging
+The project SHALL treat provider-owned evidence provenance as Phase 4 evidence packaging work when it helps callers answer from returned citations without moving final answer policy into the provider.
+
+#### Scenario: Evidence provenance is phase-aligned
+- **WHEN** an OpenSpec change adds provenance metadata to evidence packs
+- **THEN** the roadmap records it as Phase 4 evidence packaging work
+
+#### Scenario: Evidence provenance preserves caller ownership
+- **WHEN** evidence packs include source path, chunk id, chunking strategy, and citation anchor metadata
+- **THEN** the caller still owns final response style, refusal policy, approval workflow, and final orchestration
+
 ### Requirement: Deployment readiness evidence advances Phase 6 without expanding provider scope
 The project SHALL treat local readiness reports, model artifact diagnostics, backup/reindex notes, and integration evidence summaries as Phase 6 operations work when they help deploy the provider component without moving control-plane governance into this module.
 

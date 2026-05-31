@@ -74,6 +74,10 @@ Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on 
 - allowed citations aligned to returned documents
 - evidence count and score summary
 - requested source ids, retrieval backend, filter context, and compact evidence entries
+- provider-owned provenance on each evidence entry when available:
+  `source_path`, `chunk_id`, `chunking_strategy`, and `citation_anchor`
+
+This provenance is intentionally attached to `metadata.evidence_pack.evidence[]` instead of the top-level returned `documents` list, so caller integrations keep a compact document envelope while still receiving enough traceability for grounding and retrieval debugging.
 
 This does not make the provider the final answer policy owner. MyPrivateAgent or another caller still owns user-facing response style, refusal policy, approval workflow, and final orchestration. The provider only exposes trustworthy evidence and diagnostics so callers can avoid hallucinating beyond returned citations.
 

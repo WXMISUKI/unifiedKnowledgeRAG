@@ -167,6 +167,12 @@ def retrieve(
             snippet=document.text,
             score=round(score, 4),
             citation=document.citation,
+            metadata={
+                "source_path": _source_path_for(document.source_id),
+                "chunk_id": _chunk_id_for(document.citation),
+                "chunking_strategy": "fixture-evidence-v1",
+                "citation_anchor": document.citation,
+            },
         )
         for score, document in scored_documents[:top_k]
     ]
@@ -205,3 +211,11 @@ def _cjk_bigrams(value: str) -> set[str]:
         "".join(cjk_chars[index : index + 2])
         for index in range(max(len(cjk_chars) - 1, 0))
     }
+
+
+def _source_path_for(source_id: str) -> str:
+    return f"app/data/sources/{source_id}.md"
+
+
+def _chunk_id_for(citation: str) -> str:
+    return citation.split("#", maxsplit=1)[-1]

@@ -1407,6 +1407,7 @@ reason: documents_returned | no_documents
 citation_policy: use_only_returned_citations
 allowed_citations: 与返回 documents 对齐的 citation 列表
 evidence_count / score_summary / retrieval_backend / requested_source_ids / filter_context
+evidence[].provenance: source_path / chunk_id / chunking_strategy / citation_anchor
 ```
 
 重新导出的 provider contract smoke 位于：
@@ -1416,7 +1417,9 @@ docs/smoke/provider-contract/provider-contract-smoke.json
 docs/smoke/provider-contract/provider-contract-smoke.md
 ```
 
-结论：调用方可以直接用 evidence pack 判断“这批证据能不能支撑回答、允许引用哪些 citation、过滤/后端上下文是什么”。这仍然不是最终 answer policy；MyPrivateAgent 或其他调用者继续负责最终措辞、拒答策略、审批和工作流。
+其中 `metadata.evidence_pack.evidence[]` 会携带 provider-owned provenance，用于说明证据来自哪个 source path、chunk id、chunking strategy 和 citation anchor；顶层 `documents` 仍保持紧凑合同，不暴露内部 backend metadata。
+
+结论：调用方可以直接用 evidence pack 判断“这批证据能不能支撑回答、允许引用哪些 citation、过滤/后端上下文和证据溯源是什么”。这仍然不是最终 answer policy；MyPrivateAgent 或其他调用者继续负责最终措辞、拒答策略、审批和工作流。
 
 第五十一阶段 OpenSpec change `add-insufficient-evidence-pack-smoke` 补强 Phase 4 的 fail-closed 集成证据。provider contract smoke 现在包含 `rag_insufficient_evidence_pack_contract`，会用无匹配 query 同时验证 `/api/rag/retrieve` 和 `/api/rag/answer`：
 
@@ -1655,6 +1658,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 第六十八阶段 OpenSpec change `add-live-ready-probes` 增加轻量高可用探针：`/live` 用于进程 liveness，`/ready` 用于接流量前 readiness，`/health` 保持兼容。Docker Compose healthcheck 已切到 `/ready`，manifest 也会暴露 `live` 和 `ready` 路径。该阶段不引入监控平台、编排系统、告警策略或指标采集。
 
 第六十九阶段 OpenSpec change `fail-unready-readiness-probe` 让 `/ready` 的 HTTP 状态码具备摘流量语义：ready 时返回 HTTP 200，degraded 时返回 HTTP 503，同时保留 readiness body 供诊断。`/health` 继续作为兼容诊断端点，degraded 时仍返回 HTTP 200。
+
+第七十阶段 OpenSpec change `add-evidence-provenance-pack` 回到核心数据面，给 `evidence_pack-v1` 的每条 evidence 增加轻量 provenance：`source_path`、`chunk_id`、`chunking_strategy` 和 `citation_anchor`。这让外部调用方能在不额外调用诊断接口的情况下判断证据来源和切分粒度；顶层 `documents` 继续保持稳定紧凑，不把 provider 内部 metadata 扩散成新的公共合同。
 
 ## 设计文档
 
