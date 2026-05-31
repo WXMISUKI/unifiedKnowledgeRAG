@@ -24,6 +24,10 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["provider_contract_smoke"]["status"] == "ready"
     assert artifacts["deployment_readiness"]["status"] == "review"
     assert artifacts["reindex_readiness"]["status"] == "ready"
+    assert artifacts["source_binding_summary"]["status"] == "ready"
+    assert artifacts["source_binding_summary"]["summary"] == (
+        "status=ready; bindable_sources=2/2"
+    )
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
@@ -152,6 +156,7 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["provider_contract_smoke"]["status"] == "ready"
     assert artifacts["deployment_readiness"]["status"] == "review"
     assert artifacts["reindex_readiness"]["status"] == "ready"
+    assert artifacts["source_binding_summary"]["status"] == "ready"
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"
@@ -250,3 +255,58 @@ def test_provider_handoff_bundle_blocks_blocked_deployed_smoke(tmp_path):
     assert artifact["required"] is False
     assert artifact["status"] == "blocked"
     assert artifact["recommended_action"] == "resolve_failed_evidence"
+
+
+def test_provider_handoff_bundle_blocks_missing_source_binding_evidence(tmp_path):
+    specs = [
+        HandoffEvidenceSpec(
+            id="source_binding_summary",
+            category="source-binding",
+            path=Path("missing-source-bindings.json"),
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "blocked"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is True
+    assert artifact["status"] == "missing"
+    assert artifact["recommended_action"] == "regenerate_source_binding_summary"
+
+
+def test_provider_handoff_bundle_summarizes_source_binding_evidence(tmp_path):
+    source_binding_path = tmp_path / "source-bindings.json"
+    source_binding_path.write_text(
+        json.dumps(
+            {
+                "status": "ready",
+                "sources": [
+                    {"source_id": "refund_policy_docs", "bindable": True},
+                    {"source_id": "logistics_faq", "bindable": True},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    specs = [
+        HandoffEvidenceSpec(
+            id="source_binding_summary",
+            category="source-binding",
+            path=Path("source-bindings.json"),
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "ready"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["status"] == "ready"
+    assert artifact["summary"] == "status=ready; bindable_sources=2/2"

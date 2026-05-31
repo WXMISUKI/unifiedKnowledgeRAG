@@ -52,6 +52,11 @@ DEFAULT_EVIDENCE_SPECS = [
         path=Path("docs/operations/reindex-readiness/reindex-readiness.json"),
     ),
     HandoffEvidenceSpec(
+        id="source_binding_summary",
+        category="source-binding",
+        path=Path("docs/integration/source-bindings/provider-source-bindings.json"),
+    ),
+    HandoffEvidenceSpec(
         id="deployed_provider_smoke",
         category="deployed-integration",
         path=Path(
@@ -244,6 +249,18 @@ def _artifact_status_and_summary(
         return (
             status if status in {"ready", "review", "blocked"} else "review",
             f"status={status}",
+        )
+    if artifact_id == "source_binding_summary":
+        status = payload.get("status", "review")
+        sources = payload.get("sources", [])
+        bindable_count = sum(
+            1
+            for source in sources
+            if isinstance(source, dict) and source.get("bindable") is True
+        )
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            f"status={status}; bindable_sources={bindable_count}/{len(sources)}",
         )
     if artifact_id == "deployed_provider_smoke":
         status = payload.get("status", "review")

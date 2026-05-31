@@ -122,6 +122,8 @@ class ProviderSourceBindingSummaryResponse(BaseModel):
     provider: dict[str, Any]
     sources: list[SourceBindingSummaryRow]
     operation_notes: list[str] = Field(default_factory=list)
+    json_path: str | None = None
+    markdown_path: str | None = None
 
 
 class KnowledgeBaseSource(BaseModel):

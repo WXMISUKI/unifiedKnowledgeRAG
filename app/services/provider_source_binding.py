@@ -1,4 +1,7 @@
+import json
 from datetime import UTC, datetime
+from pathlib import Path
+
 from app.config import Settings, get_settings
 from app.models.contracts import (
     KnowledgeBaseSource,
@@ -38,6 +41,74 @@ def build_provider_source_binding_summary(
         sources=sources,
         operation_notes=_operation_notes(sources),
     )
+
+
+def provider_source_binding_summary_to_dict(
+    report: ProviderSourceBindingSummaryResponse,
+) -> dict:
+    return report.model_dump()
+
+
+def render_provider_source_binding_summary_markdown(
+    report: ProviderSourceBindingSummaryResponse,
+) -> str:
+    lines = [
+        "# Provider Source Binding Summary",
+        "",
+        f"- Report: `{report.id}`",
+        f"- Status: `{report.status}`",
+        f"- Generated At: `{report.generated_at}`",
+        f"- Provider: `{report.provider['provider_id']}`",
+        f"- Contract: `{report.provider['contract_version']}`",
+        "",
+        "## Sources",
+        "",
+        "| Source | Status | Bindable | Backend | Index | Drift | Preflight | Recommended Action |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for source in report.sources:
+        lines.append(
+            f"| `{source.source_id}` | `{source.status}` | `{source.bindable}` | "
+            f"`{source.backend_status or 'unknown'}` | `{source.index_status}` | "
+            f"`{', '.join(source.drift_statuses) or 'none'}` | "
+            f"`{source.ingestion_preflight_status or 'unknown'}` | "
+            f"`{source.recommended_action}` |"
+        )
+    lines.extend(["", "## Operation Notes", ""])
+    lines.extend(f"- {note}" for note in report.operation_notes)
+    lines.append("")
+    return "\n".join(lines)
+
+
+def export_provider_source_binding_summary(
+    output_dir: Path = Path("docs/integration/source-bindings"),
+    *,
+    settings: Settings | None = None,
+) -> ProviderSourceBindingSummaryResponse:
+    report = build_provider_source_binding_summary(settings)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / "provider-source-bindings.json"
+    markdown_path = output_dir / "provider-source-bindings.md"
+    exported_report = report.model_copy(
+        update={
+            "json_path": str(json_path),
+            "markdown_path": str(markdown_path),
+        }
+    )
+    json_path.write_text(
+        json.dumps(
+            provider_source_binding_summary_to_dict(exported_report),
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    markdown_path.write_text(
+        render_provider_source_binding_summary_markdown(exported_report),
+        encoding="utf-8",
+    )
+    return exported_report
 
 
 def _source_binding_row(

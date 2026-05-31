@@ -253,3 +253,11 @@ GET /api/provider/source-bindings
 The summary combines configured source catalog facts, retrieval backend readiness, index lifecycle status, source document fingerprint drift, ingestion preflight status, and deterministic recommended actions. It helps MyPrivateAgent or another external control plane decide whether a source is ready for binding without reading several provider diagnostics separately.
 
 This remains provider-owned evidence, not binding policy. The provider does not create source-to-agent bindings, run approvals, write audit records, create ingestion jobs, rebuild indexes, execute retrieval or answer composition, call embedding/vector stores, or execute GraphRAG from this endpoint.
+
+Source binding summary can also be exported as handoff evidence:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_source_bindings.py
+```
+
+The handoff refresh workflow regenerates this evidence before the final provider handoff bundle, and the handoff bundle treats it as required local evidence. This makes source bindability visible in the same evidence package used for MyPrivateAgent review while still leaving actual source-to-agent binding policy outside this provider.

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from app.services.provider_handoff_refresh import (
     HandoffRefreshStepSpec,
+    default_handoff_refresh_steps,
     refresh_provider_handoff_evidence,
     render_provider_handoff_refresh_markdown,
 )
@@ -99,6 +100,16 @@ def test_handoff_refresh_markdown_lists_outputs(tmp_path):
     assert "| Step | Category | Status | Output Paths | Recommended Action | Summary |" in markdown
     assert "integration.json" in markdown
     assert "integration.md" in markdown
+
+
+def test_default_handoff_refresh_runs_source_binding_before_bundle():
+    steps = default_handoff_refresh_steps()
+    step_ids = [step.id for step in steps]
+
+    assert "source_binding_summary" in step_ids
+    assert step_ids.index("source_binding_summary") < step_ids.index(
+        "provider_handoff_bundle"
+    )
 
 
 def _step(tmp_path: Path, step_id: str, status: str) -> HandoffRefreshStepSpec:

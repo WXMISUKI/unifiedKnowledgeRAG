@@ -6,7 +6,11 @@ from app.config import Settings
 from app.main import create_app
 from app.models.contracts import SourceDocumentManifest
 from app.services import ingestion_preflight, source_document_manifest
-from app.services.provider_source_binding import build_provider_source_binding_summary
+from app.services.provider_source_binding import (
+    build_provider_source_binding_summary,
+    export_provider_source_binding_summary,
+    render_provider_source_binding_summary_markdown,
+)
 
 
 def test_provider_source_binding_summary_marks_default_sources_bindable():
@@ -118,3 +122,30 @@ def test_provider_source_binding_summary_is_read_only(monkeypatch):
 
     assert response.status_code == 200
     assert response.json()["id"] == "provider-source-binding-summary-v1"
+
+
+def test_provider_source_binding_export_writes_json_and_markdown(tmp_path):
+    report = export_provider_source_binding_summary(output_dir=tmp_path / "bindings")
+
+    assert report.status == "ready"
+    assert report.json_path is not None
+    assert report.markdown_path is not None
+    json_path = Path(report.json_path)
+    markdown_path = Path(report.markdown_path)
+    assert json_path.exists()
+    assert markdown_path.exists()
+    payload = json_path.read_text(encoding="utf-8")
+    markdown = markdown_path.read_text(encoding="utf-8")
+    assert "provider-source-binding-summary-v1" in payload
+    assert "# Provider Source Binding Summary" in markdown
+    assert "bind_source_from_control_plane" in markdown
+
+
+def test_provider_source_binding_markdown_summarizes_sources():
+    report = build_provider_source_binding_summary()
+
+    markdown = render_provider_source_binding_summary_markdown(report)
+
+    assert "| Source | Status | Bindable | Backend | Index | Drift | Preflight | Recommended Action |" in markdown
+    assert "`refund_policy_docs`" in markdown
+    assert "`bind_source_from_control_plane`" in markdown

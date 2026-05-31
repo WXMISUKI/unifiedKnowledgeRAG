@@ -1623,6 +1623,22 @@ Invoke-RestMethod http://127.0.0.1:8020/api/provider/source-bindings
 
 这个接口把每个 source 的 catalog readiness、retrieval backend、index status、fingerprint drift、ingestion preflight 和 recommended action 汇总为一个绑定审查视图。默认 fixture source 会返回 `bindable=true` 和 `bind_source_from_control_plane`；如果 source 文件 changed/missing 或 index 未 ready，则返回 `bindable=false` 和修复/重建建议。它只提供事实和建议，不负责 source-to-agent binding 决策。
 
+第六十五阶段 OpenSpec change `export-source-binding-evidence` 将 source binding summary 纳入 handoff evidence 链路：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_provider_source_bindings.py
+conda run -n GRAPHRAG python scripts/export_provider_handoff_refresh.py
+```
+
+导出文件：
+
+```text
+docs/integration/source-bindings/provider-source-bindings.json
+docs/integration/source-bindings/provider-source-bindings.md
+```
+
+`provider-handoff-refresh-v1` 现在会在生成最终 handoff bundle 前刷新 source binding evidence；`provider-handoff-bundle-v1` 也会把 `source_binding_summary` 作为 required 本地证据汇总。若 source binding evidence blocked，handoff bundle 会 fail-closed，提醒外部控制面不要直接绑定问题 source。
+
 ## 设计文档
 
 - [External RAG / GraphRAG Provider Design](docs/external_rag_graphrag_provider_design.md)

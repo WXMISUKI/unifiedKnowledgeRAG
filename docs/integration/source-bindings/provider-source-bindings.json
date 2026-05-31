@@ -1,0 +1,68 @@
+{
+  "id": "provider-source-binding-summary-v1",
+  "generated_at": "2026-05-31T02:12:10.079493+00:00",
+  "status": "ready",
+  "provider": {
+    "provider_id": "unifiedKnowledgeProvider",
+    "provider_name": "unifiedKnowledgeRAG",
+    "provider_version": "0.1.0",
+    "contract_version": "knowledge-provider-contract-v1",
+    "manifest_version": "provider-integration-manifest-v1",
+    "component_role": "knowledge_data_plane"
+  },
+  "sources": [
+    {
+      "source_id": "refund_policy_docs",
+      "owner": "customer_service",
+      "source_status": "ready",
+      "status": "ready",
+      "bindable": true,
+      "retrieval_backend": "fixture",
+      "backend_status": "ready",
+      "backend_reason": null,
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "latest_index_job_id": null,
+      "document_count": 1,
+      "drift_statuses": [
+        "in_sync"
+      ],
+      "parser_statuses": [
+        "ready"
+      ],
+      "ingestion_preflight_status": "ready",
+      "recommended_action": "bind_source_from_control_plane",
+      "reasons": []
+    },
+    {
+      "source_id": "logistics_faq",
+      "owner": "logistics",
+      "source_status": "ready",
+      "status": "ready",
+      "bindable": true,
+      "retrieval_backend": "fixture",
+      "backend_status": "ready",
+      "backend_reason": null,
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "latest_index_job_id": null,
+      "document_count": 1,
+      "drift_statuses": [
+        "in_sync"
+      ],
+      "parser_statuses": [
+        "ready"
+      ],
+      "ingestion_preflight_status": "ready",
+      "recommended_action": "bind_source_from_control_plane",
+      "reasons": []
+    }
+  ],
+  "operation_notes": [
+    "This summary is read-only and does not create source-to-agent bindings.",
+    "External control planes own binding policy, approvals, audit, and final answer workflow.",
+    "Detailed document diagnostics remain available from source document manifests and ingestion preflight endpoints."
+  ],
+  "json_path": "docs\\integration\\source-bindings\\provider-source-bindings.json",
+  "markdown_path": "docs\\integration\\source-bindings\\provider-source-bindings.md"
+}

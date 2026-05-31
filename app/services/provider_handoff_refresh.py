@@ -8,6 +8,7 @@ from app.services.deployment_readiness import export_deployment_readiness_report
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.provider_integration_client import export_provider_integration_probe_report
+from app.services.provider_source_binding import export_provider_source_binding_summary
 from app.services.reindex_readiness import export_reindex_readiness_report
 
 
@@ -66,6 +67,13 @@ def default_handoff_refresh_steps(
             category="operations",
             output_dir=artifact_base_dir / "docs/operations/reindex-readiness",
             exporter=export_reindex_readiness_report,
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="source_binding_summary",
+            category="source-binding",
+            output_dir=artifact_base_dir / "docs/integration/source-bindings",
+            exporter=export_provider_source_binding_summary,
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
