@@ -36,6 +36,8 @@ OpenSpec change：`add-knowledge-provider-v1`
 
 `GET /api/provider/manifest` 是给 MyPrivateAgent 这类外部控制面的只读集成清单。它会返回 provider id/name/version、manifest version、contract version、组件角色 `knowledge_data_plane`、兼容控制面提示、关键 endpoint 路径、capability ids 和本地 smoke/架构证据路径。manifest 也会暴露 `rag_source_documents_template=/api/rag/sources/{source_id}/documents`，便于调用方发现 source document manifest 诊断入口。这个接口用于接入前预检和版本兼容判断，不会启动 ingestion、调用 embedding/vector DB，也不会执行 GraphRAG 查询。
 
+Manifest 还会返回机器可读的 `access` 元数据，说明 `/health` 是公开 health check、`/api/*` 是可选 API key 保护范围、支持 `Authorization: Bearer <token>` 和 `X-Provider-Api-Key: <token>`。它只报告 `provider_api_key_configured=true/false`，不会输出 secret 值。这个 token 仍只是组件访问保护，不代表用户身份、RBAC、审批、审计或 source-to-agent binding。
+
 `GET /api/provider/preflight` 是更直接的绑定预检入口。它会汇总 manifest 身份、health readiness、必需 capability 覆盖、OpenAPI schema refs 和 planned GraphRAG boundary，返回 `bindable=true/false` 以及每项检查详情。MyPrivateAgent 在注册或启用外部知识 provider 前，可以先调用该接口做 fail-closed 检查；该接口只读，不会执行 RAG 检索、回答生成、索引重建或图查询。
 
 `GET /api/provider/handoff` 是只读交接包 API。它返回当前 `provider-handoff-bundle-v1` 状态，包括 provider identity、contract version、集成证据、contract smoke、deployment readiness 和 reindex readiness 的汇总行与 recommended action。该接口读取当前本地 evidence artifacts，不会重新刷新证据、执行 RAG/answer、创建 ingestion job、重建索引、下载模型、调用 Qdrant 或执行 GraphRAG；需要刷新证据时仍应显式运行 `scripts/export_provider_handoff_refresh.py`。
@@ -1638,6 +1640,8 @@ docs/integration/source-bindings/provider-source-bindings.md
 ```
 
 `provider-handoff-refresh-v1` 现在会在生成最终 handoff bundle 前刷新 source binding evidence；`provider-handoff-bundle-v1` 也会把 `source_binding_summary` 作为 required 本地证据汇总。若 source binding evidence blocked，handoff bundle 会 fail-closed，提醒外部控制面不要直接绑定问题 source。
+
+第六十六阶段 OpenSpec change `advertise-provider-access-metadata` 将组件访问规则写入 manifest 的 `access` 字段。外部控制面现在可以从 manifest 直接读取 public/protected path、accepted headers、API key 是否已配置，以及“组件访问不等于用户身份/策略”的边界说明，不需要从 README 文本推断。
 
 ## 设计文档
 

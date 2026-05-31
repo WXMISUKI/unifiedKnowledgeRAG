@@ -52,6 +52,7 @@ class ProviderIntegrationManifest(BaseModel):
     endpoints: dict[str, str]
     capability_ids: list[str]
     evidence: dict[str, str]
+    access: dict[str, Any]
     boundaries: dict[str, str]
 
 

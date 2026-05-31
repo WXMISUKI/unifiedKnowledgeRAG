@@ -205,6 +205,8 @@ X-Provider-Api-Key: <token>
 
 This is a lightweight component access guard, not an identity or policy system. MyPrivateAgent or another external control plane still owns user identity, roles, approvals, audit policy, source-to-agent binding, and final answer policy.
 
+Provider manifest access metadata now advertises the same component access contract in machine-readable form: public health path, protected API path pattern, accepted header schemes, whether an API key is configured, and an explicit boundary note. Secret values are never included in the manifest.
+
 ## Lightweight Deployment Profile
 
 Phase 6 now includes a minimal container deployment profile:

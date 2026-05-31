@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+from app.config import Settings
 from app.main import create_app
 from app.services.provider_manifest import build_provider_integration_manifest
 
@@ -74,6 +75,40 @@ def test_provider_manifest_lists_capability_ids_without_internal_bindings():
     boundary_text = body["boundaries"]["implementation_internals"]
     assert "provider internals" in boundary_text
     assert "not MyPrivateAgent binding contracts" in boundary_text
+
+
+def test_provider_manifest_advertises_component_access_metadata():
+    response = client.get("/api/provider/manifest")
+
+    assert response.status_code == 200
+    access = response.json()["access"]
+    assert access == {
+        "type": "component_api_key",
+        "provider_api_key_configured": False,
+        "public_paths": ["/health"],
+        "protected_path_patterns": ["/api/*"],
+        "accepted_header_schemes": [
+            "Authorization: Bearer <token>",
+            "X-Provider-Api-Key: <token>",
+        ],
+        "secret_values_in_manifest": False,
+        "boundary": (
+            "Component access control only; user identity, RBAC, approvals, "
+            "audit policy, source-to-agent binding, and final answer workflow "
+            "belong to the external control plane."
+        ),
+    }
+
+
+def test_provider_manifest_access_metadata_redacts_configured_secret():
+    manifest = build_provider_integration_manifest(
+        Settings(provider_api_key="secret-token")
+    )
+    payload = manifest.model_dump()
+
+    assert payload["access"]["provider_api_key_configured"] is True
+    assert payload["access"]["secret_values_in_manifest"] is False
+    assert "secret-token" not in str(payload)
 
 
 def test_provider_manifest_service_is_side_effect_free(monkeypatch):

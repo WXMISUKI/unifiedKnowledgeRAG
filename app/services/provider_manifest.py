@@ -1,3 +1,4 @@
+from app.config import Settings, get_settings
 from app.models.contracts import ProviderIntegrationManifest
 
 
@@ -16,7 +17,10 @@ SUPPORTED_CAPABILITY_IDS = [
 ]
 
 
-def build_provider_integration_manifest() -> ProviderIntegrationManifest:
+def build_provider_integration_manifest(
+    settings: Settings | None = None,
+) -> ProviderIntegrationManifest:
+    settings = settings or get_settings()
     return ProviderIntegrationManifest(
         provider_id=PROVIDER_ID,
         provider_name=PROVIDER_NAME,
@@ -61,6 +65,22 @@ def build_provider_integration_manifest() -> ProviderIntegrationManifest:
             ),
             "production_indexing_decision": (
                 "docs/architecture/production_indexing_architecture.md"
+            ),
+        },
+        access={
+            "type": "component_api_key",
+            "provider_api_key_configured": bool(settings.provider_api_key),
+            "public_paths": ["/health"],
+            "protected_path_patterns": ["/api/*"],
+            "accepted_header_schemes": [
+                "Authorization: Bearer <token>",
+                "X-Provider-Api-Key: <token>",
+            ],
+            "secret_values_in_manifest": False,
+            "boundary": (
+                "Component access control only; user identity, RBAC, approvals, "
+                "audit policy, source-to-agent binding, and final answer workflow "
+                "belong to the external control plane."
             ),
         },
         boundaries={
