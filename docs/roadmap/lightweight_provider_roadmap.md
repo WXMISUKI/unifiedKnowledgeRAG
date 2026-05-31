@@ -63,6 +63,12 @@ The current provider already has Phase 0 mostly complete. The most valuable next
 4. Promote Qdrant/BGE-M3/hybrid behavior only after customer-like benchmark evidence supports it.
 5. Keep GraphRAG as a later, use-case-driven phase rather than a default dependency.
 
+## Graph Boundary Preflight
+
+Phase 5 graph work remains use-case driven, but provider preflight now summarizes the graph boundary that already exists: graph schema count, graph ids, graph statuses, and graph store labels. This lets MyPrivateAgent or another control plane discover that graph namespaces are present while still seeing `execution_status=planned`.
+
+This does not implement GraphRAG execution. It does not connect to Neo4j, extract entities, build ontology workflows, create graph indexes, execute graph queries, or change runtime retrieval behavior. Graph execution still requires a separate relationship-heavy use case, source evidence rules, benchmark evidence, and operational ownership.
+
 ## Retrieval Evidence Pack
 
 Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on successful RAG retrieve and answer envelopes. The pack is retrieval-owned and deterministic; it gives callers a stable bundle with:
@@ -263,7 +269,7 @@ It remains a lightweight provider-component smoke, not platform certification. I
 
 The provider handoff bundle summarizes deployed smoke as optional Phase 6 evidence. Missing deployed smoke keeps the bundle in `review` with `run_deployed_provider_smoke_after_deployment`; present `ready` or `review` deployed evidence is surfaced directly, and present `blocked` deployed evidence blocks the bundle. This keeps local development lightweight while making live URL evidence visible from the same handoff entry point used by external control planes.
 
-Deployed smoke now includes source binding review as a protected API check. It summarizes source count and bindable source count, and fails closed when source binding evidence is blocked or invalid. This validates live binding-review reachability without creating source-to-agent bindings or executing retrieval, ingestion, answer composition, or GraphRAG.
+Deployed smoke now includes source binding review as a protected API check. It summarizes source count, bindable source count, source status counts, and recommended action counts, and fails closed when source binding evidence is blocked or invalid. This validates live binding-review reachability without creating source-to-agent bindings or executing retrieval, ingestion, answer composition, or GraphRAG.
 
 ## Source Binding Summary
 

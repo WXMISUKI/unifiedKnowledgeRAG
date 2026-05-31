@@ -232,6 +232,25 @@ The system SHALL allow callers to supply binding requirements to provider prefli
 - **WHEN** a caller requests `GET /api/provider/preflight` without explicit requirements
 - **THEN** the provider uses the default required knowledge capability ids and current contract version checks
 
+### Requirement: Provider preflight summarizes graph boundary schemas
+
+The system SHALL include compact graph schema discovery details in provider preflight graph boundary evidence without executing graph queries.
+
+#### Scenario: Preflight summarizes graph namespaces
+
+- **WHEN** a caller requests `GET /api/provider/preflight`
+- **THEN** the `graph_boundary` check details include graph schema count and configured graph ids
+
+#### Scenario: Preflight preserves planned graph execution
+
+- **WHEN** graph schemas are summarized in provider preflight
+- **THEN** the `graph_boundary` check still reports graph query execution as planned until GraphRAG execution is separately approved
+
+#### Scenario: Graph boundary preflight remains read-only
+
+- **WHEN** provider preflight summarizes graph schemas
+- **THEN** it does not execute graph queries, connect to graph stores, create ingestion jobs, extract entities, build ontology workflows, rebuild indexes, execute retrieval, or compose answers
+
 ### Requirement: Provider capability invocations include example requests
 The system SHALL include provider-owned example request payloads in capability invocation metadata for stable knowledge capability ids so external control planes can construct first-call probes without relying on implementation-specific defaults.
 
@@ -667,3 +686,22 @@ The system SHALL provide a read-only deployed provider smoke probe that validate
 
 - **WHEN** deployed smoke runs
 - **THEN** it does not execute document retrieval, answer composition, ingestion jobs, index rebuilds, embedding models, vector databases, model downloads, graph queries, provider registration, heartbeat governance, audit policy, source-to-agent binding, or final answer policy
+
+### Requirement: Deployed smoke summarizes source binding actions
+
+The system SHALL include compact source status and recommended action rollups when deployed provider smoke validates live source binding evidence.
+
+#### Scenario: Deployed smoke summarizes source binding statuses
+
+- **WHEN** the deployed provider smoke probe receives source binding summary evidence from `GET /api/provider/source-bindings`
+- **THEN** the `provider_source_bindings` check details include counts for source binding row statuses
+
+#### Scenario: Deployed smoke summarizes source binding recommended actions
+
+- **WHEN** the deployed provider smoke probe receives source binding summary evidence from `GET /api/provider/source-bindings`
+- **THEN** the `provider_source_bindings` check details include counts for source binding recommended actions
+
+#### Scenario: Deployed smoke source binding action summary remains read-only
+
+- **WHEN** source binding status and action counts are summarized in deployed provider smoke evidence
+- **THEN** the probe does not create source-to-agent bindings, create ingestion jobs, rebuild indexes, execute retrieval or answer composition, call embedding models, call vector databases, or execute GraphRAG

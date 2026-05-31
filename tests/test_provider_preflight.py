@@ -213,6 +213,14 @@ def test_provider_preflight_preserves_planned_graph_boundary():
         "capability_status": "planned",
         "execution_status": "planned",
         "reason": "Graph query execution is not implemented in this slice.",
+        "graph_schema_count": 1,
+        "graph_ids": ["ecommerce_order_graph"],
+        "graph_statuses": {"ecommerce_order_graph": "planned"},
+        "graph_stores": {"ecommerce_order_graph": "neo4j_planned"},
+        "boundary_note": (
+            "Graph schemas are discoverable, but graph query execution "
+            "remains planned until a separate GraphRAG change is approved."
+        ),
     }
     required = checks["required_capabilities"]["details"]["required_capability_ids"]
     assert "knowledge.rag.source_documents" in required

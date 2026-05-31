@@ -40,6 +40,20 @@ The project SHALL keep GraphRAG storage and graph query execution behind a separ
 - **WHEN** GraphRAG execution is proposed
 - **THEN** the proposal identifies target graph use cases, expected entities/relations/paths, source evidence rules, and operational ownership before adding graph-store dependencies
 
+### Requirement: Graph boundary preflight summaries advance use-case-driven GraphRAG readiness
+
+The project SHALL treat graph namespace summaries in provider preflight as Phase 5 boundary evidence when they help callers discover planned graph capability without adding graph execution or graph-store dependencies.
+
+#### Scenario: Graph boundary preflight summary is phase-aligned
+
+- **WHEN** an OpenSpec change adds graph schema counts or graph namespace ids to provider preflight evidence
+- **THEN** the roadmap records it as lightweight Phase 5 GraphRAG boundary/readiness work rather than graph execution promotion
+
+#### Scenario: Graph boundary preflight summary preserves graph gate
+
+- **WHEN** provider preflight summarizes graph namespaces
+- **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
+
 ### Requirement: Evidence packaging changes advance Phase 4 without changing provider scope
 The project SHALL treat retrieval evidence packs, citation policy metadata, and insufficient-evidence diagnostics as Phase 4 roadmap work when they help callers answer safely without moving final answer policy into the provider.
 
@@ -328,6 +342,20 @@ The project SHALL treat deployed source binding endpoint smoke as Phase 6 integr
 
 - **WHEN** deployed smoke validates source binding review over HTTP
 - **THEN** source-to-agent binding creation, approvals, audit, heartbeat governance, registration, and final answer policy remain outside this provider
+
+### Requirement: Deployed source binding action summaries advance Phase 6 integration evidence
+
+The project SHALL treat source binding status and recommended action rollups in deployed provider smoke evidence as lightweight Phase 6 deployed integration work when they help external control planes review live source readiness without adding binding policy or runtime execution responsibilities.
+
+#### Scenario: Deployed smoke action summary is phase-aligned
+
+- **WHEN** an OpenSpec change enriches deployed provider smoke source binding evidence with source status counts or recommended action counts
+- **THEN** the roadmap records it as Phase 6 deployed integration evidence with Phase 2 source binding context
+
+#### Scenario: Deployed smoke action summary preserves provider boundary
+
+- **WHEN** deployed provider smoke summarizes source binding statuses or recommended actions
+- **THEN** source-to-agent binding policy, approvals, audit, registration, ingestion execution, retrieval execution, answer composition, and final answer workflow remain owned outside this provider
 
 ### Requirement: Handoff evidence may include optional deployed smoke
 

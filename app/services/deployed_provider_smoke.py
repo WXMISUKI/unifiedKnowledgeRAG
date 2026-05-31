@@ -1,4 +1,5 @@
 import json
+from collections import Counter
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -449,7 +450,24 @@ def _source_bindings_summary(payload: dict[str, Any]) -> dict[str, Any]:
         "status": payload.get("status"),
         "source_count": source_count,
         "bindable_source_count": bindable_count,
+        "source_status_counts": _count_source_values(sources, "status"),
+        "recommended_action_counts": _count_source_values(
+            sources,
+            "recommended_action",
+        ),
     }
+
+
+def _count_source_values(
+    sources: list[Any],
+    field_name: str,
+) -> dict[str, int]:
+    counts = Counter(
+        source.get(field_name)
+        for source in sources
+        if isinstance(source, dict) and source.get(field_name)
+    )
+    return dict(sorted(counts.items()))
 
 
 def _operation_notes(*, provider_api_key: str | None) -> list[str]:

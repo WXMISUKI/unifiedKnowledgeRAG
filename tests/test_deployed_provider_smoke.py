@@ -76,6 +76,8 @@ def test_deployed_provider_smoke_is_ready_when_handoff_is_ready():
         "status": "ready",
         "source_count": 2,
         "bindable_source_count": 2,
+        "source_status_counts": {"ready": 2},
+        "recommended_action_counts": {"bind_source_from_control_plane": 2},
     }
 
 
@@ -127,6 +129,14 @@ def test_deployed_provider_smoke_fails_closed_on_blocked_source_bindings():
         if request.url.path == "/api/provider/source-bindings":
             payload["status"] = "blocked"
             payload["sources"][0]["bindable"] = False
+            payload["sources"][0]["status"] = "blocked"
+            payload["sources"][0]["recommended_action"] = (
+                "run_ingestion_job_before_binding"
+            )
+            payload["sources"][1]["status"] = "review"
+            payload["sources"][1]["recommended_action"] = (
+                "review_source_fingerprint_before_binding"
+            )
         return httpx.Response(200, json=payload)
 
     client = httpx.Client(
@@ -142,6 +152,16 @@ def test_deployed_provider_smoke_fails_closed_on_blocked_source_bindings():
     assert checks["provider_source_bindings"].passed is False
     assert checks["provider_source_bindings"].details["source_count"] == 2
     assert checks["provider_source_bindings"].details["bindable_source_count"] == 1
+    assert checks["provider_source_bindings"].details["source_status_counts"] == {
+        "blocked": 1,
+        "review": 1,
+    }
+    assert checks["provider_source_bindings"].details[
+        "recommended_action_counts"
+    ] == {
+        "review_source_fingerprint_before_binding": 1,
+        "run_ingestion_job_before_binding": 1,
+    }
     assert checks["provider_source_bindings"].error == (
         "Provider source binding evidence is blocked or invalid."
     )
@@ -231,8 +251,18 @@ def _payload_for(path: str) -> dict:
             "status": "ready",
             "provider": {"provider_id": "unifiedKnowledgeProvider"},
             "sources": [
-                {"source_id": "refund_policy_docs", "bindable": True},
-                {"source_id": "logistics_faq", "bindable": True},
+                {
+                    "source_id": "refund_policy_docs",
+                    "status": "ready",
+                    "bindable": True,
+                    "recommended_action": "bind_source_from_control_plane",
+                },
+                {
+                    "source_id": "logistics_faq",
+                    "status": "ready",
+                    "bindable": True,
+                    "recommended_action": "bind_source_from_control_plane",
+                },
             ],
         }
     if path == "/api/provider/handoff":

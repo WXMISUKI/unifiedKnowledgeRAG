@@ -3,6 +3,7 @@ from app.models.contracts import ProviderPreflightCheck, ProviderPreflightRespon
 from app.services.provider_capabilities import build_capabilities_response
 from app.services.provider_health import build_health_response
 from app.services.provider_manifest import build_provider_integration_manifest
+from app.services.source_catalog import list_graphs
 
 
 REQUIRED_CAPABILITY_IDS = [
@@ -170,6 +171,7 @@ def _schema_refs_check(
 def _planned_graph_boundary_check(capabilities_by_id) -> ProviderPreflightCheck:
     graph_capability = capabilities_by_id.get("knowledge.graph.query")
     graph_status = graph_capability.status if graph_capability else "missing"
+    graphs = list_graphs()
     passed = graph_status in {"planned", "ready"}
     return ProviderPreflightCheck(
         name="graph_boundary",
@@ -180,6 +182,20 @@ def _planned_graph_boundary_check(capabilities_by_id) -> ProviderPreflightCheck:
             "capability_status": graph_status,
             "execution_status": "planned",
             "reason": graph_capability.reason if graph_capability else None,
+            "graph_schema_count": len(graphs),
+            "graph_ids": [graph.id for graph in graphs],
+            "graph_statuses": {
+                graph.id: graph.status
+                for graph in graphs
+            },
+            "graph_stores": {
+                graph.id: graph.graph_store
+                for graph in graphs
+            },
+            "boundary_note": (
+                "Graph schemas are discoverable, but graph query execution "
+                "remains planned until a separate GraphRAG change is approved."
+            ),
         },
         reason=None if passed else "Graph query contract boundary is missing.",
     )
