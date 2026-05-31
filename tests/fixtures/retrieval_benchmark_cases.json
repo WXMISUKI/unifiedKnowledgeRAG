@@ -229,5 +229,38 @@
     "expected_source_id": null,
     "expected_citation": null,
     "expect_empty": true
+  },
+  {
+    "id": "refund-high-value-review-customer-like",
+    "category": "policy-nuance",
+    "difficulty": "hard",
+    "query": "客户申请退款金额超过5000元时，是否必须主管复核并把复核意见写进工单？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#high-value-review",
+    "expect_empty": false
+  },
+  {
+    "id": "empty-datacenter-temperature-alert",
+    "category": "empty",
+    "difficulty": "medium",
+    "query": "数据中心机柜温度告警分级标准是什么？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
+  },
+  {
+    "id": "empty-social-security-reconciliation",
+    "category": "empty",
+    "difficulty": "medium",
+    "query": "发动机气缸压缩比标定标准是什么？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
   }
 ]

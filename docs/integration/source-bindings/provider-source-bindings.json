@@ -1,6 +1,6 @@
 {
   "id": "provider-source-binding-summary-v1",
-  "generated_at": "2026-05-31T04:56:38.819392+00:00",
+  "generated_at": "2026-05-31T06:51:27.720159+00:00",
   "status": "ready",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -9,6 +9,14 @@
     "contract_version": "knowledge-provider-contract-v1",
     "manifest_version": "provider-integration-manifest-v1",
     "component_role": "knowledge_data_plane"
+  },
+  "total_source_count": 2,
+  "bindable_source_count": 2,
+  "status_counts": {
+    "ready": 2
+  },
+  "recommended_action_counts": {
+    "bind_source_from_control_plane": 2
   },
   "sources": [
     {

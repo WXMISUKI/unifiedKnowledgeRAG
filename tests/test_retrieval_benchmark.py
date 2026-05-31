@@ -116,6 +116,9 @@ def test_loads_retrieval_benchmark_cases():
         "empty-coupon-approval",
         "empty-password-reset-email",
         "empty-finance-reconciliation",
+        "refund-high-value-review-customer-like",
+        "empty-datacenter-temperature-alert",
+        "empty-social-security-reconciliation",
     ]
     assert cases[0].expected_citation == "refund_policy_2026#section-3"
     assert cases[-1].expect_empty is True
@@ -127,7 +130,7 @@ def test_fixture_backend_benchmark_reports_success_metrics():
     report = run_retrieval_benchmark(cases, Settings(rag_retrieval_backend="fixture"))
 
     assert report.summary.backend == "fixture"
-    assert report.summary.total_cases == 21
+    assert report.summary.total_cases == 24
     assert report.summary.hit_rate == 1.0
     assert report.summary.citation_match_rate == 1.0
     assert report.summary.empty_handling_rate == 1.0
@@ -173,10 +176,11 @@ def test_benchmark_report_includes_category_summaries():
 
     summaries = report.summary.category_summaries
     assert summaries["policy"]["total_cases"] == 1
+    assert summaries["policy-nuance"]["total_cases"] == 1
     assert summaries["paraphrase"]["total_cases"] == 2
     assert summaries["operational-escalation"]["total_cases"] == 2
     assert summaries["long-section"]["total_cases"] == 2
-    assert summaries["empty"]["total_cases"] == 7
+    assert summaries["empty"]["total_cases"] == 9
     assert summaries["empty"]["empty_handling_rate"] == 1.0
 
 
@@ -191,7 +195,7 @@ def test_exports_benchmark_report_json(tmp_path):
     assert exported_path == output_path
     assert payload == benchmark_report_to_dict(report)
     assert payload["summary"]["backend"] == "fixture"
-    assert payload["summary"]["category_summaries"]["empty"]["total_cases"] == 7
+    assert payload["summary"]["category_summaries"]["empty"]["total_cases"] == 9
     assert payload["cases"][0]["returned_citations"]
 
 
@@ -386,7 +390,7 @@ def test_evidence_grading_candidate_labels_expected_empty_cases():
         case for case in citation_result.cases if case.case_id == "empty-moon-warehouse"
     )
 
-    assert citation_result.total_cases == 21
+    assert citation_result.total_cases == 24
     assert citation_result.answer_bearing_rate == 1.0
     assert citation_result.related_insufficient_count == 0
     assert citation_result.missing_evidence_count == 0
@@ -434,7 +438,7 @@ def test_loads_evidence_grading_stress_cases_separately():
     baseline_cases = load_benchmark_cases(FIXTURE_PATH)
     stress_cases = load_benchmark_cases(EVIDENCE_GRADING_STRESS_PATH)
 
-    assert len(baseline_cases) == 21
+    assert len(baseline_cases) == 24
     assert [case.id for case in stress_cases] == [
         "stress-refund-source-but-wrong-citation",
         "stress-missing-evidence-unmatched-vocabulary",
@@ -451,7 +455,7 @@ def test_loads_exact_term_identifier_cases_separately():
     baseline_cases = load_benchmark_cases(FIXTURE_PATH)
     exact_cases = load_benchmark_cases(EXACT_TERM_IDENTIFIER_PATH)
 
-    assert len(baseline_cases) == 21
+    assert len(baseline_cases) == 24
     assert [case.id for case in exact_cases] == [
         "exact-refund-policy-code",
         "exact-refund-form-name",
@@ -471,7 +475,7 @@ def test_loads_hybrid_empty_stress_cases_separately():
     exact_cases = load_benchmark_cases(EXACT_TERM_IDENTIFIER_PATH)
     stress_cases = load_benchmark_cases(HYBRID_EMPTY_STRESS_PATH)
 
-    assert len(baseline_cases) == 21
+    assert len(baseline_cases) == 24
     assert len(exact_cases) == 4
     assert [case.id for case in stress_cases] == [
         "hybrid-empty-fake-refund-form",
@@ -782,7 +786,7 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     assert [item.candidate.id for item in bundle.retrieval_evaluations] == [
         "fixture-chinese-seed-baseline"
     ]
-    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 21
+    assert bundle.retrieval_evaluations[0].report.summary.total_cases == 24
     assert bundle.retrieval_evaluations[0].report.summary.hit_rate == 1.0
     assert {item.result.candidate.id for item in bundle.embedding_evaluations} >= {
         "mock-hash-v1",
@@ -809,7 +813,7 @@ def test_exports_chinese_seed_evidence_bundle(tmp_path):
     assert retrieval_payload["candidate"]["metadata"]["quality_claim"] == (
         "contract-baseline-only"
     )
-    assert retrieval_payload["report"]["summary"]["total_cases"] == 21
+    assert retrieval_payload["report"]["summary"]["total_cases"] == 24
 
     embedding_payload = json.loads(embedding_json.read_text(encoding="utf-8"))
     assert embedding_payload["candidate"]["id"] == "bge-m3-local-candidate"

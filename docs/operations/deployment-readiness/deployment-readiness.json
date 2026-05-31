@@ -1,6 +1,6 @@
 {
   "id": "deployment-readiness-v1",
-  "generated_at": "2026-05-31T02:12:10.073370+00:00",
+  "generated_at": "2026-05-31T06:51:27.714188+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -42,6 +42,7 @@
       "knowledge.rag.source_documents",
       "knowledge.rag.retrieve",
       "knowledge.rag.answer",
+      "knowledge.provider.source_bindings",
       "knowledge.graph.query"
     ],
     "checks": [
@@ -94,10 +95,12 @@
             "knowledge.rag.source_documents",
             "knowledge.rag.retrieve",
             "knowledge.rag.answer",
+            "knowledge.provider.source_bindings",
             "knowledge.graph.query"
           ],
           "available_capability_ids": [
             "knowledge.graph.query",
+            "knowledge.provider.source_bindings",
             "knowledge.rag.answer",
             "knowledge.rag.retrieve",
             "knowledge.rag.source_documents"
@@ -116,6 +119,7 @@
             "knowledge.rag.source_documents",
             "knowledge.rag.retrieve",
             "knowledge.rag.answer",
+            "knowledge.provider.source_bindings",
             "knowledge.graph.query"
           ],
           "missing_schema_ref_capability_ids": []
@@ -130,7 +134,18 @@
           "capability_id": "knowledge.graph.query",
           "capability_status": "planned",
           "execution_status": "planned",
-          "reason": "Graph query execution is not implemented in this slice."
+          "reason": "Graph query execution is not implemented in this slice.",
+          "graph_schema_count": 1,
+          "graph_ids": [
+            "ecommerce_order_graph"
+          ],
+          "graph_statuses": {
+            "ecommerce_order_graph": "planned"
+          },
+          "graph_stores": {
+            "ecommerce_order_graph": "neo4j_planned"
+          },
+          "boundary_note": "Graph schemas are discoverable, but graph query execution remains planned until a separate GraphRAG change is approved."
         },
         "reason": null
       }
@@ -139,8 +154,8 @@
   "contract_smoke": {
     "passed": true,
     "summary": {
-      "total": 8,
-      "passed": 8,
+      "total": 9,
+      "passed": 9,
       "failed": 0
     },
     "check_names": [
@@ -148,6 +163,7 @@
       "provider_integration_manifest",
       "provider_preflight",
       "capability_invocation_metadata",
+      "graph_schema_discovery",
       "rag_retrieve_contract",
       "rag_answer_contract",
       "rag_insufficient_evidence_pack_contract",

@@ -1,6 +1,6 @@
 {
   "id": "provider-contract-smoke-v1",
-  "generated_at": "2026-05-31T02:12:10.008742+00:00",
+  "generated_at": "2026-05-31T06:51:27.663511+00:00",
   "passed": true,
   "checks": [
     {
@@ -24,7 +24,7 @@
         "manifest_version": "provider-integration-manifest-v1",
         "contract_version": "knowledge-provider-contract-v1",
         "component_role": "knowledge_data_plane",
-        "capability_count": 4
+        "capability_count": 5
       },
       "error": null
     },
@@ -47,6 +47,7 @@
       "details": {
         "capability_ids": [
           "knowledge.graph.query",
+          "knowledge.provider.source_bindings",
           "knowledge.rag.answer",
           "knowledge.rag.retrieve",
           "knowledge.rag.source_documents"
@@ -55,10 +56,27 @@
           "knowledge.rag.source_documents": "/api/rag/sources/{source_id}/documents",
           "knowledge.rag.retrieve": "/api/rag/retrieve",
           "knowledge.rag.answer": "/api/rag/answer",
+          "knowledge.provider.source_bindings": "/api/provider/source-bindings",
           "knowledge.graph.query": "/api/graph/query"
         },
-        "example_request_count": 4,
+        "example_request_count": 5,
         "graph_status": "planned"
+      },
+      "error": null
+    },
+    {
+      "name": "graph_schema_discovery",
+      "passed": true,
+      "endpoint": "GET /api/graph/schemas",
+      "details": {
+        "graph_count": 1,
+        "graph_ids": [
+          "ecommerce_order_graph"
+        ],
+        "graph_status": "planned",
+        "graph_store": "neo4j_planned",
+        "entity_type_count": 4,
+        "relation_type_count": 3
       },
       "error": null
     },
@@ -125,8 +143,8 @@
     }
   ],
   "summary": {
-    "total": 8,
-    "passed": 8,
+    "total": 9,
+    "passed": 9,
     "failed": 0
   },
   "json_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",

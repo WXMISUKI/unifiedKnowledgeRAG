@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-05-31T02:12:10.084410+00:00",
+  "generated_at": "2026-05-31T06:51:27.724031+00:00",
   "status": "review",
   "steps": [
     {
@@ -24,7 +24,7 @@
         "docs\\smoke\\provider-contract\\provider-contract-smoke.md"
       ],
       "recommended_action": "no_action_required",
-      "summary": "status=ready; summary={\"failed\": 0, \"passed\": 8, \"total\": 8}",
+      "summary": "status=ready; summary={\"failed\": 0, \"passed\": 9, \"total\": 9}",
       "error": null
     },
     {

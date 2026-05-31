@@ -2,9 +2,13 @@
 
 - Report: `provider-source-binding-summary-v1`
 - Status: `ready`
-- Generated At: `2026-05-31T04:56:38.819392+00:00`
+- Generated At: `2026-05-31T06:51:27.720159+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
+- Total Sources: `2`
+- Bindable Sources: `2`
+- Status Counts: `ready=2`
+- Recommended Action Counts: `bind_source_from_control_plane=2`
 
 ## Sources
 

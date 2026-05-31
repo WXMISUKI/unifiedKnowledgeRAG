@@ -2,7 +2,7 @@
 
 - Report: `deployment-readiness-v1`
 - Status: `review`
-- Generated At: `2026-05-31T02:12:10.073370+00:00`
+- Generated At: `2026-05-31T06:51:27.714188+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 
@@ -12,7 +12,7 @@
 |---|---|---|
 | Health | `ok` | RAG `ready`, Answer `ready`, Graph `planned` |
 | Preflight | `bindable` | `6/6` checks passed |
-| Contract Smoke | `passed` | `8/8` checks passed |
+| Contract Smoke | `passed` | `9/9` checks passed |
 
 ## Runtime Configuration
 
