@@ -7,6 +7,7 @@ from typing import Any, Callable
 from app.services.deployment_readiness import export_deployment_readiness_report
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
+from app.services.phase3_fp_fn_review import export_phase3_fp_fn_review_report
 from app.services.provider_integration_client import export_provider_integration_probe_report
 from app.services.provider_source_binding import export_provider_source_binding_summary
 from app.services.reindex_readiness import export_reindex_readiness_report
@@ -33,6 +34,14 @@ class ProviderHandoffRefreshReport:
     status: str
     steps: list[dict[str, Any]]
     operation_notes: list[str] = field(default_factory=list)
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class LocalRefreshPlaceholderReport:
+    status: str
+    summary: dict[str, Any] | None = None
     json_path: Path | None = None
     markdown_path: Path | None = None
 
@@ -75,6 +84,16 @@ def default_handoff_refresh_steps(
             output_dir=artifact_base_dir / "docs/integration/source-bindings",
             exporter=export_provider_source_binding_summary,
             status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase3_fp_fn_review",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir / "docs/benchmark/chinese-seed/fp-fn-review",
+            exporter=lambda output_dir: _export_phase3_fp_fn_review_nonblocking(
+                artifact_base_dir=artifact_base_dir,
+                output_dir=output_dir,
+            ),
+            status_reader=_phase3_fp_fn_step_status,
         ),
         HandoffRefreshStepSpec(
             id="provider_handoff_bundle",
@@ -295,3 +314,32 @@ def _operation_notes(steps: list[dict[str, Any]]) -> list[str]:
     if any(step["status"] in {"blocked", "skipped"} for step in steps):
         notes.append("Refresh stopped or skipped later steps because a blocking issue was detected.")
     return notes
+
+
+def _export_phase3_fp_fn_review_nonblocking(
+    *,
+    artifact_base_dir: Path,
+    output_dir: Path,
+) -> Any:
+    benchmark_path = (
+        artifact_base_dir
+        / "docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json"
+    )
+    try:
+        return export_phase3_fp_fn_review_report(
+            benchmark_report_path=benchmark_path,
+            output_dir=output_dir,
+        )
+    except FileNotFoundError:
+        return LocalRefreshPlaceholderReport(
+            status="review",
+            summary={"reason": "phase3_seed_retrieval_baseline_missing"},
+        )
+
+
+def _phase3_fp_fn_step_status(report: Any) -> str:
+    if hasattr(report, "status"):
+        return getattr(report, "status")
+    fp_count = getattr(report, "false_positive_count", 0)
+    fn_count = getattr(report, "false_negative_count", 0)
+    return "review" if (fp_count > 0 or fn_count > 0) else "ready"

@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-refresh-v1`
 - Status: `review`
-- Generated At: `2026-05-31T06:51:27.724031+00:00`
+- Generated At: `2026-05-31T07:52:28.899496+00:00`
 
 ## Refresh Steps
 
@@ -13,6 +13,7 @@
 | `deployment_readiness` | `operations` | `review` | `docs\operations\deployment-readiness\deployment-readiness.json`, `docs\operations\deployment-readiness\deployment-readiness.md` | `review_evidence_notes` | status=review; report_status=review |
 | `reindex_readiness` | `operations` | `ready` | `docs\operations\reindex-readiness\reindex-readiness.json`, `docs\operations\reindex-readiness\reindex-readiness.md` | `no_action_required` | status=ready; report_status=ready |
 | `source_binding_summary` | `source-binding` | `ready` | `docs\integration\source-bindings\provider-source-bindings.json`, `docs\integration\source-bindings\provider-source-bindings.md` | `no_action_required` | status=ready; report_status=ready |
+| `phase3_fp_fn_review` | `retrieval-evidence` | `review` | `docs\benchmark\chinese-seed\fp-fn-review\phase3-fp-fn-review.json`, `docs\benchmark\chinese-seed\fp-fn-review\phase3-fp-fn-review.md` | `review_evidence_notes` | status=review |
 | `provider_handoff_bundle` | `handoff` | `review` | `docs\integration\provider-handoff\provider-handoff-bundle.json`, `docs\integration\provider-handoff\provider-handoff-bundle.md` | `review_evidence_notes` | status=review; report_status=review |
 
 ## Operation Notes

@@ -2,7 +2,7 @@
 
 - Report: `provider-source-binding-summary-v1`
 - Status: `ready`
-- Generated At: `2026-05-31T06:51:27.720159+00:00`
+- Generated At: `2026-05-31T07:52:28.892744+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Total Sources: `2`

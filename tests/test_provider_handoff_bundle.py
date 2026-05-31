@@ -32,7 +32,11 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["phase3_seed_retrieval_baseline"]["present"] is True
     assert artifacts["phase3_seed_retrieval_baseline"]["required"] is False
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
-    assert "total_cases=24" in artifacts["phase3_seed_retrieval_baseline"]["summary"]
+    assert "total_cases=26" in artifacts["phase3_seed_retrieval_baseline"]["summary"]
+    assert artifacts["phase3_fp_fn_review"]["present"] is True
+    assert artifacts["phase3_fp_fn_review"]["required"] is False
+    assert artifacts["phase3_fp_fn_review"]["status"] == "ready"
+    assert "false_positive_count=1" in artifacts["phase3_fp_fn_review"]["summary"]
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
@@ -163,6 +167,7 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["reindex_readiness"]["status"] == "ready"
     assert artifacts["source_binding_summary"]["status"] == "ready"
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
+    assert artifacts["phase3_fp_fn_review"]["status"] == "ready"
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"
@@ -446,5 +451,30 @@ def test_provider_handoff_bundle_keeps_missing_phase3_evidence_reviewable(tmp_pa
     assert artifact["required"] is False
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
-        "run_deployed_provider_smoke_after_deployment"
+        "regenerate_phase3_seed_retrieval_baseline"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase3_fp_fn_evidence_reviewable(tmp_path):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase3_fp_fn_review",
+            category="retrieval-evidence",
+            path=Path("missing-phase3-fp-fn-review.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase3_fp_fn_review"
     )

@@ -73,6 +73,12 @@ DEFAULT_EVIDENCE_SPECS = [
         ),
         required=False,
     ),
+    HandoffEvidenceSpec(
+        id="phase3_fp_fn_review",
+        category="retrieval-evidence",
+        path=Path("docs/benchmark/chinese-seed/fp-fn-review/phase3-fp-fn-review.json"),
+        required=False,
+    ),
 ]
 
 
@@ -209,12 +215,12 @@ def _artifact_row(
             "summary": (
                 "Required evidence artifact is missing."
                 if spec.required
-                else "Optional deployed evidence is missing."
+                else _optional_missing_summary(spec.id)
             ),
             "recommended_action": (
                 f"regenerate_{spec.id}"
                 if spec.required
-                else "run_deployed_provider_smoke_after_deployment"
+                else _optional_missing_action(spec.id)
             ),
         }
     payload = json.loads(path.read_text(encoding="utf-8"))
@@ -327,6 +333,20 @@ def _artifact_status_and_summary(
                 f"empty_handling_rate={empty_handling_rate:.4f}"
             ),
         )
+    if artifact_id == "phase3_fp_fn_review":
+        fp_count = _int_value(payload.get("false_positive_count"), fallback=0)
+        fn_count = _int_value(payload.get("false_negative_count"), fallback=0)
+        fp_rate = _float_value(payload.get("false_positive_rate"), fallback=0.0)
+        fn_rate = _float_value(payload.get("false_negative_rate"), fallback=0.0)
+        return (
+            "ready",
+            (
+                f"false_positive_count={fp_count}; "
+                f"false_negative_count={fn_count}; "
+                f"false_positive_rate={fp_rate:.4f}; "
+                f"false_negative_rate={fn_rate:.4f}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -388,6 +408,26 @@ def _recommended_action(status: str) -> str:
     if status == "missing":
         return "regenerate_evidence"
     return "resolve_failed_evidence"
+
+
+def _optional_missing_summary(artifact_id: str) -> str:
+    if artifact_id == "deployed_provider_smoke":
+        return "Optional deployed evidence is missing."
+    if artifact_id == "phase3_seed_retrieval_baseline":
+        return "Optional Phase 3 retrieval baseline evidence is missing."
+    if artifact_id == "phase3_fp_fn_review":
+        return "Optional Phase 3 FP/FN review evidence is missing."
+    return "Optional evidence artifact is missing."
+
+
+def _optional_missing_action(artifact_id: str) -> str:
+    if artifact_id == "deployed_provider_smoke":
+        return "run_deployed_provider_smoke_after_deployment"
+    if artifact_id == "phase3_seed_retrieval_baseline":
+        return "regenerate_phase3_seed_retrieval_baseline"
+    if artifact_id == "phase3_fp_fn_review":
+        return "regenerate_phase3_fp_fn_review"
+    return "review_evidence_notes"
 
 
 def _overall_status(artifact_rows: list[dict[str, Any]]) -> str:

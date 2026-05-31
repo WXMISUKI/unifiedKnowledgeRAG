@@ -1,0 +1,32 @@
+{
+  "id": "phase3-fp-fn-review-v1",
+  "generated_at": "2026-05-31T07:52:28.894550+00:00",
+  "source_report_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
+  "total_cases": 26,
+  "false_positive_count": 1,
+  "false_negative_count": 0,
+  "false_positive_rate": 0.0385,
+  "false_negative_rate": 0.0,
+  "false_positive_cases": [
+    {
+      "id": "empty-refund-high-value-auto-compensation",
+      "category": "empty",
+      "expect_empty": true,
+      "hit_at_k": false,
+      "citation_match": false,
+      "empty_query_handling": false,
+      "returned_citations": [
+        "refund_policy_2026#high-value-review",
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#address-change"
+      ]
+    }
+  ],
+  "false_negative_cases": [],
+  "notes": [
+    "This report is a read-only review view over existing benchmark evidence.",
+    "It does not change retrieval defaults, thresholds, or runtime promotion status."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.md"
+}

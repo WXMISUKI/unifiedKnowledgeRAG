@@ -74,20 +74,15 @@ The system SHALL run benchmark cases against a selected retrieval backend and re
 
 The system SHALL export retrieval benchmark reports as durable local evidence files.
 
-#### Scenario: JSON report is exported
+#### Scenario: Phase 3 FP/FN review can be exported from benchmark evidence
 
-- **WHEN** a benchmark report is exported as JSON
-- **THEN** the output includes summary metrics, category summaries, and per-case results
+- **WHEN** a caller exports Phase 3 FP/FN review from an existing benchmark evidence JSON
+- **THEN** the system writes local JSON and Markdown files containing false-positive and false-negative counts, rates, and case ids
 
-#### Scenario: Markdown report is exported
+#### Scenario: FP/FN review export remains local and evaluation-only
 
-- **WHEN** a benchmark report is exported as Markdown
-- **THEN** the output includes a human-readable summary table and per-case result table
-
-#### Scenario: Report export remains local
-
-- **WHEN** benchmark report export is used
-- **THEN** the system writes local files without exposing a new public HTTP API
+- **WHEN** Phase 3 FP/FN review evidence is exported
+- **THEN** runtime retrieval defaults, provider HTTP contracts, and production promotion status remain unchanged
 
 ### Requirement: Retrieval candidates can be evaluated consistently
 

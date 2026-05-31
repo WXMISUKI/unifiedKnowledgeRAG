@@ -5,6 +5,7 @@ from pathlib import Path
 from app.services.provider_handoff_refresh import (
     HandoffRefreshStepSpec,
     default_handoff_refresh_steps,
+    _phase3_fp_fn_step_status,
     refresh_provider_handoff_evidence,
     render_provider_handoff_refresh_markdown,
 )
@@ -107,9 +108,24 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     step_ids = [step.id for step in steps]
 
     assert "source_binding_summary" in step_ids
+    assert "phase3_fp_fn_review" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
+        "phase3_fp_fn_review"
+    )
+    assert step_ids.index("phase3_fp_fn_review") < step_ids.index(
         "provider_handoff_bundle"
     )
+
+
+def test_phase3_fp_fn_step_status_uses_counts():
+    @dataclass(frozen=True)
+    class FakeFpFn:
+        false_positive_count: int
+        false_negative_count: int
+
+    assert _phase3_fp_fn_step_status(FakeFpFn(0, 0)) == "ready"
+    assert _phase3_fp_fn_step_status(FakeFpFn(1, 0)) == "review"
+    assert _phase3_fp_fn_step_status(FakeFpFn(0, 1)) == "review"
 
 
 def _step(tmp_path: Path, step_id: str, status: str) -> HandoffRefreshStepSpec:

@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-05-31T06:51:27.722887+00:00",
+  "generated_at": "2026-05-31T07:52:28.898066+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -73,6 +73,26 @@
       "status": "review",
       "summary": "Optional deployed evidence is missing.",
       "recommended_action": "run_deployed_provider_smoke_after_deployment"
+    },
+    {
+      "id": "phase3_seed_retrieval_baseline",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "total_cases=26; hit_rate=0.9615; citation_match_rate=0.9615; empty_handling_rate=0.9000",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_fp_fn_review",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "false_positive_count=1; false_negative_count=0; false_positive_rate=0.0385; false_negative_rate=0.0000",
+      "recommended_action": "no_action_required"
     }
   ],
   "operation_notes": [

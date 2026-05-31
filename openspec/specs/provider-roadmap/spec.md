@@ -431,10 +431,10 @@ The project SHALL treat reuse of source binding aggregate counts in handoff and 
 
 The project SHALL treat customer-like benchmark fixture expansion as Phase 3 retrieval evidence work when it improves promotion review quality without changing runtime defaults.
 
-#### Scenario: Customer-like expansion includes false-positive/false-negative review
+#### Scenario: Phase 3 FP/FN review export is phase-aligned
 
-- **WHEN** an OpenSpec change expands customer-like benchmark fixtures
-- **THEN** the roadmap records explicit false-positive and false-negative review coverage as evidence-only Phase 3 work
+- **WHEN** an OpenSpec change adds local FP/FN review exports based on existing benchmark evidence
+- **THEN** the roadmap records it as Phase 3 evidence review ergonomics work without runtime retrieval promotion
 
 ### Requirement: Phase 3 evidence refresh preserves lightweight promotion boundaries
 
@@ -463,4 +463,13 @@ The project SHALL treat compact Phase 3 retrieval evidence summaries in handoff 
 
 - **WHEN** handoff includes compact Phase 3 benchmark summary metrics
 - **THEN** retrieval defaults, control-plane ownership, and GraphRAG execution boundaries remain unchanged
+
+### Requirement: Phase 3 FP/FN review export is phase-aligned
+
+The project SHALL treat integration of local FP/FN review evidence into handoff and refresh as Phase 3/Phase 6 evidence visibility work.
+
+#### Scenario: Handoff/refresh FP/FN integration remains evaluation-only
+
+- **WHEN** an OpenSpec change integrates FP/FN review evidence into handoff bundle or refresh workflow
+- **THEN** runtime retrieval defaults and promotion gates remain unchanged
 

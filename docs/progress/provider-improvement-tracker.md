@@ -19,6 +19,8 @@
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`), with baseline fixture expanded to 24 cases.
 - Phase 3 handoff evidence summary completed and archived (`2026-05-31-add-phase3-evidence-summary-to-handoff`), adding optional baseline metric rollup to provider handoff bundle.
 - Phase 3 false-positive/false-negative customer-like extension completed and archived (`2026-05-31-expand-phase3-fp-fn-customer-like-cases`), with baseline fixture expanded to 26 cases and one expected-empty false-positive risk explicitly exposed.
+- Phase 3 FP/FN review export completed and archived (`2026-05-31-add-phase3-fp-fn-review-export`), adding a read-only summary artifact over benchmark evidence (`false_positive_count=1`, `false_negative_count=0`).
+- Phase 3 FP/FN review integrated into handoff/refresh and archived (`2026-05-31-add-phase3-fp-fn-review-into-handoff-refresh`), with optional handoff summary row and non-blocking refresh step.
 
 ## In Progress
 
@@ -40,6 +42,10 @@
 - Refreshed artifact:
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json`
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.md`
+  - `docs/benchmark/chinese-seed/fp-fn-review/phase3-fp-fn-review.json`
+  - `docs/benchmark/chinese-seed/fp-fn-review/phase3-fp-fn-review.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_fp_fn_review` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_fp_fn_review` step)
 - Refreshed baseline summary:
   - `total_cases=26`
   - `hit_rate=0.9615`
@@ -54,7 +60,7 @@
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
-- Continue next smallest Phase 3 slice on false-positive/false-negative customer-like benchmark coverage (evidence only, no runtime default promotion).
+- Continue next smallest Phase 3 slice on evaluation-only gating candidates with cross-case coverage, and avoid single-case overfitting.
 
 ## Next Step Plan
 
@@ -65,7 +71,7 @@
 
 ## Latest Refresh
 
-- Run time: `2026-05-31T06:51:27Z`
+- Run time: `2026-05-31T07:54:20Z`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -74,6 +80,7 @@
   - `deployment_readiness`: `review`
   - `reindex_readiness`: `ready`
   - `source_binding_summary`: `ready`
+  - `phase3_fp_fn_review`: `review`
   - `provider_handoff_bundle`: `review`
 
 ## Current Gaps To Close
