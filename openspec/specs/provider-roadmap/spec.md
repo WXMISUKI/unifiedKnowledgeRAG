@@ -854,3 +854,59 @@ The project SHALL preserve a documentation-only decision record for each Qdrant+
 - **WHEN** the decision record is published
 - **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
 
+### Requirement: Phase 3 hybrid runtime promotion decision review SHALL have a dedicated contract
+
+The project SHALL maintain a documentation-only contract for the final Phase 3 hybrid runtime promotion review before any runtime default switch is considered.
+
+#### Scenario: Hybrid decision contract is phase-aligned and evidence-driven
+
+- **WHEN** a reviewer evaluates whether hybrid runtime defaults can be promoted
+- **THEN** the contract lists required Phase 3 and Phase 6 bridge evidence inputs and explicit review-state semantics
+
+#### Scenario: Hybrid decision contract preserves provider boundaries
+
+- **WHEN** the contract is published or refreshed
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG planned boundaries, and caller control-plane ownership remain unchanged
+
+### Requirement: Phase 3 hybrid runtime promotion decision readiness exports stay lightweight and review-only
+
+The project SHALL treat hybrid runtime promotion decision readiness exports as local Phase 3 evidence visibility work without changing runtime defaults.
+
+#### Scenario: Hybrid decision readiness export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes hybrid runtime promotion decision readiness evidence
+- **THEN** the roadmap records it as Phase 3 review visibility and not runtime promotion
+
+#### Scenario: Hybrid decision readiness export preserves boundaries
+
+- **WHEN** the export summarizes review signals and open gates
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG planned boundaries, and caller ownership remain unchanged
+
+### Requirement: Phase 3 hybrid runtime promotion decision smoke remains lightweight evidence maintenance
+
+The project SHALL treat Phase 3 hybrid runtime promotion decision smoke as lightweight evidence maintenance when it validates final decision evidence-chain completeness without changing runtime defaults.
+
+#### Scenario: Hybrid decision smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes hybrid runtime promotion decision smoke evidence
+- **THEN** the roadmap records it as Phase 3 evidence maintenance and review ergonomics work
+
+#### Scenario: Hybrid decision smoke preserves boundaries
+
+- **WHEN** smoke checks run
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG boundaries, and caller ownership remain unchanged
+
+### Requirement: Phase 3 hybrid runtime promotion decision SHALL be explicitly recorded
+
+The project SHALL preserve a documentation-only final decision record for each Phase 3 hybrid runtime promotion review cycle before any runtime default promotion.
+
+#### Scenario: Hybrid decision record captures keep-default verdict
+
+- **WHEN** hybrid promotion evidence remains candidate-level or review-level
+- **THEN** the decision record states `keep_runtime_defaults` and lists open gates for production promotion
+
+#### Scenario: Hybrid decision record remains boundary-safe
+
+- **WHEN** the hybrid decision record is published
+- **THEN** it does not change provider runtime defaults, public API contracts, GraphRAG planned boundary, or caller ownership responsibilities
+

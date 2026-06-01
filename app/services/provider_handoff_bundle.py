@@ -197,6 +197,24 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase3_hybrid_runtime_promotion_decision_readiness",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/benchmark/chinese-seed/hybrid-runtime-promotion/"
+            "phase3-hybrid-runtime-promotion-decision-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase3_hybrid_runtime_promotion_decision_smoke",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/smoke/hybrid-runtime-promotion/"
+            "phase3-hybrid-runtime-promotion-decision-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase4_evidence_pack_readiness",
         category="evidence-packaging",
         path=Path(
@@ -689,6 +707,33 @@ def _artifact_status_and_summary(
                 f"expected_empty_pass_rate={_float_value(summary.get('expected_empty_pass_rate'), fallback=0.0):.4f}"
             ),
         )
+    if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"review_state={payload.get('review_state', 'review')}; "
+                f"required_signals={_int_value(summary.get('required_signals'), fallback=0)}; "
+                f"ready_signals={_int_value(summary.get('ready_signals'), fallback=0)}; "
+                f"open_gates={_int_value(summary.get('review_signals'), fallback=0) + _int_value(summary.get('blocked_signals'), fallback=0)}; "
+                f"open_gate_count={len(open_gate_ids) if isinstance(open_gate_ids, list) else 0}"
+            ),
+        )
+    if artifact_id == "phase3_hybrid_runtime_promotion_decision_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"passed_checks={_int_value(summary.get('passed_checks'), fallback=0)}/"
+                f"{_int_value(summary.get('total_checks'), fallback=0)}; "
+                f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}"
+            ),
+        )
     if artifact_id == "phase4_evidence_pack_readiness":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -848,6 +893,16 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 6 private-network promotion smoke evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
+    if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
+        return (
+            "Optional Phase 3 hybrid runtime promotion decision readiness "
+            "export is missing."
+        )
+    if artifact_id == "phase3_hybrid_runtime_promotion_decision_smoke":
+        return (
+            "Optional Phase 3 hybrid runtime promotion decision smoke "
+            "evidence is missing."
+        )
     if artifact_id == "phase4_evidence_pack_readiness":
         return "Optional Phase 4 evidence pack readiness export is missing."
     if artifact_id == "phase4_caller_consumption_smoke":
@@ -892,6 +947,10 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase6_qdrant_bge_private_network_promotion_smoke"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
+    if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
+        return "regenerate_phase3_hybrid_runtime_promotion_decision_readiness"
+    if artifact_id == "phase3_hybrid_runtime_promotion_decision_smoke":
+        return "regenerate_phase3_hybrid_runtime_promotion_decision_smoke"
     if artifact_id == "phase4_evidence_pack_readiness":
         return "regenerate_phase4_evidence_pack_readiness"
     if artifact_id == "phase4_caller_consumption_smoke":
@@ -1024,6 +1083,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 3 aggregation/relation negative-control smoke is optional before promotion review; regenerate it after aggregation or relation-aware grading evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase3_hybrid_runtime_promotion_decision_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 3 hybrid runtime promotion decision readiness export is optional before final promotion review; regenerate it after Phase 3 or Phase 6 bridge evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase3_hybrid_runtime_promotion_decision_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 3 hybrid runtime promotion decision smoke is optional before final promotion review; regenerate it after readiness or prerequisite evidence changes."
         )
     if any(
         artifact["id"] == "phase4_evidence_pack_readiness"

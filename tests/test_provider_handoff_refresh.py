@@ -121,6 +121,8 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase3_hybrid_fusion_threshold_calibration" in step_ids
     assert "phase3_hybrid_cross_case_fp_fn_smoke" in step_ids
     assert "phase3_aggregation_relation_negative_control_smoke" in step_ids
+    assert "phase3_hybrid_runtime_promotion_decision_readiness" in step_ids
+    assert "phase3_hybrid_runtime_promotion_decision_smoke" in step_ids
     assert "phase4_evidence_pack_readiness" in step_ids
     assert "phase4_caller_consumption_smoke" in step_ids
     assert "phase5_graph_use_case_readiness" in step_ids
@@ -176,6 +178,16 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     )
     assert step_ids.index(
         "phase3_aggregation_relation_negative_control_smoke"
+    ) < step_ids.index(
+        "phase3_hybrid_runtime_promotion_decision_readiness"
+    )
+    assert step_ids.index(
+        "phase3_hybrid_runtime_promotion_decision_readiness"
+    ) < step_ids.index(
+        "phase3_hybrid_runtime_promotion_decision_smoke"
+    )
+    assert step_ids.index(
+        "phase3_hybrid_runtime_promotion_decision_smoke"
     ) < step_ids.index(
         "phase4_evidence_pack_readiness"
     )

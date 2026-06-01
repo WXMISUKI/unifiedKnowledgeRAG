@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T08:16:02.522734+00:00",
+  "generated_at": "2026-06-01T08:51:05.454330+00:00",
   "status": "review",
   "steps": [
     {
@@ -229,6 +229,30 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"expected_empty_pass_rate\": 1.0, \"failed_checks\": 0, \"open_check_ids\": [], \"passed_checks\": 4, \"relation_unsupported_count\": 1, \"total_checks\": 4}",
+      "error": null
+    },
+    {
+      "id": "phase3_hybrid_runtime_promotion_decision_readiness",
+      "category": "retrieval-evidence",
+      "status": "review",
+      "output_paths": [
+        "docs\\benchmark\\chinese-seed\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-readiness.json",
+        "docs\\benchmark\\chinese-seed\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"open_gate_ids\": [\"phase3_retrieval_promotion_readiness\", \"phase3_candidate_runtime_diagnostics\", \"phase3_candidate_latency_resource_diagnostics\", \"phase3_hybrid_fusion_threshold_calibration\", \"phase6_bge_m3_artifact_readiness\", \"phase6_bge_m3_vs_mock_fixture_diagnostics\", \"phase6_qdrant_vector_store_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 6, \"required_signals\": 14, \"review_signals\": 9, \"total_signals\": 15}",
+      "error": null
+    },
+    {
+      "id": "phase3_hybrid_runtime_promotion_decision_smoke",
+      "category": "retrieval-evidence",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-smoke.json",
+        "docs\\smoke\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 16, \"total_checks\": 16}",
       "error": null
     },
     {

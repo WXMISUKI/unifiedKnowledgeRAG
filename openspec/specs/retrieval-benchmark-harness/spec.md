@@ -1000,3 +1000,69 @@ The system documentation SHALL provide a Phase 3 decision record that maps curre
 - **WHEN** evidence includes local candidate wins but open gates remain
 - **THEN** the record explicitly keeps runtime defaults and lists required next evidence for future promotion consideration
 
+### Requirement: Hybrid runtime promotion SHALL be contract-reviewed against evidence chain completeness
+
+The retrieval benchmark harness documentation SHALL define a contract that maps hybrid runtime promotion decisions to required local evidence artifacts and open-gate handling.
+
+#### Scenario: Contract specifies required hybrid promotion evidence classes
+
+- **WHEN** hybrid runtime promotion is reviewed
+- **THEN** the contract references promotion readiness, runtime diagnostics, latency/resource diagnostics, hybrid calibration, cross-case FP/FN smoke, and aggregation/relation negative-control smoke
+
+#### Scenario: Contract keeps candidate evidence from implying automatic promotion
+
+- **WHEN** candidate-level retrieval artifacts show partial wins but production gates remain open
+- **THEN** the contract requires `keep_runtime_defaults` until deployed smoke and deployment sign-off gates are explicitly closed
+
+### Requirement: Phase 3 hybrid runtime promotion decision readiness can be exported locally
+
+The system SHALL export a local Phase 3 hybrid runtime promotion decision readiness report that consolidates final promotion-review prerequisites.
+
+#### Scenario: Hybrid decision readiness export writes artifacts
+
+- **WHEN** the Phase 3 hybrid runtime promotion decision readiness export runs
+- **THEN** the system writes JSON and Markdown evidence files under `docs/benchmark/chinese-seed/hybrid-runtime-promotion/`
+
+#### Scenario: Hybrid decision readiness summarizes required signals
+
+- **WHEN** the export completes
+- **THEN** it summarizes contract presence, Phase 3 evidence status, Phase 6 bridge evidence status, and open gates with recommended actions
+
+#### Scenario: Hybrid decision readiness remains read-only
+
+- **WHEN** the report is exported
+- **THEN** runtime defaults, public HTTP APIs, and promotion decisions remain unchanged
+
+### Requirement: Phase 3 hybrid runtime promotion decision smoke can be exported locally
+
+The system SHALL export a local Phase 3 hybrid runtime promotion decision smoke report that validates final decision evidence-chain completeness.
+
+#### Scenario: Hybrid decision smoke export writes artifacts
+
+- **WHEN** the Phase 3 hybrid runtime promotion decision smoke export runs
+- **THEN** it writes JSON and Markdown evidence files under `docs/smoke/hybrid-runtime-promotion/`
+
+#### Scenario: Hybrid decision smoke validates readiness linkage
+
+- **WHEN** the smoke runs
+- **THEN** it validates contract/readiness artifacts plus required Phase 3 and Phase 6 bridge evidence presence and parseability
+
+#### Scenario: Hybrid decision smoke remains read-only
+
+- **WHEN** smoke artifacts are exported
+- **THEN** runtime retrieval defaults, public HTTP APIs, and promotion decisions remain unchanged
+
+### Requirement: Phase 3 hybrid promotion evidence SHALL have a final decision record
+
+The system documentation SHALL provide a Phase 3 hybrid runtime promotion decision record that maps current readiness and smoke evidence to a single verdict.
+
+#### Scenario: Hybrid decision record references current evidence bundle
+
+- **WHEN** the hybrid decision record is authored
+- **THEN** it references current hybrid runtime promotion readiness, hybrid decision smoke, and linked Phase 3/Phase 6 prerequisite artifacts
+
+#### Scenario: Hybrid decision record does not imply automatic promotion
+
+- **WHEN** evidence includes local candidate wins but open gates remain
+- **THEN** the record explicitly keeps runtime defaults and lists required next evidence for future promotion consideration
+

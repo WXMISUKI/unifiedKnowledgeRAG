@@ -109,6 +109,34 @@ Phase 3 now also has a compact cross-case smoke artifact for hybrid-risk visibil
 
 The smoke is read-only and local. It verifies that key risk-case coverage, false-positive trap alignment, and positive-control outcomes remain visible in existing baseline and FP/FN evidence without changing runtime defaults.
 
+## Phase 3 Hybrid Runtime Promotion Decision Readiness
+
+Phase 3 now also has a machine-readable final promotion-review readiness export that consolidates Phase 3 and Phase 6 bridge evidence:
+
+`docs/benchmark/chinese-seed/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-readiness.json`
+
+`docs/benchmark/chinese-seed/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-readiness.md`
+
+The export is read-only and local. It summarizes required evidence-chain signals and open gates for the hybrid runtime promotion decision while preserving `keep_runtime_defaults` until all required gates are explicitly closed.
+
+## Phase 3 Hybrid Runtime Promotion Decision Smoke
+
+Phase 3 now also has a compact smoke artifact for final promotion-review evidence-chain completeness:
+
+`docs/smoke/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-smoke.json`
+
+`docs/smoke/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-smoke.md`
+
+The smoke is read-only and local. It validates contract/readiness linkage and prerequisite evidence-chain presence without changing runtime defaults or promotion decisions.
+
+## Phase 3 Hybrid Runtime Promotion Decision Record
+
+Phase 3 now also has a final decision record for the current hybrid runtime promotion cycle:
+
+`docs/benchmark/chinese-seed/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-record.md`
+
+The record is documentation-only. It captures the current verdict and open gates for promotion while preserving the boundary that runtime defaults remain unchanged until a separate approved promotion change.
+
 ## Graph Boundary Preflight
 
 Phase 5 graph work remains use-case driven, but provider preflight now summarizes the graph boundary that already exists: graph schema count, graph ids, graph statuses, and graph store labels. This lets MyPrivateAgent or another control plane discover that graph namespaces are present while still seeing `execution_status=planned`.

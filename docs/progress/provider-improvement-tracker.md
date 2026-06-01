@@ -35,9 +35,13 @@
 - Phase 3 candidate runtime diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-runtime-diagnostics`), summarizing runtime-adjacent promotion prerequisites and adding optional handoff/refresh visibility.
 - Phase 3 candidate latency/resource diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-latency-resource-diagnostics`), combining benchmark latency shape with deployment/runtime posture into optional handoff/refresh evidence.
 - Phase 3 hybrid fusion/threshold calibration export implemented and refreshed (`2026-06-01-export-phase3-hybrid-fusion-threshold-calibration`), consolidating hybrid RRF context, dense-threshold recommendation context, FP/FN signal, and runtime threshold posture into one optional review artifact.
+- Phase 3 hybrid runtime promotion decision contract documented (`document-phase3-hybrid-runtime-promotion-decision-contract`), defining required Phase 3 + Phase 6 bridge evidence inputs, decision-state semantics, and non-goal boundaries before any runtime default switch.
 - Phase 3 runtime promotion decision record documented (`2026-06-01-document-phase3-runtime-promotion-decision-record`), explicitly recording this cycle's `keep_runtime_defaults` verdict and the remaining promotion gates.
 - Phase 3 hybrid cross-case FP/FN smoke implemented and refreshed (`2026-06-01-add-phase3-hybrid-cross-case-fp-fn-smoke`), validating risk-case coverage, false-positive trap alignment, and positive-control stability from local evidence.
 - Phase 3 aggregation/relation negative-control smoke implemented and refreshed (`2026-06-01-add-phase3-aggregation-relation-negative-control-smoke`), keeping the over-broad aggregation risk and relation-aware unsupported-case signal visible in one compact local review artifact.
+- Phase 3 hybrid runtime promotion decision readiness export implemented and refreshed (`export-phase3-hybrid-runtime-promotion-decision-readiness`), consolidating Phase 3 and Phase 6 bridge prerequisites into one machine-readable final promotion review artifact.
+- Phase 3 hybrid runtime promotion decision smoke implemented and refreshed (`add-phase3-hybrid-runtime-promotion-decision-smoke`), validating final promotion-review evidence-chain completeness in a compact local smoke artifact.
+- Phase 3 hybrid runtime promotion decision record documented (`document-phase3-hybrid-runtime-promotion-decision-record`), explicitly recording this cycle's `keep_runtime_defaults` verdict and remaining promotion gates.
 - Deployment readiness operator guide added for Phase 6 operations documentation, translating `review` evidence into operator steps without changing runtime behavior.
 - Deployment readiness configuration reference added for Phase 6 operations documentation, mapping env vars, mounts, and evidence commands to the current deploy-prep state.
 - Deployment readiness runbook added for Phase 6 operations documentation, sequencing review, configuration, refresh, and optional live smoke into a single operator flow.
@@ -113,6 +117,16 @@
   - `docs/smoke/aggregation-relation-negative-control/phase3-aggregation-relation-negative-control-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_aggregation_relation_negative_control_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_aggregation_relation_negative_control_smoke` step)
+- Phase 3 hybrid runtime promotion decision readiness refresh additions:
+  - `docs/benchmark/chinese-seed/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-readiness.json`
+  - `docs/benchmark/chinese-seed/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-readiness.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_hybrid_runtime_promotion_decision_readiness` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_hybrid_runtime_promotion_decision_readiness` step)
+- Phase 3 hybrid runtime promotion decision smoke refresh additions:
+  - `docs/smoke/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-smoke.json`
+  - `docs/smoke/hybrid-runtime-promotion/phase3-hybrid-runtime-promotion-decision-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_hybrid_runtime_promotion_decision_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_hybrid_runtime_promotion_decision_smoke` step)
 - Phase 6 BGE-M3 artifact readiness refresh additions:
   - `docs/operations/bge-m3-artifact-readiness/phase6-bge-m3-artifact-readiness.json`
   - `docs/operations/bge-m3-artifact-readiness/phase6-bge-m3-artifact-readiness.md`

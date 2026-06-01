@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T08:16:02.520710+00:00",
+  "generated_at": "2026-06-01T08:51:05.452331+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -222,6 +222,26 @@
       "required": false,
       "status": "ready",
       "summary": "status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_hybrid_runtime_promotion_decision_readiness",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; review_state=review; required_signals=14; ready_signals=6; open_gates=9; open_gate_count=9",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase3_hybrid_runtime_promotion_decision_smoke",
+      "category": "retrieval-evidence",
+      "path": "docs\\smoke\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults; passed_checks=16/16; failed_checks=0",
       "recommended_action": "no_action_required"
     },
     {

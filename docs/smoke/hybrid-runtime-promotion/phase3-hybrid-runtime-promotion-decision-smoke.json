@@ -1,0 +1,148 @@
+{
+  "id": "phase3-hybrid-runtime-promotion-decision-smoke-v1",
+  "generated_at": "2026-06-01T08:51:05.433050+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "checks": [
+    {
+      "id": "hybrid_runtime_promotion_contract_present",
+      "path": "docs\\benchmark\\chinese-seed\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-contract.md",
+      "required": true,
+      "passed": true,
+      "summary": "present",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "hybrid_runtime_promotion_readiness_present",
+      "path": "docs\\benchmark\\chinese-seed\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_retrieval_promotion_readiness_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_candidate_runtime_diagnostics_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_candidate_latency_diagnostics_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_hybrid_calibration_present",
+      "path": "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_hybrid_cross_case_fp_fn_smoke_present",
+      "path": "docs\\smoke\\hybrid-cross-case-fp-fn\\phase3-hybrid-cross-case-fp-fn-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_aggregation_relation_negative_control_smoke_present",
+      "path": "docs\\smoke\\aggregation-relation-negative-control\\phase3-aggregation-relation-negative-control-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_bge_artifact_readiness_present",
+      "path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_bge_comparison_diagnostics_present",
+      "path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-vs-mock-fixture-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_bge_comparison_smoke_present",
+      "path": "docs\\smoke\\bge-m3-comparison\\phase6-bge-m3-comparison-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_qdrant_vector_store_readiness_present",
+      "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_qdrant_backup_restore_smoke_present",
+      "path": "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_private_network_promotion_readiness_present",
+      "path": "docs\\operations\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase6_private_network_promotion_smoke_present",
+      "path": "docs\\smoke\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "hybrid_runtime_promotion_readiness_gate_visibility",
+      "path": "docs\\benchmark\\chinese-seed\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "decision=keep_runtime_defaults; review_state=review; open_gate_count=9",
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "summary": {
+    "total_checks": 16,
+    "passed_checks": 16,
+    "failed_checks": 0
+  },
+  "notes": [
+    "This smoke validates hybrid runtime promotion decision evidence-chain completeness only.",
+    "It does not run retrieval execution, model download, deployment automation, or runtime promotion.",
+    "Use it before final Phase 3 hybrid runtime promotion decision review."
+  ],
+  "json_path": "docs\\smoke\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-smoke.json",
+  "markdown_path": "docs\\smoke\\hybrid-runtime-promotion\\phase3-hybrid-runtime-promotion-decision-smoke.md"
+}

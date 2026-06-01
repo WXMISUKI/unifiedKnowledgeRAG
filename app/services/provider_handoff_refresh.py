@@ -58,6 +58,12 @@ from app.services.phase3_hybrid_cross_case_fp_fn_smoke import (
 from app.services.phase3_aggregation_relation_negative_control_smoke import (
     export_phase3_aggregation_relation_negative_control_smoke_report,
 )
+from app.services.phase3_hybrid_runtime_promotion_decision_readiness import (
+    export_phase3_hybrid_runtime_promotion_decision_readiness_report,
+)
+from app.services.phase3_hybrid_runtime_promotion_decision_smoke import (
+    export_phase3_hybrid_runtime_promotion_decision_smoke_report,
+)
 from app.services.phase3_fp_fn_review import export_phase3_fp_fn_review_report
 from app.services.provider_integration_client import export_provider_integration_probe_report
 from app.services.provider_source_binding import export_provider_source_binding_summary
@@ -275,6 +281,27 @@ def default_handoff_refresh_steps(
             category="retrieval-evidence",
             output_dir=artifact_base_dir / "docs/smoke/aggregation-relation-negative-control",
             exporter=lambda output_dir: export_phase3_aggregation_relation_negative_control_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase3_hybrid_runtime_promotion_decision_readiness",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir
+            / "docs/benchmark/chinese-seed/hybrid-runtime-promotion",
+            exporter=lambda output_dir: export_phase3_hybrid_runtime_promotion_decision_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase3_hybrid_runtime_promotion_decision_smoke",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir / "docs/smoke/hybrid-runtime-promotion",
+            exporter=lambda output_dir: export_phase3_hybrid_runtime_promotion_decision_smoke_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),
