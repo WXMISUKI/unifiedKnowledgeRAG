@@ -31,6 +31,15 @@ from app.services.phase3_candidate_latency_resource_diagnostics import (
 from app.services.phase3_hybrid_fusion_threshold_calibration import (
     export_phase3_hybrid_fusion_threshold_calibration_report,
 )
+from app.services.phase6_bge_m3_artifact_readiness import (
+    export_phase6_bge_m3_artifact_readiness_report,
+)
+from app.services.phase6_qdrant_vector_store_readiness import (
+    export_phase6_qdrant_vector_store_readiness_report,
+)
+from app.services.phase6_qdrant_backup_restore_smoke import (
+    export_phase6_qdrant_backup_restore_smoke_report,
+)
 from app.services.phase3_hybrid_cross_case_fp_fn_smoke import (
     export_phase3_hybrid_cross_case_fp_fn_smoke_report,
 )
@@ -106,6 +115,36 @@ def default_handoff_refresh_steps(
             category="operations",
             output_dir=artifact_base_dir / "docs/operations/reindex-readiness",
             exporter=export_reindex_readiness_report,
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_bge_m3_artifact_readiness",
+            category="operations",
+            output_dir=artifact_base_dir / "docs/operations/bge-m3-artifact-readiness",
+            exporter=lambda output_dir: export_phase6_bge_m3_artifact_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_qdrant_vector_store_readiness",
+            category="operations",
+            output_dir=artifact_base_dir / "docs/operations/qdrant-vector-store-readiness",
+            exporter=lambda output_dir: export_phase6_qdrant_vector_store_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_qdrant_backup_restore_smoke",
+            category="operations-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/qdrant-backup-restore",
+            exporter=lambda output_dir: export_phase6_qdrant_backup_restore_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(

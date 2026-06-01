@@ -108,6 +108,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     step_ids = [step.id for step in steps]
 
     assert "source_binding_summary" in step_ids
+    assert "phase6_bge_m3_artifact_readiness" in step_ids
+    assert "phase6_qdrant_vector_store_readiness" in step_ids
+    assert "phase6_qdrant_backup_restore_smoke" in step_ids
     assert "phase3_fp_fn_review" in step_ids
     assert "phase3_candidate_runtime_diagnostics" in step_ids
     assert "phase3_candidate_latency_resource_diagnostics" in step_ids
@@ -120,6 +123,18 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase5_graph_boundary_smoke_summary" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
+    )
+    assert step_ids.index("reindex_readiness") < step_ids.index(
+        "phase6_bge_m3_artifact_readiness"
+    )
+    assert step_ids.index("phase6_bge_m3_artifact_readiness") < step_ids.index(
+        "phase6_qdrant_vector_store_readiness"
+    )
+    assert step_ids.index("phase6_qdrant_vector_store_readiness") < step_ids.index(
+        "phase6_qdrant_backup_restore_smoke"
+    )
+    assert step_ids.index("phase6_qdrant_backup_restore_smoke") < step_ids.index(
+        "source_binding_summary"
     )
     assert step_ids.index("phase3_fp_fn_review") < step_ids.index(
         "phase3_retrieval_promotion_readiness"

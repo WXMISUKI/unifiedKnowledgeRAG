@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-refresh-v1`
 - Status: `review`
-- Generated At: `2026-06-01T03:35:58.427188+00:00`
+- Generated At: `2026-06-01T07:19:36.213331+00:00`
 
 ## Refresh Steps
 
@@ -12,6 +12,9 @@
 | `provider_contract_smoke` | `contract` | `ready` | `docs\smoke\provider-contract\provider-contract-smoke.json`, `docs\smoke\provider-contract\provider-contract-smoke.md` | `no_action_required` | status=ready; summary={"failed": 0, "passed": 9, "total": 9} |
 | `deployment_readiness` | `operations` | `review` | `docs\operations\deployment-readiness\deployment-readiness.json`, `docs\operations\deployment-readiness\deployment-readiness.md` | `review_evidence_notes` | status=review; report_status=review |
 | `reindex_readiness` | `operations` | `ready` | `docs\operations\reindex-readiness\reindex-readiness.json`, `docs\operations\reindex-readiness\reindex-readiness.md` | `no_action_required` | status=ready; report_status=ready |
+| `phase6_bge_m3_artifact_readiness` | `operations` | `review` | `docs\operations\bge-m3-artifact-readiness\phase6-bge-m3-artifact-readiness.json`, `docs\operations\bge-m3-artifact-readiness\phase6-bge-m3-artifact-readiness.md` | `review_evidence_notes` | status=review; summary={"blocked_signals": 0, "open_signal_ids": ["embedding_provider_candidate", "model_path_and_manifest_presence", "required_file_inventory", "checksum_coverage", "private_network_copy_posture"], "ready_signals": 1, "review_signals": 5, "total_signals": 6} |
+| `phase6_qdrant_vector_store_readiness` | `operations` | `review` | `docs\operations\qdrant-vector-store-readiness\phase6-qdrant-vector-store-readiness.json`, `docs\operations\qdrant-vector-store-readiness\phase6-qdrant-vector-store-readiness.md` | `review_evidence_notes` | status=review; summary={"ready_signals": 3, "review_signals": 3, "total_signals": 6} |
+| `phase6_qdrant_backup_restore_smoke` | `operations-smoke` | `ready` | `docs\smoke\qdrant-backup-restore\phase6-qdrant-backup-restore-smoke.json`, `docs\smoke\qdrant-backup-restore\phase6-qdrant-backup-restore-smoke.md` | `no_action_required` | status=ready; summary={"failed_checks": 0, "passed_checks": 4, "total_checks": 4} |
 | `source_binding_summary` | `source-binding` | `ready` | `docs\integration\source-bindings\provider-source-bindings.json`, `docs\integration\source-bindings\provider-source-bindings.md` | `no_action_required` | status=ready; report_status=ready |
 | `phase3_fp_fn_review` | `retrieval-evidence` | `review` | `docs\benchmark\chinese-seed\fp-fn-review\phase3-fp-fn-review.json`, `docs\benchmark\chinese-seed\fp-fn-review\phase3-fp-fn-review.md` | `review_evidence_notes` | status=review |
 | `phase3_retrieval_promotion_readiness` | `retrieval-evidence` | `review` | `docs\benchmark\chinese-seed\retrieval-promotion-readiness\phase3-retrieval-promotion-readiness.json`, `docs\benchmark\chinese-seed\retrieval-promotion-readiness\phase3-retrieval-promotion-readiness.md` | `review_evidence_notes` | status=review; summary={"blocked_gates": 0, "candidate_gates": 4, "open_gates": 7, "ready_gates": 0, "review_gates": 3, "supporting_evidence_ready": 2, "total_gates": 7} |

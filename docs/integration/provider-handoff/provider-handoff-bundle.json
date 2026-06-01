@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T03:35:58.425681+00:00",
+  "generated_at": "2026-06-01T07:19:36.212331+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -133,6 +133,36 @@
       "status": "review",
       "summary": "status=review; decision=keep_runtime_defaults; ready_signals=3/6; review_signals=3; fusion=rrf; score_filter=disabled-for-rrf-fusion-score; selected_dense_threshold=0.7000; runtime_threshold=0.0100",
       "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase6_bge_m3_artifact_readiness",
+      "category": "operations",
+      "path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; ready_signals=1/6; review_signals=5; path_exists=False; manifest_exists=False; checksum_coverage=0/0",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase6_qdrant_vector_store_readiness",
+      "category": "operations",
+      "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; ready_signals=3/6; review_signals=3; backend=fixture; candidate_present=True; empty_handling_rate=0.2857",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase6_qdrant_backup_restore_smoke",
+      "category": "operations-smoke",
+      "path": "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults; passed_checks=4/4; failed_checks=0",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase3_hybrid_cross_case_fp_fn_smoke",

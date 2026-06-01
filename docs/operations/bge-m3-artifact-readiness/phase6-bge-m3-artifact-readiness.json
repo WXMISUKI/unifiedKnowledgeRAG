@@ -1,0 +1,88 @@
+{
+  "id": "phase6-bge-m3-artifact-readiness-v1",
+  "generated_at": "2026-06-01T07:19:36.168545+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_signals": 6,
+    "ready_signals": 1,
+    "review_signals": 5,
+    "blocked_signals": 0,
+    "open_signal_ids": [
+      "embedding_provider_candidate",
+      "model_path_and_manifest_presence",
+      "required_file_inventory",
+      "checksum_coverage",
+      "private_network_copy_posture"
+    ]
+  },
+  "artifact": {
+    "embedding_provider": "mock",
+    "embedding_model": "mock-hash-v1",
+    "embedding_local_files_only": false,
+    "deployment_readiness_status": "review",
+    "model_path": null,
+    "path_exists": false,
+    "manifest_exists": false,
+    "required_files": [],
+    "required_files_total": 0,
+    "required_files_present_count": 0,
+    "weight_files": [],
+    "weight_files_count": 0,
+    "checksum_algorithm": "unknown",
+    "checksum_target_count": 0,
+    "checksum_coverage_count": 0,
+    "manifest_local_files_only": false
+  },
+  "signals": [
+    {
+      "id": "embedding_provider_candidate",
+      "status": "review",
+      "summary": "embedding_provider=mock",
+      "recommended_action": "set_embedding_provider_to_bge_m3_local_for_candidate_review",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "model_path_and_manifest_presence",
+      "status": "review",
+      "summary": "path_exists=False; manifest_exists=False",
+      "recommended_action": "configure_embedding_model_path_and_manifest",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "required_file_inventory",
+      "status": "review",
+      "summary": "required_files=0/0; weight_files=0",
+      "recommended_action": "rebuild_or_copy_complete_bge_m3_artifact",
+      "evidence_path": "model-manifest.json"
+    },
+    {
+      "id": "checksum_coverage",
+      "status": "review",
+      "summary": "checksum_coverage=0/0; algorithm=unknown",
+      "recommended_action": "regenerate_manifest_with_sha256_checksums",
+      "evidence_path": "model-manifest.json"
+    },
+    {
+      "id": "deployment_readiness_linkage",
+      "status": "ready",
+      "summary": "deployment_readiness_status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "private_network_copy_posture",
+      "status": "review",
+      "summary": "runtime_local_files_only=False; manifest_local_files_only=False",
+      "recommended_action": "enable_local_files_only_for_private_network_artifacts",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only artifact readiness evidence for Phase 6 deployment review.",
+    "It supports Phase 3 promotion review as a bridge artifact but does not promote embedding defaults.",
+    "Use matching artifact directory and manifest when copying models into private-network deployments."
+  ],
+  "json_path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json",
+  "markdown_path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.md"
+}

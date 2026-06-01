@@ -1,0 +1,52 @@
+{
+  "id": "phase6-qdrant-backup-restore-smoke-v1",
+  "generated_at": "2026-06-01T07:19:36.173141+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "checks": [
+    {
+      "id": "qdrant_contract_present",
+      "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-deployment-backup-recovery-contract.md",
+      "required": true,
+      "passed": true,
+      "summary": "present",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "qdrant_readiness_export_present",
+      "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "deployment_readiness_present",
+      "path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "reindex_readiness_present",
+      "path": "docs\\operations\\reindex-readiness\\reindex-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "summary": {
+    "total_checks": 4,
+    "passed_checks": 4,
+    "failed_checks": 0
+  },
+  "operation_notes": [
+    "This smoke report is read-only and validates prerequisite evidence only.",
+    "No backup, restore, or reindex operations are executed.",
+    "Use this report as a gate review aid before private-network promotion review."
+  ],
+  "json_path": "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.json",
+  "markdown_path": "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.md"
+}

@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import os
 from datetime import UTC, datetime
@@ -155,10 +156,24 @@ def validate_bge_m3_model_dir(model_dir: Path) -> dict:
             + ", ".join(missing)
         )
 
+    checksum_targets = [
+        model_dir / filename
+        for filename in REQUIRED_FILES
+    ] + [
+        model_dir / filename
+        for filename in weight_files
+    ]
+    checksums = {
+        str(path.relative_to(model_dir)): _sha256(path)
+        for path in checksum_targets
+    }
+
     return {
         "required_files": list(REQUIRED_FILES),
         "weight_files": weight_files,
         "file_count": sum(1 for path in model_dir.rglob("*") if path.is_file()),
+        "checksums": checksums,
+        "checksum_algorithm": "sha256",
     }
 
 
@@ -211,3 +226,11 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for chunk in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()

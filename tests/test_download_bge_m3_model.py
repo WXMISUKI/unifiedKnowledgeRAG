@@ -26,6 +26,8 @@ def test_validate_bge_m3_model_dir_accepts_required_files(tmp_path):
 
     assert validation["file_count"] == 5
     assert validation["weight_files"] == ["model.safetensors"]
+    assert validation["checksum_algorithm"] == "sha256"
+    assert len(validation["checksums"]) == 5
 
 
 def test_validate_bge_m3_model_dir_rejects_missing_files(tmp_path):
@@ -61,6 +63,8 @@ def test_download_bge_m3_model_writes_manifest_without_network_when_skipped(tmp_
     assert manifest["local_files_only"] is True
     assert manifest["usage"]["EMBEDDING_PROVIDER"] == "bge_m3_local"
     assert manifest["usage"]["EMBEDDING_LOCAL_FILES_ONLY"] == "true"
+    assert manifest["validation"]["checksum_algorithm"] == "sha256"
+    assert "config.json" in manifest["validation"]["checksums"]
 
 
 def test_download_bge_m3_model_uses_snapshot_download(monkeypatch, tmp_path):

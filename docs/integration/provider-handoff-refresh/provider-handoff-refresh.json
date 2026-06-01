@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T03:35:58.427188+00:00",
+  "generated_at": "2026-06-01T07:19:36.213331+00:00",
   "status": "review",
   "steps": [
     {
@@ -49,6 +49,42 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; report_status=ready",
+      "error": null
+    },
+    {
+      "id": "phase6_bge_m3_artifact_readiness",
+      "category": "operations",
+      "status": "review",
+      "output_paths": [
+        "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json",
+        "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"embedding_provider_candidate\", \"model_path_and_manifest_presence\", \"required_file_inventory\", \"checksum_coverage\", \"private_network_copy_posture\"], \"ready_signals\": 1, \"review_signals\": 5, \"total_signals\": 6}",
+      "error": null
+    },
+    {
+      "id": "phase6_qdrant_vector_store_readiness",
+      "category": "operations",
+      "status": "review",
+      "output_paths": [
+        "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json",
+        "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"ready_signals\": 3, \"review_signals\": 3, \"total_signals\": 6}",
+      "error": null
+    },
+    {
+      "id": "phase6_qdrant_backup_restore_smoke",
+      "category": "operations-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.json",
+        "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 4, \"total_checks\": 4}",
       "error": null
     },
     {

@@ -962,3 +962,74 @@ The system SHALL allow provider handoff bundle and handoff refresh workflows to 
 - **WHEN** provider handoff refresh runs
 - **THEN** it regenerates the Phase 3 hybrid fusion/threshold calibration export before final handoff bundle generation
 
+### Requirement: Provider handoff can summarize optional BGE-M3 artifact readiness evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional BGE-M3 artifact readiness evidence as read-only deployment context.
+
+#### Scenario: Handoff summarizes artifact readiness
+
+- **WHEN** provider handoff reads the BGE-M3 artifact readiness export
+- **THEN** it summarizes report status, decision, checksum coverage, and readiness posture in a compact optional row
+
+#### Scenario: Missing artifact readiness remains non-blocking
+
+- **WHEN** the optional BGE-M3 artifact readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates artifact readiness before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the BGE-M3 artifact readiness export before final handoff bundle generation
+
+### Requirement: Provider can publish a read-only Qdrant deployment/backup/recovery readiness contract
+
+The system SHALL allow provider-owned documentation of Qdrant deployment, backup, and recovery readiness as read-only operator evidence.
+
+#### Scenario: Contract documents deployment/backup/recovery gates
+
+- **WHEN** operators review Qdrant readiness
+- **THEN** the contract enumerates required deployment, backup, and recovery evidence fields and recommended review actions
+
+#### Scenario: Contract remains boundary-safe
+
+- **WHEN** the Qdrant readiness contract is published
+- **THEN** it does not trigger backup/restore operations, does not change retrieval defaults, and does not move control-plane ownership into the provider
+
+### Requirement: Provider handoff can summarize optional Qdrant vector-store readiness evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 Qdrant vector-store readiness evidence as read-only deployment context.
+
+#### Scenario: Handoff summarizes Qdrant readiness export
+
+- **WHEN** provider handoff reads the Qdrant vector-store readiness export
+- **THEN** it summarizes report status, decision, and key readiness signals in a compact optional row
+
+#### Scenario: Missing Qdrant readiness export remains non-blocking
+
+- **WHEN** the optional Qdrant vector-store readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates Qdrant readiness before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the Qdrant vector-store readiness export before final handoff bundle generation
+
+### Requirement: Provider handoff can summarize optional Qdrant backup/restore smoke evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 Qdrant backup/restore smoke evidence as read-only operations context.
+
+#### Scenario: Handoff summarizes backup/restore smoke
+
+- **WHEN** provider handoff reads the Qdrant backup/restore smoke export
+- **THEN** it summarizes smoke status and check coverage in a compact optional row
+
+#### Scenario: Missing backup/restore smoke remains non-blocking
+
+- **WHEN** the optional Qdrant backup/restore smoke export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates backup/restore smoke before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the Qdrant backup/restore smoke export before final handoff bundle generation
+

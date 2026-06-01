@@ -1,0 +1,48 @@
+{
+  "id": "phase6-qdrant-vector-store-readiness-v1",
+  "generated_at": "2026-06-01T07:19:36.170121+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "deployment_readiness": {
+    "status": "review",
+    "retrieval_backend": "fixture",
+    "embedding_provider": "mock",
+    "qdrant_url": "http://localhost:6333",
+    "qdrant_collection": "knowledge_chunks"
+  },
+  "reindex_readiness": {
+    "status": "ready",
+    "retrieval_backend": "fixture",
+    "source_count": 2
+  },
+  "backup_recovery_contract": {
+    "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-deployment-backup-recovery-contract.md",
+    "present": true
+  },
+  "qdrant_candidate_evidence": {
+    "present": true,
+    "path": "docs/benchmark/chinese-seed/retrieval-candidates/qdrant-bge-m3-smoke.json",
+    "hit_rate": 0.7619,
+    "citation_match_rate": 0.7619,
+    "empty_handling_rate": 0.2857,
+    "total_cases": 21
+  },
+  "summary": {
+    "total_signals": 6,
+    "ready_signals": 3,
+    "review_signals": 3
+  },
+  "open_signal_ids": [
+    "deployment_readiness_status",
+    "deployment_uses_qdrant_backend",
+    "qdrant_candidate_empty_handling_review"
+  ],
+  "operation_notes": [
+    "This report is local, read-only, and does not run backup or restore operations.",
+    "Runtime promotion remains gated; this export is prerequisite evidence only.",
+    "Runtime retrieval backend is not qdrant; keep runtime defaults and treat this as candidate readiness.",
+    "Embedding provider is mock; complete non-mock embedding validation before any promotion review."
+  ],
+  "json_path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json",
+  "markdown_path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.md"
+}

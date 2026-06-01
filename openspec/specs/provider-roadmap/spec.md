@@ -700,3 +700,59 @@ The project SHALL preserve a documentation-only decision record for each Phase 3
 - **WHEN** the decision record is published
 - **THEN** it does not change provider runtime defaults, public API contracts, GraphRAG planned boundary, or caller ownership responsibilities
 
+### Requirement: BGE-M3 artifact readiness is treated as Phase 6 bridge evidence
+
+The project SHALL treat BGE-M3 artifact readiness as lightweight deployment evidence that supports Phase 3 promotion review without changing runtime defaults.
+
+#### Scenario: Artifact readiness is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes BGE-M3 artifact readiness evidence
+- **THEN** the roadmap records it as Phase 6 deployment evidence with Phase 3 bridge value
+
+#### Scenario: Artifact readiness preserves boundaries
+
+- **WHEN** the readiness report summarizes checksum-aware model artifact state
+- **THEN** runtime embedding defaults, provider HTTP contracts, and promotion decisions remain unchanged
+
+### Requirement: Qdrant deployment/backup/recovery readiness is treated as Phase 6 operations evidence
+
+The project SHALL treat Qdrant vector-store deployment, backup, and recovery readiness as lightweight Phase 6 operations evidence without changing runtime defaults.
+
+#### Scenario: Qdrant readiness contract is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes Qdrant deployment/backup/recovery readiness evidence
+- **THEN** the roadmap records it as Phase 6 operations work instead of retrieval runtime promotion
+
+#### Scenario: Qdrant readiness preserves boundaries
+
+- **WHEN** Qdrant readiness evidence is reviewed
+- **THEN** retrieval defaults, provider HTTP contracts, and external control-plane ownership remain unchanged
+
+### Requirement: Phase 6 Qdrant vector-store readiness exports stay lightweight and review-only
+
+The project SHALL treat Phase 6 Qdrant vector-store readiness exports as local evidence visibility work without changing runtime defaults.
+
+#### Scenario: Qdrant readiness export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a Qdrant vector-store readiness export
+- **THEN** the roadmap records it as Phase 6 operations evidence visibility work rather than retrieval runtime promotion
+
+#### Scenario: Qdrant readiness export preserves boundaries
+
+- **WHEN** the export summarizes deployment, backup/recovery contract, and reindex linkage
+- **THEN** runtime defaults, provider HTTP contracts, and external control-plane ownership remain unchanged
+
+### Requirement: Phase 6 Qdrant backup/restore smoke stays lightweight and read-only
+
+The project SHALL treat Phase 6 Qdrant backup/restore smoke summaries as local operations evidence maintenance without changing runtime defaults.
+
+#### Scenario: Backup/restore smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes Qdrant backup/restore smoke evidence
+- **THEN** the roadmap records it as Phase 6 evidence maintenance work rather than runtime promotion
+
+#### Scenario: Backup/restore smoke preserves boundaries
+
+- **WHEN** smoke summaries validate backup/restore prerequisites
+- **THEN** they do not execute backup/restore actions and do not move control-plane ownership into the provider
+
