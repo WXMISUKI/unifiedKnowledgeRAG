@@ -1,0 +1,100 @@
+{
+  "id": "phase6-qdrant-bge-private-network-promotion-smoke-v1",
+  "generated_at": "2026-06-01T08:16:02.482295+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "checks": [
+    {
+      "id": "private_network_review_contract_present",
+      "path": "docs\\operations\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-review-contract.md",
+      "required": true,
+      "passed": true,
+      "summary": "present",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "private_network_promotion_readiness_present",
+      "path": "docs\\operations\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "qdrant_vector_store_readiness_present",
+      "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "qdrant_backup_restore_smoke_present",
+      "path": "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "bge_artifact_readiness_present",
+      "path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "bge_comparison_diagnostics_present",
+      "path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-vs-mock-fixture-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "bge_comparison_smoke_present",
+      "path": "docs\\smoke\\bge-m3-comparison\\phase6-bge-m3-comparison-smoke.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_runtime_diagnostics_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_latency_diagnostics_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "deployment_readiness_present",
+      "path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "summary": {
+    "total_checks": 10,
+    "passed_checks": 10,
+    "failed_checks": 0
+  },
+  "notes": [
+    "This smoke report validates private-network promotion evidence-chain completeness only.",
+    "It does not run retrieval execution, model download, deployment automation, or runtime promotion.",
+    "Use it before manual private-network candidate promotion review."
+  ],
+  "json_path": "docs\\smoke\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-smoke.json",
+  "markdown_path": "docs\\smoke\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-smoke.md"
+}

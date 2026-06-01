@@ -42,6 +42,13 @@
 - Deployment readiness configuration reference added for Phase 6 operations documentation, mapping env vars, mounts, and evidence commands to the current deploy-prep state.
 - Deployment readiness runbook added for Phase 6 operations documentation, sequencing review, configuration, refresh, and optional live smoke into a single operator flow.
 - Phase 6 BGE-M3 artifact readiness bridge implemented and refreshed (`phase6-bge-m3-artifact-readiness`), adding checksum-aware manifest coverage and a local artifact readiness export for deployment and promotion review.
+- Phase 6 BGE-M3 quality/latency comparison contract documented (`document-phase6-bge-m3-quality-latency-comparison-contract`), defining read-only comparison gates between BGE-M3 candidate evidence and mock/fixture baseline before promotion review.
+- Phase 6 BGE-M3 vs mock/fixture diagnostics export implemented and refreshed (`export-phase6-bge-m3-vs-mock-fixture-diagnostics`), consolidating baseline/candidate deltas and deployment-linkage posture into a machine-readable bridge artifact.
+- Phase 6 BGE-M3 comparison smoke implemented and refreshed (`add-phase6-bge-m3-comparison-smoke`), validating bridge evidence-chain completeness in a compact read-only smoke artifact.
+- Phase 6 Qdrant+BGE-M3 private-network promotion review contract documented (`document-phase6-qdrant-bge-private-network-promotion-review-contract`), defining required review inputs and boundary-safe review states before candidate promotion.
+- Phase 6 Qdrant+BGE-M3 private-network promotion readiness export implemented and refreshed (`export-phase6-qdrant-bge-private-network-promotion-readiness`), consolidating Qdrant/BGE/Phase3/deployment inputs into one machine-readable review artifact.
+- Phase 6 Qdrant+BGE private-network promotion smoke implemented and refreshed (`add-phase6-qdrant-bge-private-network-promotion-smoke`), validating contract/readiness/prerequisite evidence-chain completeness in a compact read-only smoke artifact.
+- Phase 6 Qdrant+BGE private-network promotion decision record documented (`document-phase6-qdrant-bge-private-network-promotion-decision-record`), explicitly recording current `keep_runtime_defaults` verdict and open gates.
 - Phase 6 Qdrant deployment/backup/recovery contract documented (`document-phase6-qdrant-deployment-backup-recovery-contract`), defining operator-facing evidence gates before any Qdrant runtime promotion review.
 - Phase 6 Qdrant vector-store readiness export implemented and refreshed (`export-phase6-qdrant-vector-store-readiness`), consolidating deployment/reindex/contract/candidate evidence into a machine-readable review artifact with optional handoff visibility.
 - Phase 6 Qdrant backup/restore smoke implemented and refreshed (`add-phase6-qdrant-backup-restore-smoke`), validating prerequisite evidence coverage in a compact read-only smoke artifact.
@@ -111,6 +118,16 @@
   - `docs/operations/bge-m3-artifact-readiness/phase6-bge-m3-artifact-readiness.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_bge_m3_artifact_readiness` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_bge_m3_artifact_readiness` step)
+- Phase 6 BGE-M3 comparison diagnostics refresh additions:
+  - `docs/operations/bge-m3-comparison-readiness/phase6-bge-m3-vs-mock-fixture-diagnostics.json`
+  - `docs/operations/bge-m3-comparison-readiness/phase6-bge-m3-vs-mock-fixture-diagnostics.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_bge_m3_vs_mock_fixture_diagnostics` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_bge_m3_vs_mock_fixture_diagnostics` step)
+- Phase 6 BGE-M3 comparison smoke refresh additions:
+  - `docs/smoke/bge-m3-comparison/phase6-bge-m3-comparison-smoke.json`
+  - `docs/smoke/bge-m3-comparison/phase6-bge-m3-comparison-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_bge_m3_comparison_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_bge_m3_comparison_smoke` step)
 - Phase 6 Qdrant vector-store readiness refresh additions:
   - `docs/operations/qdrant-vector-store-readiness/phase6-qdrant-vector-store-readiness.json`
   - `docs/operations/qdrant-vector-store-readiness/phase6-qdrant-vector-store-readiness.md`
@@ -121,6 +138,16 @@
   - `docs/smoke/qdrant-backup-restore/phase6-qdrant-backup-restore-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_qdrant_backup_restore_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_qdrant_backup_restore_smoke` step)
+- Phase 6 private-network promotion readiness refresh additions:
+  - `docs/operations/private-network-promotion/phase6-qdrant-bge-private-network-promotion-readiness.json`
+  - `docs/operations/private-network-promotion/phase6-qdrant-bge-private-network-promotion-readiness.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_qdrant_bge_private_network_promotion_readiness` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_qdrant_bge_private_network_promotion_readiness` step)
+- Phase 6 private-network promotion smoke refresh additions:
+  - `docs/smoke/private-network-promotion/phase6-qdrant-bge-private-network-promotion-smoke.json`
+  - `docs/smoke/private-network-promotion/phase6-qdrant-bge-private-network-promotion-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_qdrant_bge_private_network_promotion_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_qdrant_bge_private_network_promotion_smoke` step)
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`

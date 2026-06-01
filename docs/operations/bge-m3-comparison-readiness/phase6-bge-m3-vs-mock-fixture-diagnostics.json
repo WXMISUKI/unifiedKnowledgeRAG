@@ -1,0 +1,109 @@
+{
+  "id": "phase6-bge-m3-vs-mock-fixture-diagnostics-v1",
+  "generated_at": "2026-06-01T08:16:02.468927+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_signals": 7,
+    "ready_signals": 5,
+    "review_signals": 2,
+    "blocked_signals": 0,
+    "open_signal_ids": [
+      "artifact_readiness_linkage",
+      "quality_non_regression_visibility"
+    ]
+  },
+  "baseline_profile": {
+    "present": true,
+    "total_cases": 32,
+    "hit_rate": 0.9062,
+    "citation_match_rate": 0.9062,
+    "empty_handling_rate": 0.75,
+    "average_latency_ms": 0.2368125,
+    "has_core_metrics": true
+  },
+  "candidate_profile": {
+    "present": true,
+    "total_cases": 21,
+    "hit_rate": 0.7619,
+    "citation_match_rate": 0.7619,
+    "empty_handling_rate": 0.2857,
+    "average_latency_ms": 324.7620952380951,
+    "has_core_metrics": true
+  },
+  "quality_delta": {
+    "comparable": true,
+    "hit_rate_delta": -0.1443,
+    "citation_match_rate_delta": -0.1443,
+    "empty_handling_rate_delta": -0.4643,
+    "average_latency_ms_delta": 324.5253
+  },
+  "linkage": {
+    "latency_diagnostics_present": true,
+    "latency_diagnostics_status": "review",
+    "runtime_diagnostics_present": true,
+    "runtime_diagnostics_status": "review",
+    "artifact_readiness_present": true,
+    "artifact_readiness_status": "review",
+    "deployment_readiness_present": true,
+    "deployment_readiness_status": "review"
+  },
+  "signals": [
+    {
+      "id": "baseline_profile_presence",
+      "status": "ready",
+      "summary": "present=True; total_cases=32",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json"
+    },
+    {
+      "id": "candidate_profile_presence",
+      "status": "ready",
+      "summary": "present=True; total_cases=21",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-smoke.json"
+    },
+    {
+      "id": "comparison_metric_schema",
+      "status": "ready",
+      "summary": "baseline_core_metrics=True; candidate_core_metrics=True",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-smoke.json"
+    },
+    {
+      "id": "artifact_readiness_linkage",
+      "status": "review",
+      "summary": "artifact_present=True; artifact_status=review",
+      "recommended_action": "review_bge_m3_artifact_readiness",
+      "evidence_path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json"
+    },
+    {
+      "id": "runtime_and_latency_diagnostics_linkage",
+      "status": "ready",
+      "summary": "runtime_status=review; latency_status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json"
+    },
+    {
+      "id": "quality_non_regression_visibility",
+      "status": "review",
+      "summary": "hit_rate_delta=-0.1443; citation_match_rate_delta=-0.1443; empty_handling_rate_delta=-0.4643",
+      "recommended_action": "expand_candidate_cases_and_review_fp_fn",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-smoke.json"
+    },
+    {
+      "id": "deployment_linkage_visibility",
+      "status": "ready",
+      "summary": "deployment_present=True; deployment_status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    }
+  ],
+  "notes": [
+    "This report is local read-only comparison evidence and does not change runtime defaults.",
+    "Candidate deltas are interpreted as review guidance, not direct promotion approval.",
+    "Use matching benchmark fixture scope when comparing baseline and candidate evidence."
+  ],
+  "json_path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-vs-mock-fixture-diagnostics.json",
+  "markdown_path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-vs-mock-fixture-diagnostics.md"
+}

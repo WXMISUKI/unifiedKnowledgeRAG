@@ -1,0 +1,130 @@
+{
+  "id": "phase6-qdrant-bge-private-network-promotion-readiness-v1",
+  "generated_at": "2026-06-01T08:16:02.479167+00:00",
+  "status": "review",
+  "promotion_review_state": "review",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_signals": 12,
+    "required_signals": 9,
+    "ready_signals": 3,
+    "review_signals": 9,
+    "blocked_signals": 0,
+    "open_gate_ids": [
+      "qdrant_vector_store_readiness",
+      "bge_m3_artifact_readiness",
+      "bge_m3_comparison_diagnostics",
+      "phase3_runtime_diagnostics",
+      "phase3_latency_diagnostics",
+      "deployment_readiness",
+      "phase3_fp_fn_review",
+      "phase3_hybrid_calibration",
+      "deployed_provider_smoke"
+    ]
+  },
+  "signals": [
+    {
+      "id": "private_network_review_contract",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\operations\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-review-contract.md"
+    },
+    {
+      "id": "qdrant_vector_store_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=keep_runtime_defaults",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-vector-store-readiness.json"
+    },
+    {
+      "id": "qdrant_backup_restore_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=ready; decision=keep_runtime_defaults",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\qdrant-backup-restore\\phase6-qdrant-backup-restore-smoke.json"
+    },
+    {
+      "id": "bge_m3_artifact_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=keep_runtime_defaults",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json"
+    },
+    {
+      "id": "bge_m3_comparison_diagnostics",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=keep_runtime_defaults",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-vs-mock-fixture-diagnostics.json"
+    },
+    {
+      "id": "bge_m3_comparison_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=ready; decision=keep_runtime_defaults",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\bge-m3-comparison\\phase6-bge-m3-comparison-smoke.json"
+    },
+    {
+      "id": "phase3_runtime_diagnostics",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=keep_runtime_defaults",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json"
+    },
+    {
+      "id": "phase3_latency_diagnostics",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=keep_runtime_defaults",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json"
+    },
+    {
+      "id": "deployment_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=n/a",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "phase3_fp_fn_review",
+      "required": false,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=n/a",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json"
+    },
+    {
+      "id": "phase3_hybrid_calibration",
+      "required": false,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; decision=keep_runtime_defaults",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.json"
+    },
+    {
+      "id": "deployed_provider_smoke",
+      "required": false,
+      "status": "review",
+      "summary": "artifact_present=false",
+      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+    }
+  ],
+  "notes": [
+    "This report is local read-only promotion review evidence.",
+    "Use it to decide whether private-network candidate review can proceed.",
+    "Even when ready_for_private_network_candidate, runtime defaults remain unchanged until separate promotion approval."
+  ],
+  "json_path": "docs\\operations\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-readiness.json",
+  "markdown_path": "docs\\operations\\private-network-promotion\\phase6-qdrant-bge-private-network-promotion-readiness.md"
+}

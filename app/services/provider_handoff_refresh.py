@@ -34,11 +34,23 @@ from app.services.phase3_hybrid_fusion_threshold_calibration import (
 from app.services.phase6_bge_m3_artifact_readiness import (
     export_phase6_bge_m3_artifact_readiness_report,
 )
+from app.services.phase6_bge_m3_vs_mock_fixture_diagnostics import (
+    export_phase6_bge_m3_vs_mock_fixture_diagnostics_report,
+)
+from app.services.phase6_bge_m3_comparison_smoke import (
+    export_phase6_bge_m3_comparison_smoke_report,
+)
 from app.services.phase6_qdrant_vector_store_readiness import (
     export_phase6_qdrant_vector_store_readiness_report,
 )
 from app.services.phase6_qdrant_backup_restore_smoke import (
     export_phase6_qdrant_backup_restore_smoke_report,
+)
+from app.services.phase6_qdrant_bge_private_network_promotion_readiness import (
+    export_phase6_qdrant_bge_private_network_promotion_readiness_report,
+)
+from app.services.phase6_qdrant_bge_private_network_promotion_smoke import (
+    export_phase6_qdrant_bge_private_network_promotion_smoke_report,
 )
 from app.services.phase3_hybrid_cross_case_fp_fn_smoke import (
     export_phase3_hybrid_cross_case_fp_fn_smoke_report,
@@ -128,6 +140,26 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
+            id="phase6_bge_m3_vs_mock_fixture_diagnostics",
+            category="operations",
+            output_dir=artifact_base_dir / "docs/operations/bge-m3-comparison-readiness",
+            exporter=lambda output_dir: export_phase6_bge_m3_vs_mock_fixture_diagnostics_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_bge_m3_comparison_smoke",
+            category="operations-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/bge-m3-comparison",
+            exporter=lambda output_dir: export_phase6_bge_m3_comparison_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
             id="phase6_qdrant_vector_store_readiness",
             category="operations",
             output_dir=artifact_base_dir / "docs/operations/qdrant-vector-store-readiness",
@@ -142,6 +174,26 @@ def default_handoff_refresh_steps(
             category="operations-smoke",
             output_dir=artifact_base_dir / "docs/smoke/qdrant-backup-restore",
             exporter=lambda output_dir: export_phase6_qdrant_backup_restore_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_qdrant_bge_private_network_promotion_readiness",
+            category="operations",
+            output_dir=artifact_base_dir / "docs/operations/private-network-promotion",
+            exporter=lambda output_dir: export_phase6_qdrant_bge_private_network_promotion_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_qdrant_bge_private_network_promotion_smoke",
+            category="operations-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/private-network-promotion",
+            exporter=lambda output_dir: export_phase6_qdrant_bge_private_network_promotion_smoke_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

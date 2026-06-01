@@ -1,0 +1,68 @@
+{
+  "id": "phase6-bge-m3-comparison-smoke-v1",
+  "generated_at": "2026-06-01T08:16:02.470927+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "checks": [
+    {
+      "id": "comparison_contract_present",
+      "path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-quality-latency-comparison-contract.md",
+      "required": true,
+      "passed": true,
+      "summary": "present",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "comparison_diagnostics_present",
+      "path": "docs\\operations\\bge-m3-comparison-readiness\\phase6-bge-m3-vs-mock-fixture-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "artifact_readiness_present",
+      "path": "docs\\operations\\bge-m3-artifact-readiness\\phase6-bge-m3-artifact-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_runtime_diagnostics_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_latency_diagnostics_present",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "deployment_readiness_present",
+      "path": "docs\\operations\\deployment-readiness\\deployment-readiness.json",
+      "required": true,
+      "passed": true,
+      "summary": "json_parse_ok",
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "summary": {
+    "total_checks": 6,
+    "passed_checks": 6,
+    "failed_checks": 0
+  },
+  "notes": [
+    "This smoke report is read-only and validates evidence-chain completeness only.",
+    "No embedding execution, retrieval switching, or runtime promotion is performed.",
+    "Use this artifact before starting private-network promotion review."
+  ],
+  "json_path": "docs\\smoke\\bge-m3-comparison\\phase6-bge-m3-comparison-smoke.json",
+  "markdown_path": "docs\\smoke\\bge-m3-comparison\\phase6-bge-m3-comparison-smoke.md"
+}

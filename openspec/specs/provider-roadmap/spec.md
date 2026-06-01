@@ -756,3 +756,101 @@ The project SHALL treat Phase 6 Qdrant backup/restore smoke summaries as local o
 - **WHEN** smoke summaries validate backup/restore prerequisites
 - **THEN** they do not execute backup/restore actions and do not move control-plane ownership into the provider
 
+### Requirement: BGE-M3 quality/latency comparison contracts are Phase 6/Phase 3 bridge evidence
+
+The project SHALL treat BGE-M3 vs mock/fixture quality and latency comparison contracts as lightweight Phase 6 deployment evidence with explicit Phase 3 promotion bridge value.
+
+#### Scenario: Comparison contract is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a BGE-M3 quality/latency comparison contract
+- **THEN** the roadmap records it as bridge evidence and not as runtime promotion
+
+#### Scenario: Comparison contract preserves boundaries
+
+- **WHEN** the comparison contract is reviewed
+- **THEN** runtime defaults, provider HTTP contracts, and external control-plane ownership remain unchanged
+
+### Requirement: Phase 6 BGE-M3 comparison diagnostics exports stay lightweight and evaluation-only
+
+The project SHALL treat Phase 6 BGE-M3 vs mock/fixture diagnostics exports as local evidence visibility work without changing runtime defaults.
+
+#### Scenario: Comparison diagnostics export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a BGE-M3 comparison diagnostics export
+- **THEN** the roadmap records it as Phase 6/Phase 3 bridge evidence visibility rather than runtime promotion
+
+#### Scenario: Comparison diagnostics preserve boundaries
+
+- **WHEN** the export summarizes baseline/candidate quality-latency deltas and deployment linkage
+- **THEN** runtime defaults, provider HTTP contracts, and external control-plane ownership remain unchanged
+
+### Requirement: Phase 6 BGE-M3 comparison smoke stays lightweight and read-only
+
+The project SHALL treat Phase 6 BGE-M3 comparison smoke summaries as local evidence maintenance without changing runtime defaults.
+
+#### Scenario: Comparison smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes BGE-M3 comparison smoke evidence
+- **THEN** the roadmap records it as Phase 6 evidence maintenance and not runtime promotion
+
+#### Scenario: Comparison smoke preserves boundaries
+
+- **WHEN** the smoke checks comparison evidence-chain prerequisites
+- **THEN** it does not execute retrieval changes, model download, embedding execution, or control-plane policy
+
+### Requirement: Qdrant+BGE-M3 private-network promotion review contracts are Phase 6/Phase 3 bridge evidence
+
+The project SHALL treat Qdrant+BGE-M3 private-network promotion review contracts as lightweight Phase 6 evidence with explicit Phase 3 promotion bridge value.
+
+#### Scenario: Private-network review contract is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a private-network promotion review contract
+- **THEN** the roadmap records it as review-governance evidence and not runtime promotion
+
+#### Scenario: Private-network review contract preserves boundaries
+
+- **WHEN** the contract is reviewed
+- **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
+
+### Requirement: Phase 6 Qdrant+BGE-M3 private-network promotion readiness exports stay lightweight and review-only
+
+The project SHALL treat Qdrant+BGE-M3 private-network promotion readiness exports as local evidence visibility work without changing runtime defaults.
+
+#### Scenario: Private-network readiness export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes private-network promotion readiness export evidence
+- **THEN** the roadmap records it as Phase 6 bridge visibility and not runtime promotion
+
+#### Scenario: Private-network readiness export preserves boundaries
+
+- **WHEN** the export summarizes review gates and open evidence inputs
+- **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
+
+### Requirement: Phase 6 private-network promotion smoke stays lightweight and read-only
+
+The project SHALL treat private-network promotion smoke summaries as local Phase 6 evidence maintenance without changing runtime defaults.
+
+#### Scenario: Private-network promotion smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes private-network promotion smoke evidence
+- **THEN** the roadmap records it as Phase 6 evidence maintenance and not runtime promotion
+
+#### Scenario: Private-network promotion smoke preserves boundaries
+
+- **WHEN** smoke checks run
+- **THEN** they do not execute runtime retrieval changes, model downloads, deployment automation, or control-plane policies
+
+### Requirement: Private-network promotion decision records SHALL be explicit before runtime promotion
+
+The project SHALL preserve a documentation-only decision record for each Qdrant+BGE private-network promotion review cycle before any runtime default promotion.
+
+#### Scenario: Decision record captures keep-default verdict
+
+- **WHEN** review evidence remains `review` or has open gates
+- **THEN** the decision record states `keep_runtime_defaults` and lists open gates
+
+#### Scenario: Decision record preserves boundaries
+
+- **WHEN** the decision record is published
+- **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
+

@@ -125,6 +125,24 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase6_bge_m3_vs_mock_fixture_diagnostics",
+        category="operations",
+        path=Path(
+            "docs/operations/bge-m3-comparison-readiness/"
+            "phase6-bge-m3-vs-mock-fixture-diagnostics.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase6_bge_m3_comparison_smoke",
+        category="operations-smoke",
+        path=Path(
+            "docs/smoke/bge-m3-comparison/"
+            "phase6-bge-m3-comparison-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase6_qdrant_vector_store_readiness",
         category="operations",
         path=Path(
@@ -139,6 +157,24 @@ DEFAULT_EVIDENCE_SPECS = [
         path=Path(
             "docs/smoke/qdrant-backup-restore/"
             "phase6-qdrant-backup-restore-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase6_qdrant_bge_private_network_promotion_readiness",
+        category="operations",
+        path=Path(
+            "docs/operations/private-network-promotion/"
+            "phase6-qdrant-bge-private-network-promotion-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase6_qdrant_bge_private_network_promotion_smoke",
+        category="operations-smoke",
+        path=Path(
+            "docs/smoke/private-network-promotion/"
+            "phase6-qdrant-bge-private-network-promotion-smoke.json"
         ),
         required=False,
     ),
@@ -543,6 +579,34 @@ def _artifact_status_and_summary(
                 f"{_int_value(artifact.get('checksum_target_count'), fallback=0)}"
             ),
         )
+    if artifact_id == "phase6_bge_m3_vs_mock_fixture_diagnostics":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        quality_delta = payload.get("quality_delta", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"ready_signals={_int_value(summary.get('ready_signals'), fallback=0)}/"
+                f"{_int_value(summary.get('total_signals'), fallback=0)}; "
+                f"review_signals={_int_value(summary.get('review_signals'), fallback=0)}; "
+                f"hit_rate_delta={_float_value(quality_delta.get('hit_rate_delta'), fallback=0.0):.4f}; "
+                f"citation_match_rate_delta={_float_value(quality_delta.get('citation_match_rate_delta'), fallback=0.0):.4f}; "
+                f"empty_handling_rate_delta={_float_value(quality_delta.get('empty_handling_rate_delta'), fallback=0.0):.4f}"
+            ),
+        )
+    if artifact_id == "phase6_bge_m3_comparison_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"passed_checks={_int_value(summary.get('passed_checks'), fallback=0)}/"
+                f"{_int_value(summary.get('total_checks'), fallback=0)}; "
+                f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}"
+            ),
+        )
     if artifact_id == "phase6_qdrant_vector_store_readiness":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -561,6 +625,32 @@ def _artifact_status_and_summary(
             ),
         )
     if artifact_id == "phase6_qdrant_backup_restore_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"passed_checks={_int_value(summary.get('passed_checks'), fallback=0)}/"
+                f"{_int_value(summary.get('total_checks'), fallback=0)}; "
+                f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase6_qdrant_bge_private_network_promotion_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; state={payload.get('promotion_review_state', 'review')}; "
+                f"decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"ready_signals={_int_value(summary.get('ready_signals'), fallback=0)}/"
+                f"{_int_value(summary.get('total_signals'), fallback=0)}; "
+                f"review_signals={_int_value(summary.get('review_signals'), fallback=0)}; "
+                f"blocked_signals={_int_value(summary.get('blocked_signals'), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase6_qdrant_bge_private_network_promotion_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
         return (
@@ -744,10 +834,18 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 3 hybrid fusion/threshold calibration evidence is missing."
     if artifact_id == "phase6_bge_m3_artifact_readiness":
         return "Optional Phase 6 BGE-M3 artifact readiness evidence is missing."
+    if artifact_id == "phase6_bge_m3_vs_mock_fixture_diagnostics":
+        return "Optional Phase 6 BGE-M3 comparison diagnostics evidence is missing."
+    if artifact_id == "phase6_bge_m3_comparison_smoke":
+        return "Optional Phase 6 BGE-M3 comparison smoke evidence is missing."
     if artifact_id == "phase6_qdrant_vector_store_readiness":
         return "Optional Phase 6 Qdrant vector-store readiness evidence is missing."
     if artifact_id == "phase6_qdrant_backup_restore_smoke":
         return "Optional Phase 6 Qdrant backup/restore smoke evidence is missing."
+    if artifact_id == "phase6_qdrant_bge_private_network_promotion_readiness":
+        return "Optional Phase 6 private-network promotion readiness evidence is missing."
+    if artifact_id == "phase6_qdrant_bge_private_network_promotion_smoke":
+        return "Optional Phase 6 private-network promotion smoke evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase4_evidence_pack_readiness":
@@ -780,10 +878,18 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase3_hybrid_fusion_threshold_calibration"
     if artifact_id == "phase6_bge_m3_artifact_readiness":
         return "regenerate_phase6_bge_m3_artifact_readiness"
+    if artifact_id == "phase6_bge_m3_vs_mock_fixture_diagnostics":
+        return "regenerate_phase6_bge_m3_vs_mock_fixture_diagnostics"
+    if artifact_id == "phase6_bge_m3_comparison_smoke":
+        return "regenerate_phase6_bge_m3_comparison_smoke"
     if artifact_id == "phase6_qdrant_vector_store_readiness":
         return "regenerate_phase6_qdrant_vector_store_readiness"
     if artifact_id == "phase6_qdrant_backup_restore_smoke":
         return "regenerate_phase6_qdrant_backup_restore_smoke"
+    if artifact_id == "phase6_qdrant_bge_private_network_promotion_readiness":
+        return "regenerate_phase6_qdrant_bge_private_network_promotion_readiness"
+    if artifact_id == "phase6_qdrant_bge_private_network_promotion_smoke":
+        return "regenerate_phase6_qdrant_bge_private_network_promotion_smoke"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase4_evidence_pack_readiness":
@@ -856,6 +962,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
             "Phase 6 BGE-M3 artifact readiness export is optional before deployment promotion review; regenerate it after model artifact or deployment readiness changes."
         )
     if any(
+        artifact["id"] == "phase6_bge_m3_vs_mock_fixture_diagnostics"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 6 BGE-M3 comparison diagnostics export is optional before promotion review; regenerate it after baseline/candidate evidence or deployment linkage changes."
+        )
+    if any(
+        artifact["id"] == "phase6_bge_m3_comparison_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 6 BGE-M3 comparison smoke is optional before promotion review; regenerate it after comparison diagnostics or artifact readiness changes."
+        )
+    if any(
         artifact["id"] == "phase6_qdrant_vector_store_readiness"
         and not artifact["present"]
         for artifact in artifact_rows
@@ -870,6 +992,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 6 Qdrant backup/restore smoke is optional before deployment promotion review; regenerate it after qdrant readiness evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase6_qdrant_bge_private_network_promotion_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 6 private-network promotion readiness export is optional before promotion review; regenerate it after qdrant/bge comparison evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase6_qdrant_bge_private_network_promotion_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 6 private-network promotion smoke is optional before promotion review; regenerate it after private-network readiness evidence changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

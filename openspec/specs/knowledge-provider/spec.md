@@ -1033,3 +1033,121 @@ The system SHALL allow provider handoff bundle and handoff refresh workflows to 
 - **WHEN** provider handoff refresh runs
 - **THEN** it regenerates the Qdrant backup/restore smoke export before final handoff bundle generation
 
+### Requirement: Provider can publish a read-only BGE-M3 quality/latency comparison contract
+
+The system SHALL allow provider-owned documentation of BGE-M3 vs mock/fixture comparison requirements as read-only promotion-review evidence.
+
+#### Scenario: Contract documents comparison gates
+
+- **WHEN** operators review BGE-M3 comparison readiness
+- **THEN** the contract enumerates quality, latency, artifact, and deployment-linkage evidence expectations
+
+#### Scenario: Contract remains boundary-safe
+
+- **WHEN** the comparison contract is published
+- **THEN** it does not trigger retrieval execution changes, does not switch runtime defaults, and does not move control-plane ownership into the provider
+
+### Requirement: Provider handoff can summarize optional BGE-M3 comparison diagnostics evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 BGE-M3 comparison diagnostics evidence as read-only review context.
+
+#### Scenario: Handoff summarizes comparison diagnostics
+
+- **WHEN** provider handoff reads the BGE-M3 comparison diagnostics export
+- **THEN** it summarizes report status, decision, and key comparison signal counts in a compact optional row
+
+#### Scenario: Missing comparison diagnostics remains non-blocking
+
+- **WHEN** the optional BGE-M3 comparison diagnostics export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates comparison diagnostics before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the BGE-M3 comparison diagnostics export before final handoff bundle generation
+
+### Requirement: Provider handoff can summarize optional BGE-M3 comparison smoke evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 BGE-M3 comparison smoke evidence as read-only review context.
+
+#### Scenario: Handoff summarizes comparison smoke
+
+- **WHEN** provider handoff reads the BGE-M3 comparison smoke export
+- **THEN** it summarizes smoke status and check coverage in a compact optional row
+
+#### Scenario: Missing comparison smoke remains non-blocking
+
+- **WHEN** the optional BGE-M3 comparison smoke export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates comparison smoke before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the BGE-M3 comparison smoke export before final handoff bundle generation
+
+### Requirement: Provider can publish a read-only Qdrant+BGE-M3 private-network promotion review contract
+
+The system SHALL allow provider-owned documentation of Qdrant+BGE-M3 private-network promotion review as read-only evidence guidance.
+
+#### Scenario: Contract documents private-network promotion gates
+
+- **WHEN** operators review private-network promotion readiness
+- **THEN** the contract enumerates required evidence inputs, review states, and recommended follow-up actions
+
+#### Scenario: Contract remains boundary-safe
+
+- **WHEN** the contract is published
+- **THEN** it does not trigger runtime backend switches, model downloads, deployment automation, or control-plane governance execution
+
+### Requirement: Provider handoff can summarize optional private-network promotion readiness evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 Qdrant+BGE-M3 private-network promotion readiness evidence as read-only review context.
+
+#### Scenario: Handoff summarizes private-network readiness
+
+- **WHEN** provider handoff reads the private-network promotion readiness export
+- **THEN** it summarizes report status, decision, and key open-gate counts in a compact optional row
+
+#### Scenario: Missing private-network readiness remains non-blocking
+
+- **WHEN** the optional private-network promotion readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates private-network readiness before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the private-network promotion readiness export before final handoff bundle generation
+
+### Requirement: Provider handoff can summarize optional private-network promotion smoke evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 private-network promotion smoke evidence as read-only review context.
+
+#### Scenario: Handoff summarizes private-network smoke
+
+- **WHEN** provider handoff reads private-network promotion smoke evidence
+- **THEN** it summarizes smoke status and check coverage in a compact optional row
+
+#### Scenario: Missing private-network smoke remains non-blocking
+
+- **WHEN** the optional private-network promotion smoke artifact is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates private-network smoke before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates private-network promotion smoke evidence before final handoff bundle generation
+
+### Requirement: Provider can publish a read-only private-network promotion decision record
+
+The system SHALL allow provider-owned publication of private-network promotion decision records as read-only governance evidence.
+
+#### Scenario: Decision record is discoverable
+
+- **WHEN** reviewers inspect local operations evidence
+- **THEN** the private-network decision record clearly states current verdict, review state, and open gates
+
+#### Scenario: Decision record does not imply runtime change
+
+- **WHEN** the decision record is updated
+- **THEN** it does not automatically switch retrieval or embedding runtime defaults
+

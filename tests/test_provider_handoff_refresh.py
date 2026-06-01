@@ -109,8 +109,12 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
 
     assert "source_binding_summary" in step_ids
     assert "phase6_bge_m3_artifact_readiness" in step_ids
+    assert "phase6_bge_m3_vs_mock_fixture_diagnostics" in step_ids
+    assert "phase6_bge_m3_comparison_smoke" in step_ids
     assert "phase6_qdrant_vector_store_readiness" in step_ids
     assert "phase6_qdrant_backup_restore_smoke" in step_ids
+    assert "phase6_qdrant_bge_private_network_promotion_readiness" in step_ids
+    assert "phase6_qdrant_bge_private_network_promotion_smoke" in step_ids
     assert "phase3_fp_fn_review" in step_ids
     assert "phase3_candidate_runtime_diagnostics" in step_ids
     assert "phase3_candidate_latency_resource_diagnostics" in step_ids
@@ -128,12 +132,24 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase6_bge_m3_artifact_readiness"
     )
     assert step_ids.index("phase6_bge_m3_artifact_readiness") < step_ids.index(
+        "phase6_bge_m3_vs_mock_fixture_diagnostics"
+    )
+    assert step_ids.index("phase6_bge_m3_vs_mock_fixture_diagnostics") < step_ids.index(
+        "phase6_bge_m3_comparison_smoke"
+    )
+    assert step_ids.index("phase6_bge_m3_comparison_smoke") < step_ids.index(
         "phase6_qdrant_vector_store_readiness"
     )
     assert step_ids.index("phase6_qdrant_vector_store_readiness") < step_ids.index(
         "phase6_qdrant_backup_restore_smoke"
     )
     assert step_ids.index("phase6_qdrant_backup_restore_smoke") < step_ids.index(
+        "phase6_qdrant_bge_private_network_promotion_readiness"
+    )
+    assert step_ids.index("phase6_qdrant_bge_private_network_promotion_readiness") < step_ids.index(
+        "phase6_qdrant_bge_private_network_promotion_smoke"
+    )
+    assert step_ids.index("phase6_qdrant_bge_private_network_promotion_smoke") < step_ids.index(
         "source_binding_summary"
     )
     assert step_ids.index("phase3_fp_fn_review") < step_ids.index(
