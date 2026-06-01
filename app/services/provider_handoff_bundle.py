@@ -98,11 +98,29 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase3_candidate_latency_resource_diagnostics",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics/"
+            "phase3-candidate-latency-resource-diagnostics.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
             "docs/smoke/hybrid-cross-case-fp-fn/"
             "phase3-hybrid-cross-case-fp-fn-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase3_aggregation_relation_negative_control_smoke",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/smoke/aggregation-relation-negative-control/"
+            "phase3-aggregation-relation-negative-control-smoke.json"
         ),
         required=False,
     ),
@@ -437,6 +455,24 @@ def _artifact_status_and_summary(
                 f"blocked_checks={_int_value(summary.get('blocked_checks'), fallback=0)}"
             ),
         )
+    if artifact_id == "phase3_candidate_latency_resource_diagnostics":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        latency_profile = payload.get("latency_profile", {})
+        resource_posture = payload.get("resource_posture", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"total_signals={_int_value(summary.get('total_signals'), fallback=0)}; "
+                f"ready_signals={_int_value(summary.get('ready_signals'), fallback=0)}; "
+                f"review_signals={_int_value(summary.get('review_signals'), fallback=0)}; "
+                f"backend={_dict_value(latency_profile, 'backend', 'unknown')}; "
+                f"avg_latency_ms={_float_value(latency_profile.get('average_latency_ms'), fallback=0.0):.4f}; "
+                f"deployment_status={_dict_value(resource_posture, 'deployment_readiness_status', 'unknown')}; "
+                f"runtime_status={_dict_value(resource_posture, 'runtime_diagnostics_status', 'unknown')}"
+            ),
+        )
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -448,6 +484,20 @@ def _artifact_status_and_summary(
                 f"{_int_value(summary.get('total'), fallback=0)}; "
                 f"false_positive_count={_int_value(summary.get('false_positive_count'), fallback=0)}; "
                 f"false_negative_count={_int_value(summary.get('false_negative_count'), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"total_checks={_int_value(summary.get('total_checks'), fallback=0)}; "
+                f"passed_checks={_int_value(summary.get('passed_checks'), fallback=0)}; "
+                f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}; "
+                f"relation_unsupported_count={_int_value(summary.get('relation_unsupported_count'), fallback=0)}; "
+                f"expected_empty_pass_rate={_float_value(summary.get('expected_empty_pass_rate'), fallback=0.0):.4f}"
             ),
         )
     if artifact_id == "phase4_evidence_pack_readiness":
@@ -543,6 +593,12 @@ def _int_value(value: Any, *, fallback: int) -> int:
     return fallback
 
 
+def _dict_value(value: Any, key: str, fallback: Any) -> Any:
+    if not isinstance(value, dict):
+        return fallback
+    return value.get(key, fallback)
+
+
 def _float_value(value: Any, *, fallback: float) -> float:
     if isinstance(value, bool):
         return fallback
@@ -581,8 +637,12 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 3 readiness export is missing."
     if artifact_id == "phase3_candidate_runtime_diagnostics":
         return "Optional Phase 3 runtime diagnostics export is missing."
+    if artifact_id == "phase3_candidate_latency_resource_diagnostics":
+        return "Optional Phase 3 latency/resource diagnostics export is missing."
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         return "Optional Phase 3 hybrid cross-case FP/FN smoke evidence is missing."
+    if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
+        return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase4_evidence_pack_readiness":
         return "Optional Phase 4 evidence pack readiness export is missing."
     if artifact_id == "phase4_caller_consumption_smoke":
@@ -605,8 +665,12 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase3_retrieval_promotion_readiness"
     if artifact_id == "phase3_candidate_runtime_diagnostics":
         return "regenerate_phase3_candidate_runtime_diagnostics"
+    if artifact_id == "phase3_candidate_latency_resource_diagnostics":
+        return "regenerate_phase3_candidate_latency_resource_diagnostics"
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         return "regenerate_phase3_hybrid_cross_case_fp_fn_smoke"
+    if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
+        return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase4_evidence_pack_readiness":
         return "regenerate_phase4_evidence_pack_readiness"
     if artifact_id == "phase4_caller_consumption_smoke":
@@ -653,12 +717,28 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
             "Phase 3 candidate runtime diagnostics export is optional before promotion review; regenerate it after runtime configuration or readiness evidence changes."
         )
     if any(
+        artifact["id"] == "phase3_candidate_latency_resource_diagnostics"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 3 latency/resource diagnostics export is optional before promotion review; regenerate it after benchmark latency or deployment posture changes."
+        )
+    if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"
         and not artifact["present"]
         for artifact in artifact_rows
     ):
         notes.append(
             "Phase 3 hybrid cross-case FP/FN smoke is optional before promotion review; regenerate it after baseline or FP/FN evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase3_aggregation_relation_negative_control_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 3 aggregation/relation negative-control smoke is optional before promotion review; regenerate it after aggregation or relation-aware grading evidence changes."
         )
     if any(
         artifact["id"] == "phase4_evidence_pack_readiness"

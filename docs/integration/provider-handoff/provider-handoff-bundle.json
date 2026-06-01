@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T01:47:33.344631+00:00",
+  "generated_at": "2026-06-01T03:16:25.549170+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -81,7 +81,7 @@
       "present": true,
       "required": false,
       "status": "ready",
-      "summary": "total_cases=29; hit_rate=0.9310; citation_match_rate=0.9310; empty_handling_rate=0.8182",
+      "summary": "total_cases=32; hit_rate=0.9062; citation_match_rate=0.9062; empty_handling_rate=0.7500",
       "recommended_action": "no_action_required"
     },
     {
@@ -91,7 +91,7 @@
       "present": true,
       "required": false,
       "status": "ready",
-      "summary": "false_positive_count=2; false_negative_count=0; false_positive_rate=0.0690; false_negative_rate=0.0000",
+      "summary": "false_positive_count=3; false_negative_count=0; false_positive_rate=0.0938; false_negative_rate=0.0000",
       "recommended_action": "no_action_required"
     },
     {
@@ -115,13 +115,33 @@
       "recommended_action": "review_evidence_notes"
     },
     {
+      "id": "phase3_candidate_latency_resource_diagnostics",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; total_signals=6; ready_signals=1; review_signals=5; backend=fixture; avg_latency_ms=0.2368; deployment_status=review; runtime_status=review",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
       "id": "phase3_hybrid_cross_case_fp_fn_smoke",
       "category": "retrieval-evidence",
       "path": "docs\\smoke\\hybrid-cross-case-fp-fn\\phase3-hybrid-cross-case-fp-fn-smoke.json",
       "present": true,
       "required": false,
       "status": "ready",
-      "summary": "status=ready; passed_checks=4/4; false_positive_count=2; false_negative_count=0",
+      "summary": "status=ready; passed_checks=4/4; false_positive_count=3; false_negative_count=0",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase3_aggregation_relation_negative_control_smoke",
+      "category": "retrieval-evidence",
+      "path": "docs\\smoke\\aggregation-relation-negative-control\\phase3-aggregation-relation-negative-control-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000",
       "recommended_action": "no_action_required"
     },
     {

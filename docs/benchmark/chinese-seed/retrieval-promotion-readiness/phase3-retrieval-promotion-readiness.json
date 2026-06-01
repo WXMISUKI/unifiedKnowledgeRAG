@@ -1,6 +1,6 @@
 {
   "id": "phase3-retrieval-promotion-readiness-v1",
-  "generated_at": "2026-06-01T01:47:33.329284+00:00",
+  "generated_at": "2026-06-01T03:16:25.520571+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "gap_matrix_path": "docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md",
@@ -125,7 +125,7 @@
       "category": "retrieval-evidence",
       "path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
       "status": "ready",
-      "summary": "total_cases=29; hit_rate=0.9310; citation_match_rate=0.9310; empty_handling_rate=0.8182",
+      "summary": "total_cases=32; hit_rate=0.9062; citation_match_rate=0.9062; empty_handling_rate=0.7500",
       "present": true,
       "required": false,
       "recommended_action": "no_action_required"
@@ -135,7 +135,7 @@
       "category": "retrieval-evidence",
       "path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json",
       "status": "ready",
-      "summary": "false_positive_count=2; false_negative_count=0; false_positive_rate=0.0690; false_negative_rate=0.0000",
+      "summary": "false_positive_count=3; false_negative_count=0; false_positive_rate=0.0938; false_negative_rate=0.0000",
       "present": true,
       "required": false,
       "recommended_action": "no_action_required"

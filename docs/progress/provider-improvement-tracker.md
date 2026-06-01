@@ -24,6 +24,7 @@
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 promotion customer-like benchmark expansion completed (`2026-05-31-phase3-expand-promotion-customer-like-cases`), extending the canonical baseline fixture to 29 cases and exposing a second expected-empty false-positive trap for promotion review.
+- Phase 3 promotion customer-like gate cases v2 completed (`2026-06-01-expand-phase3-promotion-customer-like-gate-cases-v2`), extending the canonical baseline fixture to 32 cases and adding a third expected-empty false-positive trap for promotion review.
 - Phase 3 handoff evidence summary completed and archived (`2026-05-31-add-phase3-evidence-summary-to-handoff`), adding optional baseline metric rollup to provider handoff bundle.
 - Phase 3 false-positive/false-negative customer-like extension completed and archived (`2026-05-31-expand-phase3-fp-fn-customer-like-cases`), with baseline fixture expanded to 26 cases and one expected-empty false-positive risk explicitly exposed.
 - Phase 3 FP/FN review export completed and archived (`2026-05-31-add-phase3-fp-fn-review-export`), adding a read-only summary artifact over benchmark evidence (`false_positive_count=2`, `false_negative_count=0`).
@@ -32,7 +33,9 @@
 - Phase 3 retrieval promotion readiness export implemented and refreshed (`2026-05-31-phase3-retrieval-promotion-readiness-export`), surfacing the gap matrix as machine-readable evidence and adding optional handoff/refresh visibility.
 - Phase 3 retrieval candidate evaluation protocol documented (`2026-06-01-document-phase3-retrieval-candidate-evaluation-protocol`), standardizing gate expectations and required evidence classes across Qdrant/BGE-M3/hybrid/aggregation/relation-aware/deployed-smoke review.
 - Phase 3 candidate runtime diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-runtime-diagnostics`), summarizing runtime-adjacent promotion prerequisites and adding optional handoff/refresh visibility.
+- Phase 3 candidate latency/resource diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-latency-resource-diagnostics`), combining benchmark latency shape with deployment/runtime posture into optional handoff/refresh evidence.
 - Phase 3 hybrid cross-case FP/FN smoke implemented and refreshed (`2026-06-01-add-phase3-hybrid-cross-case-fp-fn-smoke`), validating risk-case coverage, false-positive trap alignment, and positive-control stability from local evidence.
+- Phase 3 aggregation/relation negative-control smoke implemented and refreshed (`2026-06-01-add-phase3-aggregation-relation-negative-control-smoke`), keeping the over-broad aggregation risk and relation-aware unsupported-case signal visible in one compact local review artifact.
 - Deployment readiness operator guide added for Phase 6 operations documentation, translating `review` evidence into operator steps without changing runtime behavior.
 - Deployment readiness configuration reference added for Phase 6 operations documentation, mapping env vars, mounts, and evidence commands to the current deploy-prep state.
 - Deployment readiness runbook added for Phase 6 operations documentation, sequencing review, configuration, refresh, and optional live smoke into a single operator flow.
@@ -45,12 +48,12 @@
 
 ## Benchmark Fixture Scope
 
-- Baseline retrieval fixture `tests/fixtures/retrieval_benchmark_cases.json` is expanded to 29 cases.
+- Baseline retrieval fixture `tests/fixtures/retrieval_benchmark_cases.json` is expanded to 32 cases.
 - Customer-like additions in this round:
   - one nuanced high-value refund review case (`policy-nuance`)
   - one logistics identifier case (`identifier-noise`)
   - one cross-domain expected-empty trap case (`empty`)
-- Current empty-case count in baseline fixture: 11.
+- Current empty-case count in baseline fixture: 12.
 
 ## Phase 3 Evidence Refresh
 
@@ -59,6 +62,7 @@
   - `2026-05-31-expand-phase3-fp-fn-customer-like-cases` follow-up refresh
   - `2026-05-31-phase3-expand-promotion-customer-like-cases` follow-up refresh
   - `2026-06-01-add-phase5-graph-boundary-smoke-summary` follow-up refresh
+  - `2026-06-01-expand-phase3-promotion-customer-like-gate-cases-v2` follow-up refresh
 - Refreshed artifact:
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json`
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.md`
@@ -76,19 +80,29 @@
   - `docs/benchmark/chinese-seed/retrieval-runtime-diagnostics/phase3-candidate-runtime-diagnostics.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_candidate_runtime_diagnostics` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_candidate_runtime_diagnostics` step)
+- Phase 3 latency/resource diagnostics refresh additions:
+  - `docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics/phase3-candidate-latency-resource-diagnostics.json`
+  - `docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics/phase3-candidate-latency-resource-diagnostics.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_candidate_latency_resource_diagnostics` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_candidate_latency_resource_diagnostics` step)
 - Phase 3 hybrid cross-case smoke refresh additions:
   - `docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.json`
   - `docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_hybrid_cross_case_fp_fn_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_hybrid_cross_case_fp_fn_smoke` step)
+- Phase 3 aggregation/relation negative-control smoke refresh additions:
+  - `docs/smoke/aggregation-relation-negative-control/phase3-aggregation-relation-negative-control-smoke.json`
+  - `docs/smoke/aggregation-relation-negative-control/phase3-aggregation-relation-negative-control-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_aggregation_relation_negative_control_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_aggregation_relation_negative_control_smoke` step)
 - Refreshed baseline summary:
-  - `total_cases=29`
-  - `hit_rate=0.9310`
-  - `citation_match_rate=0.9310`
-  - `empty_handling_rate=0.8182`
-  - `empty.total_cases=11`
-  - `policy-nuance.total_cases=3`
-  - `identifier-noise.total_cases=1`
+  - `total_cases=32`
+  - `hit_rate=0.9062`
+  - `citation_match_rate=0.9062`
+  - `empty_handling_rate=0.7500`
+  - `empty.total_cases=12`
+  - `policy-nuance.total_cases=4`
+  - `identifier-noise.total_cases=2`
 - Maintenance rule:
   - Treat the above artifacts as current only after rerunning:
     `python scripts/export_provider_handoff_refresh.py`
@@ -110,7 +124,7 @@
 
 ## Latest Refresh
 
-- Run time: `2026-06-01T01:47:33.345867+00:00`
+- Run time: `2026-06-01T03:16:25.552258+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -122,7 +136,9 @@
   - `phase3_fp_fn_review`: `review`
   - `phase3_retrieval_promotion_readiness`: `review`
   - `phase3_candidate_runtime_diagnostics`: `review`
+  - `phase3_candidate_latency_resource_diagnostics`: `review`
   - `phase3_hybrid_cross_case_fp_fn_smoke`: `ready`
+  - `phase3_aggregation_relation_negative_control_smoke`: `ready`
   - `phase4_evidence_pack_readiness`: `ready`
   - `phase4_caller_consumption_smoke`: `ready`
   - `phase5_graph_use_case_readiness`: `ready`
@@ -136,4 +152,6 @@
 - The deployment readiness config reference documents the current runtime surface and deployment modes; it does not change the underlying readiness state.
 - The deployment readiness runbook sequences the operator guide, config reference, refresh commands, and optional deployed smoke into a single deployment-prep flow.
 - Handoff bundle remains `review` because deployment readiness is `review` and optional deployed smoke evidence is not present for a live URL.
+- Phase 3 candidate latency/resource diagnostics is `review` by design because it is a local evidence-only export that still depends on deployment/runtime posture and deployed smoke context.
+- Phase 3 aggregation/relation negative-control smoke is `ready` because the positive split-chunk control, the same-document negative control, and the relation-aware unsupported-case label all match current local evidence.
 - Runtime promotion gates remain open for Phase 3 and GraphRAG execution; current evidence is candidate-level, not production approval.

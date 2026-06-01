@@ -3,7 +3,7 @@
 - Report: `phase3-retrieval-promotion-readiness-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T01:47:33.329284+00:00`
+- Generated At: `2026-06-01T03:16:25.520571+00:00`
 - Gap Matrix: `docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md`
 
 ## Summary
@@ -34,8 +34,8 @@
 
 | Evidence | Status | Summary |
 |---|---|---|
-| `phase3_seed_retrieval_baseline` | `ready` | total_cases=29; hit_rate=0.9310; citation_match_rate=0.9310; empty_handling_rate=0.8182 |
-| `phase3_fp_fn_review` | `ready` | false_positive_count=2; false_negative_count=0; false_positive_rate=0.0690; false_negative_rate=0.0000 |
+| `phase3_seed_retrieval_baseline` | `ready` | total_cases=32; hit_rate=0.9062; citation_match_rate=0.9062; empty_handling_rate=0.7500 |
+| `phase3_fp_fn_review` | `ready` | false_positive_count=3; false_negative_count=0; false_positive_rate=0.0938; false_negative_rate=0.0000 |
 
 ## Notes
 

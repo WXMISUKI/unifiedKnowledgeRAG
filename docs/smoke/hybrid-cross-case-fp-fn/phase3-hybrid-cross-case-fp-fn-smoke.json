@@ -1,6 +1,6 @@
 {
   "id": "phase3-hybrid-cross-case-fp-fn-smoke-v1",
-  "generated_at": "2026-06-01T01:47:33.333157+00:00",
+  "generated_at": "2026-06-01T03:16:25.528740+00:00",
   "status": "ready",
   "checks": [
     {
@@ -27,7 +27,7 @@
           "empty-refund-high-value-auto-compensation",
           "empty-refund-high-value-auto-compensation-customer-like-2"
         ],
-        "observed_false_positive_count": 2
+        "observed_false_positive_count": 3
       },
       "error": null
     },
@@ -60,8 +60,8 @@
     "passed": 4,
     "failed": 0,
     "risk_case_count": 4,
-    "baseline_total_cases": 29,
-    "false_positive_count": 2,
+    "baseline_total_cases": 32,
+    "false_positive_count": 3,
     "false_negative_count": 0
   },
   "source_paths": {

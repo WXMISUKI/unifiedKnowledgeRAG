@@ -110,7 +110,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "source_binding_summary" in step_ids
     assert "phase3_fp_fn_review" in step_ids
     assert "phase3_candidate_runtime_diagnostics" in step_ids
+    assert "phase3_candidate_latency_resource_diagnostics" in step_ids
     assert "phase3_hybrid_cross_case_fp_fn_smoke" in step_ids
+    assert "phase3_aggregation_relation_negative_control_smoke" in step_ids
     assert "phase4_evidence_pack_readiness" in step_ids
     assert "phase4_caller_consumption_smoke" in step_ids
     assert "phase5_graph_use_case_readiness" in step_ids
@@ -125,9 +127,19 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase3_candidate_runtime_diagnostics"
     )
     assert step_ids.index("phase3_candidate_runtime_diagnostics") < step_ids.index(
+        "phase3_candidate_latency_resource_diagnostics"
+    )
+    assert step_ids.index(
+        "phase3_candidate_latency_resource_diagnostics"
+    ) < step_ids.index(
         "phase3_hybrid_cross_case_fp_fn_smoke"
     )
     assert step_ids.index("phase3_hybrid_cross_case_fp_fn_smoke") < step_ids.index(
+        "phase3_aggregation_relation_negative_control_smoke"
+    )
+    assert step_ids.index(
+        "phase3_aggregation_relation_negative_control_smoke"
+    ) < step_ids.index(
         "phase4_evidence_pack_readiness"
     )
     assert step_ids.index("phase4_evidence_pack_readiness") < step_ids.index(

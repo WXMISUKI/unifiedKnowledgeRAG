@@ -1,0 +1,110 @@
+{
+  "id": "phase3-candidate-latency-resource-diagnostics-v1",
+  "generated_at": "2026-06-01T03:16:25.526638+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_signals": 6,
+    "ready_signals": 1,
+    "review_signals": 5,
+    "blocked_signals": 0,
+    "open_signal_ids": [
+      "deployment_readiness_snapshot",
+      "runtime_diagnostics_snapshot",
+      "local_embedding_artifact",
+      "provider_api_guard",
+      "deployed_smoke_evidence"
+    ]
+  },
+  "latency_profile": {
+    "backend": "fixture",
+    "total_cases": 32,
+    "hit_rate": 0.9062,
+    "citation_match_rate": 0.9062,
+    "empty_handling_rate": 0.75,
+    "average_latency_ms": 0.2368,
+    "median_latency_ms": 0.239,
+    "p95_latency_ms": 0.362,
+    "max_latency_ms": 0.388,
+    "slowest_case_id": "logistics-lost-package-cross-team",
+    "slowest_case_latency_ms": 0.388,
+    "empty_case_count": 12,
+    "empty_case_average_latency_ms": 0.2726,
+    "non_empty_case_count": 20,
+    "non_empty_case_average_latency_ms": 0.2154
+  },
+  "resource_posture": {
+    "deployment_readiness_status": "review",
+    "runtime_diagnostics_status": "review",
+    "deployment_health_status": "ok",
+    "deployment_bindable": true,
+    "rag_retrieval_backend": "fixture",
+    "embedding_provider": "mock",
+    "embedding_model": "mock-hash-v1",
+    "embedding_model_path": null,
+    "model_artifacts_status": "not_configured",
+    "provider_api_key_configured": false,
+    "qdrant_api_key_configured": false,
+    "qdrant_url": "http://localhost:6333",
+    "qdrant_collection": "knowledge_chunks",
+    "open_runtime_prerequisite_ids": [
+      "candidate_retrieval_backend",
+      "candidate_embedding_provider",
+      "local_embedding_artifact",
+      "provider_api_guard",
+      "phase3_readiness_export",
+      "deployed_smoke_evidence"
+    ]
+  },
+  "signals": [
+    {
+      "id": "benchmark_latency_profile",
+      "status": "ready",
+      "summary": "backend=fixture; total_cases=32; average_latency_ms=0.2368; median_latency_ms=0.2390; p95_latency_ms=0.3620",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json"
+    },
+    {
+      "id": "deployment_readiness_snapshot",
+      "status": "review",
+      "summary": "status=review; rag_backend=fixture; embedding_provider=mock; model_artifacts_status=not_configured",
+      "recommended_action": "review_deployment_readiness_notes",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "runtime_diagnostics_snapshot",
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; open_prerequisites=6",
+      "recommended_action": "review_runtime_diagnostics_notes",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json"
+    },
+    {
+      "id": "local_embedding_artifact",
+      "status": "review",
+      "summary": "status=not_configured; path_exists=False; manifest_exists=False",
+      "recommended_action": "validate_local_embedding_artifact",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "provider_api_guard",
+      "status": "review",
+      "summary": "provider_api_key_configured=False",
+      "recommended_action": "configure_provider_api_key_for_deployment_review",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "deployed_smoke_evidence",
+      "status": "review",
+      "summary": "Deployed smoke evidence is not present in local workspace.",
+      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only candidate latency/resource evidence for Phase 3 promotion review.",
+    "It combines benchmark latency profile evidence with deployment and runtime posture snapshots.",
+    "Latency values are environment-sensitive and should be compared against matching deployment conditions."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.md"
+}

@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T01:47:33.345867+00:00",
+  "generated_at": "2026-06-01T03:16:25.552258+00:00",
   "status": "review",
   "steps": [
     {
@@ -100,6 +100,18 @@
       "error": null
     },
     {
+      "id": "phase3_candidate_latency_resource_diagnostics",
+      "category": "retrieval-evidence",
+      "status": "review",
+      "output_paths": [
+        "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.json",
+        "docs\\benchmark\\chinese-seed\\retrieval-latency-resource-diagnostics\\phase3-candidate-latency-resource-diagnostics.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"deployment_readiness_snapshot\", \"runtime_diagnostics_snapshot\", \"local_embedding_artifact\", \"provider_api_guard\", \"deployed_smoke_evidence\"], \"ready_signals\": 1, \"review_signals\": 5, \"total_signals\": 6}",
+      "error": null
+    },
+    {
       "id": "phase3_hybrid_cross_case_fp_fn_smoke",
       "category": "retrieval-evidence",
       "status": "ready",
@@ -108,7 +120,19 @@
         "docs\\smoke\\hybrid-cross-case-fp-fn\\phase3-hybrid-cross-case-fp-fn-smoke.md"
       ],
       "recommended_action": "no_action_required",
-      "summary": "status=ready; summary={\"baseline_total_cases\": 29, \"failed\": 0, \"false_negative_count\": 0, \"false_positive_count\": 2, \"passed\": 4, \"risk_case_count\": 4, \"total\": 4}",
+      "summary": "status=ready; summary={\"baseline_total_cases\": 32, \"failed\": 0, \"false_negative_count\": 0, \"false_positive_count\": 3, \"passed\": 4, \"risk_case_count\": 4, \"total\": 4}",
+      "error": null
+    },
+    {
+      "id": "phase3_aggregation_relation_negative_control_smoke",
+      "category": "retrieval-evidence",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\aggregation-relation-negative-control\\phase3-aggregation-relation-negative-control-smoke.json",
+        "docs\\smoke\\aggregation-relation-negative-control\\phase3-aggregation-relation-negative-control-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"expected_empty_pass_rate\": 1.0, \"failed_checks\": 0, \"open_check_ids\": [], \"passed_checks\": 4, \"relation_unsupported_count\": 1, \"total_checks\": 4}",
       "error": null
     },
     {

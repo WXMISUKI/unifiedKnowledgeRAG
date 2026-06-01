@@ -1,0 +1,56 @@
+{
+  "id": "phase3-aggregation-relation-negative-control-smoke-v1",
+  "generated_at": "2026-06-01T03:16:25.532455+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_checks": 4,
+    "passed_checks": 4,
+    "failed_checks": 0,
+    "open_check_ids": [],
+    "relation_unsupported_count": 1,
+    "expected_empty_pass_rate": 1.0
+  },
+  "source_paths": {
+    "aggregation_candidate": "docs\\benchmark\\chinese-seed\\multi-chunk-aggregation-candidates\\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
+    "aggregation_negative_control": "docs\\benchmark\\chinese-seed\\multi-chunk-aggregation-negative-controls\\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json",
+    "relation_aware_grading": "docs\\benchmark\\chinese-seed\\relation-aware-aggregation-grading\\relation-aware-aggregation-grading.json"
+  },
+  "checks": [
+    {
+      "id": "aggregation_positive_control",
+      "status": "ready",
+      "summary": "backend=qdrant-hybrid:source-document-identifier-coverage-v1; total_cases=1; hit_rate=1.0000; citation_match_rate=1.0000; split_case_hit_at_k=True",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\multi-chunk-aggregation-candidates\\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json"
+    },
+    {
+      "id": "aggregation_negative_control",
+      "status": "ready",
+      "summary": "backend=qdrant-hybrid:source-document-identifier-coverage-v1; total_cases=2; hit_rate=0.5000; citation_match_rate=0.5000; empty_handling_rate=0.0000; negative_case_hit_at_k=False",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\multi-chunk-aggregation-negative-controls\\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json"
+    },
+    {
+      "id": "relation_aware_labeling",
+      "status": "ready",
+      "summary": "candidate=relation-aware-aggregation-grader-v1; label=relation_unsupported; reason=Returned evidence contains identifiers but does not prove the requested relationship.",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\relation-aware-aggregation-grading\\relation-aware-aggregation-grading.json"
+    },
+    {
+      "id": "relation_aware_summary",
+      "status": "ready",
+      "summary": "total_cases=2; answer_bearing_rate=1.0000; relation_unsupported_count=1; unexpected_evidence_count=0; expected_empty_pass_rate=1.0000",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\relation-aware-aggregation-grading\\relation-aware-aggregation-grading.json"
+    }
+  ],
+  "notes": [
+    "This smoke reuses existing aggregation and relation-aware grading evidence.",
+    "It is read-only and does not execute retrieval backends.",
+    "Smoke readiness reflects negative-control visibility, not runtime promotion approval."
+  ],
+  "json_path": "docs\\smoke\\aggregation-relation-negative-control\\phase3-aggregation-relation-negative-control-smoke.json",
+  "markdown_path": "docs\\smoke\\aggregation-relation-negative-control\\phase3-aggregation-relation-negative-control-smoke.md"
+}

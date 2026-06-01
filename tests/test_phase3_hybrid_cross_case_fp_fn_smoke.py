@@ -15,7 +15,7 @@ def test_run_phase3_hybrid_cross_case_fp_fn_smoke_summarizes_current_evidence():
     assert report.summary["total"] == 4
     assert report.summary["passed"] == 4
     assert report.summary["failed"] == 0
-    assert report.summary["false_positive_count"] == 2
+    assert report.summary["false_positive_count"] == 3
     assert report.summary["false_negative_count"] == 0
 
     checks = {check.name: check for check in report.checks}

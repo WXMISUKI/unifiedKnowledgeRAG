@@ -25,8 +25,14 @@ from app.services.phase3_retrieval_promotion_readiness import (
 from app.services.phase3_candidate_runtime_diagnostics import (
     export_phase3_candidate_runtime_diagnostics_report,
 )
+from app.services.phase3_candidate_latency_resource_diagnostics import (
+    export_phase3_candidate_latency_resource_diagnostics_report,
+)
 from app.services.phase3_hybrid_cross_case_fp_fn_smoke import (
     export_phase3_hybrid_cross_case_fp_fn_smoke_report,
+)
+from app.services.phase3_aggregation_relation_negative_control_smoke import (
+    export_phase3_aggregation_relation_negative_control_smoke_report,
 )
 from app.services.phase3_fp_fn_review import export_phase3_fp_fn_review_report
 from app.services.provider_integration_client import export_provider_integration_probe_report
@@ -139,10 +145,31 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
+            id="phase3_candidate_latency_resource_diagnostics",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir
+            / "docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics",
+            exporter=lambda output_dir: export_phase3_candidate_latency_resource_diagnostics_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
             id="phase3_hybrid_cross_case_fp_fn_smoke",
             category="retrieval-evidence",
             output_dir=artifact_base_dir / "docs/smoke/hybrid-cross-case-fp-fn",
             exporter=lambda output_dir: export_phase3_hybrid_cross_case_fp_fn_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase3_aggregation_relation_negative_control_smoke",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir / "docs/smoke/aggregation-relation-negative-control",
+            exporter=lambda output_dir: export_phase3_aggregation_relation_negative_control_smoke_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

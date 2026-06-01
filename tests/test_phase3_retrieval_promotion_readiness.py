@@ -34,8 +34,8 @@ def test_build_phase3_retrieval_promotion_readiness_report_summarizes_current_ev
     supporting = {item.id: item for item in report.supporting_evidence}
     assert supporting["phase3_seed_retrieval_baseline"].status == "ready"
     assert supporting["phase3_fp_fn_review"].status == "ready"
-    assert "total_cases=29" in supporting["phase3_seed_retrieval_baseline"].summary
-    assert "false_positive_count=2" in supporting["phase3_fp_fn_review"].summary
+    assert "total_cases=32" in supporting["phase3_seed_retrieval_baseline"].summary
+    assert "false_positive_count=3" in supporting["phase3_fp_fn_review"].summary
 
 
 def test_export_phase3_retrieval_promotion_readiness_report_writes_json_and_markdown(

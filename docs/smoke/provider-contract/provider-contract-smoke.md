@@ -2,7 +2,7 @@
 
 - Report: `provider-contract-smoke-v1`
 - Status: `passed`
-- Generated At: `2026-06-01T01:47:33.262277+00:00`
+- Generated At: `2026-06-01T03:16:25.438323+00:00`
 - Checks: `9/9` passed
 
 | Check | Endpoint | Status | Details |

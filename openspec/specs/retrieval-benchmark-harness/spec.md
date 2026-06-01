@@ -727,12 +727,12 @@ The system SHALL provide an evaluation-only relation-aware grading path for mult
 
 ### Requirement: Phase 3 benchmark fixtures include customer-like gate cases
 
-The system SHALL maintain a lightweight customer-like fixture expansion for retrieval benchmark evaluation so Phase 3 promotion reviews can inspect borderline false-positive and false-negative behavior beyond the baseline seed phrasing.
+The system SHALL maintain a lightweight customer-like fixture extension for retrieval benchmark evaluation so Phase 3 promotion reviews can inspect false-positive and false-negative behavior beyond baseline seed phrasing.
 
-#### Scenario: Customer-like fixture includes additional promotion-review cases
+#### Scenario: Customer-like fixture includes promotion-review cases
 
 - **WHEN** benchmark cases are loaded from the canonical retrieval benchmark fixture
-- **THEN** the customer-like additions include a bounded set of support-like cases that cover noisy identifiers, policy nuance phrasing, or expected-empty traps
+- **THEN** the customer-like additions include a bounded set of support-like cases that cover policy nuance phrasing, identifier noise, or expected-empty traps
 
 #### Scenario: Customer-like fixture stays evaluation-only
 
@@ -928,4 +928,42 @@ The system SHALL export a local Phase 3 hybrid cross-case FP/FN smoke report tha
 
 - **WHEN** cross-case smoke is exported
 - **THEN** runtime retrieval defaults, public HTTP APIs, and promotion decisions remain unchanged
+
+### Requirement: Phase 3 candidate latency/resource diagnostics can be exported locally
+
+The system SHALL export a local Phase 3 candidate latency/resource diagnostics report that combines benchmark latency profile evidence with resource/deployment posture evidence.
+
+#### Scenario: Latency/resource diagnostics are exported
+
+- **WHEN** the Phase 3 latency/resource diagnostics export is run
+- **THEN** the system writes JSON and Markdown evidence files under `docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics/`
+
+#### Scenario: Latency/resource diagnostics summarize current evidence
+
+- **WHEN** the export completes
+- **THEN** the report summarizes benchmark latency statistics, deployment readiness posture, runtime diagnostics posture, and the current resource snapshot
+
+#### Scenario: Latency/resource diagnostics remain read-only
+
+- **WHEN** the latency/resource diagnostics report is exported
+- **THEN** runtime defaults, public HTTP APIs, and promotion decisions remain unchanged
+
+### Requirement: Phase 3 aggregation and relation-aware negative-control smoke can be exported locally
+
+The system SHALL export a local Phase 3 aggregation/relation negative-control smoke report that combines multi-chunk aggregation evidence with relation-aware grading evidence.
+
+#### Scenario: Smoke export is local
+
+- **WHEN** the Phase 3 aggregation/relation negative-control smoke export is run
+- **THEN** the system writes JSON and Markdown evidence files under `docs/smoke/aggregation-relation-negative-control/`
+
+#### Scenario: Smoke covers positive and negative controls
+
+- **WHEN** the smoke report is generated
+- **THEN** it validates the positive split-chunk control, the same-document negative control, and the relation-aware grading label for the unsupported relationship case
+
+#### Scenario: Smoke remains evaluation-only
+
+- **WHEN** the aggregation/relation negative-control smoke is exported
+- **THEN** runtime retrieval defaults and graph execution behavior remain unchanged
 

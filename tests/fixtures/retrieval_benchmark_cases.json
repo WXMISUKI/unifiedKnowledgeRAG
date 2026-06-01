@@ -317,5 +317,38 @@
     "expected_source_id": null,
     "expected_citation": null,
     "expect_empty": true
+  },
+  {
+    "id": "refund-high-value-review-customer-like-v2",
+    "category": "policy-nuance",
+    "difficulty": "hard",
+    "query": "客户退款金额超过5000元并补齐付款凭证后，主管复核意见是否必须写进工单记录才能继续处理？",
+    "knowledge_base_ids": ["refund_policy_docs"],
+    "top_k": 2,
+    "expected_source_id": "refund_policy_docs",
+    "expected_citation": "refund_policy_2026#high-value-review",
+    "expect_empty": false
+  },
+  {
+    "id": "logistics-exact-id-customer-like-v2",
+    "category": "identifier-noise",
+    "difficulty": "hard",
+    "query": "客户只给出 ORD-ZS-2026-0012，这个物流升级编号要先去核对哪条处理流程？",
+    "knowledge_base_ids": ["logistics_faq"],
+    "top_k": 2,
+    "expected_source_id": "logistics_faq",
+    "expected_citation": "logistics_faq_2026#exact-logistics-id",
+    "expect_empty": false
+  },
+  {
+    "id": "empty-refund-high-value-cross-train-v2",
+    "category": "empty",
+    "difficulty": "hard",
+    "query": "高价值退款复核通过后是否会自动联动会员积分补偿和税务发票重开流程？",
+    "knowledge_base_ids": ["refund_policy_docs", "logistics_faq"],
+    "top_k": 3,
+    "expected_source_id": null,
+    "expected_citation": null,
+    "expect_empty": true
   }
 ]

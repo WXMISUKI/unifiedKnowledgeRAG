@@ -905,3 +905,41 @@ The system SHALL allow provider handoff bundle and handoff refresh workflows to 
 - **WHEN** provider handoff refresh runs
 - **THEN** it regenerates Phase 3 hybrid cross-case FP/FN smoke evidence before final handoff bundle generation
 
+### Requirement: Provider handoff can summarize optional Phase 3 candidate latency/resource diagnostics evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 3 candidate latency/resource diagnostics evidence as read-only review context.
+
+#### Scenario: Handoff summarizes latency/resource diagnostics
+
+- **WHEN** provider handoff reads the Phase 3 candidate latency/resource diagnostics export
+- **THEN** it summarizes report status, decision, latency profile, and resource posture in a compact optional row
+
+#### Scenario: Missing latency/resource diagnostics remains non-blocking
+
+- **WHEN** the optional latency/resource diagnostics export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates latency/resource diagnostics before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the Phase 3 candidate latency/resource diagnostics export before final handoff bundle generation
+
+### Requirement: Provider handoff can summarize optional Phase 3 aggregation/relation negative-control smoke evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 3 aggregation/relation negative-control smoke evidence as read-only review context.
+
+#### Scenario: Handoff summarizes negative-control smoke
+
+- **WHEN** provider handoff reads the Phase 3 aggregation/relation negative-control smoke export
+- **THEN** it summarizes report status, decision, positive control, negative control, and relation-aware grading alignment in a compact optional row
+
+#### Scenario: Missing negative-control smoke remains non-blocking
+
+- **WHEN** the optional aggregation/relation negative-control smoke export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates negative-control smoke before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates the Phase 3 aggregation/relation negative-control smoke export before final handoff bundle generation
+

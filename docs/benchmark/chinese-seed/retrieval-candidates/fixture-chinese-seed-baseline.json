@@ -13,10 +13,10 @@
   "report": {
     "summary": {
       "backend": "fixture",
-      "total_cases": 29,
-      "hit_rate": 0.931,
-      "citation_match_rate": 0.931,
-      "empty_handling_rate": 0.8182,
+      "total_cases": 32,
+      "hit_rate": 0.9062,
+      "citation_match_rate": 0.9062,
+      "empty_handling_rate": 0.75,
       "category_summaries": {
         "cross-source": {
           "total_cases": 1,
@@ -25,10 +25,10 @@
           "empty_handling_rate": 0.0
         },
         "empty": {
-          "total_cases": 11,
-          "hit_rate": 0.8182,
-          "citation_match_rate": 0.8182,
-          "empty_handling_rate": 0.8182
+          "total_cases": 12,
+          "hit_rate": 0.75,
+          "citation_match_rate": 0.75,
+          "empty_handling_rate": 0.75
         },
         "evidence": {
           "total_cases": 1,
@@ -49,7 +49,7 @@
           "empty_handling_rate": 0.0
         },
         "identifier-noise": {
-          "total_cases": 1,
+          "total_cases": 2,
           "hit_rate": 1.0,
           "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
@@ -91,7 +91,7 @@
           "empty_handling_rate": 0.0
         },
         "policy-nuance": {
-          "total_cases": 3,
+          "total_cases": 4,
           "hit_rate": 1.0,
           "citation_match_rate": 1.0,
           "empty_handling_rate": 0.0
@@ -112,7 +112,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.31,
+        "latency_ms": 0.342,
         "returned_citations": [
           "refund_policy_2026#section-3",
           "refund_policy_2026#exact-refund-code"
@@ -129,7 +129,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.197,
+        "latency_ms": 0.184,
         "returned_citations": [
           "logistics_faq_2026#delay",
           "logistics_faq_2026#batch-exception"
@@ -157,7 +157,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.161,
+        "latency_ms": 0.164,
         "returned_citations": [
           "refund_policy_2026#section-3",
           "refund_policy_2026#exact-refund-code"
@@ -174,7 +174,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.149,
+        "latency_ms": 0.158,
         "returned_citations": [
           "refund_policy_2026#section-5",
           "refund_policy_2026#appeal-review"
@@ -191,7 +191,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.156,
+        "latency_ms": 0.163,
         "returned_citations": [
           "logistics_faq_2026#delay",
           "logistics_faq_2026#lost-package"
@@ -208,7 +208,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.288,
+        "latency_ms": 0.362,
         "returned_citations": [
           "refund_policy_2026#section-5",
           "refund_policy_2026#appeal-review",
@@ -227,7 +227,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.149,
+        "latency_ms": 0.189,
         "returned_citations": [
           "refund_policy_2026#exception",
           "refund_policy_2026#appeal-review"
@@ -244,7 +244,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.144,
+        "latency_ms": 0.162,
         "returned_citations": [
           "refund_policy_2026#high-value-review",
           "refund_policy_2026#exact-refund-code"
@@ -261,7 +261,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.281,
+        "latency_ms": 0.308,
         "returned_citations": [
           "refund_policy_2026#address-change",
           "logistics_faq_2026#lost-package",
@@ -280,7 +280,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.144,
+        "latency_ms": 0.322,
         "returned_citations": [
           "logistics_faq_2026#same-city-timeout",
           "logistics_faq_2026#batch-exception"
@@ -297,7 +297,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.279,
+        "latency_ms": 0.388,
         "returned_citations": [
           "logistics_faq_2026#lost-package",
           "logistics_faq_2026#batch-exception",
@@ -316,7 +316,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.147,
+        "latency_ms": 0.167,
         "returned_citations": [
           "logistics_faq_2026#address-intercept",
           "logistics_faq_2026#delay"
@@ -333,7 +333,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.168,
+        "latency_ms": 0.21,
         "returned_citations": [
           "refund_policy_2026#appeal-review",
           "refund_policy_2026#exact-refund-code",
@@ -352,7 +352,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.155,
+        "latency_ms": 0.196,
         "returned_citations": [
           "logistics_faq_2026#batch-exception",
           "logistics_faq_2026#lost-package",
@@ -371,7 +371,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.26,
+        "latency_ms": 0.294,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -382,7 +382,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.257,
+        "latency_ms": 0.28,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -393,7 +393,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.251,
+        "latency_ms": 0.271,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -404,7 +404,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.249,
+        "latency_ms": 0.268,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -415,7 +415,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.251,
+        "latency_ms": 0.291,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -426,7 +426,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.25,
+        "latency_ms": 0.268,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -437,7 +437,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.161,
+        "latency_ms": 0.184,
         "returned_citations": [
           "refund_policy_2026#high-value-review",
           "refund_policy_2026#appeal-review"
@@ -454,7 +454,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.314,
+        "latency_ms": 0.283,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -465,7 +465,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": true,
-        "latency_ms": 0.312,
+        "latency_ms": 0.279,
         "returned_citations": [],
         "returned_source_ids": []
       },
@@ -476,7 +476,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.17,
+        "latency_ms": 0.162,
         "returned_citations": [
           "refund_policy_2026#high-value-review",
           "refund_policy_2026#appeal-review"
@@ -493,7 +493,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.172,
+        "latency_ms": 0.165,
         "returned_citations": [
           "refund_policy_2026#appeal-review",
           "refund_policy_2026#high-value-review"
@@ -510,7 +510,7 @@
         "hit_at_k": true,
         "citation_match": true,
         "empty_query_handling": null,
-        "latency_ms": 0.155,
+        "latency_ms": 0.157,
         "returned_citations": [
           "logistics_faq_2026#exact-logistics-id",
           "logistics_faq_2026#batch-exception"
@@ -527,7 +527,7 @@
         "hit_at_k": false,
         "citation_match": false,
         "empty_query_handling": false,
-        "latency_ms": 0.296,
+        "latency_ms": 0.287,
         "returned_citations": [
           "refund_policy_2026#high-value-review",
           "refund_policy_2026#exact-refund-code",
@@ -546,7 +546,60 @@
         "hit_at_k": false,
         "citation_match": false,
         "empty_query_handling": false,
-        "latency_ms": 0.279,
+        "latency_ms": 0.288,
+        "returned_citations": [
+          "refund_policy_2026#high-value-review",
+          "refund_policy_2026#exact-refund-code",
+          "refund_policy_2026#address-change"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs",
+          "refund_policy_docs",
+          "refund_policy_docs"
+        ]
+      },
+      {
+        "id": "refund-high-value-review-customer-like-v2",
+        "category": "policy-nuance",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 0.165,
+        "returned_citations": [
+          "refund_policy_2026#high-value-review",
+          "refund_policy_2026#appeal-review"
+        ],
+        "returned_source_ids": [
+          "refund_policy_docs",
+          "refund_policy_docs"
+        ]
+      },
+      {
+        "id": "logistics-exact-id-customer-like-v2",
+        "category": "identifier-noise",
+        "difficulty": "hard",
+        "hit_at_k": true,
+        "citation_match": true,
+        "empty_query_handling": null,
+        "latency_ms": 0.159,
+        "returned_citations": [
+          "logistics_faq_2026#exact-logistics-id",
+          "logistics_faq_2026#batch-exception"
+        ],
+        "returned_source_ids": [
+          "logistics_faq",
+          "logistics_faq"
+        ]
+      },
+      {
+        "id": "empty-refund-high-value-cross-train-v2",
+        "category": "empty",
+        "difficulty": "hard",
+        "hit_at_k": false,
+        "citation_match": false,
+        "empty_query_handling": false,
+        "latency_ms": 0.305,
         "returned_citations": [
           "refund_policy_2026#high-value-review",
           "refund_policy_2026#exact-refund-code",

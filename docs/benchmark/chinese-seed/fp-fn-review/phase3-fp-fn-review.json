@@ -1,11 +1,11 @@
 {
   "id": "phase3-fp-fn-review-v1",
-  "generated_at": "2026-06-01T01:47:33.324589+00:00",
+  "generated_at": "2026-06-01T03:16:25.513328+00:00",
   "source_report_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
-  "total_cases": 29,
-  "false_positive_count": 2,
+  "total_cases": 32,
+  "false_positive_count": 3,
   "false_negative_count": 0,
-  "false_positive_rate": 0.069,
+  "false_positive_rate": 0.0938,
   "false_negative_rate": 0.0,
   "false_positive_cases": [
     {
@@ -23,6 +23,19 @@
     },
     {
       "id": "empty-refund-high-value-auto-compensation-customer-like-2",
+      "category": "empty",
+      "expect_empty": true,
+      "hit_at_k": false,
+      "citation_match": false,
+      "empty_query_handling": false,
+      "returned_citations": [
+        "refund_policy_2026#high-value-review",
+        "refund_policy_2026#exact-refund-code",
+        "refund_policy_2026#address-change"
+      ]
+    },
+    {
+      "id": "empty-refund-high-value-cross-train-v2",
       "category": "empty",
       "expect_empty": true,
       "hit_at_k": false,
