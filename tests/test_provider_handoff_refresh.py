@@ -108,6 +108,8 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     step_ids = [step.id for step in steps]
 
     assert "source_binding_summary" in step_ids
+    assert "phase2_source_format_demand_readiness" in step_ids
+    assert "phase2_unsupported_format_negative_control_smoke" in step_ids
     assert "phase6_bge_m3_artifact_readiness" in step_ids
     assert "phase6_bge_m3_vs_mock_fixture_diagnostics" in step_ids
     assert "phase6_bge_m3_comparison_smoke" in step_ids
@@ -129,6 +131,10 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase4_caller_consumption_smoke" in step_ids
     assert "phase5_graph_use_case_readiness" in step_ids
     assert "phase5_graph_boundary_smoke_summary" in step_ids
+    assert "phase7_provider_release_readiness" in step_ids
+    assert "phase7_cross_phase_handoff_consistency_smoke" in step_ids
+    assert "phase8_live_url_validation_readiness" in step_ids
+    assert "phase8_live_url_smoke_consistency_check" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
     )
@@ -157,6 +163,12 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "source_binding_summary"
     )
     assert step_ids.index("source_binding_summary") < step_ids.index(
+        "phase2_source_format_demand_readiness"
+    )
+    assert step_ids.index("phase2_source_format_demand_readiness") < step_ids.index(
+        "phase2_unsupported_format_negative_control_smoke"
+    )
+    assert step_ids.index("phase2_unsupported_format_negative_control_smoke") < step_ids.index(
         "phase6_deployed_field_validation_readiness"
     )
     assert step_ids.index("phase6_deployed_field_validation_readiness") < step_ids.index(
@@ -212,6 +224,18 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase5_graph_boundary_smoke_summary"
     )
     assert step_ids.index("phase5_graph_boundary_smoke_summary") < step_ids.index(
+        "phase7_provider_release_readiness"
+    )
+    assert step_ids.index("phase7_provider_release_readiness") < step_ids.index(
+        "phase7_cross_phase_handoff_consistency_smoke"
+    )
+    assert step_ids.index("phase7_cross_phase_handoff_consistency_smoke") < step_ids.index(
+        "phase8_live_url_validation_readiness"
+    )
+    assert step_ids.index("phase8_live_url_validation_readiness") < step_ids.index(
+        "phase8_live_url_smoke_consistency_check"
+    )
+    assert step_ids.index("phase8_live_url_smoke_consistency_check") < step_ids.index(
         "provider_handoff_bundle"
     )
 

@@ -3,7 +3,7 @@
 - Report: `phase3-aggregation-relation-negative-control-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T09:28:54.112265+00:00`
+- Generated At: `2026-06-01T11:51:13.958732+00:00`
 - Aggregation Candidate Source: `docs\benchmark\chinese-seed\multi-chunk-aggregation-candidates\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json`
 - Aggregation Negative-Control Source: `docs\benchmark\chinese-seed\multi-chunk-aggregation-negative-controls\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json`
 - Relation-Aware Grading Source: `docs\benchmark\chinese-seed\relation-aware-aggregation-grading\relation-aware-aggregation-grading.json`

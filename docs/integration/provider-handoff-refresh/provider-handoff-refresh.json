@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T09:28:54.151641+00:00",
+  "generated_at": "2026-06-01T11:51:13.991609+00:00",
   "status": "review",
   "steps": [
     {
@@ -145,6 +145,30 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; report_status=ready",
+      "error": null
+    },
+    {
+      "id": "phase2_source_format_demand_readiness",
+      "category": "ingestion-evidence",
+      "status": "ready",
+      "output_paths": [
+        "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.json",
+        "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"bindable_sources\": 2, \"format_expansion_demand_signal\": false, \"markdown_only_sources\": 2, \"non_markdown_sources\": 0, \"open_gate_count\": 0, \"parser_ready_documents\": 2, \"parser_status_counts\": {\"ready\": 2}, \"recommended_action_counts\": {\"bind_source_from_control_plane\": 2}, \"source_binding_ready\": true, \"source_binding_status\": \"ready\", \"source_status_counts\": {\"ready\": 2}, \"supported_format_counts\": {\"markdown\": 2}, \"total_sources\": 2, \"unsupported_documents\": 0}",
+      "error": null
+    },
+    {
+      "id": "phase2_unsupported_format_negative_control_smoke",
+      "category": "ingestion-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\source-format-demand\\phase2-unsupported-format-negative-control-smoke.json",
+        "docs\\smoke\\source-format-demand\\phase2-unsupported-format-negative-control-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"failed_checks\": 0, \"format_expansion_demand_signal\": false, \"non_markdown_sources\": 0, \"parser_ready_documents\": 2, \"passed_checks\": 5, \"status\": \"ready\", \"total_checks\": 5, \"unsupported_documents\": 0}",
       "error": null
     },
     {
@@ -325,6 +349,54 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"entity_type_count\": 4, \"graph_checks_passed\": 2, \"graph_error_code\": \"GRAPH_NOT_IMPLEMENTED\", \"graph_ids\": [\"ecommerce_order_graph\"], \"graph_query_planned\": true, \"graph_query_status\": \"planned\", \"graph_schema_count\": 1, \"graph_status\": \"planned\", \"graph_store\": \"neo4j_planned\", \"ready_artifacts\": 3, \"relation_type_count\": 3, \"required_artifacts\": 3, \"required_ready_artifacts\": 3, \"review_artifacts\": 0, \"smoke_checks_passed\": true, \"smoke_checks_ready\": 9, \"smoke_checks_total\": 9, \"source_smoke_passed\": true, \"total_artifacts\": 3}",
+      "error": null
+    },
+    {
+      "id": "phase7_provider_release_readiness",
+      "category": "release-readiness",
+      "status": "review",
+      "output_paths": [
+        "docs\\operations\\provider-release-readiness\\phase7-provider-release-readiness.json",
+        "docs\\operations\\provider-release-readiness\\phase7-provider-release-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"open_gate_ids\": [\"phase3_hybrid_runtime_promotion_decision_readiness\", \"phase6_deployment_readiness\", \"phase6_deployed_field_validation_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\"], \"ready_for_local_provider_handoff\": true, \"ready_for_runtime_default_promotion\": false, \"ready_signals\": 11, \"required_signals\": 4, \"review_signals\": 4, \"total_signals\": 15}",
+      "error": null
+    },
+    {
+      "id": "phase7_cross_phase_handoff_consistency_smoke",
+      "category": "release-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\cross-phase-handoff\\phase7-cross-phase-handoff-consistency-smoke.json",
+        "docs\\smoke\\cross-phase-handoff\\phase7-cross-phase-handoff-consistency-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"failed_checks\": 0, \"open_gate_ids\": [], \"passed_checks\": 6, \"total_checks\": 6}",
+      "error": null
+    },
+    {
+      "id": "phase8_live_url_validation_readiness",
+      "category": "live-url-validation",
+      "status": "review",
+      "output_paths": [
+        "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.json",
+        "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"deployed_smoke_present\": false, \"deployed_smoke_status\": \"review\", \"live_url_present\": false, \"open_gate_ids\": [\"phase6_deployed_field_validation_readiness\", \"phase7_provider_release_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
+      "error": null
+    },
+    {
+      "id": "phase8_live_url_smoke_consistency_check",
+      "category": "live-url-validation-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.json",
+        "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"deployed_smoke_present\": false, \"deployed_smoke_status\": \"review\", \"failed_checks\": 0, \"live_url_present\": false, \"live_validation_state\": \"await_live_url_validation\", \"open_gate_count\": 3, \"passed_checks\": 10, \"readiness_status\": \"review\", \"total_checks\": 10}",
       "error": null
     },
     {

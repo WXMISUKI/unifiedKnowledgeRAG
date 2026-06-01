@@ -344,6 +344,106 @@ The next parser-related work should be driven by real corpus demand and separate
 
 Phase 2 source onboarding now also includes source package and chunk manifest diagnostics on the existing source document and ingestion preflight surfaces. `source_package` records lightweight business and parsing expectations such as domain, language, sensitivity, supported formats, default chunking strategy, citation granularity, and allowed parser statuses. `chunk_manifest` records deterministic markdown chunk ids, citations, chunking strategy, source path, character count, and capped preview text. These fields help operators review enterprise source readiness before ingestion while keeping parser expansion, indexing, embedding, vector-store promotion, and GraphRAG behind separate gates.
 
+## Phase 2 Source-Format Demand Readiness
+
+Phase 2 now also has a machine-readable source-format demand readiness export:
+
+`docs/operations/source-format-demand/phase2-source-format-demand-readiness.json`
+
+`docs/operations/source-format-demand/phase2-source-format-demand-readiness.md`
+
+The export is read-only and local. It summarizes markdown baseline posture, unsupported/non-markdown demand signals, and open expansion gates from current source-binding evidence without enabling non-Markdown parser runtime behavior.
+
+## Phase 2 Unsupported-Format Negative-Control Smoke
+
+Phase 2 now also has a compact unsupported-format negative-control smoke report:
+
+`docs/smoke/source-format-demand/phase2-unsupported-format-negative-control-smoke.json`
+
+`docs/smoke/source-format-demand/phase2-unsupported-format-negative-control-smoke.md`
+
+The smoke is read-only and local. It keeps markdown positive controls and unsupported/non-markdown negative controls visible in one artifact, without changing ingestion execution or parser defaults.
+
+## Phase 2 Parser Expansion Decision Record
+
+Phase 2 now also has a parser-expansion decision record for the current cycle:
+
+`docs/operations/source-format-demand/phase2-parser-expansion-decision-record.md`
+
+The record is documentation-only governance evidence. It captures the current `keep_markdown_baseline` verdict, evidence basis, and open gates while preserving parser expansion as a separate future change.
+
+## Phase 7 Provider Handoff Acceptance Contract
+
+Cross-phase handoff acceptance is now documented as a local contract:
+
+`docs/operations/provider-release-readiness/phase7-provider-handoff-acceptance-contract.md`
+
+The contract is read-only and reviewer-facing. It defines required handoff evidence, optional review evidence, and status semantics (`ready/review/blocked`) without changing runtime defaults. It also preserves the boundary that local handoff acceptance does not imply runtime default promotion.
+
+## Phase 7 Provider Release Readiness
+
+Phase 7 now also has a machine-readable cross-phase provider release-readiness export:
+
+`docs/operations/provider-release-readiness/phase7-provider-release-readiness.json`
+
+`docs/operations/provider-release-readiness/phase7-provider-release-readiness.md`
+
+The export is read-only and local. It summarizes required handoff gates and representative Phase 2-6 review signals, and it separates `ready_for_local_provider_handoff` from `ready_for_runtime_default_promotion`.
+
+## Phase 7 Cross-Phase Handoff Consistency Smoke
+
+Phase 7 now also has a compact cross-phase handoff consistency smoke artifact:
+
+`docs/smoke/cross-phase-handoff/phase7-cross-phase-handoff-consistency-smoke.json`
+
+`docs/smoke/cross-phase-handoff/phase7-cross-phase-handoff-consistency-smoke.md`
+
+The smoke is read-only and local. It checks that key phase decisions and smoke/readiness outputs remain aligned with the current Phase 7 release-readiness decision.
+
+## Phase 7 Provider Release Decision Record
+
+Phase 7 now also has a release decision record for the current cycle:
+
+`docs/operations/provider-release-readiness/phase7-provider-release-decision-record.md`
+
+The record is documentation-only governance evidence. It captures the current verdict that local handoff is ready while runtime default promotion remains gated.
+
+## Phase 8 Live URL Validation Execution Contract
+
+Phase 8 now introduces a live URL validation execution contract:
+
+`docs/operations/live-url-validation/phase8-live-url-validation-execution-contract.md`
+
+The contract is execution-oriented and read-only. It defines required live-validation inputs, allowed endpoint scope, and status semantics while preserving the boundary that live URL validation evidence does not imply runtime default promotion.
+
+## Phase 8 Live URL Validation Readiness
+
+Phase 8 now also has a machine-readable live URL validation readiness export:
+
+`docs/operations/live-url-validation/phase8-live-url-validation-readiness.json`
+
+`docs/operations/live-url-validation/phase8-live-url-validation-readiness.md`
+
+The export is read-only and local. It summarizes execution-contract presence, Phase 6 deployed field-validation posture, Phase 7 release posture, deployed smoke status, and live URL presence without changing runtime defaults or promotion decisions.
+
+## Phase 8 Live URL Smoke Consistency Check
+
+Phase 8 now also has a compact local consistency smoke artifact:
+
+`docs/smoke/live-url-validation/phase8-live-url-smoke-consistency-check.json`
+
+`docs/smoke/live-url-validation/phase8-live-url-smoke-consistency-check.md`
+
+The smoke is read-only and local. It compares Phase 8 readiness fields with the corresponding handoff bundle row to expose evidence drift without calling deployed endpoints or changing runtime defaults.
+
+## Phase 8 Live URL Validation Decision Record
+
+Phase 8 now also has a live URL validation decision record for the current cycle:
+
+`docs/operations/live-url-validation/phase8-live-url-validation-decision-record.md`
+
+The record is documentation-only. It freezes current live-url validation verdict and open gates while preserving the boundary that runtime default promotion remains a separate decision gate.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

@@ -58,6 +58,24 @@ DEFAULT_EVIDENCE_SPECS = [
         path=Path("docs/integration/source-bindings/provider-source-bindings.json"),
     ),
     HandoffEvidenceSpec(
+        id="phase2_source_format_demand_readiness",
+        category="ingestion-evidence",
+        path=Path(
+            "docs/operations/source-format-demand/"
+            "phase2-source-format-demand-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase2_unsupported_format_negative_control_smoke",
+        category="ingestion-smoke",
+        path=Path(
+            "docs/smoke/source-format-demand/"
+            "phase2-unsupported-format-negative-control-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="deployed_provider_smoke",
         category="deployed-integration",
         path=Path(
@@ -193,6 +211,42 @@ DEFAULT_EVIDENCE_SPECS = [
         path=Path(
             "docs/smoke/private-network-promotion/"
             "phase6-qdrant-bge-private-network-promotion-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase7_provider_release_readiness",
+        category="release-readiness",
+        path=Path(
+            "docs/operations/provider-release-readiness/"
+            "phase7-provider-release-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase7_cross_phase_handoff_consistency_smoke",
+        category="release-smoke",
+        path=Path(
+            "docs/smoke/cross-phase-handoff/"
+            "phase7-cross-phase-handoff-consistency-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase8_live_url_validation_readiness",
+        category="live-url-validation",
+        path=Path(
+            "docs/operations/live-url-validation/"
+            "phase8-live-url-validation-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase8_live_url_smoke_consistency_check",
+        category="live-url-validation-smoke",
+        path=Path(
+            "docs/smoke/live-url-validation/"
+            "phase8-live-url-smoke-consistency-check.json"
         ),
         required=False,
     ),
@@ -485,6 +539,37 @@ def _artifact_status_and_summary(
                 f"recommended_actions={_format_counts(action_counts)}"
             ),
         )
+    if artifact_id == "phase2_source_format_demand_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        if not isinstance(summary, dict):
+            summary = {}
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_markdown_baseline')}; "
+                f"demand_signal={_bool_value(summary.get('format_expansion_demand_signal'))}; "
+                f"unsupported_documents={_int_value(summary.get('unsupported_documents'), fallback=0)}; "
+                f"non_markdown_sources={_int_value(summary.get('non_markdown_sources'), fallback=0)}; "
+                f"open_gate_count={_int_value(summary.get('open_gate_count'), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase2_unsupported_format_negative_control_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        if not isinstance(summary, dict):
+            summary = {}
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_markdown_baseline')}; "
+                f"passed_checks={_int_value(summary.get('passed_checks'), fallback=0)}/"
+                f"{_int_value(summary.get('total_checks'), fallback=0)}; "
+                f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}; "
+                f"unsupported_documents={_int_value(summary.get('unsupported_documents'), fallback=0)}; "
+                f"non_markdown_sources={_int_value(summary.get('non_markdown_sources'), fallback=0)}"
+            ),
+        )
     if artifact_id == "deployed_provider_smoke":
         status = payload.get("status", "review")
         normalized_status = (
@@ -728,6 +813,62 @@ def _artifact_status_and_summary(
                 f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}"
             ),
         )
+    if artifact_id == "phase7_provider_release_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; release_state={payload.get('release_state', 'review')}; "
+                f"decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"local_handoff_ready={bool(_dict_value(summary, 'ready_for_local_provider_handoff', False))}; "
+                f"runtime_promotion_ready={bool(_dict_value(summary, 'ready_for_runtime_default_promotion', False))}; "
+                f"open_gate_count={_int_value(len(_dict_value(summary, 'open_gate_ids', [])), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase7_cross_phase_handoff_consistency_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults_until_live_validation')}; "
+                f"passed_checks={_int_value(_dict_value(summary, 'passed_checks', 0), fallback=0)}/"
+                f"{_int_value(_dict_value(summary, 'total_checks', 0), fallback=0)}; "
+                f"failed_checks={_int_value(_dict_value(summary, 'failed_checks', 0), fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase8_live_url_validation_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; "
+                f"live_validation_state={payload.get('live_validation_state', 'review')}; "
+                f"decision={payload.get('decision', 'keep_runtime_defaults_until_live_url_validation')}; "
+                f"deployed_smoke_present={bool(_dict_value(summary, 'deployed_smoke_present', False))}; "
+                f"deployed_smoke_status={_dict_value(summary, 'deployed_smoke_status', 'review')}; "
+                f"live_url_present={bool(_dict_value(summary, 'live_url_present', False))}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase8_live_url_smoke_consistency_check":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults_until_live_url_validation')}; "
+                f"passed_checks={_int_value(_dict_value(summary, 'passed_checks', 0), fallback=0)}/"
+                f"{_int_value(_dict_value(summary, 'total_checks', 0), fallback=0)}; "
+                f"failed_checks={_int_value(_dict_value(summary, 'failed_checks', 0), fallback=0)}; "
+                f"readiness_status={_dict_value(summary, 'readiness_status', 'unknown')}; "
+                f"bundle_status={_dict_value(summary, 'bundle_status', 'unknown')}; "
+                f"bundle_row_status={_dict_value(summary, 'bundle_row_status', 'unknown')}"
+            ),
+        )
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -921,6 +1062,10 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 6 deployed field-validation readiness evidence is missing."
     if artifact_id == "phase6_deployed_handoff_consistency_smoke":
         return "Optional Phase 6 deployed handoff consistency smoke evidence is missing."
+    if artifact_id == "phase2_source_format_demand_readiness":
+        return "Optional Phase 2 source-format demand readiness evidence is missing."
+    if artifact_id == "phase2_unsupported_format_negative_control_smoke":
+        return "Optional Phase 2 unsupported-format negative-control smoke evidence is missing."
     if artifact_id == "phase3_seed_retrieval_baseline":
         return "Optional Phase 3 retrieval baseline evidence is missing."
     if artifact_id == "phase3_fp_fn_review":
@@ -949,6 +1094,14 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 6 private-network promotion readiness evidence is missing."
     if artifact_id == "phase6_qdrant_bge_private_network_promotion_smoke":
         return "Optional Phase 6 private-network promotion smoke evidence is missing."
+    if artifact_id == "phase7_provider_release_readiness":
+        return "Optional Phase 7 provider release readiness evidence is missing."
+    if artifact_id == "phase7_cross_phase_handoff_consistency_smoke":
+        return "Optional Phase 7 cross-phase handoff consistency smoke evidence is missing."
+    if artifact_id == "phase8_live_url_validation_readiness":
+        return "Optional Phase 8 live URL validation readiness evidence is missing."
+    if artifact_id == "phase8_live_url_smoke_consistency_check":
+        return "Optional Phase 8 live URL smoke consistency evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -979,6 +1132,10 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase6_deployed_field_validation_readiness"
     if artifact_id == "phase6_deployed_handoff_consistency_smoke":
         return "regenerate_phase6_deployed_handoff_consistency_smoke"
+    if artifact_id == "phase2_source_format_demand_readiness":
+        return "regenerate_phase2_source_format_demand_readiness"
+    if artifact_id == "phase2_unsupported_format_negative_control_smoke":
+        return "regenerate_phase2_unsupported_format_negative_control_smoke"
     if artifact_id == "phase3_seed_retrieval_baseline":
         return "regenerate_phase3_seed_retrieval_baseline"
     if artifact_id == "phase3_fp_fn_review":
@@ -1007,6 +1164,14 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase6_qdrant_bge_private_network_promotion_readiness"
     if artifact_id == "phase6_qdrant_bge_private_network_promotion_smoke":
         return "regenerate_phase6_qdrant_bge_private_network_promotion_smoke"
+    if artifact_id == "phase7_provider_release_readiness":
+        return "regenerate_phase7_provider_release_readiness"
+    if artifact_id == "phase7_cross_phase_handoff_consistency_smoke":
+        return "regenerate_phase7_cross_phase_handoff_consistency_smoke"
+    if artifact_id == "phase8_live_url_validation_readiness":
+        return "regenerate_phase8_live_url_validation_readiness"
+    if artifact_id == "phase8_live_url_smoke_consistency_check":
+        return "regenerate_phase8_live_url_smoke_consistency_check"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1049,6 +1214,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding."
+        )
+    if any(
+        artifact["id"] == "phase2_source_format_demand_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 2 source-format demand readiness export is optional before parser-expansion review; regenerate it after source-binding evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase2_unsupported_format_negative_control_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 2 unsupported-format negative-control smoke is optional before parser-expansion review; regenerate it after Phase 2 source-format demand readiness changes."
         )
     if any(
         artifact["id"] == "phase6_deployed_field_validation_readiness"
@@ -1145,6 +1326,38 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 6 private-network promotion smoke is optional before promotion review; regenerate it after private-network readiness evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase7_provider_release_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 7 provider release readiness is optional before final handoff review; regenerate it after cross-phase evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase7_cross_phase_handoff_consistency_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 7 cross-phase handoff consistency smoke is optional before final handoff review; regenerate it after Phase 7 release-readiness or phase decision evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase8_live_url_validation_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 8 live URL validation readiness is optional before deployed live validation review; regenerate it after Phase 6/7 evidence or deployed smoke changes."
+        )
+    if any(
+        artifact["id"] == "phase8_live_url_smoke_consistency_check"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 8 live URL smoke consistency check is optional before deployed live validation review; regenerate it after Phase 8 readiness or handoff bundle changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

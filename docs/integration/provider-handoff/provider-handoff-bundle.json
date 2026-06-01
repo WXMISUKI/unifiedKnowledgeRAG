@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T09:28:54.149113+00:00",
+  "generated_at": "2026-06-01T11:51:13.990272+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -62,6 +62,26 @@
       "required": true,
       "status": "ready",
       "summary": "status=ready; bindable_sources=2/2; source_statuses=ready:2; recommended_actions=bind_source_from_control_plane:2",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase2_source_format_demand_readiness",
+      "category": "ingestion-evidence",
+      "path": "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_markdown_baseline; demand_signal=False; unsupported_documents=0; non_markdown_sources=0; open_gate_count=0",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase2_unsupported_format_negative_control_smoke",
+      "category": "ingestion-smoke",
+      "path": "docs\\smoke\\source-format-demand\\phase2-unsupported-format-negative-control-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_markdown_baseline; passed_checks=5/5; failed_checks=0; unsupported_documents=0; non_markdown_sources=0",
       "recommended_action": "no_action_required"
     },
     {
@@ -222,6 +242,46 @@
       "required": false,
       "status": "ready",
       "summary": "status=ready; decision=keep_runtime_defaults; passed_checks=10/10; failed_checks=0",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase7_provider_release_readiness",
+      "category": "release-readiness",
+      "path": "docs\\operations\\provider-release-readiness\\phase7-provider-release-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; release_state=ready_for_local_handoff; decision=keep_runtime_defaults; local_handoff_ready=True; runtime_promotion_ready=False; open_gate_count=4",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase7_cross_phase_handoff_consistency_smoke",
+      "category": "release-smoke",
+      "path": "docs\\smoke\\cross-phase-handoff\\phase7-cross-phase-handoff-consistency-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults_until_live_validation; passed_checks=6/6; failed_checks=0",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase8_live_url_validation_readiness",
+      "category": "live-url-validation",
+      "path": "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase8_live_url_smoke_consistency_check",
+      "category": "live-url-validation-smoke",
+      "path": "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults_until_live_url_validation; passed_checks=10/10; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review",
       "recommended_action": "no_action_required"
     },
     {

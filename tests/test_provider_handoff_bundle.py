@@ -29,6 +29,18 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
         "status=ready; bindable_sources=2/2; source_statuses=ready:2; "
         "recommended_actions=bind_source_from_control_plane:2"
     )
+    assert artifacts["phase2_source_format_demand_readiness"]["present"] is True
+    assert artifacts["phase2_source_format_demand_readiness"]["required"] is False
+    assert artifacts["phase2_source_format_demand_readiness"]["status"] == "ready"
+    assert "decision=keep_markdown_baseline" in artifacts[
+        "phase2_source_format_demand_readiness"
+    ]["summary"]
+    assert artifacts["phase2_unsupported_format_negative_control_smoke"]["present"] is True
+    assert artifacts["phase2_unsupported_format_negative_control_smoke"]["required"] is False
+    assert artifacts["phase2_unsupported_format_negative_control_smoke"]["status"] == "ready"
+    assert "passed_checks=5/5" in artifacts[
+        "phase2_unsupported_format_negative_control_smoke"
+    ]["summary"]
     assert artifacts["phase3_seed_retrieval_baseline"]["present"] is True
     assert artifacts["phase3_seed_retrieval_baseline"]["required"] is False
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
@@ -150,6 +162,44 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["phase5_graph_boundary_smoke_summary"]["status"] == "ready"
     assert "graph_checks_passed=2" in artifacts[
         "phase5_graph_boundary_smoke_summary"
+    ]["summary"]
+    assert artifacts["phase7_provider_release_readiness"]["present"] is True
+    assert artifacts["phase7_provider_release_readiness"]["required"] is False
+    assert artifacts["phase7_provider_release_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "release_state=" in artifacts["phase7_provider_release_readiness"]["summary"]
+    assert artifacts["phase7_cross_phase_handoff_consistency_smoke"]["present"] is True
+    assert artifacts["phase7_cross_phase_handoff_consistency_smoke"]["required"] is False
+    assert artifacts["phase7_cross_phase_handoff_consistency_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "passed_checks=" in artifacts[
+        "phase7_cross_phase_handoff_consistency_smoke"
+    ]["summary"]
+    assert artifacts["phase8_live_url_validation_readiness"]["present"] is True
+    assert artifacts["phase8_live_url_validation_readiness"]["required"] is False
+    assert artifacts["phase8_live_url_validation_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "live_validation_state=" in artifacts[
+        "phase8_live_url_validation_readiness"
+    ]["summary"]
+    assert artifacts["phase8_live_url_smoke_consistency_check"]["present"] is True
+    assert artifacts["phase8_live_url_smoke_consistency_check"]["required"] is False
+    assert artifacts["phase8_live_url_smoke_consistency_check"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "passed_checks=" in artifacts[
+        "phase8_live_url_smoke_consistency_check"
     ]["summary"]
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
@@ -295,6 +345,36 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["deployment_readiness"]["status"] == "review"
     assert artifacts["reindex_readiness"]["status"] == "ready"
     assert artifacts["source_binding_summary"]["status"] == "ready"
+    assert artifacts["phase2_source_format_demand_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase2_unsupported_format_negative_control_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase7_provider_release_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase7_cross_phase_handoff_consistency_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase8_live_url_validation_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase8_live_url_smoke_consistency_check"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
     assert artifacts["phase3_fp_fn_review"]["status"] == "ready"
     assert artifacts["phase3_retrieval_promotion_readiness"]["status"] == "review"
@@ -348,6 +428,26 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["phase4_caller_consumption_smoke"]["status"] == "ready"
     assert artifacts["phase5_graph_use_case_readiness"]["status"] == "ready"
     assert artifacts["phase5_graph_boundary_smoke_summary"]["status"] == "ready"
+    assert artifacts["phase7_provider_release_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase7_cross_phase_handoff_consistency_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase8_live_url_validation_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase8_live_url_smoke_consistency_check"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"
@@ -632,6 +732,168 @@ def test_provider_handoff_bundle_keeps_missing_phase3_evidence_reviewable(tmp_pa
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
         "regenerate_phase3_seed_retrieval_baseline"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase2_source_format_demand_readiness_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase2_source_format_demand_readiness",
+            category="ingestion-evidence",
+            path=Path("missing-phase2-source-format-demand-readiness.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase2_source_format_demand_readiness"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase2_unsupported_format_negative_control_smoke_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase2_unsupported_format_negative_control_smoke",
+            category="ingestion-smoke",
+            path=Path("missing-phase2-unsupported-format-negative-control-smoke.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase2_unsupported_format_negative_control_smoke"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase7_provider_release_readiness_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase7_provider_release_readiness",
+            category="release-readiness",
+            path=Path("missing-phase7-provider-release-readiness.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase7_provider_release_readiness"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase7_cross_phase_handoff_consistency_smoke_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase7_cross_phase_handoff_consistency_smoke",
+            category="release-smoke",
+            path=Path("missing-phase7-cross-phase-handoff-consistency-smoke.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase7_cross_phase_handoff_consistency_smoke"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase8_live_url_validation_readiness_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase8_live_url_validation_readiness",
+            category="live-url-validation",
+            path=Path("missing-phase8-live-url-validation-readiness.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase8_live_url_validation_readiness"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase8_live_url_smoke_consistency_check_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase8_live_url_smoke_consistency_check",
+            category="live-url-validation-smoke",
+            path=Path("missing-phase8-live-url-smoke-consistency-check.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase8_live_url_smoke_consistency_check"
     )
 
 

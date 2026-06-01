@@ -17,6 +17,24 @@ from app.services.phase5_graph_use_case_readiness import (
 from app.services.phase5_graph_boundary_smoke_summary import (
     export_phase5_graph_boundary_smoke_summary_report,
 )
+from app.services.phase2_source_format_demand_readiness import (
+    export_phase2_source_format_demand_readiness_report,
+)
+from app.services.phase2_unsupported_format_negative_control_smoke import (
+    export_phase2_unsupported_format_negative_control_smoke_report,
+)
+from app.services.phase7_provider_release_readiness import (
+    export_phase7_provider_release_readiness_report,
+)
+from app.services.phase7_cross_phase_handoff_consistency_smoke import (
+    export_phase7_cross_phase_handoff_consistency_smoke_report,
+)
+from app.services.phase8_live_url_validation_readiness import (
+    export_phase8_live_url_validation_readiness_report,
+)
+from app.services.phase8_live_url_smoke_consistency_check import (
+    export_phase8_live_url_smoke_consistency_check_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -219,6 +237,26 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
+            id="phase2_source_format_demand_readiness",
+            category="ingestion-evidence",
+            output_dir=artifact_base_dir / "docs/operations/source-format-demand",
+            exporter=lambda output_dir: export_phase2_source_format_demand_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase2_unsupported_format_negative_control_smoke",
+            category="ingestion-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/source-format-demand",
+            exporter=lambda output_dir: export_phase2_unsupported_format_negative_control_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
             id="phase6_deployed_field_validation_readiness",
             category="operations",
             output_dir=artifact_base_dir
@@ -371,6 +409,46 @@ def default_handoff_refresh_steps(
             category="graph-boundary-smoke",
             output_dir=artifact_base_dir / "docs/smoke/graph-boundary-summary",
             exporter=lambda output_dir: export_phase5_graph_boundary_smoke_summary_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase7_provider_release_readiness",
+            category="release-readiness",
+            output_dir=artifact_base_dir / "docs/operations/provider-release-readiness",
+            exporter=lambda output_dir: export_phase7_provider_release_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase7_cross_phase_handoff_consistency_smoke",
+            category="release-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/cross-phase-handoff",
+            exporter=lambda output_dir: export_phase7_cross_phase_handoff_consistency_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase8_live_url_validation_readiness",
+            category="live-url-validation",
+            output_dir=artifact_base_dir / "docs/operations/live-url-validation",
+            exporter=lambda output_dir: export_phase8_live_url_validation_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase8_live_url_smoke_consistency_check",
+            category="live-url-validation-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/live-url-validation",
+            exporter=lambda output_dir: export_phase8_live_url_smoke_consistency_check_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

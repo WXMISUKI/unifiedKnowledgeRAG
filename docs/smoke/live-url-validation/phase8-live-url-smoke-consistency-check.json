@@ -1,0 +1,108 @@
+{
+  "id": "phase8-live-url-smoke-consistency-check-v1",
+  "generated_at": "2026-06-01T11:51:13.981873+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults_until_live_url_validation",
+  "summary": {
+    "total_checks": 10,
+    "passed_checks": 10,
+    "failed_checks": 0,
+    "readiness_status": "review",
+    "bundle_status": "review",
+    "bundle_row_status": "review",
+    "live_validation_state": "await_live_url_validation",
+    "deployed_smoke_present": false,
+    "deployed_smoke_status": "review",
+    "live_url_present": false,
+    "open_gate_count": 3
+  },
+  "checks": [
+    {
+      "id": "phase8_live_url_validation_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.json"
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=review; artifact_count=34",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "provider_handoff_bundle_row",
+      "required": true,
+      "status": "ready",
+      "summary": "bundle_row_present=true; bundle_row_status=review; bundle_row_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "status_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "readiness_status=review; bundle_row_status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "live_validation_state_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=await_live_url_validation; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "decision_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=keep_runtime_defaults_until_live_url_validation; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "deployed_smoke_present_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=False; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "deployed_smoke_status_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=review; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "live_url_present_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=False; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "open_gate_count_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=3; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    }
+  ],
+  "notes": [
+    "This smoke is local read-only consistency evidence.",
+    "It compares the current Phase 8 readiness export with the handoff bundle row.",
+    "It does not call deployed endpoints or promote runtime defaults."
+  ],
+  "json_path": "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.json",
+  "markdown_path": "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.md"
+}

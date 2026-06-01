@@ -25,6 +25,18 @@
 - Phase 6 deployed field validation readiness export implemented and refreshed (`export-phase6-deployed-field-validation-readiness`), summarizing deployment readiness, handoff bundle posture, and live URL smoke evidence as optional review input.
 - Phase 6 deployed handoff consistency smoke implemented and refreshed (`add-phase6-deployed-handoff-consistency-smoke`), validating local consistency between deployed field-validation readiness and provider handoff bundle without live network calls.
 - Phase 6 deployed field validation decision record documented (`document-phase6-deployed-field-validation-decision-record`), freezing the current live-url verdict and next-step gates in a documentation-only record.
+- Phase 2 parser expansion demand contract documented (`document-phase2-parser-expansion-demand-contract`), defining evidence-gated non-Markdown parser expansion criteria while preserving Markdown as the lightweight baseline.
+- Phase 2 source-format demand readiness export implemented and refreshed (`2026-06-01-export-phase2-source-format-demand-readiness`), summarizing markdown baseline posture, unsupported/non-markdown demand signals, and open expansion gates as a machine-readable local review artifact.
+- Phase 2 unsupported-format negative-control smoke implemented and refreshed (`2026-06-01-add-phase2-unsupported-format-negative-control-smoke`), validating markdown positive controls and unsupported/non-markdown negative controls in a compact read-only smoke artifact.
+- Phase 2 parser expansion decision record documented (`document-phase2-parser-expansion-decision-record`), explicitly recording this cycle's `keep_markdown_baseline` verdict and future parser-expansion gates.
+- Phase 7 provider handoff acceptance contract documented (`document-phase7-provider-handoff-acceptance-contract`), defining required handoff evidence, optional review evidence, and cross-phase acceptance semantics without runtime promotion.
+- Phase 7 provider release readiness export implemented and refreshed (`2026-06-01-export-phase7-provider-release-readiness`), summarizing required handoff gates and cross-phase review posture in one machine-readable local artifact.
+- Phase 7 cross-phase handoff consistency smoke implemented and refreshed (`2026-06-01-add-phase7-cross-phase-handoff-consistency-smoke`), validating alignment across key phase decision/readiness/smoke evidence in a compact read-only artifact.
+- Phase 7 provider release decision record documented (`document-phase7-provider-release-decision-record`), explicitly recording this cycle's `ready_for_local_provider_handoff_but_not_runtime_promotion` verdict.
+- Phase 8 live URL validation execution contract documented (`document-phase8-live-url-validation-execution-contract`), defining deployed live validation inputs, endpoint scope, and status semantics without runtime promotion.
+- Phase 8 live URL validation readiness export implemented and refreshed (`export-phase8-live-url-validation-readiness`), summarizing contract/Phase6/Phase7/deployed-smoke posture in one machine-readable local review artifact.
+- Phase 8 live URL smoke consistency check implemented and refreshed (`add-phase8-live-url-smoke-consistency-check`), validating readiness-vs-handoff summary alignment in a compact read-only artifact.
+- Phase 8 live URL validation decision record documented (`document-phase8-live-url-validation-decision-record`), explicitly freezing this cycle's `keep_runtime_defaults_until_live_url_validation` verdict and open gates.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 promotion customer-like benchmark expansion completed (`2026-05-31-phase3-expand-promotion-customer-like-cases`), extending the canonical baseline fixture to 29 cases and exposing a second expected-empty false-positive trap for promotion review.
@@ -166,6 +178,26 @@
   - `docs/smoke/private-network-promotion/phase6-qdrant-bge-private-network-promotion-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase6_qdrant_bge_private_network_promotion_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase6_qdrant_bge_private_network_promotion_smoke` step)
+- Phase 2 source-format demand readiness refresh additions:
+  - `docs/operations/source-format-demand/phase2-source-format-demand-readiness.json`
+  - `docs/operations/source-format-demand/phase2-source-format-demand-readiness.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase2_source_format_demand_readiness` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase2_source_format_demand_readiness` step)
+- Phase 2 unsupported-format negative-control smoke refresh additions:
+  - `docs/smoke/source-format-demand/phase2-unsupported-format-negative-control-smoke.json`
+  - `docs/smoke/source-format-demand/phase2-unsupported-format-negative-control-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase2_unsupported_format_negative_control_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase2_unsupported_format_negative_control_smoke` step)
+- Phase 7 provider release-readiness refresh additions:
+  - `docs/operations/provider-release-readiness/phase7-provider-release-readiness.json`
+  - `docs/operations/provider-release-readiness/phase7-provider-release-readiness.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase7_provider_release_readiness` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase7_provider_release_readiness` step)
+- Phase 7 cross-phase handoff consistency smoke refresh additions:
+  - `docs/smoke/cross-phase-handoff/phase7-cross-phase-handoff-consistency-smoke.json`
+  - `docs/smoke/cross-phase-handoff/phase7-cross-phase-handoff-consistency-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase7_cross_phase_handoff_consistency_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase7_cross_phase_handoff_consistency_smoke` step)
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`

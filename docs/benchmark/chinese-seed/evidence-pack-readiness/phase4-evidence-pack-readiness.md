@@ -3,7 +3,7 @@
 - Report: `phase4-evidence-pack-readiness-v1`
 - Status: `passed`
 - Decision: `keep_caller_ownership`
-- Generated At: `2026-06-01T09:28:54.129296+00:00`
+- Generated At: `2026-06-01T11:51:13.967801+00:00`
 - Contract Doc: `docs\benchmark\chinese-seed\evidence-pack-consumption-contract\phase4-evidence-pack-consumption-contract.md`
 - Smoke Report: `docs\smoke\provider-contract\provider-contract-smoke.json`
 

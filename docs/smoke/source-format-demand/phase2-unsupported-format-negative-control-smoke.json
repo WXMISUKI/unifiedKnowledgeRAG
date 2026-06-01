@@ -1,0 +1,62 @@
+{
+  "id": "phase2-unsupported-format-negative-control-smoke-v1",
+  "generated_at": "2026-06-01T11:51:13.937461+00:00",
+  "status": "ready",
+  "decision": "keep_markdown_baseline",
+  "readiness_report_path": "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.json",
+  "summary": {
+    "status": "ready",
+    "total_checks": 5,
+    "passed_checks": 5,
+    "failed_checks": 0,
+    "parser_ready_documents": 2,
+    "unsupported_documents": 0,
+    "non_markdown_sources": 0,
+    "format_expansion_demand_signal": false
+  },
+  "checks": [
+    {
+      "name": "phase2_source_format_demand_readiness_present",
+      "passed": true,
+      "details": {
+        "readiness_status": "ready"
+      }
+    },
+    {
+      "name": "markdown_positive_control",
+      "passed": true,
+      "details": {
+        "parser_ready_documents": 2
+      }
+    },
+    {
+      "name": "unsupported_document_negative_control",
+      "passed": true,
+      "details": {
+        "unsupported_documents": 0
+      }
+    },
+    {
+      "name": "non_markdown_source_negative_control",
+      "passed": true,
+      "details": {
+        "non_markdown_sources": 0
+      }
+    },
+    {
+      "name": "decision_alignment_control",
+      "passed": true,
+      "details": {
+        "decision": "keep_markdown_baseline",
+        "format_expansion_demand_signal": false
+      }
+    }
+  ],
+  "notes": [
+    "This smoke report is local and read-only for Phase 2 parser-expansion boundary review.",
+    "It verifies unsupported-format and non-markdown-source negative controls from the Phase 2 readiness export.",
+    "It does not enable non-Markdown parsers, ingestion execution, or retrieval default changes."
+  ],
+  "json_path": "docs\\smoke\\source-format-demand\\phase2-unsupported-format-negative-control-smoke.json",
+  "markdown_path": "docs\\smoke\\source-format-demand\\phase2-unsupported-format-negative-control-smoke.md"
+}

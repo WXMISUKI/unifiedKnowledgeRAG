@@ -1,0 +1,70 @@
+{
+  "id": "phase2-source-format-demand-readiness-v1",
+  "generated_at": "2026-06-01T11:51:13.935967+00:00",
+  "status": "ready",
+  "decision": "keep_markdown_baseline",
+  "baseline_parser": "markdown",
+  "deferred_formats": [
+    "pdf",
+    "word",
+    "excel",
+    "ocr",
+    "table-structure"
+  ],
+  "contract_path": "docs\\operations\\source-format-demand\\phase2-parser-expansion-demand-contract.md",
+  "source_binding_path": "docs\\integration\\source-bindings\\provider-source-bindings.json",
+  "summary": {
+    "total_sources": 2,
+    "bindable_sources": 2,
+    "markdown_only_sources": 2,
+    "non_markdown_sources": 0,
+    "parser_ready_documents": 2,
+    "unsupported_documents": 0,
+    "source_binding_status": "ready",
+    "source_binding_ready": true,
+    "source_status_counts": {
+      "ready": 2
+    },
+    "recommended_action_counts": {
+      "bind_source_from_control_plane": 2
+    },
+    "supported_format_counts": {
+      "markdown": 2
+    },
+    "parser_status_counts": {
+      "ready": 2
+    },
+    "format_expansion_demand_signal": false,
+    "open_gate_count": 0
+  },
+  "open_gate_ids": [],
+  "supporting_evidence": [
+    {
+      "id": "phase2_parser_expansion_demand_contract",
+      "category": "contract",
+      "path": "docs\\operations\\source-format-demand\\phase2-parser-expansion-demand-contract.md",
+      "status": "ready",
+      "summary": "contract_doc_present=True",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "source_binding_summary",
+      "category": "source-binding",
+      "path": "docs\\integration\\source-bindings\\provider-source-bindings.json",
+      "status": "ready",
+      "summary": "status=ready; sources=2; parser_ready_documents=2; unsupported_documents=0; non_markdown_sources=0",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only evidence for Phase 2 parser-expansion demand review.",
+    "It uses source-binding evidence to summarize real format demand without enabling non-Markdown runtime parsing.",
+    "It does not change ingestion defaults, retrieval defaults, deployment ownership boundaries, or GraphRAG boundaries."
+  ],
+  "json_path": "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.json",
+  "markdown_path": "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.md"
+}

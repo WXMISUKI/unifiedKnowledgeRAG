@@ -3,7 +3,7 @@
 - Report: `phase6-bge-m3-comparison-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T09:28:54.052737+00:00`
+- Generated At: `2026-06-01T11:51:13.920787+00:00`
 
 ## Checks
 

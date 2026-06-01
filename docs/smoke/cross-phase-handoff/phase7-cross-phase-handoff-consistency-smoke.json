@@ -1,0 +1,68 @@
+{
+  "id": "phase7-cross-phase-handoff-consistency-smoke-v1",
+  "generated_at": "2026-06-01T11:51:13.978464+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults_until_live_validation",
+  "summary": {
+    "total_checks": 6,
+    "passed_checks": 6,
+    "failed_checks": 0,
+    "open_gate_ids": []
+  },
+  "checks": [
+    {
+      "name": "phase7_release_readiness_decision_alignment",
+      "passed": true,
+      "details": {
+        "release_state": "ready_for_local_handoff",
+        "decision": "keep_runtime_defaults",
+        "ready_for_local_provider_handoff": true,
+        "ready_for_runtime_default_promotion": false
+      }
+    },
+    {
+      "name": "phase2_decision_record_alignment",
+      "passed": true,
+      "details": {
+        "contains_keep_markdown_baseline": true
+      }
+    },
+    {
+      "name": "phase3_decision_record_alignment",
+      "passed": true,
+      "details": {
+        "contains_keep_runtime_defaults": true
+      }
+    },
+    {
+      "name": "phase4_caller_consumption_smoke_alignment",
+      "passed": true,
+      "details": {
+        "status": "ready"
+      }
+    },
+    {
+      "name": "phase5_graph_boundary_alignment",
+      "passed": true,
+      "details": {
+        "status": "ready",
+        "graph_query_planned": true
+      }
+    },
+    {
+      "name": "phase6_deployed_field_validation_alignment",
+      "passed": true,
+      "details": {
+        "status": "review",
+        "field_validation_state": "await_live_url"
+      }
+    }
+  ],
+  "notes": [
+    "This smoke is local read-only cross-phase consistency evidence.",
+    "It validates that phase decisions and key smoke/readiness outputs remain aligned.",
+    "It does not promote runtime defaults or replace deployed live-url validation."
+  ],
+  "json_path": "docs\\smoke\\cross-phase-handoff\\phase7-cross-phase-handoff-consistency-smoke.json",
+  "markdown_path": "docs\\smoke\\cross-phase-handoff\\phase7-cross-phase-handoff-consistency-smoke.md"
+}
