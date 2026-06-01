@@ -4,7 +4,7 @@
 - Status: `review`
 - Field Validation State: `review`
 - Decision: `keep_local_review_until_deployed_smoke`
-- Generated At: `2026-06-01T13:01:28.425342+00:00`
+- Generated At: `2026-06-01T13:24:10.012867+00:00`
 
 ## Summary
 
@@ -24,7 +24,7 @@
 |---|---|---|---|---|
 | `deployed_field_validation_contract` | `True` | `ready` | contract_present=true | `no_action_required` |
 | `deployment_readiness` | `True` | `review` | artifact_present=true; status=review; retrieval_backend=fixture | `review_evidence_notes` |
-| `provider_handoff_bundle` | `True` | `review` | artifact_present=true; status=review; artifact_count=35 | `review_evidence_notes` |
+| `provider_handoff_bundle` | `True` | `review` | artifact_present=true; status=review; artifact_count=39 | `review_evidence_notes` |
 | `deployed_provider_smoke` | `False` | `review` | artifact_present=true; status=review; base_url=http://127.0.0.1:8020; handoff_status=review | `review_evidence_notes` |
 
 ## Notes

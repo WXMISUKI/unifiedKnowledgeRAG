@@ -41,6 +41,10 @@
 - Phase 9 MyPrivateAgent local-consumption readiness export implemented and refreshed (`export-phase9-myprivateagent-local-consumption-readiness`), summarizing Phase 7/8 linkage, integration-probe posture, optional deployed smoke context, and local-consumption open gates in one machine-readable artifact.
 - Phase 9 MyPrivateAgent local-consumption smoke implemented and refreshed (`add-phase9-myprivateagent-local-consumption-smoke`), validating local-consumption contract coverage, control-plane compatibility, graph planned-boundary signal, and runtime-promotion boundary alignment.
 - Phase 9 MyPrivateAgent local-consumption decision record documented (`document-phase9-myprivateagent-local-consumption-decision-record`), explicitly freezing current `ready_for_local_myprivateagent_consumption_review` posture while preserving runtime-default boundaries.
+- Phase 10 MyPrivateAgent local consumer verification contract documented (`document-phase10-myprivateagent-local-consumer-verification-contract`), defining caller-shaped local verification assumptions, read-only provider discovery flow, and provider/control-plane ownership boundaries.
+- Phase 10 MyPrivateAgent local consumer readiness export implemented and refreshed (`export-phase10-myprivateagent-local-consumer-readiness`), summarizing Phase 9 linkage, provider handoff posture, evidence-pack readiness, graph boundary posture, access-key mode, and runtime-promotion boundary status.
+- Phase 10 MyPrivateAgent local consumer probe implemented and refreshed (`add-phase10-myprivateagent-local-consumer-probe`), validating local access mode, contract coverage, handoff visibility, evidence-pack caller smoke, graph planned-boundary alignment, and runtime-default preservation.
+- Phase 10 MyPrivateAgent local consumer decision record documented (`document-phase10-myprivateagent-local-consumer-decision-record`), explicitly freezing current `ready_for_local_myprivateagent_consumer_probe_review` posture while preserving runtime-default and caller-owned control-plane boundaries.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 promotion customer-like benchmark expansion completed (`2026-05-31-phase3-expand-promotion-customer-like-cases`), extending the canonical baseline fixture to 29 cases and exposing a second expected-empty false-positive trap for promotion review.
@@ -212,6 +216,16 @@
   - `docs/smoke/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase9_myprivateagent_local_consumption_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase9_myprivateagent_local_consumption_smoke` step)
+- Phase 10 MyPrivateAgent local consumer readiness refresh additions:
+  - `docs/integration/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-readiness.json`
+  - `docs/integration/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-readiness.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase10_myprivateagent_local_consumer_readiness` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase10_myprivateagent_local_consumer_readiness` step)
+- Phase 10 MyPrivateAgent local consumer probe refresh additions:
+  - `docs/smoke/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-probe.json`
+  - `docs/smoke/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-probe.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase10_myprivateagent_local_consumer_probe` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase10_myprivateagent_local_consumer_probe` step)
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -241,7 +255,7 @@
 
 ## Latest Refresh
 
-- Run time: `2026-06-01T03:16:25.552258+00:00`
+- Run time: `2026-06-01T13:24:10.071795+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -260,6 +274,10 @@
   - `phase4_caller_consumption_smoke`: `ready`
   - `phase5_graph_use_case_readiness`: `ready`
   - `phase5_graph_boundary_smoke_summary`: `ready`
+  - `phase9_myprivateagent_local_consumption_readiness`: `review`
+  - `phase9_myprivateagent_local_consumption_smoke`: `ready`
+  - `phase10_myprivateagent_local_consumer_readiness`: `review`
+  - `phase10_myprivateagent_local_consumer_probe`: `ready`
   - `provider_handoff_bundle`: `review`
 
 ## Current Gaps To Close

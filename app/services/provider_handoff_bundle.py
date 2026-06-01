@@ -269,6 +269,24 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase10_myprivateagent_local_consumer_readiness",
+        category="local-consumer-verification",
+        path=Path(
+            "docs/integration/myprivateagent-local-consumer-verification/"
+            "phase10-myprivateagent-local-consumer-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase10_myprivateagent_local_consumer_probe",
+        category="local-consumer-verification-smoke",
+        path=Path(
+            "docs/smoke/myprivateagent-local-consumer-verification/"
+            "phase10-myprivateagent-local-consumer-probe.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -917,6 +935,38 @@ def _artifact_status_and_summary(
                 f"local_consumption_state={_dict_value(summary, 'local_consumption_state', 'unknown')}"
             ),
         )
+    if artifact_id == "phase10_myprivateagent_local_consumer_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; "
+                f"local_consumer_state={payload.get('local_consumer_state', 'review')}; "
+                f"decision={payload.get('decision', 'run_local_consumer_probe_before_myprivateagent_integration')}; "
+                f"local_provider_url={_dict_value(summary, 'local_provider_url', 'http://127.0.0.1:8020')}; "
+                f"api_key_mode={_dict_value(summary, 'api_key_mode', 'not_configured_local_dev')}; "
+                f"graph_boundary_ready={bool(_dict_value(summary, 'graph_boundary_ready', False))}; "
+                f"runtime_promotion_status={_dict_value(summary, 'runtime_promotion_status', 'keep_runtime_defaults')}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase10_myprivateagent_local_consumer_probe":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_provider_side_consumer_probe_review')}; "
+                f"passed_checks={_int_value(_dict_value(summary, 'passed_checks', 0), fallback=0)}/"
+                f"{_int_value(_dict_value(summary, 'total_checks', 0), fallback=0)}; "
+                f"failed_checks={_int_value(_dict_value(summary, 'failed_checks', 0), fallback=0)}; "
+                f"local_consumer_state={_dict_value(summary, 'local_consumer_state', 'unknown')}; "
+                f"api_key_mode={_dict_value(summary, 'api_key_mode', 'not_configured_local_dev')}; "
+                f"runtime_promotion_status={_dict_value(summary, 'runtime_promotion_status', 'keep_runtime_defaults')}"
+            ),
+        )
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1154,6 +1204,10 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 9 MyPrivateAgent local-consumption readiness evidence is missing."
     if artifact_id == "phase9_myprivateagent_local_consumption_smoke":
         return "Optional Phase 9 MyPrivateAgent local-consumption smoke evidence is missing."
+    if artifact_id == "phase10_myprivateagent_local_consumer_readiness":
+        return "Optional Phase 10 MyPrivateAgent local consumer readiness evidence is missing."
+    if artifact_id == "phase10_myprivateagent_local_consumer_probe":
+        return "Optional Phase 10 MyPrivateAgent local consumer probe evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1228,6 +1282,10 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase9_myprivateagent_local_consumption_readiness"
     if artifact_id == "phase9_myprivateagent_local_consumption_smoke":
         return "regenerate_phase9_myprivateagent_local_consumption_smoke"
+    if artifact_id == "phase10_myprivateagent_local_consumer_readiness":
+        return "regenerate_phase10_myprivateagent_local_consumer_readiness"
+    if artifact_id == "phase10_myprivateagent_local_consumer_probe":
+        return "regenerate_phase10_myprivateagent_local_consumer_probe"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1430,6 +1488,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 9 MyPrivateAgent local-consumption smoke is optional before caller local-consumption review; regenerate it after Phase 9 readiness or provider contract evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase10_myprivateagent_local_consumer_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 10 MyPrivateAgent local consumer readiness is optional before caller-shaped local verification; regenerate it after Phase 9, Phase 4, handoff, or provider contract evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase10_myprivateagent_local_consumer_probe"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 10 MyPrivateAgent local consumer probe is optional before MyPrivateAgent repository integration; regenerate it after Phase 10 readiness or handoff bundle evidence changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

@@ -4,7 +4,7 @@
 - Status: `review`
 - Local Consumption State: `review`
 - Decision: `keep_local_consumption_review`
-- Generated At: `2026-06-01T13:01:28.494677+00:00`
+- Generated At: `2026-06-01T13:24:10.051524+00:00`
 
 ## Summary
 
@@ -18,7 +18,7 @@
 | Local Provider URL | `http://127.0.0.1:8020` |
 | Local Handoff Ready | `True` |
 | Runtime Promotion Ready | `False` |
-| API Key Mode | `configured_protected_api` |
+| API Key Mode | `not_configured_local_dev` |
 | Open Gate IDs | `["phase7_provider_release_readiness", "phase8_live_url_validation_readiness", "deployed_provider_smoke"]` |
 
 ## Signals

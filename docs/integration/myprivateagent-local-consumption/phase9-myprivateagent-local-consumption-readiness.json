@@ -1,6 +1,6 @@
 {
   "id": "phase9-myprivateagent-local-consumption-readiness-v1",
-  "generated_at": "2026-06-01T13:01:28.494677+00:00",
+  "generated_at": "2026-06-01T13:24:10.051524+00:00",
   "status": "review",
   "local_consumption_state": "review",
   "decision": "keep_local_consumption_review",
@@ -13,7 +13,7 @@
     "local_provider_url": "http://127.0.0.1:8020",
     "local_handoff_ready": true,
     "runtime_promotion_ready": false,
-    "api_key_mode": "configured_protected_api",
+    "api_key_mode": "not_configured_local_dev",
     "open_gate_ids": [
       "phase7_provider_release_readiness",
       "phase8_live_url_validation_readiness",

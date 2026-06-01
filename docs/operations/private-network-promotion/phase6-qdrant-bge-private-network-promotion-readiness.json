@@ -1,6 +1,6 @@
 {
   "id": "phase6-qdrant-bge-private-network-promotion-readiness-v1",
-  "generated_at": "2026-06-01T13:01:28.408060+00:00",
+  "generated_at": "2026-06-01T13:24:10.002996+00:00",
   "status": "review",
   "promotion_review_state": "review",
   "decision": "keep_runtime_defaults",

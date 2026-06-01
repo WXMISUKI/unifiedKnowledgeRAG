@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T13:01:28.512173+00:00",
+  "generated_at": "2026-06-01T13:24:10.065311+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -302,6 +302,26 @@
       "required": false,
       "status": "ready",
       "summary": "status=ready; decision=keep_runtime_defaults; passed_checks=7/7; failed_checks=0; readiness_status=review; local_consumption_state=review",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase10_myprivateagent_local_consumer_readiness",
+      "category": "local-consumer-verification",
+      "path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; local_consumer_state=ready_for_local_consumer_probe_review; decision=run_local_consumer_probe_before_myprivateagent_integration; local_provider_url=http://127.0.0.1:8020; api_key_mode=not_configured_local_dev; graph_boundary_ready=True; runtime_promotion_status=keep_runtime_defaults; open_gate_count=3",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase10_myprivateagent_local_consumer_probe",
+      "category": "local-consumer-verification-smoke",
+      "path": "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_provider_side_consumer_probe_review; passed_checks=7/7; failed_checks=0; local_consumer_state=ready_for_local_consumer_probe_review; api_key_mode=not_configured_local_dev; runtime_promotion_status=keep_runtime_defaults",
       "recommended_action": "no_action_required"
     },
     {

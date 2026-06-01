@@ -136,6 +136,8 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase8_live_url_validation_readiness" in step_ids
     assert "phase9_myprivateagent_local_consumption_readiness" in step_ids
     assert "phase9_myprivateagent_local_consumption_smoke" in step_ids
+    assert "phase10_myprivateagent_local_consumer_readiness" in step_ids
+    assert "phase10_myprivateagent_local_consumer_probe" in step_ids
     assert "phase8_live_url_smoke_consistency_check" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
@@ -238,9 +240,15 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase9_myprivateagent_local_consumption_smoke"
     )
     assert step_ids.index("phase9_myprivateagent_local_consumption_smoke") < step_ids.index(
+        "phase10_myprivateagent_local_consumer_readiness"
+    )
+    assert step_ids.index("phase10_myprivateagent_local_consumer_readiness") < step_ids.index(
         "provider_handoff_bundle"
     )
     assert step_ids.index("provider_handoff_bundle") < step_ids.index(
+        "phase10_myprivateagent_local_consumer_probe"
+    )
+    assert step_ids.index("phase10_myprivateagent_local_consumer_probe") < step_ids.index(
         "phase6_deployed_handoff_consistency_smoke"
     )
     assert step_ids.index("phase6_deployed_handoff_consistency_smoke") < step_ids.index(

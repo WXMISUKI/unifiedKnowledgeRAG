@@ -1,0 +1,100 @@
+{
+  "id": "phase10-myprivateagent-local-consumer-readiness-v1",
+  "generated_at": "2026-06-01T13:24:10.056824+00:00",
+  "status": "review",
+  "local_consumer_state": "ready_for_local_consumer_probe_review",
+  "decision": "run_local_consumer_probe_before_myprivateagent_integration",
+  "summary": {
+    "total_signals": 8,
+    "required_signals": 7,
+    "ready_signals": 5,
+    "review_signals": 3,
+    "blocked_signals": 0,
+    "local_provider_url": "http://127.0.0.1:8020",
+    "api_key_mode": "not_configured_local_dev",
+    "phase9_local_handoff_ready": true,
+    "phase4_evidence_pack_ready": true,
+    "graph_boundary_ready": true,
+    "runtime_promotion_ready": false,
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_binding_policy_owner": "caller",
+    "open_gate_ids": [
+      "phase9_myprivateagent_local_consumption_readiness",
+      "provider_handoff_bundle",
+      "deployed_provider_smoke"
+    ]
+  },
+  "signals": [
+    {
+      "id": "phase10_local_consumer_verification_contract",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-verification-contract.md"
+    },
+    {
+      "id": "phase9_myprivateagent_local_consumption_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "status=review; local_consumption_state=review; local_handoff_ready=True",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.json"
+    },
+    {
+      "id": "phase9_myprivateagent_local_consumption_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; passed_checks=7/7",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-smoke.json"
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "required": true,
+      "status": "review",
+      "summary": "status=review; evidence_artifacts=39",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "phase4_evidence_pack_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_caller_ownership",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.json"
+    },
+    {
+      "id": "phase4_caller_consumption_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; passed_checks=3/3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json"
+    },
+    {
+      "id": "provider_contract_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "passed=True; checks=9/9",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "deployed_provider_smoke",
+      "required": false,
+      "status": "review",
+      "summary": "status=review; base_url=http://127.0.0.1:8020",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+    }
+  ],
+  "notes": [
+    "This report is provider-side read-only evidence for a MyPrivateAgent-shaped local consumer probe.",
+    "Local development may keep PROVIDER_API_KEY unset; protected mode is documented for later internal or online deployment.",
+    "The provider does not own source-to-agent binding, registration, heartbeat governance, audit policy, or final answer policy."
+  ],
+  "json_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json",
+  "markdown_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.md"
+}

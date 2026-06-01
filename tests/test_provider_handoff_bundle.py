@@ -221,6 +221,26 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "passed_checks=" in artifacts[
         "phase9_myprivateagent_local_consumption_smoke"
     ]["summary"]
+    assert artifacts["phase10_myprivateagent_local_consumer_readiness"]["present"] is True
+    assert artifacts["phase10_myprivateagent_local_consumer_readiness"]["required"] is False
+    assert artifacts["phase10_myprivateagent_local_consumer_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "local_consumer_state=" in artifacts[
+        "phase10_myprivateagent_local_consumer_readiness"
+    ]["summary"]
+    assert artifacts["phase10_myprivateagent_local_consumer_probe"]["present"] is True
+    assert artifacts["phase10_myprivateagent_local_consumer_probe"]["required"] is False
+    assert artifacts["phase10_myprivateagent_local_consumer_probe"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "passed_checks=" in artifacts[
+        "phase10_myprivateagent_local_consumer_probe"
+    ]["summary"]
     assert artifacts["deployed_provider_smoke"]["present"] in {True, False}
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] in {

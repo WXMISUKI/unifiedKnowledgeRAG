@@ -39,6 +39,7 @@ def test_export_phase9_local_consumption_readiness_report(tmp_path):
     assert report.local_consumption_state == "ready_for_local_consumption"
     assert payload["summary"]["local_handoff_ready"] is True
     assert payload["summary"]["runtime_promotion_ready"] is False
+    assert payload["summary"]["api_key_mode"] == "not_configured_local_dev"
 
 
 def test_phase9_local_consumption_readiness_blocks_without_probe(tmp_path):

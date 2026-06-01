@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T13:01:28.519619+00:00",
+  "generated_at": "2026-06-01T13:24:10.071795+00:00",
   "status": "review",
   "steps": [
     {
@@ -384,7 +384,7 @@
         "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.md"
       ],
       "recommended_action": "review_evidence_notes",
-      "summary": "status=review; summary={\"api_key_mode\": \"configured_protected_api\", \"blocked_signals\": 0, \"local_handoff_ready\": true, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase7_provider_release_readiness\", \"phase8_live_url_validation_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 5, \"required_signals\": 4, \"review_signals\": 3, \"runtime_promotion_ready\": false, \"total_signals\": 8}",
+      "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_signals\": 0, \"local_handoff_ready\": true, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase7_provider_release_readiness\", \"phase8_live_url_validation_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 5, \"required_signals\": 4, \"review_signals\": 3, \"runtime_promotion_ready\": false, \"total_signals\": 8}",
       "error": null
     },
     {
@@ -400,6 +400,18 @@
       "error": null
     },
     {
+      "id": "phase10_myprivateagent_local_consumer_readiness",
+      "category": "local-consumer-verification",
+      "status": "review",
+      "output_paths": [
+        "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json",
+        "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_signals\": 0, \"graph_boundary_ready\": true, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase9_myprivateagent_local_consumption_readiness\", \"provider_handoff_bundle\", \"deployed_provider_smoke\"], \"phase4_evidence_pack_ready\": true, \"phase9_local_handoff_ready\": true, \"ready_signals\": 5, \"required_signals\": 7, \"review_signals\": 3, \"runtime_promotion_ready\": false, \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 8}",
+      "error": null
+    },
+    {
       "id": "provider_handoff_bundle",
       "category": "handoff",
       "status": "review",
@@ -409,6 +421,18 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; report_status=review",
+      "error": null
+    },
+    {
+      "id": "phase10_myprivateagent_local_consumer_probe",
+      "category": "local-consumer-verification-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.json",
+        "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"api_key_mode\": \"not_configured_local_dev\", \"failed_checks\": 0, \"local_consumer_state\": \"ready_for_local_consumer_probe_review\", \"local_provider_url\": \"http://127.0.0.1:8020\", \"passed_checks\": 7, \"readiness_status\": \"review\", \"runtime_promotion_status\": \"keep_runtime_defaults\", \"total_checks\": 7}",
       "error": null
     },
     {

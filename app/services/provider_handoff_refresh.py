@@ -41,6 +41,12 @@ from app.services.phase9_myprivateagent_local_consumption_readiness import (
 from app.services.phase9_myprivateagent_local_consumption_smoke import (
     export_phase9_myprivateagent_local_consumption_smoke_report,
 )
+from app.services.phase10_myprivateagent_local_consumer_readiness import (
+    export_phase10_myprivateagent_local_consumer_readiness_report,
+)
+from app.services.phase10_myprivateagent_local_consumer_probe import (
+    export_phase10_myprivateagent_local_consumer_probe_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -462,10 +468,32 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
+            id="phase10_myprivateagent_local_consumer_readiness",
+            category="local-consumer-verification",
+            output_dir=artifact_base_dir
+            / "docs/integration/myprivateagent-local-consumer-verification",
+            exporter=lambda output_dir: export_phase10_myprivateagent_local_consumer_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
             id="provider_handoff_bundle",
             category="handoff",
             output_dir=artifact_base_dir / "docs/integration/provider-handoff",
             exporter=lambda output_dir: export_provider_handoff_bundle_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase10_myprivateagent_local_consumer_probe",
+            category="local-consumer-verification-smoke",
+            output_dir=artifact_base_dir
+            / "docs/smoke/myprivateagent-local-consumer-verification",
+            exporter=lambda output_dir: export_phase10_myprivateagent_local_consumer_probe_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

@@ -466,6 +466,12 @@ def _api_key_mode(base_dir: Path) -> str:
         return "not_configured_local_dev"
     notes = payload.get("operation_notes", [])
     if isinstance(notes, list) and any(
+        isinstance(note, str)
+        and "no provider api credentials were supplied" in note.lower()
+        for note in notes
+    ):
+        return "not_configured_local_dev"
+    if isinstance(notes, list) and any(
         isinstance(note, str) and "credentials were supplied" in note.lower()
         for note in notes
     ):

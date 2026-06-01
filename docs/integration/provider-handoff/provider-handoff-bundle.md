@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-01T13:01:28.512173+00:00`
+- Generated At: `2026-06-01T13:24:10.065311+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -40,6 +40,8 @@
 | `phase8_live_url_smoke_consistency_check` | `live-url-validation-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults_until_live_url_validation; passed_checks=10/10; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review | `no_action_required` |
 | `phase9_myprivateagent_local_consumption_readiness` | `local-consumption` | `True` | `review` | status=review; local_consumption_state=review; decision=keep_local_consumption_review; local_provider_url=http://127.0.0.1:8020; local_handoff_ready=True; runtime_promotion_ready=False; open_gate_count=3 | `review_evidence_notes` |
 | `phase9_myprivateagent_local_consumption_smoke` | `local-consumption-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; passed_checks=7/7; failed_checks=0; readiness_status=review; local_consumption_state=review | `no_action_required` |
+| `phase10_myprivateagent_local_consumer_readiness` | `local-consumer-verification` | `True` | `review` | status=review; local_consumer_state=ready_for_local_consumer_probe_review; decision=run_local_consumer_probe_before_myprivateagent_integration; local_provider_url=http://127.0.0.1:8020; api_key_mode=not_configured_local_dev; graph_boundary_ready=True; runtime_promotion_status=keep_runtime_defaults; open_gate_count=3 | `review_evidence_notes` |
+| `phase10_myprivateagent_local_consumer_probe` | `local-consumer-verification-smoke` | `True` | `ready` | status=ready; decision=keep_provider_side_consumer_probe_review; passed_checks=7/7; failed_checks=0; local_consumer_state=ready_for_local_consumer_probe_review; api_key_mode=not_configured_local_dev; runtime_promotion_status=keep_runtime_defaults | `no_action_required` |
 | `phase3_hybrid_cross_case_fp_fn_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; passed_checks=4/4; false_positive_count=3; false_negative_count=0 | `no_action_required` |
 | `phase3_aggregation_relation_negative_control_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000 | `no_action_required` |
 | `phase3_hybrid_runtime_promotion_decision_readiness` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; review_state=review; required_signals=14; ready_signals=6; open_gates=9; open_gate_count=9 | `review_evidence_notes` |

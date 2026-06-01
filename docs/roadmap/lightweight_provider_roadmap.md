@@ -480,6 +480,42 @@ Phase 9 now also has a local-consumption decision record for the current cycle:
 
 The record is documentation-only. It freezes the current verdict for local MyPrivateAgent consumption review while preserving runtime-default and control-plane boundaries.
 
+## Phase 10 MyPrivateAgent Local Consumer Verification Contract
+
+Phase 10 introduces a caller-shaped, read-only local consumer verification contract:
+
+`docs/integration/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-verification-contract.md`
+
+The contract keeps the recommended local URL at `http://127.0.0.1:8020`, keeps `PROVIDER_API_KEY` optional for local development, and defines the provider discovery flow a MyPrivateAgent-shaped consumer can inspect before real repository integration.
+
+## Phase 10 MyPrivateAgent Local Consumer Readiness
+
+Phase 10 now also has a machine-readable local consumer readiness export:
+
+`docs/integration/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-readiness.json`
+
+`docs/integration/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-readiness.md`
+
+The export is read-only and local. It summarizes Phase 9 linkage, provider handoff posture, Phase 4 evidence-pack readiness, graph planned-boundary status, access-key posture, and runtime-promotion boundary status.
+
+## Phase 10 MyPrivateAgent Local Consumer Probe
+
+Phase 10 now also has a compact caller-shaped local consumer probe artifact:
+
+`docs/smoke/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-probe.json`
+
+`docs/smoke/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-probe.md`
+
+The probe validates local access assumptions, contract coverage, handoff visibility, evidence-pack caller smoke, graph planned-boundary alignment, and runtime-default preservation without mutating provider state or requiring a live MyPrivateAgent integration.
+
+## Phase 10 MyPrivateAgent Local Consumer Decision Record
+
+Phase 10 now also has a local consumer verification decision record:
+
+`docs/integration/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-decision-record.md`
+
+The record freezes the current `ready_for_local_myprivateagent_consumer_probe_review` posture while preserving provider/caller ownership boundaries and runtime-default gates.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

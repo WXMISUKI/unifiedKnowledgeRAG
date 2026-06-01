@@ -1,0 +1,81 @@
+{
+  "id": "phase10-myprivateagent-local-consumer-probe-v1",
+  "generated_at": "2026-06-01T13:24:10.067485+00:00",
+  "status": "ready",
+  "decision": "keep_provider_side_consumer_probe_review",
+  "summary": {
+    "total_checks": 7,
+    "passed_checks": 7,
+    "failed_checks": 0,
+    "readiness_status": "review",
+    "local_consumer_state": "ready_for_local_consumer_probe_review",
+    "local_provider_url": "http://127.0.0.1:8020",
+    "api_key_mode": "not_configured_local_dev",
+    "runtime_promotion_status": "keep_runtime_defaults"
+  },
+  "checks": [
+    {
+      "id": "phase10_local_consumer_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "readiness_present=true; status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json"
+    },
+    {
+      "id": "phase10_contract_content",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_required_tokens_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-verification-contract.md"
+    },
+    {
+      "id": "local_access_mode",
+      "required": true,
+      "status": "ready",
+      "summary": "base_url=http://127.0.0.1:8020; api_key_mode=not_configured_local_dev",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json"
+    },
+    {
+      "id": "handoff_phase10_presence",
+      "required": true,
+      "status": "ready",
+      "summary": "phase10_handoff_artifacts_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "evidence_pack_caller_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json"
+    },
+    {
+      "id": "graph_planned_boundary",
+      "required": true,
+      "status": "ready",
+      "summary": "readiness_graph_boundary_ready=True; provider_smoke_graph_boundary_ready=True",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "runtime_promotion_boundary",
+      "required": true,
+      "status": "ready",
+      "summary": "runtime_promotion_ready=False; runtime_promotion_status=keep_runtime_defaults",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json"
+    }
+  ],
+  "notes": [
+    "This probe is caller-shaped but provider-side and read-only.",
+    "It validates local consumer evidence alignment without running a live MyPrivateAgent integration.",
+    "It does not create source bindings, execute GraphRAG, or promote runtime defaults."
+  ],
+  "json_path": "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.json",
+  "markdown_path": "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.md"
+}
