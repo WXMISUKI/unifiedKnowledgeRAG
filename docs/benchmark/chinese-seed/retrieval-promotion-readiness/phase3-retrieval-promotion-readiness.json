@@ -1,6 +1,6 @@
 {
   "id": "phase3-retrieval-promotion-readiness-v1",
-  "generated_at": "2026-05-31T14:10:10.269513+00:00",
+  "generated_at": "2026-06-01T01:10:40.130255+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "gap_matrix_path": "docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md",

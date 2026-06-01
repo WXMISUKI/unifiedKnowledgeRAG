@@ -61,6 +61,12 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "decision=keep_graph_query_planned" in artifacts[
         "phase5_graph_use_case_readiness"
     ]["summary"]
+    assert artifacts["phase5_graph_boundary_smoke_summary"]["present"] is True
+    assert artifacts["phase5_graph_boundary_smoke_summary"]["required"] is False
+    assert artifacts["phase5_graph_boundary_smoke_summary"]["status"] == "ready"
+    assert "graph_checks_passed=2" in artifacts[
+        "phase5_graph_boundary_smoke_summary"
+    ]["summary"]
     assert artifacts["deployed_provider_smoke"]["present"] is False
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
@@ -196,6 +202,7 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["phase4_evidence_pack_readiness"]["status"] == "ready"
     assert artifacts["phase4_caller_consumption_smoke"]["status"] == "ready"
     assert artifacts["phase5_graph_use_case_readiness"]["status"] == "ready"
+    assert artifacts["phase5_graph_boundary_smoke_summary"]["status"] == "ready"
     assert artifacts["deployed_provider_smoke"]["status"] == "review"
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"

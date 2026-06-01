@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-05-31T14:10:10.278929+00:00",
+  "generated_at": "2026-06-01T01:10:40.140218+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -132,6 +132,16 @@
       "required": false,
       "status": "ready",
       "summary": "status=ready; decision=keep_graph_query_planned; graph_schema_count=1; graph_query_status=planned; graph_query_planned=True; preflight_graph_boundary_ready=True; smoke_graph_check_passed=True; smoke_checks_passed=True",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase5_graph_boundary_smoke_summary",
+      "category": "graph-boundary-smoke",
+      "path": "docs\\smoke\\graph-boundary-summary\\phase5-graph-boundary-smoke-summary.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_graph_query_planned; source_smoke_passed=True; graph_checks_passed=2; graph_schema_count=1; graph_query_status=planned; graph_query_planned=True; graph_error_code=GRAPH_NOT_IMPLEMENTED",
       "recommended_action": "no_action_required"
     }
   ],

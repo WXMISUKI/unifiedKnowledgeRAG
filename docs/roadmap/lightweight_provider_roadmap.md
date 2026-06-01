@@ -107,6 +107,16 @@ Phase 5 now also has a machine-readable readiness export that consolidates the g
 
 The export is intentionally read-only. It lets reviewers and handoff consumers inspect the current GraphRAG boundary without changing runtime defaults, adding graph execution, or introducing graph-store dependencies.
 
+## Phase 5 Graph Boundary Smoke Summary
+
+Phase 5 now also has a compact graph boundary smoke summary that condenses the graph schema discovery and planned graph query checks from provider contract smoke into a local review artifact:
+
+`docs/smoke/graph-boundary-summary/phase5-graph-boundary-smoke-summary.json`
+
+`docs/smoke/graph-boundary-summary/phase5-graph-boundary-smoke-summary.md`
+
+The summary is intentionally read-only. It gives reviewers a small graph-boundary-only smoke artifact without changing runtime defaults or adding GraphRAG execution.
+
 ## Retrieval Evidence Pack
 
 Phase 4 evidence packaging is now represented by `evidence_pack-v1` metadata on successful RAG retrieve and answer envelopes. The pack is retrieval-owned and deterministic; it gives callers a stable bundle with:

@@ -17,6 +17,7 @@
 - Phase 4 caller-consumption smoke implemented and refreshed (`2026-05-31-phase4-add-caller-consumption-smoke`), directly exercising `build_evidence_pack` for answerable and fail-closed caller branches.
 - Phase 5 graph use-case readiness contract documented (`2026-05-31-phase5-document-graph-use-case-readiness-contract`), separating graph-worthy relationship-heavy questions from document-RAG-only questions.
 - Phase 5 graph use-case readiness export implemented and refreshed (`2026-05-31-phase5-export-graph-use-case-readiness`), consolidating the graph contract, provider preflight graph boundary, and provider contract smoke into a machine-readable review artifact.
+- Phase 5 graph boundary smoke summary implemented and refreshed (`2026-06-01-add-phase5-graph-boundary-smoke-summary`), condensing the graph schema discovery and planned graph query checks into a compact smoke artifact.
 - Phase 5 boundary-only graph evidence: graph schema discovery in preflight/contract smoke; graph query remains planned boundary.
 - Phase 6 operations baseline: deployment readiness, reindex readiness, handoff bundle, handoff refresh, handoff API.
 - Phase 6 optional live-url evidence: deployed provider smoke and source-binding checks.
@@ -54,6 +55,7 @@
   - `refresh-phase3-seed-evidence-after-fixture-expansion`
   - `2026-05-31-expand-phase3-fp-fn-customer-like-cases` follow-up refresh
   - `2026-05-31-phase3-expand-promotion-customer-like-cases` follow-up refresh
+  - `2026-06-01-add-phase5-graph-boundary-smoke-summary` follow-up refresh
 - Refreshed artifact:
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.json`
   - `docs/benchmark/chinese-seed/retrieval-candidates/fixture-chinese-seed-baseline.md`
@@ -61,6 +63,11 @@
   - `docs/benchmark/chinese-seed/fp-fn-review/phase3-fp-fn-review.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_fp_fn_review` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_fp_fn_review` step)
+- Phase 5 graph boundary refresh additions:
+  - `docs/smoke/graph-boundary-summary/phase5-graph-boundary-smoke-summary.json`
+  - `docs/smoke/graph-boundary-summary/phase5-graph-boundary-smoke-summary.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase5_graph_boundary_smoke_summary` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase5_graph_boundary_smoke_summary` step)
 - Refreshed baseline summary:
   - `total_cases=29`
   - `hit_rate=0.9310`
@@ -83,7 +90,7 @@
 
 ## Next Step Plan
 
-1. Keep the Phase 5 graph use-case readiness contract and export aligned with the graph boundary evidence.
+1. Keep the Phase 5 graph use-case readiness contract, export, and smoke summary aligned with the graph boundary evidence.
 2. Move to the next roadmap slice only when a new evidence-backed gap appears.
 3. Keep the next benchmark or evidence change bounded and evaluation-only.
 4. Export refreshed evidence before comparing any new gate signal.
@@ -91,7 +98,7 @@
 
 ## Latest Refresh
 
-- Run time: `2026-05-31T14:10:10.280113+00:00`
+- Run time: `2026-06-01T01:10:40.141514+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -104,6 +111,7 @@
   - `phase4_evidence_pack_readiness`: `ready`
   - `phase4_caller_consumption_smoke`: `ready`
   - `phase5_graph_use_case_readiness`: `ready`
+  - `phase5_graph_boundary_smoke_summary`: `ready`
   - `provider_handoff_bundle`: `review`
 
 ## Current Gaps To Close

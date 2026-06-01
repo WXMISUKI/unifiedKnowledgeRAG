@@ -115,6 +115,15 @@ DEFAULT_EVIDENCE_SPECS = [
         ),
         required=False,
     ),
+    HandoffEvidenceSpec(
+        id="phase5_graph_boundary_smoke_summary",
+        category="graph-boundary-smoke",
+        path=Path(
+            "docs/smoke/graph-boundary-summary/"
+            "phase5-graph-boundary-smoke-summary.json"
+        ),
+        required=False,
+    ),
 ]
 
 
@@ -439,6 +448,21 @@ def _artifact_status_and_summary(
                 f"smoke_checks_passed={bool(summary.get('smoke_checks_passed', False))}"
             ),
         )
+    if artifact_id == "phase5_graph_boundary_smoke_summary":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_graph_query_planned')}; "
+                f"source_smoke_passed={bool(summary.get('source_smoke_passed', False))}; "
+                f"graph_checks_passed={_int_value(summary.get('graph_checks_passed'), fallback=0)}; "
+                f"graph_schema_count={_int_value(summary.get('graph_schema_count'), fallback=0)}; "
+                f"graph_query_status={summary.get('graph_query_status', 'unknown')}; "
+                f"graph_query_planned={bool(summary.get('graph_query_planned', False))}; "
+                f"graph_error_code={summary.get('graph_error_code', 'unknown')}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -517,6 +541,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 4 caller-consumption smoke evidence is missing."
     if artifact_id == "phase5_graph_use_case_readiness":
         return "Optional Phase 5 graph readiness export is missing."
+    if artifact_id == "phase5_graph_boundary_smoke_summary":
+        return "Optional Phase 5 graph boundary smoke summary is missing."
     return "Optional evidence artifact is missing."
 
 
@@ -535,6 +561,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase4_caller_consumption_smoke"
     if artifact_id == "phase5_graph_use_case_readiness":
         return "regenerate_phase5_graph_use_case_readiness"
+    if artifact_id == "phase5_graph_boundary_smoke_summary":
+        return "regenerate_phase5_graph_boundary_smoke_summary"
     return "review_evidence_notes"
 
 
@@ -587,5 +615,13 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 5 graph use-case readiness export is optional before graph review; regenerate it after the graph contract or graph boundary evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase5_graph_boundary_smoke_summary"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 5 graph boundary smoke summary is optional before graph review; regenerate it after provider contract smoke changes."
         )
     return notes

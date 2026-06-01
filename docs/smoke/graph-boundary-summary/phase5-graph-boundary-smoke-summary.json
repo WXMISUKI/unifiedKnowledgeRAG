@@ -1,0 +1,70 @@
+{
+  "id": "phase5-graph-boundary-smoke-summary-v1",
+  "generated_at": "2026-06-01T01:10:40.136546+00:00",
+  "status": "ready",
+  "decision": "keep_graph_query_planned",
+  "source_smoke_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+  "summary": {
+    "total_artifacts": 3,
+    "ready_artifacts": 3,
+    "review_artifacts": 0,
+    "blocked_artifacts": 0,
+    "required_artifacts": 3,
+    "required_ready_artifacts": 3,
+    "source_smoke_passed": true,
+    "smoke_checks_passed": true,
+    "smoke_checks_total": 9,
+    "smoke_checks_ready": 9,
+    "graph_checks_passed": 2,
+    "graph_schema_count": 1,
+    "graph_ids": [
+      "ecommerce_order_graph"
+    ],
+    "graph_status": "planned",
+    "graph_store": "neo4j_planned",
+    "entity_type_count": 4,
+    "relation_type_count": 3,
+    "graph_query_status": "planned",
+    "graph_query_planned": true,
+    "graph_error_code": "GRAPH_NOT_IMPLEMENTED"
+  },
+  "supporting_evidence": [
+    {
+      "id": "provider_contract_smoke_source",
+      "category": "source-smoke",
+      "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+      "status": "ready",
+      "summary": "passed=True; checks=9/9; failed_checks=0",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "graph_schema_discovery_summary",
+      "category": "graph-smoke",
+      "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+      "status": "ready",
+      "summary": "graph_count=1; graph_ids=[\"ecommerce_order_graph\"]; graph_status=planned; graph_store=neo4j_planned; entity_type_count=4; relation_type_count=3",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "graph_planned_boundary_summary",
+      "category": "graph-smoke",
+      "path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",
+      "status": "ready",
+      "summary": "error_code=GRAPH_NOT_IMPLEMENTED; graph_id=ecommerce_order_graph; status=planned; capability_id=knowledge.graph.query",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only evidence for Phase 5 graph boundary review.",
+    "It condenses the graph schema discovery and planned graph query checks from provider contract smoke.",
+    "It does not change runtime defaults, add graph execution, or introduce graph-store dependencies."
+  ],
+  "json_path": "docs\\smoke\\graph-boundary-summary\\phase5-graph-boundary-smoke-summary.json",
+  "markdown_path": "docs\\smoke\\graph-boundary-summary\\phase5-graph-boundary-smoke-summary.md"
+}

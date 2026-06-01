@@ -14,6 +14,9 @@ from app.services.phase4_caller_consumption_smoke import (
 from app.services.phase5_graph_use_case_readiness import (
     export_phase5_graph_use_case_readiness_report,
 )
+from app.services.phase5_graph_boundary_smoke_summary import (
+    export_phase5_graph_boundary_smoke_summary_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -145,6 +148,16 @@ def default_handoff_refresh_steps(
             output_dir=artifact_base_dir
             / "docs/benchmark/chinese-seed/graph-use-case-readiness",
             exporter=lambda output_dir: export_phase5_graph_use_case_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase5_graph_boundary_smoke_summary",
+            category="graph-boundary-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/graph-boundary-summary",
+            exporter=lambda output_dir: export_phase5_graph_boundary_smoke_summary_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

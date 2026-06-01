@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-05-31T14:10:10.280113+00:00",
+  "generated_at": "2026-06-01T01:10:40.141514+00:00",
   "status": "review",
   "steps": [
     {
@@ -121,6 +121,18 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"graph_ids\": [\"ecommerce_order_graph\"], \"graph_query_planned\": true, \"graph_query_status\": \"planned\", \"graph_schema_count\": 1, \"graph_stores\": {\"ecommerce_order_graph\": \"neo4j_planned\"}, \"preflight_graph_boundary_ready\": true, \"ready_artifacts\": 3, \"required_artifacts\": 3, \"required_ready_artifacts\": 3, \"review_artifacts\": 0, \"smoke_check_count\": 9, \"smoke_checks_passed\": true, \"smoke_graph_check_passed\": true, \"total_artifacts\": 3}",
+      "error": null
+    },
+    {
+      "id": "phase5_graph_boundary_smoke_summary",
+      "category": "graph-boundary-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\graph-boundary-summary\\phase5-graph-boundary-smoke-summary.json",
+        "docs\\smoke\\graph-boundary-summary\\phase5-graph-boundary-smoke-summary.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"entity_type_count\": 4, \"graph_checks_passed\": 2, \"graph_error_code\": \"GRAPH_NOT_IMPLEMENTED\", \"graph_ids\": [\"ecommerce_order_graph\"], \"graph_query_planned\": true, \"graph_query_status\": \"planned\", \"graph_schema_count\": 1, \"graph_status\": \"planned\", \"graph_store\": \"neo4j_planned\", \"ready_artifacts\": 3, \"relation_type_count\": 3, \"required_artifacts\": 3, \"required_ready_artifacts\": 3, \"review_artifacts\": 0, \"smoke_checks_passed\": true, \"smoke_checks_ready\": 9, \"smoke_checks_total\": 9, \"source_smoke_passed\": true, \"total_artifacts\": 3}",
       "error": null
     },
     {

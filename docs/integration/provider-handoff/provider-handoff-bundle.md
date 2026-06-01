@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-05-31T14:10:10.278929+00:00`
+- Generated At: `2026-06-01T01:10:40.140218+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -23,6 +23,7 @@
 | `phase4_evidence_pack_readiness` | `evidence-packaging` | `True` | `ready` | status=ready; decision=keep_caller_ownership; smoke_passed=True; ready_artifacts=5/5; required_ready=2/2 | `no_action_required` |
 | `phase4_caller_consumption_smoke` | `caller-consumption` | `True` | `ready` | status=ready; passed_checks=3/3; answerable_checks=1; insufficient_checks=1; contract_doc_present=True | `no_action_required` |
 | `phase5_graph_use_case_readiness` | `graph-readiness` | `True` | `ready` | status=ready; decision=keep_graph_query_planned; graph_schema_count=1; graph_query_status=planned; graph_query_planned=True; preflight_graph_boundary_ready=True; smoke_graph_check_passed=True; smoke_checks_passed=True | `no_action_required` |
+| `phase5_graph_boundary_smoke_summary` | `graph-boundary-smoke` | `True` | `ready` | status=ready; decision=keep_graph_query_planned; source_smoke_passed=True; graph_checks_passed=2; graph_schema_count=1; graph_query_status=planned; graph_query_planned=True; graph_error_code=GRAPH_NOT_IMPLEMENTED | `no_action_required` |
 
 ## Operation Notes
 

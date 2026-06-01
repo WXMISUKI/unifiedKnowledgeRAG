@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-refresh-v1`
 - Status: `review`
-- Generated At: `2026-05-31T14:10:10.280113+00:00`
+- Generated At: `2026-06-01T01:10:40.141514+00:00`
 
 ## Refresh Steps
 
@@ -18,6 +18,7 @@
 | `phase4_evidence_pack_readiness` | `evidence-packaging` | `ready` | `docs\benchmark\chinese-seed\evidence-pack-readiness\phase4-evidence-pack-readiness.json`, `docs\benchmark\chinese-seed\evidence-pack-readiness\phase4-evidence-pack-readiness.md` | `no_action_required` | status=ready; summary={"blocked_artifacts": 0, "evidence_pack_checks_passed": true, "ready_artifacts": 5, "required_artifacts": 2, "required_ready_artifacts": 2, "review_artifacts": 0, "smoke_passed": true, "total_artifacts": 5} |
 | `phase4_caller_consumption_smoke` | `caller-consumption` | `ready` | `docs\smoke\evidence-pack-consumption\phase4-caller-consumption-smoke.json`, `docs\smoke\evidence-pack-consumption\phase4-caller-consumption-smoke.md` | `no_action_required` | status=ready; summary={"answerable_checks": 1, "contract_doc_present": 1, "failed": 0, "insufficient_checks": 1, "passed": 3, "total": 3} |
 | `phase5_graph_use_case_readiness` | `graph-readiness` | `ready` | `docs\benchmark\chinese-seed\graph-use-case-readiness\phase5-graph-use-case-readiness.json`, `docs\benchmark\chinese-seed\graph-use-case-readiness\phase5-graph-use-case-readiness.md` | `no_action_required` | status=ready; summary={"blocked_artifacts": 0, "graph_ids": ["ecommerce_order_graph"], "graph_query_planned": true, "graph_query_status": "planned", "graph_schema_count": 1, "graph_stores": {"ecommerce_order_graph": "neo4j_planned"}, "preflight_graph_boundary_ready": true, "ready_artifacts": 3, "required_artifacts": 3, "required_ready_artifacts": 3, "review_artifacts": 0, "smoke_check_count": 9, "smoke_checks_passed": true, "smoke_graph_check_passed": true, "total_artifacts": 3} |
+| `phase5_graph_boundary_smoke_summary` | `graph-boundary-smoke` | `ready` | `docs\smoke\graph-boundary-summary\phase5-graph-boundary-smoke-summary.json`, `docs\smoke\graph-boundary-summary\phase5-graph-boundary-smoke-summary.md` | `no_action_required` | status=ready; summary={"blocked_artifacts": 0, "entity_type_count": 4, "graph_checks_passed": 2, "graph_error_code": "GRAPH_NOT_IMPLEMENTED", "graph_ids": ["ecommerce_order_graph"], "graph_query_planned": true, "graph_query_status": "planned", "graph_schema_count": 1, "graph_status": "planned", "graph_store": "neo4j_planned", "ready_artifacts": 3, "relation_type_count": 3, "required_artifacts": 3, "required_ready_artifacts": 3, "review_artifacts": 0, "smoke_checks_passed": true, "smoke_checks_ready": 9, "smoke_checks_total": 9, "source_smoke_passed": true, "total_artifacts": 3} |
 | `provider_handoff_bundle` | `handoff` | `review` | `docs\integration\provider-handoff\provider-handoff-bundle.json`, `docs\integration\provider-handoff\provider-handoff-bundle.md` | `review_evidence_notes` | status=review; report_status=review |
 
 ## Operation Notes

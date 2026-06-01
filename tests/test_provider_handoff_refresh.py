@@ -112,6 +112,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase4_evidence_pack_readiness" in step_ids
     assert "phase4_caller_consumption_smoke" in step_ids
     assert "phase5_graph_use_case_readiness" in step_ids
+    assert "phase5_graph_boundary_smoke_summary" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
     )
@@ -128,6 +129,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase5_graph_use_case_readiness"
     )
     assert step_ids.index("phase5_graph_use_case_readiness") < step_ids.index(
+        "phase5_graph_boundary_smoke_summary"
+    )
+    assert step_ids.index("phase5_graph_boundary_smoke_summary") < step_ids.index(
         "provider_handoff_bundle"
     )
 
