@@ -111,6 +111,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase3_fp_fn_review" in step_ids
     assert "phase3_candidate_runtime_diagnostics" in step_ids
     assert "phase3_candidate_latency_resource_diagnostics" in step_ids
+    assert "phase3_hybrid_fusion_threshold_calibration" in step_ids
     assert "phase3_hybrid_cross_case_fp_fn_smoke" in step_ids
     assert "phase3_aggregation_relation_negative_control_smoke" in step_ids
     assert "phase4_evidence_pack_readiness" in step_ids
@@ -131,6 +132,11 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     )
     assert step_ids.index(
         "phase3_candidate_latency_resource_diagnostics"
+    ) < step_ids.index(
+        "phase3_hybrid_fusion_threshold_calibration"
+    )
+    assert step_ids.index(
+        "phase3_hybrid_fusion_threshold_calibration"
     ) < step_ids.index(
         "phase3_hybrid_cross_case_fp_fn_smoke"
     )

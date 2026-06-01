@@ -28,6 +28,9 @@ from app.services.phase3_candidate_runtime_diagnostics import (
 from app.services.phase3_candidate_latency_resource_diagnostics import (
     export_phase3_candidate_latency_resource_diagnostics_report,
 )
+from app.services.phase3_hybrid_fusion_threshold_calibration import (
+    export_phase3_hybrid_fusion_threshold_calibration_report,
+)
 from app.services.phase3_hybrid_cross_case_fp_fn_smoke import (
     export_phase3_hybrid_cross_case_fp_fn_smoke_report,
 )
@@ -150,6 +153,17 @@ def default_handoff_refresh_steps(
             output_dir=artifact_base_dir
             / "docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics",
             exporter=lambda output_dir: export_phase3_candidate_latency_resource_diagnostics_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase3_hybrid_fusion_threshold_calibration",
+            category="retrieval-evidence",
+            output_dir=artifact_base_dir
+            / "docs/benchmark/chinese-seed/hybrid-fusion-threshold-calibration",
+            exporter=lambda output_dir: export_phase3_hybrid_fusion_threshold_calibration_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

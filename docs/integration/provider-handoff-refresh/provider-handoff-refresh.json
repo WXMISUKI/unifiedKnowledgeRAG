@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T03:16:25.552258+00:00",
+  "generated_at": "2026-06-01T03:35:58.427188+00:00",
   "status": "review",
   "steps": [
     {
@@ -109,6 +109,18 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"deployment_readiness_snapshot\", \"runtime_diagnostics_snapshot\", \"local_embedding_artifact\", \"provider_api_guard\", \"deployed_smoke_evidence\"], \"ready_signals\": 1, \"review_signals\": 5, \"total_signals\": 6}",
+      "error": null
+    },
+    {
+      "id": "phase3_hybrid_fusion_threshold_calibration",
+      "category": "retrieval-evidence",
+      "status": "review",
+      "output_paths": [
+        "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.json",
+        "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"hybrid_empty_stress_negative_control\", \"cross_case_fp_fn_context\", \"runtime_threshold_alignment\"], \"ready_signals\": 3, \"review_signals\": 3, \"total_signals\": 6}",
       "error": null
     },
     {

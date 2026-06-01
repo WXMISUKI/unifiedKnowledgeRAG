@@ -1,0 +1,80 @@
+{
+  "id": "phase3-hybrid-fusion-threshold-calibration-v1",
+  "generated_at": "2026-06-01T03:35:58.405942+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_signals": 6,
+    "ready_signals": 3,
+    "review_signals": 3,
+    "blocked_signals": 0,
+    "open_signal_ids": [
+      "hybrid_empty_stress_negative_control",
+      "cross_case_fp_fn_context",
+      "runtime_threshold_alignment"
+    ]
+  },
+  "calibration": {
+    "fusion_mode": "rrf",
+    "score_filter_mode": "disabled-for-rrf-fusion-score",
+    "selected_dense_threshold": 0.7,
+    "runtime_threshold": 0.01,
+    "threshold_delta": 0.69,
+    "sweep_threshold_count": 3,
+    "sweep_best_empty_handling_rate": 1.0,
+    "hybrid_exact_term_hit_rate": 1.0,
+    "hybrid_exact_term_total_cases": 4,
+    "hybrid_empty_stress_empty_handling_rate": 0.0
+  },
+  "signals": [
+    {
+      "id": "hybrid_exact_term_positive_control",
+      "status": "ready",
+      "summary": "hit_rate=1.0000; total_cases=4",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\exact-term-candidates\\qdrant-bge-m3-hybrid-exact-term-smoke.json"
+    },
+    {
+      "id": "hybrid_empty_stress_negative_control",
+      "status": "review",
+      "summary": "empty_handling_rate=0.0000; total_cases=4",
+      "recommended_action": "review_empty_false_positive_risk",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\hybrid-empty-stress\\qdrant-bge-m3-hybrid-empty-stress.json"
+    },
+    {
+      "id": "hybrid_gate_coverage_bundle",
+      "status": "ready",
+      "summary": "present_gate_artifacts=4/4",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\hybrid-gating-candidates\\qdrant-bge-m3-hybrid-exact-identifier-gate.json; docs\\benchmark\\chinese-seed\\hybrid-gating-candidates-expanded\\qdrant-bge-m3-hybrid-exact-identifier-gate.json; docs\\benchmark\\chinese-seed\\noisy-identifier-gating-candidates\\qdrant-bge-m3-hybrid-alias-identifier-gate.json; docs\\benchmark\\chinese-seed\\split-chunk-gating-candidates\\qdrant-bge-m3-hybrid-exact-identifier-gate.json"
+    },
+    {
+      "id": "dense_threshold_sweep_context",
+      "status": "ready",
+      "summary": "selected_dense_threshold=0.7000; sweep_threshold_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-threshold-recommendation.json; docs\\benchmark\\chinese-seed\\retrieval-candidates\\qdrant-bge-m3-threshold-sweep.json"
+    },
+    {
+      "id": "cross_case_fp_fn_context",
+      "status": "review",
+      "summary": "false_positive_count=3; false_negative_count=0",
+      "recommended_action": "continue_cross_case_fp_fn_review",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json"
+    },
+    {
+      "id": "runtime_threshold_alignment",
+      "status": "review",
+      "summary": "selected_dense_threshold=0.7000; runtime_threshold=0.0100; fusion=rrf; score_filter=disabled-for-rrf-fusion-score",
+      "recommended_action": "keep_runtime_defaults_until_hybrid_runtime_calibration",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only candidate calibration evidence for Phase 3 promotion review.",
+    "Hybrid retrieval in these artifacts uses RRF fusion and score filtering is disabled for fusion scores.",
+    "Dense threshold recommendations and runtime thresholds are not direct promotion instructions for hybrid RRF runtime defaults."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.md"
+}

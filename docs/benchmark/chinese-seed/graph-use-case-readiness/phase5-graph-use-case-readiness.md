@@ -3,7 +3,7 @@
 - Report: `phase5-graph-use-case-readiness-v1`
 - Status: `passed`
 - Decision: `keep_graph_query_planned`
-- Generated At: `2026-06-01T03:16:25.539132+00:00`
+- Generated At: `2026-06-01T03:35:58.418095+00:00`
 - Contract Doc: `docs\benchmark\chinese-seed\graph-use-case-readiness\phase5-graph-use-case-readiness-contract.md`
 - Preflight Snapshot: `/api/provider/preflight`
 - Smoke Report: `docs\smoke\provider-contract\provider-contract-smoke.json`

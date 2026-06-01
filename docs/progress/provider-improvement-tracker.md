@@ -34,6 +34,8 @@
 - Phase 3 retrieval candidate evaluation protocol documented (`2026-06-01-document-phase3-retrieval-candidate-evaluation-protocol`), standardizing gate expectations and required evidence classes across Qdrant/BGE-M3/hybrid/aggregation/relation-aware/deployed-smoke review.
 - Phase 3 candidate runtime diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-runtime-diagnostics`), summarizing runtime-adjacent promotion prerequisites and adding optional handoff/refresh visibility.
 - Phase 3 candidate latency/resource diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-latency-resource-diagnostics`), combining benchmark latency shape with deployment/runtime posture into optional handoff/refresh evidence.
+- Phase 3 hybrid fusion/threshold calibration export implemented and refreshed (`2026-06-01-export-phase3-hybrid-fusion-threshold-calibration`), consolidating hybrid RRF context, dense-threshold recommendation context, FP/FN signal, and runtime threshold posture into one optional review artifact.
+- Phase 3 runtime promotion decision record documented (`2026-06-01-document-phase3-runtime-promotion-decision-record`), explicitly recording this cycle's `keep_runtime_defaults` verdict and the remaining promotion gates.
 - Phase 3 hybrid cross-case FP/FN smoke implemented and refreshed (`2026-06-01-add-phase3-hybrid-cross-case-fp-fn-smoke`), validating risk-case coverage, false-positive trap alignment, and positive-control stability from local evidence.
 - Phase 3 aggregation/relation negative-control smoke implemented and refreshed (`2026-06-01-add-phase3-aggregation-relation-negative-control-smoke`), keeping the over-broad aggregation risk and relation-aware unsupported-case signal visible in one compact local review artifact.
 - Deployment readiness operator guide added for Phase 6 operations documentation, translating `review` evidence into operator steps without changing runtime behavior.
@@ -85,6 +87,11 @@
   - `docs/benchmark/chinese-seed/retrieval-latency-resource-diagnostics/phase3-candidate-latency-resource-diagnostics.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_candidate_latency_resource_diagnostics` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_candidate_latency_resource_diagnostics` step)
+- Phase 3 hybrid fusion calibration refresh additions:
+  - `docs/benchmark/chinese-seed/hybrid-fusion-threshold-calibration/phase3-hybrid-fusion-threshold-calibration.json`
+  - `docs/benchmark/chinese-seed/hybrid-fusion-threshold-calibration/phase3-hybrid-fusion-threshold-calibration.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_hybrid_fusion_threshold_calibration` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_hybrid_fusion_threshold_calibration` step)
 - Phase 3 hybrid cross-case smoke refresh additions:
   - `docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.json`
   - `docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.md`

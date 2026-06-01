@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-01T03:16:25.549170+00:00`
+- Generated At: `2026-06-01T03:35:58.425681+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -22,6 +22,7 @@
 | `phase3_retrieval_promotion_readiness` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; open_gates=7; ready_gates=0; review_gates=3; candidate_gates=4 | `review_evidence_notes` |
 | `phase3_candidate_runtime_diagnostics` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; ready_checks=0/6; review_checks=6; blocked_checks=0 | `review_evidence_notes` |
 | `phase3_candidate_latency_resource_diagnostics` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; total_signals=6; ready_signals=1; review_signals=5; backend=fixture; avg_latency_ms=0.2368; deployment_status=review; runtime_status=review | `review_evidence_notes` |
+| `phase3_hybrid_fusion_threshold_calibration` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; ready_signals=3/6; review_signals=3; fusion=rrf; score_filter=disabled-for-rrf-fusion-score; selected_dense_threshold=0.7000; runtime_threshold=0.0100 | `review_evidence_notes` |
 | `phase3_hybrid_cross_case_fp_fn_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; passed_checks=4/4; false_positive_count=3; false_negative_count=0 | `no_action_required` |
 | `phase3_aggregation_relation_negative_control_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000 | `no_action_required` |
 | `phase4_evidence_pack_readiness` | `evidence-packaging` | `True` | `ready` | status=ready; decision=keep_caller_ownership; smoke_passed=True; ready_artifacts=5/5; required_ready=2/2 | `no_action_required` |

@@ -107,6 +107,15 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase3_hybrid_fusion_threshold_calibration",
+        category="retrieval-evidence",
+        path=Path(
+            "docs/benchmark/chinese-seed/hybrid-fusion-threshold-calibration/"
+            "phase3-hybrid-fusion-threshold-calibration.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -473,6 +482,23 @@ def _artifact_status_and_summary(
                 f"runtime_status={_dict_value(resource_posture, 'runtime_diagnostics_status', 'unknown')}"
             ),
         )
+    if artifact_id == "phase3_hybrid_fusion_threshold_calibration":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        calibration = payload.get("calibration", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"ready_signals={_int_value(summary.get('ready_signals'), fallback=0)}/"
+                f"{_int_value(summary.get('total_signals'), fallback=0)}; "
+                f"review_signals={_int_value(summary.get('review_signals'), fallback=0)}; "
+                f"fusion={_dict_value(calibration, 'fusion_mode', 'unknown')}; "
+                f"score_filter={_dict_value(calibration, 'score_filter_mode', 'unknown')}; "
+                f"selected_dense_threshold={_float_value(calibration.get('selected_dense_threshold'), fallback=0.0):.4f}; "
+                f"runtime_threshold={_float_value(calibration.get('runtime_threshold'), fallback=0.0):.4f}"
+            ),
+        )
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -641,6 +667,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 3 latency/resource diagnostics export is missing."
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         return "Optional Phase 3 hybrid cross-case FP/FN smoke evidence is missing."
+    if artifact_id == "phase3_hybrid_fusion_threshold_calibration":
+        return "Optional Phase 3 hybrid fusion/threshold calibration evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase4_evidence_pack_readiness":
@@ -669,6 +697,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase3_candidate_latency_resource_diagnostics"
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         return "regenerate_phase3_hybrid_cross_case_fp_fn_smoke"
+    if artifact_id == "phase3_hybrid_fusion_threshold_calibration":
+        return "regenerate_phase3_hybrid_fusion_threshold_calibration"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase4_evidence_pack_readiness":
@@ -723,6 +753,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 3 latency/resource diagnostics export is optional before promotion review; regenerate it after benchmark latency or deployment posture changes."
+        )
+    if any(
+        artifact["id"] == "phase3_hybrid_fusion_threshold_calibration"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 3 hybrid fusion/threshold calibration export is optional before promotion review; regenerate it after hybrid evidence or threshold recommendation updates."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

@@ -58,6 +58,12 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "avg_latency_ms=" in artifacts[
         "phase3_candidate_latency_resource_diagnostics"
     ]["summary"]
+    assert artifacts["phase3_hybrid_fusion_threshold_calibration"]["present"] is True
+    assert artifacts["phase3_hybrid_fusion_threshold_calibration"]["required"] is False
+    assert artifacts["phase3_hybrid_fusion_threshold_calibration"]["status"] == "review"
+    assert "fusion=rrf" in artifacts[
+        "phase3_hybrid_fusion_threshold_calibration"
+    ]["summary"]
     assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["present"] is True
     assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["required"] is False
     assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["status"] == "ready"
@@ -228,6 +234,7 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["phase3_retrieval_promotion_readiness"]["status"] == "review"
     assert artifacts["phase3_candidate_runtime_diagnostics"]["status"] == "review"
     assert artifacts["phase3_candidate_latency_resource_diagnostics"]["status"] == "review"
+    assert artifacts["phase3_hybrid_fusion_threshold_calibration"]["status"] == "review"
     assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["status"] == "ready"
     assert artifacts["phase3_aggregation_relation_negative_control_smoke"]["status"] == "ready"
     assert artifacts["phase4_evidence_pack_readiness"]["status"] == "ready"
@@ -678,4 +685,31 @@ def test_provider_handoff_bundle_keeps_missing_phase3_hybrid_smoke_reviewable(
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
         "regenerate_phase3_hybrid_cross_case_fp_fn_smoke"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase3_hybrid_calibration_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase3_hybrid_fusion_threshold_calibration",
+            category="retrieval-evidence",
+            path=Path("missing-phase3-hybrid-fusion-threshold-calibration.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase3_hybrid_fusion_threshold_calibration"
     )

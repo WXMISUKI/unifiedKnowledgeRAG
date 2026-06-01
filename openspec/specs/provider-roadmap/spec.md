@@ -672,3 +672,31 @@ The project SHALL treat the Phase 3 aggregation/relation negative-control smoke 
 - **WHEN** the smoke validates positive and negative aggregation controls plus relation-aware grading alignment
 - **THEN** runtime defaults, provider HTTP contracts, GraphRAG boundaries, and caller ownership remain unchanged
 
+### Requirement: Phase 3 hybrid fusion calibration exports stay lightweight and evaluation-only
+
+The project SHALL treat Phase 3 hybrid fusion/threshold calibration exports as lightweight evidence visibility work when they summarize candidate calibration context without changing runtime defaults.
+
+#### Scenario: Calibration export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a Phase 3 hybrid fusion/threshold calibration export
+- **THEN** the roadmap records it as Phase 3 evidence visibility work rather than runtime promotion
+
+#### Scenario: Calibration export preserves boundaries
+
+- **WHEN** calibration evidence summarizes candidate hybrid fusion and threshold context
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG boundaries, and caller ownership remain unchanged
+
+### Requirement: Phase 3 runtime promotion decision SHALL be explicitly recorded
+
+The project SHALL preserve a documentation-only decision record for each Phase 3 promotion review cycle before any runtime default promotion.
+
+#### Scenario: Decision record captures no-promotion verdict
+
+- **WHEN** Phase 3 evidence remains candidate-level or review-level
+- **THEN** the decision record states `keep_runtime_defaults` and lists open gates for production promotion
+
+#### Scenario: Decision record remains boundary-safe
+
+- **WHEN** the decision record is published
+- **THEN** it does not change provider runtime defaults, public API contracts, GraphRAG planned boundary, or caller ownership responsibilities
+

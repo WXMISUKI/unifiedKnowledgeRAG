@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T03:16:25.549170+00:00",
+  "generated_at": "2026-06-01T03:35:58.425681+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -122,6 +122,16 @@
       "required": false,
       "status": "review",
       "summary": "status=review; decision=keep_runtime_defaults; total_signals=6; ready_signals=1; review_signals=5; backend=fixture; avg_latency_ms=0.2368; deployment_status=review; runtime_status=review",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase3_hybrid_fusion_threshold_calibration",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\hybrid-fusion-threshold-calibration\\phase3-hybrid-fusion-threshold-calibration.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; ready_signals=3/6; review_signals=3; fusion=rrf; score_filter=disabled-for-rrf-fusion-score; selected_dense_threshold=0.7000; runtime_threshold=0.0100",
       "recommended_action": "review_evidence_notes"
     },
     {
