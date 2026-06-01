@@ -157,6 +157,21 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
         "run_deployed_provider_smoke_after_deployment"
     )
+    assert artifacts["phase6_deployed_field_validation_readiness"]["present"] is True
+    assert artifacts["phase6_deployed_field_validation_readiness"]["required"] is False
+    assert artifacts["phase6_deployed_field_validation_readiness"]["status"] == "review"
+    assert "field_validation_state=await_live_url" in artifacts[
+        "phase6_deployed_field_validation_readiness"
+    ]["summary"]
+    assert "decision=keep_local_review_until_deployed_smoke" in artifacts[
+        "phase6_deployed_field_validation_readiness"
+    ]["summary"]
+    assert artifacts["phase6_deployed_handoff_consistency_smoke"]["present"] is True
+    assert artifacts["phase6_deployed_handoff_consistency_smoke"]["required"] is False
+    assert artifacts["phase6_deployed_handoff_consistency_smoke"]["status"] == "ready"
+    assert "passed_checks=8/8" in artifacts[
+        "phase6_deployed_handoff_consistency_smoke"
+    ]["summary"]
     assert any("read-only" in note for note in report.operation_notes)
     assert any(
         "Deployed provider smoke evidence is optional" in note
@@ -993,6 +1008,64 @@ def test_provider_handoff_bundle_keeps_missing_phase6_qdrant_backup_restore_smok
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
         "regenerate_phase6_qdrant_backup_restore_smoke"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase6_deployed_field_validation_readiness_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase6_deployed_field_validation_readiness",
+            category="operations",
+            path=Path(
+                "missing-phase6-deployed-field-validation-readiness.json"
+            ),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase6_deployed_field_validation_readiness"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase6_deployed_handoff_consistency_smoke_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase6_deployed_handoff_consistency_smoke",
+            category="operations-smoke",
+            path=Path(
+                "missing-phase6-deployed-handoff-consistency-smoke.json"
+            ),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase6_deployed_handoff_consistency_smoke"
     )
 
 

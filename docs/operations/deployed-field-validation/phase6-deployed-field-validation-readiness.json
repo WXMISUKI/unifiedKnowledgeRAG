@@ -1,0 +1,61 @@
+{
+  "id": "phase6-deployed-field-validation-readiness-v1",
+  "generated_at": "2026-06-01T09:28:54.080607+00:00",
+  "status": "review",
+  "field_validation_state": "await_live_url",
+  "decision": "keep_local_review_until_deployed_smoke",
+  "summary": {
+    "total_signals": 4,
+    "required_signals": 3,
+    "ready_signals": 1,
+    "review_signals": 3,
+    "blocked_signals": 0,
+    "open_gate_ids": [
+      "deployment_readiness",
+      "provider_handoff_bundle",
+      "deployed_provider_smoke"
+    ],
+    "live_url_present": false
+  },
+  "signals": [
+    {
+      "id": "deployed_field_validation_contract",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-contract.md"
+    },
+    {
+      "id": "deployment_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; retrieval_backend=fixture",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\deployment-readiness\\deployment-readiness.json"
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; artifact_count=28",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "deployed_provider_smoke",
+      "required": false,
+      "status": "review",
+      "summary": "artifact_present=false",
+      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+    }
+  ],
+  "notes": [
+    "This report is local read-only field validation evidence.",
+    "It only summarizes existing deployment, handoff, and deployed smoke artifacts.",
+    "A live URL is required before the field validation posture can be considered ready."
+  ],
+  "json_path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.json",
+  "markdown_path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.md"
+}

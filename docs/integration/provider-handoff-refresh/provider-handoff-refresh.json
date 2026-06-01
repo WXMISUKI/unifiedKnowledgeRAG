@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T08:51:05.454330+00:00",
+  "generated_at": "2026-06-01T09:28:54.151641+00:00",
   "status": "review",
   "steps": [
     {
@@ -145,6 +145,30 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; report_status=ready",
+      "error": null
+    },
+    {
+      "id": "phase6_deployed_field_validation_readiness",
+      "category": "operations",
+      "status": "review",
+      "output_paths": [
+        "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.json",
+        "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"live_url_present\": false, \"open_gate_ids\": [\"deployment_readiness\", \"provider_handoff_bundle\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
+      "error": null
+    },
+    {
+      "id": "phase6_deployed_handoff_consistency_smoke",
+      "category": "operations-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.json",
+        "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"failed_checks\": 0, \"field_validation_state\": \"await_live_url\", \"live_url_present\": false, \"open_gate_count\": 3, \"passed_checks\": 8, \"readiness_status\": \"review\", \"total_checks\": 8}",
       "error": null
     },
     {

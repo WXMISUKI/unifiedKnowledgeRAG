@@ -21,6 +21,10 @@
 - Phase 5 boundary-only graph evidence: graph schema discovery in preflight/contract smoke; graph query remains planned boundary.
 - Phase 6 operations baseline: deployment readiness, reindex readiness, handoff bundle, handoff refresh, handoff API.
 - Phase 6 optional live-url evidence: deployed provider smoke and source-binding checks.
+- Phase 6 deployed field validation contract documented (`document-phase6-deployed-field-validation-contract`), defining how a real deployed URL is interpreted as live field validation evidence without changing runtime defaults.
+- Phase 6 deployed field validation readiness export implemented and refreshed (`export-phase6-deployed-field-validation-readiness`), summarizing deployment readiness, handoff bundle posture, and live URL smoke evidence as optional review input.
+- Phase 6 deployed handoff consistency smoke implemented and refreshed (`add-phase6-deployed-handoff-consistency-smoke`), validating local consistency between deployed field-validation readiness and provider handoff bundle without live network calls.
+- Phase 6 deployed field validation decision record documented (`document-phase6-deployed-field-validation-decision-record`), freezing the current live-url verdict and next-step gates in a documentation-only record.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 promotion customer-like benchmark expansion completed (`2026-05-31-phase3-expand-promotion-customer-like-cases`), extending the canonical baseline fixture to 29 cases and exposing a second expected-empty false-positive trap for promotion review.

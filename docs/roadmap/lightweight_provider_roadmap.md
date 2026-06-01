@@ -399,6 +399,30 @@ The provider handoff bundle summarizes deployed smoke as optional Phase 6 eviden
 
 Deployed smoke now includes source binding review as a protected API check. It summarizes source count, bindable source count, source status counts, and recommended action counts, and fails closed when source binding evidence is blocked or invalid. This validates live binding-review reachability without creating source-to-agent bindings or executing retrieval, ingestion, answer composition, or GraphRAG.
 
+## Deployed Field Validation Readiness
+
+Phase 6 now also has a local deployed field-validation readiness export that summarizes the deployment-readiness report, handoff bundle posture, and deployed smoke evidence into a single read-only review artifact:
+
+`docs/operations/deployed-field-validation/phase6-deployed-field-validation-readiness.json`
+
+`docs/operations/deployed-field-validation/phase6-deployed-field-validation-readiness.md`
+
+The export is intentionally read-only. It does not replace deployed smoke, and it does not change runtime defaults. It only makes the live URL review posture easier to inspect from the same handoff-oriented evidence flow used by optional deployed smoke.
+
+Phase 6 now also has a local deployed handoff consistency smoke that compares the deployed field-validation readiness export with the provider handoff bundle:
+
+`docs/smoke/deployed-field-validation/phase6-deployed-handoff-consistency-smoke.json`
+
+`docs/smoke/deployed-field-validation/phase6-deployed-handoff-consistency-smoke.md`
+
+The smoke is intentionally read-only. It keeps the deployed field-validation posture easy to audit without turning the provider into a live deployment verifier.
+
+Phase 6 now also has a local deployed field-validation decision record that freezes the current live-url verdict and open gates:
+
+`docs/operations/deployed-field-validation/phase6-deployed-field-validation-decision-record.md`
+
+The record is intentionally documentation-only. It does not switch runtime defaults, and it exists to make the current live-url posture easy to reference from handoff and operations review.
+
 ## Source Binding Summary
 
 Phase 2 and Phase 6 now connect through a read-only source binding summary:

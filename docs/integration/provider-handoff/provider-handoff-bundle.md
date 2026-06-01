@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-01T08:51:05.452331+00:00`
+- Generated At: `2026-06-01T09:28:54.149113+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -17,6 +17,8 @@
 | `reindex_readiness` | `operations` | `True` | `ready` | status=ready | `no_action_required` |
 | `source_binding_summary` | `source-binding` | `True` | `ready` | status=ready; bindable_sources=2/2; source_statuses=ready:2; recommended_actions=bind_source_from_control_plane:2 | `no_action_required` |
 | `deployed_provider_smoke` | `deployed-integration` | `False` | `review` | Optional deployed evidence is missing. | `run_deployed_provider_smoke_after_deployment` |
+| `phase6_deployed_field_validation_readiness` | `operations` | `True` | `review` | status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3 | `review_evidence_notes` |
+| `phase6_deployed_handoff_consistency_smoke` | `operations-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; passed_checks=8/8; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review | `no_action_required` |
 | `phase3_seed_retrieval_baseline` | `retrieval-evidence` | `True` | `ready` | total_cases=32; hit_rate=0.9062; citation_match_rate=0.9062; empty_handling_rate=0.7500 | `no_action_required` |
 | `phase3_fp_fn_review` | `retrieval-evidence` | `True` | `ready` | false_positive_count=3; false_negative_count=0; false_positive_rate=0.0938; false_negative_rate=0.0000 | `no_action_required` |
 | `phase3_retrieval_promotion_readiness` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; open_gates=7; ready_gates=0; review_gates=3; candidate_gates=4 | `review_evidence_notes` |

@@ -115,6 +115,8 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase6_qdrant_backup_restore_smoke" in step_ids
     assert "phase6_qdrant_bge_private_network_promotion_readiness" in step_ids
     assert "phase6_qdrant_bge_private_network_promotion_smoke" in step_ids
+    assert "phase6_deployed_field_validation_readiness" in step_ids
+    assert "phase6_deployed_handoff_consistency_smoke" in step_ids
     assert "phase3_fp_fn_review" in step_ids
     assert "phase3_candidate_runtime_diagnostics" in step_ids
     assert "phase3_candidate_latency_resource_diagnostics" in step_ids
@@ -153,6 +155,15 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     )
     assert step_ids.index("phase6_qdrant_bge_private_network_promotion_smoke") < step_ids.index(
         "source_binding_summary"
+    )
+    assert step_ids.index("source_binding_summary") < step_ids.index(
+        "phase6_deployed_field_validation_readiness"
+    )
+    assert step_ids.index("phase6_deployed_field_validation_readiness") < step_ids.index(
+        "phase6_deployed_handoff_consistency_smoke"
+    )
+    assert step_ids.index("phase6_deployed_handoff_consistency_smoke") < step_ids.index(
+        "phase3_fp_fn_review"
     )
     assert step_ids.index("phase3_fp_fn_review") < step_ids.index(
         "phase3_retrieval_promotion_readiness"

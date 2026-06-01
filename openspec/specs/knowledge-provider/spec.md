@@ -1189,3 +1189,50 @@ The system SHALL allow provider handoff bundle and handoff refresh workflows to 
 - **WHEN** provider handoff refresh runs
 - **THEN** it regenerates hybrid runtime promotion decision smoke evidence before final handoff bundle generation
 
+### Requirement: Provider handoff can summarize optional deployed field validation readiness evidence
+
+The system SHALL allow provider handoff bundle and handoff refresh workflows to include optional Phase 6 deployed field validation readiness evidence as read-only review context.
+
+#### Scenario: Handoff summarizes deployed field validation readiness
+
+- **WHEN** provider handoff reads the deployed field validation readiness export
+- **THEN** it summarizes report status, decision, and key readiness signals in a compact optional row
+
+#### Scenario: Missing deployed field validation readiness remains non-blocking
+
+- **WHEN** the optional deployed field validation readiness export is missing
+- **THEN** handoff marks it reviewable and preserves existing required-artifact blocking behavior
+
+#### Scenario: Refresh regenerates deployed field validation readiness before handoff
+
+- **WHEN** provider handoff refresh runs
+- **THEN** it regenerates deployed field validation readiness evidence before final handoff bundle generation
+
+### Requirement: Provider can publish a read-only deployed handoff consistency smoke
+
+The system SHALL allow provider-owned publication of deployed handoff consistency smoke evidence as read-only review evidence.
+
+#### Scenario: Consistency smoke is discoverable
+
+- **WHEN** reviewers inspect local operations evidence
+- **THEN** the deployed handoff consistency smoke clearly states the readiness posture, bundle posture, and alignment status
+
+#### Scenario: Consistency smoke does not imply runtime change
+
+- **WHEN** the smoke is updated
+- **THEN** it does not automatically switch retrieval, embedding, or deployment defaults
+
+### Requirement: Provider can publish a read-only deployed field-validation decision record
+
+The system SHALL allow provider-owned publication of deployed field-validation decision records as read-only governance evidence.
+
+#### Scenario: Decision record is discoverable
+
+- **WHEN** reviewers inspect local operations evidence
+- **THEN** the deployed field-validation decision record clearly states the current verdict, review state, and open gates
+
+#### Scenario: Decision record does not imply runtime change
+
+- **WHEN** the decision record is updated
+- **THEN** it does not automatically switch retrieval, embedding, or deployment defaults
+

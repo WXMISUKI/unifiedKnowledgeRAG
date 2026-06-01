@@ -66,6 +66,24 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase6_deployed_field_validation_readiness",
+        category="operations",
+        path=Path(
+            "docs/operations/deployed-field-validation/"
+            "phase6-deployed-field-validation-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase6_deployed_handoff_consistency_smoke",
+        category="operations-smoke",
+        path=Path(
+            "docs/smoke/deployed-field-validation/"
+            "phase6-deployed-handoff-consistency-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_seed_retrieval_baseline",
         category="retrieval-evidence",
         path=Path(
@@ -480,6 +498,36 @@ def _artifact_status_and_summary(
                 f"handoff_status={(payload.get('handoff') or {}).get('status', 'unknown')}"
             ),
         )
+    if artifact_id == "phase6_deployed_field_validation_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        if not isinstance(summary, dict):
+            summary = {}
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; field_validation_state={payload.get('field_validation_state', 'review')}; "
+                f"decision={payload.get('decision', 'keep_local_review_until_deployed_smoke')}; "
+                f"live_url_present={_bool_value(summary.get('live_url_present'))}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase6_deployed_handoff_consistency_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"passed_checks={_int_value(summary.get('passed_checks'), fallback=0)}/"
+                f"{_int_value(summary.get('total_checks'), fallback=0)}; "
+                f"failed_checks={_int_value(summary.get('failed_checks'), fallback=0)}; "
+                f"readiness_status={summary.get('readiness_status', 'unknown')}; "
+                f"bundle_status={summary.get('bundle_status', 'unknown')}; "
+                f"bundle_row_status={summary.get('bundle_row_status', 'unknown')}"
+            ),
+        )
     if artifact_id == "phase3_seed_retrieval_baseline":
         report = payload.get("report")
         summary = report.get("summary") if isinstance(report, dict) else {}
@@ -827,6 +875,12 @@ def _int_value(value: Any, *, fallback: int) -> int:
     return fallback
 
 
+def _bool_value(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return False
+
+
 def _dict_value(value: Any, key: str, fallback: Any) -> Any:
     if not isinstance(value, dict):
         return fallback
@@ -863,6 +917,10 @@ def _recommended_action(status: str) -> str:
 def _optional_missing_summary(artifact_id: str) -> str:
     if artifact_id == "deployed_provider_smoke":
         return "Optional deployed evidence is missing."
+    if artifact_id == "phase6_deployed_field_validation_readiness":
+        return "Optional Phase 6 deployed field-validation readiness evidence is missing."
+    if artifact_id == "phase6_deployed_handoff_consistency_smoke":
+        return "Optional Phase 6 deployed handoff consistency smoke evidence is missing."
     if artifact_id == "phase3_seed_retrieval_baseline":
         return "Optional Phase 3 retrieval baseline evidence is missing."
     if artifact_id == "phase3_fp_fn_review":
@@ -917,6 +975,10 @@ def _optional_missing_summary(artifact_id: str) -> str:
 def _optional_missing_action(artifact_id: str) -> str:
     if artifact_id == "deployed_provider_smoke":
         return "run_deployed_provider_smoke_after_deployment"
+    if artifact_id == "phase6_deployed_field_validation_readiness":
+        return "regenerate_phase6_deployed_field_validation_readiness"
+    if artifact_id == "phase6_deployed_handoff_consistency_smoke":
+        return "regenerate_phase6_deployed_handoff_consistency_smoke"
     if artifact_id == "phase3_seed_retrieval_baseline":
         return "regenerate_phase3_seed_retrieval_baseline"
     if artifact_id == "phase3_fp_fn_review":
@@ -987,6 +1049,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding."
+        )
+    if any(
+        artifact["id"] == "phase6_deployed_field_validation_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 6 deployed field-validation readiness evidence is optional before live-url review; regenerate it after deployed smoke or handoff evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase6_deployed_handoff_consistency_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 6 deployed handoff consistency smoke is optional before live-url review; regenerate it after deployed field-validation readiness or handoff bundle changes."
         )
     if any(
         artifact["id"] == "phase3_candidate_runtime_diagnostics"

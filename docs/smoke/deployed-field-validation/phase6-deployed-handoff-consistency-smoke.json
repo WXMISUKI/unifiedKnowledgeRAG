@@ -1,0 +1,90 @@
+{
+  "id": "phase6-deployed-handoff-consistency-smoke-v1",
+  "generated_at": "2026-06-01T09:28:54.082799+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_checks": 8,
+    "passed_checks": 8,
+    "failed_checks": 0,
+    "readiness_status": "review",
+    "bundle_status": "review",
+    "bundle_row_status": "review",
+    "field_validation_state": "await_live_url",
+    "live_url_present": false,
+    "open_gate_count": 3
+  },
+  "checks": [
+    {
+      "id": "deployed_field_validation_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.json"
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=review; artifact_count=28",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "provider_handoff_bundle_row",
+      "required": true,
+      "status": "ready",
+      "summary": "bundle_row_present=true; bundle_row_status=review; bundle_row_summary=status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "status_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "readiness_status=review; bundle_row_status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "field_validation_state_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=await_live_url; bundle_summary=status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "decision_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=keep_local_review_until_deployed_smoke; bundle_summary=status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "live_url_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=False; bundle_summary=status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "open_gate_alignment",
+      "required": true,
+      "status": "ready",
+      "summary": "expected=3; bundle_summary=status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    }
+  ],
+  "notes": [
+    "This smoke report is local, read-only, and does not call the deployed provider.",
+    "It only compares already-generated readiness and handoff bundle evidence.",
+    "A deployed smoke report may still be needed separately for live URL validation."
+  ],
+  "json_path": "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.json",
+  "markdown_path": "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.md"
+}

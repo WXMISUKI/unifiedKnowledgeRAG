@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T08:51:05.452331+00:00",
+  "generated_at": "2026-06-01T09:28:54.149113+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -73,6 +73,26 @@
       "status": "review",
       "summary": "Optional deployed evidence is missing.",
       "recommended_action": "run_deployed_provider_smoke_after_deployment"
+    },
+    {
+      "id": "phase6_deployed_field_validation_readiness",
+      "category": "operations",
+      "path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase6_deployed_handoff_consistency_smoke",
+      "category": "operations-smoke",
+      "path": "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults; passed_checks=8/8; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase3_seed_retrieval_baseline",

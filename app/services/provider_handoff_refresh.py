@@ -52,6 +52,12 @@ from app.services.phase6_qdrant_bge_private_network_promotion_readiness import (
 from app.services.phase6_qdrant_bge_private_network_promotion_smoke import (
     export_phase6_qdrant_bge_private_network_promotion_smoke_report,
 )
+from app.services.phase6_deployed_field_validation_readiness import (
+    export_phase6_deployed_field_validation_readiness_report,
+)
+from app.services.phase6_deployed_handoff_consistency_smoke import (
+    export_phase6_deployed_handoff_consistency_smoke_report,
+)
 from app.services.phase3_hybrid_cross_case_fp_fn_smoke import (
     export_phase3_hybrid_cross_case_fp_fn_smoke_report,
 )
@@ -210,6 +216,27 @@ def default_handoff_refresh_steps(
             category="source-binding",
             output_dir=artifact_base_dir / "docs/integration/source-bindings",
             exporter=export_provider_source_binding_summary,
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_deployed_field_validation_readiness",
+            category="operations",
+            output_dir=artifact_base_dir
+            / "docs/operations/deployed-field-validation",
+            exporter=lambda output_dir: export_phase6_deployed_field_validation_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_deployed_handoff_consistency_smoke",
+            category="operations-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/deployed-field-validation",
+            exporter=lambda output_dir: export_phase6_deployed_handoff_consistency_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(

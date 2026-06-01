@@ -910,3 +910,59 @@ The project SHALL preserve a documentation-only final decision record for each P
 - **WHEN** the hybrid decision record is published
 - **THEN** it does not change provider runtime defaults, public API contracts, GraphRAG planned boundary, or caller ownership responsibilities
 
+### Requirement: Phase 6 deployed field validation SHALL be explicitly contract-reviewed
+
+The project SHALL maintain a documentation-only contract for deployed field validation before any runtime default promotion is considered.
+
+#### Scenario: Deployed field validation contract is phase-aligned
+
+- **WHEN** a reviewer evaluates a real deployed URL and its smoke evidence
+- **THEN** the contract identifies Phase 6 as the roadmap phase and keeps the scope read-only
+
+#### Scenario: Deployed field validation contract preserves provider boundaries
+
+- **WHEN** the contract is published or refreshed
+- **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
+
+### Requirement: Phase 6 deployed field validation readiness exports stay lightweight and review-only
+
+The project SHALL treat deployed field validation readiness exports as local Phase 6 evidence visibility work without changing runtime defaults.
+
+#### Scenario: Deployed field validation readiness export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes deployed field validation readiness evidence
+- **THEN** the roadmap records it as Phase 6 operations evidence visibility work rather than runtime promotion
+
+#### Scenario: Deployed field validation readiness export preserves boundaries
+
+- **WHEN** the export summarizes deployment readiness, handoff bundle posture, and deployed smoke evidence
+- **THEN** runtime defaults, provider HTTP contracts, and external control-plane ownership remain unchanged
+
+### Requirement: Deployed field-validation consistency smoke SHALL be explicit before promotion review
+
+The project SHALL preserve a documentation-only deployed handoff consistency smoke for each Phase 6 field-validation review cycle before any runtime default promotion.
+
+#### Scenario: Consistency smoke captures keep-default posture
+
+- **WHEN** deployed field-validation evidence remains review-level or has open gates
+- **THEN** the consistency smoke states that the local artifacts remain aligned without changing runtime defaults
+
+#### Scenario: Consistency smoke preserves boundaries
+
+- **WHEN** the consistency smoke is published
+- **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
+
+### Requirement: Deployed field-validation decision records SHALL be explicit before promotion review
+
+The project SHALL preserve a documentation-only decision record for each Phase 6 deployed field-validation review cycle before any runtime default promotion.
+
+#### Scenario: Decision record captures keep-default verdict
+
+- **WHEN** deployed field-validation evidence remains review-level or has open gates
+- **THEN** the decision record states `keep_local_review_until_deployed_smoke` and lists open gates
+
+#### Scenario: Decision record preserves boundaries
+
+- **WHEN** the decision record is published
+- **THEN** runtime defaults, provider HTTP contracts, and control-plane ownership remain unchanged
+
