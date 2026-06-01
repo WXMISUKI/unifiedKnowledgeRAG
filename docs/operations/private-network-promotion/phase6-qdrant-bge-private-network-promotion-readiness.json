@@ -1,6 +1,6 @@
 {
   "id": "phase6-qdrant-bge-private-network-promotion-readiness-v1",
-  "generated_at": "2026-06-01T11:51:13.928174+00:00",
+  "generated_at": "2026-06-01T13:01:28.408060+00:00",
   "status": "review",
   "promotion_review_state": "review",
   "decision": "keep_runtime_defaults",
@@ -115,8 +115,8 @@
       "id": "deployed_provider_smoke",
       "required": false,
       "status": "review",
-      "summary": "artifact_present=false",
-      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "summary": "artifact_present=true; status=review; decision=n/a",
+      "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
     }
   ],

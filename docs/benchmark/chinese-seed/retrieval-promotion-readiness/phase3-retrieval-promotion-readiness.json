@@ -1,6 +1,6 @@
 {
   "id": "phase3-retrieval-promotion-readiness-v1",
-  "generated_at": "2026-06-01T11:51:13.947117+00:00",
+  "generated_at": "2026-06-01T13:01:28.435661+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "gap_matrix_path": "docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md",
@@ -111,10 +111,10 @@
       "evidence_paths": [
         "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
       ],
-      "evidence_present": false,
-      "summary": "Optional deployed smoke evidence is missing.",
-      "open_gap": "Live deployed URL evidence is missing in local development",
-      "next_evidence": "Run deployed smoke against the deployed provider URL after deployment",
+      "evidence_present": true,
+      "summary": "status=review; base_url=http://127.0.0.1:8020; handoff_status=review",
+      "open_gap": "Live deployed URL evidence must be collected before external binding",
+      "next_evidence": "Re-run deployed smoke against the live base URL after deployment",
       "promotion_position": "Run after deployment; do not block local iteration",
       "recommended_action": "run_deployed_provider_smoke_after_deployment"
     }

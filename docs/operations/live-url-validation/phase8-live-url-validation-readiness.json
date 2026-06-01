@@ -1,8 +1,8 @@
 {
   "id": "phase8-live-url-validation-readiness-v1",
-  "generated_at": "2026-06-01T11:51:13.980370+00:00",
+  "generated_at": "2026-06-01T13:01:28.490192+00:00",
   "status": "review",
-  "live_validation_state": "await_live_url_validation",
+  "live_validation_state": "review",
   "decision": "keep_runtime_defaults_until_live_url_validation",
   "summary": {
     "total_signals": 4,
@@ -10,9 +10,9 @@
     "ready_signals": 1,
     "review_signals": 3,
     "blocked_signals": 0,
-    "deployed_smoke_present": false,
+    "deployed_smoke_present": true,
     "deployed_smoke_status": "review",
-    "live_url_present": false,
+    "live_url_present": true,
     "open_gate_ids": [
       "phase6_deployed_field_validation_readiness",
       "phase7_provider_release_readiness",
@@ -32,7 +32,7 @@
       "id": "phase6_deployed_field_validation_readiness",
       "required": true,
       "status": "review",
-      "summary": "artifact_present=true; status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "summary": "artifact_present=true; status=review; field_validation_state=review; decision=keep_local_review_until_deployed_smoke; live_url_present=True; open_gate_count=3",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.json"
     },
@@ -48,8 +48,8 @@
       "id": "deployed_provider_smoke",
       "required": false,
       "status": "review",
-      "summary": "artifact_present=false",
-      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "summary": "artifact_present=true; status=review; base_url=http://127.0.0.1:8020; handoff_status=review; check_count=5",
+      "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
     }
   ],

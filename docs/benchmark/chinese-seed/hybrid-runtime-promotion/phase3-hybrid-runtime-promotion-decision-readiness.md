@@ -4,7 +4,7 @@
 - Status: `review`
 - Review State: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T11:51:13.962509+00:00`
+- Generated At: `2026-06-01T13:01:28.462590+00:00`
 
 ## Summary
 
@@ -35,7 +35,7 @@
 | `phase6_qdrant_backup_restore_smoke` | `True` | `ready` | artifact_present=true; status=ready; decision=keep_runtime_defaults | `no_action_required` |
 | `phase6_qdrant_bge_private_network_promotion_readiness` | `True` | `review` | artifact_present=true; status=review; decision=keep_runtime_defaults | `review_evidence_notes` |
 | `phase6_qdrant_bge_private_network_promotion_smoke` | `True` | `ready` | artifact_present=true; status=ready; decision=keep_runtime_defaults | `no_action_required` |
-| `deployed_provider_smoke` | `False` | `review` | artifact_present=false | `run_deployed_provider_smoke_after_deployment` |
+| `deployed_provider_smoke` | `False` | `review` | artifact_present=true; status=review; decision=n/a | `review_evidence_notes` |
 
 ## Notes
 

@@ -3,7 +3,7 @@
 - Report: `phase3-candidate-runtime-diagnostics-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T11:51:13.949010+00:00`
+- Generated At: `2026-06-01T13:01:28.439054+00:00`
 
 ## Summary
 
@@ -36,7 +36,7 @@
 | `local_embedding_artifact` | `review` | artifact_status=not_configured; path_exists=False; manifest_exists=False | `validate_local_embedding_artifact` |
 | `provider_api_guard` | `review` | provider_api_key_configured=False | `configure_provider_api_key_for_deployment_review` |
 | `phase3_readiness_export` | `review` | status=review; decision=keep_runtime_defaults; open_gates=7 | `review_evidence_notes` |
-| `deployed_smoke_evidence` | `review` | Deployed smoke evidence is not present in local workspace. | `run_deployed_provider_smoke_after_deployment` |
+| `deployed_smoke_evidence` | `review` | status=review; base_url=http://127.0.0.1:8020 | `review_evidence_notes` |
 
 ## Notes
 

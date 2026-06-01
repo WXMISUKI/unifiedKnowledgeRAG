@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T11:51:13.990272+00:00",
+  "generated_at": "2026-06-01T13:01:28.512173+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -88,11 +88,11 @@
       "id": "deployed_provider_smoke",
       "category": "deployed-integration",
       "path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json",
-      "present": false,
+      "present": true,
       "required": false,
       "status": "review",
-      "summary": "Optional deployed evidence is missing.",
-      "recommended_action": "run_deployed_provider_smoke_after_deployment"
+      "summary": "status=review; base_url=http://127.0.0.1:8020; handoff_status=review",
+      "recommended_action": "review_evidence_notes"
     },
     {
       "id": "phase6_deployed_field_validation_readiness",
@@ -101,7 +101,7 @@
       "present": true,
       "required": false,
       "status": "review",
-      "summary": "status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3",
+      "summary": "status=review; field_validation_state=review; decision=keep_local_review_until_deployed_smoke; live_url_present=True; open_gate_count=3",
       "recommended_action": "review_evidence_notes"
     },
     {
@@ -271,7 +271,7 @@
       "present": true,
       "required": false,
       "status": "review",
-      "summary": "status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "review_evidence_notes"
     },
     {
@@ -282,6 +282,26 @@
       "required": false,
       "status": "ready",
       "summary": "status=ready; decision=keep_runtime_defaults_until_live_url_validation; passed_checks=10/10; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase9_myprivateagent_local_consumption_readiness",
+      "category": "local-consumption",
+      "path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; local_consumption_state=review; decision=keep_local_consumption_review; local_provider_url=http://127.0.0.1:8020; local_handoff_ready=True; runtime_promotion_ready=False; open_gate_count=3",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase9_myprivateagent_local_consumption_smoke",
+      "category": "local-consumption-smoke",
+      "path": "docs\\smoke\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_runtime_defaults; passed_checks=7/7; failed_checks=0; readiness_status=review; local_consumption_state=review",
       "recommended_action": "no_action_required"
     },
     {
@@ -369,8 +389,7 @@
     "This bundle is a read-only handoff index over existing local evidence files.",
     "Regenerate prerequisite evidence reports after configuration, dependency, source, or index lifecycle changes.",
     "External control planes still own provider registration, heartbeat governance, audit policy, and source-to-agent binding decisions.",
-    "At least one evidence artifact requires human review before promotion.",
-    "Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding."
+    "At least one evidence artifact requires human review before promotion."
   ],
   "json_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
   "markdown_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"

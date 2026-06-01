@@ -1,6 +1,6 @@
 {
   "id": "phase6-qdrant-bge-private-network-promotion-smoke-v1",
-  "generated_at": "2026-06-01T11:51:13.931425+00:00",
+  "generated_at": "2026-06-01T13:01:28.413252+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults",
   "checks": [

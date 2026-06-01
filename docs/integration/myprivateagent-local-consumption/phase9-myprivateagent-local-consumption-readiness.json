@@ -1,0 +1,96 @@
+{
+  "id": "phase9-myprivateagent-local-consumption-readiness-v1",
+  "generated_at": "2026-06-01T13:01:28.494677+00:00",
+  "status": "review",
+  "local_consumption_state": "review",
+  "decision": "keep_local_consumption_review",
+  "summary": {
+    "total_signals": 8,
+    "required_signals": 4,
+    "ready_signals": 5,
+    "review_signals": 3,
+    "blocked_signals": 0,
+    "local_provider_url": "http://127.0.0.1:8020",
+    "local_handoff_ready": true,
+    "runtime_promotion_ready": false,
+    "api_key_mode": "configured_protected_api",
+    "open_gate_ids": [
+      "phase7_provider_release_readiness",
+      "phase8_live_url_validation_readiness",
+      "deployed_provider_smoke"
+    ]
+  },
+  "signals": [
+    {
+      "id": "phase9_myprivateagent_local_consumption_contract",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-contract.md"
+    },
+    {
+      "id": "phase7_provider_release_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; release_state=ready_for_local_handoff; local_handoff_ready=True; runtime_promotion_ready=False",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\provider-release-readiness\\phase7-provider-release-readiness.json"
+    },
+    {
+      "id": "phase8_live_url_validation_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; live_validation_state=review; deployed_smoke_status=review; live_url_present=True",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.json"
+    },
+    {
+      "id": "provider_integration_probe",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; bindable=True; compatible_control_planes=MyPrivateAgent",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-binding\\provider-integration-probe.json"
+    },
+    {
+      "id": "deployed_provider_smoke",
+      "required": false,
+      "status": "review",
+      "summary": "artifact_present=true; status=review; base_url=http://127.0.0.1:8020; handoff_status=review",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+    },
+    {
+      "id": "source_binding_summary",
+      "required": false,
+      "status": "ready",
+      "summary": "artifact_present=true; status=ready; bindable_sources=2/2",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
+    },
+    {
+      "id": "phase4_evidence_pack_readiness",
+      "required": false,
+      "status": "ready",
+      "summary": "artifact_present=true; status=ready; decision=keep_caller_ownership",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\evidence-pack-readiness\\phase4-evidence-pack-readiness.json"
+    },
+    {
+      "id": "phase4_caller_consumption_smoke",
+      "required": false,
+      "status": "ready",
+      "summary": "artifact_present=true; status=ready; passed_checks=3/3",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json"
+    }
+  ],
+  "notes": [
+    "This report is local read-only evidence for MyPrivateAgent local consumption.",
+    "It does not change runtime defaults or control-plane ownership boundaries.",
+    "Source-to-agent binding policy and final answer governance remain MyPrivateAgent responsibilities."
+  ],
+  "json_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.json",
+  "markdown_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.md"
+}

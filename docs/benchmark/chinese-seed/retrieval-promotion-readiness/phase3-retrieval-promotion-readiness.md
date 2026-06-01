@@ -3,7 +3,7 @@
 - Report: `phase3-retrieval-promotion-readiness-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T11:51:13.947117+00:00`
+- Generated At: `2026-06-01T13:01:28.435661+00:00`
 - Gap Matrix: `docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md`
 
 ## Summary
@@ -28,7 +28,7 @@
 | `Hybrid gating` | `candidate` | `docs\benchmark\chinese-seed\hybrid-gating-candidates\qdrant-bge-m3-hybrid-exact-identifier-gate.json`, `docs\benchmark\chinese-seed\noisy-identifier-gating-candidates\qdrant-bge-m3-hybrid-alias-identifier-gate.json`, `docs\benchmark\chinese-seed\split-chunk-gating-candidates\qdrant-bge-m3-hybrid-exact-identifier-gate.json` | Broader alias/noisy identifier coverage, split-chunk false-negative review, gating policy ownership | Expand gating fixtures with additional alias, OCR-noise, and split-chunk cases |
 | `Multi-chunk aggregation` | `review` | `docs\benchmark\chinese-seed\multi-chunk-aggregation-candidates\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json`, `docs\benchmark\chinese-seed\multi-chunk-aggregation-negative-controls\qdrant-bge-m3-hybrid-multi-chunk-aggregation.json`, `docs\benchmark\chinese-seed\relation-aware-aggregation-grading\relation-aware-aggregation-grading.json` | More relation-heavy customer-like cases, noisy top-k review, latency and citation granularity review | Expand same-document negative controls and relation-aware coverage before promoting aggregation |
 | `Relation-aware grading` | `candidate` | `docs\benchmark\chinese-seed\relation-aware-aggregation-grading\relation-aware-aggregation-grading.json` | Broader relation fixture coverage and production semantics review | Expand relation fixtures and decide whether deterministic grading remains sufficient |
-| `Deployed smoke` | `review` | `docs\integration\deployed-provider-smoke\deployed-provider-smoke.json` | Live deployed URL evidence is missing in local development | Run deployed smoke against the deployed provider URL after deployment |
+| `Deployed smoke` | `review` | `docs\integration\deployed-provider-smoke\deployed-provider-smoke.json` | Live deployed URL evidence must be collected before external binding | Re-run deployed smoke against the live base URL after deployment |
 
 ## Supporting Evidence
 

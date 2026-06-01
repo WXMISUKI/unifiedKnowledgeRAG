@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-01T11:51:13.990272+00:00`
+- Generated At: `2026-06-01T13:01:28.512173+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -18,8 +18,8 @@
 | `source_binding_summary` | `source-binding` | `True` | `ready` | status=ready; bindable_sources=2/2; source_statuses=ready:2; recommended_actions=bind_source_from_control_plane:2 | `no_action_required` |
 | `phase2_source_format_demand_readiness` | `ingestion-evidence` | `True` | `ready` | status=ready; decision=keep_markdown_baseline; demand_signal=False; unsupported_documents=0; non_markdown_sources=0; open_gate_count=0 | `no_action_required` |
 | `phase2_unsupported_format_negative_control_smoke` | `ingestion-smoke` | `True` | `ready` | status=ready; decision=keep_markdown_baseline; passed_checks=5/5; failed_checks=0; unsupported_documents=0; non_markdown_sources=0 | `no_action_required` |
-| `deployed_provider_smoke` | `deployed-integration` | `False` | `review` | Optional deployed evidence is missing. | `run_deployed_provider_smoke_after_deployment` |
-| `phase6_deployed_field_validation_readiness` | `operations` | `True` | `review` | status=review; field_validation_state=await_live_url; decision=keep_local_review_until_deployed_smoke; live_url_present=False; open_gate_count=3 | `review_evidence_notes` |
+| `deployed_provider_smoke` | `deployed-integration` | `True` | `review` | status=review; base_url=http://127.0.0.1:8020; handoff_status=review | `review_evidence_notes` |
+| `phase6_deployed_field_validation_readiness` | `operations` | `True` | `review` | status=review; field_validation_state=review; decision=keep_local_review_until_deployed_smoke; live_url_present=True; open_gate_count=3 | `review_evidence_notes` |
 | `phase6_deployed_handoff_consistency_smoke` | `operations-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; passed_checks=8/8; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review | `no_action_required` |
 | `phase3_seed_retrieval_baseline` | `retrieval-evidence` | `True` | `ready` | total_cases=32; hit_rate=0.9062; citation_match_rate=0.9062; empty_handling_rate=0.7500 | `no_action_required` |
 | `phase3_fp_fn_review` | `retrieval-evidence` | `True` | `ready` | false_positive_count=3; false_negative_count=0; false_positive_rate=0.0938; false_negative_rate=0.0000 | `no_action_required` |
@@ -36,8 +36,10 @@
 | `phase6_qdrant_bge_private_network_promotion_smoke` | `operations-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; passed_checks=10/10; failed_checks=0 | `no_action_required` |
 | `phase7_provider_release_readiness` | `release-readiness` | `True` | `review` | status=review; release_state=ready_for_local_handoff; decision=keep_runtime_defaults; local_handoff_ready=True; runtime_promotion_ready=False; open_gate_count=4 | `review_evidence_notes` |
 | `phase7_cross_phase_handoff_consistency_smoke` | `release-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults_until_live_validation; passed_checks=6/6; failed_checks=0 | `no_action_required` |
-| `phase8_live_url_validation_readiness` | `live-url-validation` | `True` | `review` | status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3 | `review_evidence_notes` |
+| `phase8_live_url_validation_readiness` | `live-url-validation` | `True` | `review` | status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3 | `review_evidence_notes` |
 | `phase8_live_url_smoke_consistency_check` | `live-url-validation-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults_until_live_url_validation; passed_checks=10/10; failed_checks=0; readiness_status=review; bundle_status=review; bundle_row_status=review | `no_action_required` |
+| `phase9_myprivateagent_local_consumption_readiness` | `local-consumption` | `True` | `review` | status=review; local_consumption_state=review; decision=keep_local_consumption_review; local_provider_url=http://127.0.0.1:8020; local_handoff_ready=True; runtime_promotion_ready=False; open_gate_count=3 | `review_evidence_notes` |
+| `phase9_myprivateagent_local_consumption_smoke` | `local-consumption-smoke` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; passed_checks=7/7; failed_checks=0; readiness_status=review; local_consumption_state=review | `no_action_required` |
 | `phase3_hybrid_cross_case_fp_fn_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; passed_checks=4/4; false_positive_count=3; false_negative_count=0 | `no_action_required` |
 | `phase3_aggregation_relation_negative_control_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000 | `no_action_required` |
 | `phase3_hybrid_runtime_promotion_decision_readiness` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; review_state=review; required_signals=14; ready_signals=6; open_gates=9; open_gate_count=9 | `review_evidence_notes` |
@@ -53,4 +55,3 @@
 - Regenerate prerequisite evidence reports after configuration, dependency, source, or index lifecycle changes.
 - External control planes still own provider registration, heartbeat governance, audit policy, and source-to-agent binding decisions.
 - At least one evidence artifact requires human review before promotion.
-- Deployed provider smoke evidence is optional before deployment; run it against the deployed base URL before external binding.

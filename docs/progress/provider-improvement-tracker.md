@@ -37,6 +37,10 @@
 - Phase 8 live URL validation readiness export implemented and refreshed (`export-phase8-live-url-validation-readiness`), summarizing contract/Phase6/Phase7/deployed-smoke posture in one machine-readable local review artifact.
 - Phase 8 live URL smoke consistency check implemented and refreshed (`add-phase8-live-url-smoke-consistency-check`), validating readiness-vs-handoff summary alignment in a compact read-only artifact.
 - Phase 8 live URL validation decision record documented (`document-phase8-live-url-validation-decision-record`), explicitly freezing this cycle's `keep_runtime_defaults_until_live_url_validation` verdict and open gates.
+- Phase 9 MyPrivateAgent local-consumption contract documented (`document-phase9-myprivateagent-local-consumption-contract`), defining local URL/access assumptions, required read-only provider discovery flow, and provider/control-plane ownership boundaries.
+- Phase 9 MyPrivateAgent local-consumption readiness export implemented and refreshed (`export-phase9-myprivateagent-local-consumption-readiness`), summarizing Phase 7/8 linkage, integration-probe posture, optional deployed smoke context, and local-consumption open gates in one machine-readable artifact.
+- Phase 9 MyPrivateAgent local-consumption smoke implemented and refreshed (`add-phase9-myprivateagent-local-consumption-smoke`), validating local-consumption contract coverage, control-plane compatibility, graph planned-boundary signal, and runtime-promotion boundary alignment.
+- Phase 9 MyPrivateAgent local-consumption decision record documented (`document-phase9-myprivateagent-local-consumption-decision-record`), explicitly freezing current `ready_for_local_myprivateagent_consumption_review` posture while preserving runtime-default boundaries.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 promotion customer-like benchmark expansion completed (`2026-05-31-phase3-expand-promotion-customer-like-cases`), extending the canonical baseline fixture to 29 cases and exposing a second expected-empty false-positive trap for promotion review.
@@ -198,6 +202,16 @@
   - `docs/smoke/cross-phase-handoff/phase7-cross-phase-handoff-consistency-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase7_cross_phase_handoff_consistency_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase7_cross_phase_handoff_consistency_smoke` step)
+- Phase 9 MyPrivateAgent local-consumption readiness refresh additions:
+  - `docs/integration/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-readiness.json`
+  - `docs/integration/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-readiness.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase9_myprivateagent_local_consumption_readiness` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase9_myprivateagent_local_consumption_readiness` step)
+- Phase 9 MyPrivateAgent local-consumption smoke refresh additions:
+  - `docs/smoke/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-smoke.json`
+  - `docs/smoke/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase9_myprivateagent_local_consumption_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase9_myprivateagent_local_consumption_smoke` step)
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`

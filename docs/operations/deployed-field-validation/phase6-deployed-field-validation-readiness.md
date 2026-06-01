@@ -2,9 +2,9 @@
 
 - Report: `phase6-deployed-field-validation-readiness-v1`
 - Status: `review`
-- Field Validation State: `await_live_url`
+- Field Validation State: `review`
 - Decision: `keep_local_review_until_deployed_smoke`
-- Generated At: `2026-06-01T11:51:13.939442+00:00`
+- Generated At: `2026-06-01T13:01:28.425342+00:00`
 
 ## Summary
 
@@ -15,7 +15,7 @@
 | Ready Signals | `1` |
 | Review Signals | `3` |
 | Blocked Signals | `0` |
-| Live URL Present | `False` |
+| Live URL Present | `True` |
 | Open Gate IDs | `["deployment_readiness", "provider_handoff_bundle", "deployed_provider_smoke"]` |
 
 ## Signals
@@ -24,8 +24,8 @@
 |---|---|---|---|---|
 | `deployed_field_validation_contract` | `True` | `ready` | contract_present=true | `no_action_required` |
 | `deployment_readiness` | `True` | `review` | artifact_present=true; status=review; retrieval_backend=fixture | `review_evidence_notes` |
-| `provider_handoff_bundle` | `True` | `review` | artifact_present=true; status=review; artifact_count=34 | `review_evidence_notes` |
-| `deployed_provider_smoke` | `False` | `review` | artifact_present=false | `run_deployed_provider_smoke_after_deployment` |
+| `provider_handoff_bundle` | `True` | `review` | artifact_present=true; status=review; artifact_count=35 | `review_evidence_notes` |
+| `deployed_provider_smoke` | `False` | `review` | artifact_present=true; status=review; base_url=http://127.0.0.1:8020; handoff_status=review | `review_evidence_notes` |
 
 ## Notes
 

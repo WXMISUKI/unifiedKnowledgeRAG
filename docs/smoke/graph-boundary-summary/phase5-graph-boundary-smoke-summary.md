@@ -3,7 +3,7 @@
 - Report: `phase5-graph-boundary-smoke-summary-v1`
 - Status: `passed`
 - Decision: `keep_graph_query_planned`
-- Generated At: `2026-06-01T11:51:13.972513+00:00`
+- Generated At: `2026-06-01T13:01:28.476063+00:00`
 - Source Smoke: `docs\smoke\provider-contract\provider-contract-smoke.json`
 
 ## Summary

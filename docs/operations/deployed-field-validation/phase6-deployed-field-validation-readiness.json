@@ -1,8 +1,8 @@
 {
   "id": "phase6-deployed-field-validation-readiness-v1",
-  "generated_at": "2026-06-01T11:51:13.939442+00:00",
+  "generated_at": "2026-06-01T13:01:28.425342+00:00",
   "status": "review",
-  "field_validation_state": "await_live_url",
+  "field_validation_state": "review",
   "decision": "keep_local_review_until_deployed_smoke",
   "summary": {
     "total_signals": 4,
@@ -15,7 +15,7 @@
       "provider_handoff_bundle",
       "deployed_provider_smoke"
     ],
-    "live_url_present": false
+    "live_url_present": true
   },
   "signals": [
     {
@@ -38,7 +38,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "review",
-      "summary": "artifact_present=true; status=review; artifact_count=34",
+      "summary": "artifact_present=true; status=review; artifact_count=35",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -46,8 +46,8 @@
       "id": "deployed_provider_smoke",
       "required": false,
       "status": "review",
-      "summary": "artifact_present=false",
-      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "summary": "artifact_present=true; status=review; base_url=http://127.0.0.1:8020; handoff_status=review",
+      "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
     }
   ],

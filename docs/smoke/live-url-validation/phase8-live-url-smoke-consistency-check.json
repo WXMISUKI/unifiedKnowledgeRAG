@@ -1,6 +1,6 @@
 {
   "id": "phase8-live-url-smoke-consistency-check-v1",
-  "generated_at": "2026-06-01T11:51:13.981873+00:00",
+  "generated_at": "2026-06-01T13:01:28.518106+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults_until_live_url_validation",
   "summary": {
@@ -10,10 +10,10 @@
     "readiness_status": "review",
     "bundle_status": "review",
     "bundle_row_status": "review",
-    "live_validation_state": "await_live_url_validation",
-    "deployed_smoke_present": false,
+    "live_validation_state": "review",
+    "deployed_smoke_present": true,
     "deployed_smoke_status": "review",
-    "live_url_present": false,
+    "live_url_present": true,
     "open_gate_count": 3
   },
   "checks": [
@@ -21,7 +21,7 @@
       "id": "phase8_live_url_validation_readiness",
       "required": true,
       "status": "ready",
-      "summary": "artifact_present=true; status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "artifact_present=true; status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.json"
     },
@@ -29,7 +29,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "ready",
-      "summary": "artifact_present=true; status=review; artifact_count=34",
+      "summary": "artifact_present=true; status=review; artifact_count=37",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -37,7 +37,7 @@
       "id": "provider_handoff_bundle_row",
       "required": true,
       "status": "ready",
-      "summary": "bundle_row_present=true; bundle_row_status=review; bundle_row_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "bundle_row_present=true; bundle_row_status=review; bundle_row_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -53,7 +53,7 @@
       "id": "live_validation_state_alignment",
       "required": true,
       "status": "ready",
-      "summary": "expected=await_live_url_validation; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "expected=review; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -61,7 +61,7 @@
       "id": "decision_alignment",
       "required": true,
       "status": "ready",
-      "summary": "expected=keep_runtime_defaults_until_live_url_validation; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "expected=keep_runtime_defaults_until_live_url_validation; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -69,7 +69,7 @@
       "id": "deployed_smoke_present_alignment",
       "required": true,
       "status": "ready",
-      "summary": "expected=False; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "expected=True; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -77,7 +77,7 @@
       "id": "deployed_smoke_status_alignment",
       "required": true,
       "status": "ready",
-      "summary": "expected=review; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "expected=review; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -85,7 +85,7 @@
       "id": "live_url_present_alignment",
       "required": true,
       "status": "ready",
-      "summary": "expected=False; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "expected=True; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -93,7 +93,7 @@
       "id": "open_gate_count_alignment",
       "required": true,
       "status": "ready",
-      "summary": "expected=3; bundle_summary=status=review; live_validation_state=await_live_url_validation; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=False; deployed_smoke_status=review; live_url_present=False; open_gate_count=3",
+      "summary": "expected=3; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     }

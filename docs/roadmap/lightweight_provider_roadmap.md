@@ -444,6 +444,42 @@ Phase 8 now also has a live URL validation decision record for the current cycle
 
 The record is documentation-only. It freezes current live-url validation verdict and open gates while preserving the boundary that runtime default promotion remains a separate decision gate.
 
+## Phase 9 MyPrivateAgent Local Consumption Contract
+
+Phase 9 now introduces a read-only local consumption contract for MyPrivateAgent:
+
+`docs/integration/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-contract.md`
+
+The contract defines local URL/access assumptions, required read-only discovery endpoints, and provider-vs-control-plane ownership boundaries without changing runtime defaults.
+
+## Phase 9 MyPrivateAgent Local Consumption Readiness
+
+Phase 9 now also has a machine-readable local-consumption readiness export:
+
+`docs/integration/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-readiness.json`
+
+`docs/integration/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-readiness.md`
+
+The export is read-only and local. It summarizes contract presence, Phase 7/8 linkage, integration-probe posture, optional deployed smoke context, and open gates for local consumption review.
+
+## Phase 9 MyPrivateAgent Local Consumption Smoke
+
+Phase 9 now also has a compact local-consumption smoke artifact:
+
+`docs/smoke/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-smoke.json`
+
+`docs/smoke/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-smoke.md`
+
+The smoke is read-only and local. It checks local-consumption contract coverage, control-plane compatibility, graph planned-boundary signal, and runtime-promotion boundary alignment without mutating provider state.
+
+## Phase 9 MyPrivateAgent Local Consumption Decision Record
+
+Phase 9 now also has a local-consumption decision record for the current cycle:
+
+`docs/integration/myprivateagent-local-consumption/phase9-myprivateagent-local-consumption-decision-record.md`
+
+The record is documentation-only. It freezes the current verdict for local MyPrivateAgent consumption review while preserving runtime-default and control-plane boundaries.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

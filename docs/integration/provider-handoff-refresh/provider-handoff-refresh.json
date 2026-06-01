@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-01T11:51:13.991609+00:00",
+  "generated_at": "2026-06-01T13:01:28.519619+00:00",
   "status": "review",
   "steps": [
     {
@@ -180,19 +180,7 @@
         "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.md"
       ],
       "recommended_action": "review_evidence_notes",
-      "summary": "status=review; summary={\"blocked_signals\": 0, \"live_url_present\": false, \"open_gate_ids\": [\"deployment_readiness\", \"provider_handoff_bundle\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
-      "error": null
-    },
-    {
-      "id": "phase6_deployed_handoff_consistency_smoke",
-      "category": "operations-smoke",
-      "status": "ready",
-      "output_paths": [
-        "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.json",
-        "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.md"
-      ],
-      "recommended_action": "no_action_required",
-      "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"failed_checks\": 0, \"field_validation_state\": \"await_live_url\", \"live_url_present\": false, \"open_gate_count\": 3, \"passed_checks\": 8, \"readiness_status\": \"review\", \"total_checks\": 8}",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"live_url_present\": true, \"open_gate_ids\": [\"deployment_readiness\", \"provider_handoff_bundle\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
       "error": null
     },
     {
@@ -384,19 +372,31 @@
         "docs\\operations\\live-url-validation\\phase8-live-url-validation-readiness.md"
       ],
       "recommended_action": "review_evidence_notes",
-      "summary": "status=review; summary={\"blocked_signals\": 0, \"deployed_smoke_present\": false, \"deployed_smoke_status\": \"review\", \"live_url_present\": false, \"open_gate_ids\": [\"phase6_deployed_field_validation_readiness\", \"phase7_provider_release_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
+      "summary": "status=review; summary={\"blocked_signals\": 0, \"deployed_smoke_present\": true, \"deployed_smoke_status\": \"review\", \"live_url_present\": true, \"open_gate_ids\": [\"phase6_deployed_field_validation_readiness\", \"phase7_provider_release_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
       "error": null
     },
     {
-      "id": "phase8_live_url_smoke_consistency_check",
-      "category": "live-url-validation-smoke",
+      "id": "phase9_myprivateagent_local_consumption_readiness",
+      "category": "local-consumption",
+      "status": "review",
+      "output_paths": [
+        "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.json",
+        "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"api_key_mode\": \"configured_protected_api\", \"blocked_signals\": 0, \"local_handoff_ready\": true, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase7_provider_release_readiness\", \"phase8_live_url_validation_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 5, \"required_signals\": 4, \"review_signals\": 3, \"runtime_promotion_ready\": false, \"total_signals\": 8}",
+      "error": null
+    },
+    {
+      "id": "phase9_myprivateagent_local_consumption_smoke",
+      "category": "local-consumption-smoke",
       "status": "ready",
       "output_paths": [
-        "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.json",
-        "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.md"
+        "docs\\smoke\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-smoke.json",
+        "docs\\smoke\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-smoke.md"
       ],
       "recommended_action": "no_action_required",
-      "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"deployed_smoke_present\": false, \"deployed_smoke_status\": \"review\", \"failed_checks\": 0, \"live_url_present\": false, \"live_validation_state\": \"await_live_url_validation\", \"open_gate_count\": 3, \"passed_checks\": 10, \"readiness_status\": \"review\", \"total_checks\": 10}",
+      "summary": "status=ready; summary={\"failed_checks\": 0, \"local_consumption_state\": \"review\", \"local_handoff_ready\": true, \"passed_checks\": 7, \"readiness_status\": \"review\", \"runtime_promotion_ready\": false, \"total_checks\": 7}",
       "error": null
     },
     {
@@ -409,6 +409,30 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; report_status=review",
+      "error": null
+    },
+    {
+      "id": "phase6_deployed_handoff_consistency_smoke",
+      "category": "operations-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.json",
+        "docs\\smoke\\deployed-field-validation\\phase6-deployed-handoff-consistency-smoke.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"failed_checks\": 0, \"field_validation_state\": \"review\", \"live_url_present\": true, \"open_gate_count\": 3, \"passed_checks\": 8, \"readiness_status\": \"review\", \"total_checks\": 8}",
+      "error": null
+    },
+    {
+      "id": "phase8_live_url_smoke_consistency_check",
+      "category": "live-url-validation-smoke",
+      "status": "ready",
+      "output_paths": [
+        "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.json",
+        "docs\\smoke\\live-url-validation\\phase8-live-url-smoke-consistency-check.md"
+      ],
+      "recommended_action": "no_action_required",
+      "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"deployed_smoke_present\": true, \"deployed_smoke_status\": \"review\", \"failed_checks\": 0, \"live_url_present\": true, \"live_validation_state\": \"review\", \"open_gate_count\": 3, \"passed_checks\": 10, \"readiness_status\": \"review\", \"total_checks\": 10}",
       "error": null
     }
   ],

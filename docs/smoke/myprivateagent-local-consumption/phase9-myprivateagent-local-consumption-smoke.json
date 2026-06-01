@@ -1,0 +1,80 @@
+{
+  "id": "phase9-myprivateagent-local-consumption-smoke-v1",
+  "generated_at": "2026-06-01T13:01:28.498786+00:00",
+  "status": "ready",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_checks": 7,
+    "passed_checks": 7,
+    "failed_checks": 0,
+    "readiness_status": "review",
+    "local_consumption_state": "review",
+    "local_handoff_ready": true,
+    "runtime_promotion_ready": false
+  },
+  "checks": [
+    {
+      "id": "phase9_local_consumption_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "artifact_present=true; status=review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.json"
+    },
+    {
+      "id": "phase9_contract_content",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_required_tokens_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-contract.md"
+    },
+    {
+      "id": "control_plane_compatibility",
+      "required": true,
+      "status": "ready",
+      "summary": "myprivateagent_compatible=True",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-binding\\provider-integration-probe.json"
+    },
+    {
+      "id": "graph_planned_boundary",
+      "required": true,
+      "status": "ready",
+      "summary": "graph_boundary_check_passed=True",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "source_binding_readiness",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; bindable_sources=2/2",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
+    },
+    {
+      "id": "phase4_caller_consumption_smoke",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\evidence-pack-consumption\\phase4-caller-consumption-smoke.json"
+    },
+    {
+      "id": "runtime_promotion_boundary",
+      "required": true,
+      "status": "ready",
+      "summary": "runtime_promotion_ready=False; decision=keep_local_consumption_review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-readiness.json"
+    }
+  ],
+  "notes": [
+    "This smoke is local read-only consumer-side evidence.",
+    "It validates MyPrivateAgent local-consumption contract alignment from existing artifacts.",
+    "It does not mutate source bindings or promote runtime defaults."
+  ],
+  "json_path": "docs\\smoke\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-smoke.json",
+  "markdown_path": "docs\\smoke\\myprivateagent-local-consumption\\phase9-myprivateagent-local-consumption-smoke.md"
+}

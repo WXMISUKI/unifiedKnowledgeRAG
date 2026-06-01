@@ -4,7 +4,7 @@
 - Status: `review`
 - Promotion Review State: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T11:51:13.928174+00:00`
+- Generated At: `2026-06-01T13:01:28.408060+00:00`
 
 ## Summary
 
@@ -32,7 +32,7 @@
 | `deployment_readiness` | `True` | `review` | artifact_present=true; status=review; decision=n/a | `review_evidence_notes` |
 | `phase3_fp_fn_review` | `False` | `review` | artifact_present=true; status=review; decision=n/a | `review_evidence_notes` |
 | `phase3_hybrid_calibration` | `False` | `review` | artifact_present=true; status=review; decision=keep_runtime_defaults | `review_evidence_notes` |
-| `deployed_provider_smoke` | `False` | `review` | artifact_present=false | `run_deployed_provider_smoke_after_deployment` |
+| `deployed_provider_smoke` | `False` | `review` | artifact_present=true; status=review; decision=n/a | `review_evidence_notes` |
 
 ## Notes
 

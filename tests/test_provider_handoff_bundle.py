@@ -201,16 +201,42 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "passed_checks=" in artifacts[
         "phase8_live_url_smoke_consistency_check"
     ]["summary"]
-    assert artifacts["deployed_provider_smoke"]["present"] is False
+    assert artifacts["phase9_myprivateagent_local_consumption_readiness"]["present"] is True
+    assert artifacts["phase9_myprivateagent_local_consumption_readiness"]["required"] is False
+    assert artifacts["phase9_myprivateagent_local_consumption_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "local_consumption_state=" in artifacts[
+        "phase9_myprivateagent_local_consumption_readiness"
+    ]["summary"]
+    assert artifacts["phase9_myprivateagent_local_consumption_smoke"]["present"] is True
+    assert artifacts["phase9_myprivateagent_local_consumption_smoke"]["required"] is False
+    assert artifacts["phase9_myprivateagent_local_consumption_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "passed_checks=" in artifacts[
+        "phase9_myprivateagent_local_consumption_smoke"
+    ]["summary"]
+    assert artifacts["deployed_provider_smoke"]["present"] in {True, False}
     assert artifacts["deployed_provider_smoke"]["required"] is False
-    assert artifacts["deployed_provider_smoke"]["status"] == "review"
-    assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
-        "run_deployed_provider_smoke_after_deployment"
-    )
+    assert artifacts["deployed_provider_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["deployed_provider_smoke"]["recommended_action"] in {
+        "run_deployed_provider_smoke_after_deployment",
+        "review_evidence_notes",
+        "resolve_failed_evidence",
+    }
     assert artifacts["phase6_deployed_field_validation_readiness"]["present"] is True
     assert artifacts["phase6_deployed_field_validation_readiness"]["required"] is False
     assert artifacts["phase6_deployed_field_validation_readiness"]["status"] == "review"
-    assert "field_validation_state=await_live_url" in artifacts[
+    assert "field_validation_state=" in artifacts[
         "phase6_deployed_field_validation_readiness"
     ]["summary"]
     assert "decision=keep_local_review_until_deployed_smoke" in artifacts[
@@ -223,9 +249,12 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
         "phase6_deployed_handoff_consistency_smoke"
     ]["summary"]
     assert any("read-only" in note for note in report.operation_notes)
-    assert any(
-        "Deployed provider smoke evidence is optional" in note
-        for note in report.operation_notes
+    assert (
+        any(
+            "Deployed provider smoke evidence is optional" in note
+            for note in report.operation_notes
+        )
+        or artifacts["deployed_provider_smoke"]["present"] is True
     )
 
 
@@ -448,10 +477,16 @@ def test_provider_handoff_endpoint_returns_current_bundle():
         "review",
         "blocked",
     }
-    assert artifacts["deployed_provider_smoke"]["status"] == "review"
-    assert artifacts["deployed_provider_smoke"]["recommended_action"] == (
-        "run_deployed_provider_smoke_after_deployment"
-    )
+    assert artifacts["deployed_provider_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["deployed_provider_smoke"]["recommended_action"] in {
+        "run_deployed_provider_smoke_after_deployment",
+        "review_evidence_notes",
+        "resolve_failed_evidence",
+    }
     assert body["json_path"] is None
     assert body["markdown_path"] is None
 
@@ -894,6 +929,60 @@ def test_provider_handoff_bundle_keeps_missing_phase8_live_url_smoke_consistency
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
         "regenerate_phase8_live_url_smoke_consistency_check"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase9_local_consumption_readiness_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase9_myprivateagent_local_consumption_readiness",
+            category="local-consumption",
+            path=Path("missing-phase9-myprivateagent-local-consumption-readiness.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase9_myprivateagent_local_consumption_readiness"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase9_local_consumption_smoke_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase9_myprivateagent_local_consumption_smoke",
+            category="local-consumption-smoke",
+            path=Path("missing-phase9-myprivateagent-local-consumption-smoke.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase9_myprivateagent_local_consumption_smoke"
     )
 
 

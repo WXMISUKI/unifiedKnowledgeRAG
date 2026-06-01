@@ -1,0 +1,106 @@
+{
+  "id": "deployed-provider-smoke-v1",
+  "generated_at": "2026-06-01T12:42:37.731225+00:00",
+  "base_url": "http://127.0.0.1:8020",
+  "status": "review",
+  "provider": {
+    "provider_id": "unifiedKnowledgeProvider",
+    "provider_name": "unifiedKnowledgeRAG",
+    "provider_version": "0.1.0",
+    "contract_version": "knowledge-provider-contract-v1",
+    "manifest_version": "provider-integration-manifest-v1",
+    "component_role": "knowledge_data_plane"
+  },
+  "handoff": {
+    "id": "provider-handoff-bundle-v1",
+    "status": "review",
+    "artifact_count": 35
+  },
+  "checks": [
+    {
+      "name": "health_readiness",
+      "endpoint": "GET /health",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "service": "unifiedKnowledgeProvider",
+        "provider_status": "ok",
+        "rag_status": "ready",
+        "answer_status": "ready",
+        "graph_status": "planned"
+      },
+      "error": null
+    },
+    {
+      "name": "provider_manifest",
+      "endpoint": "GET /api/provider/manifest",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "provider_id": "unifiedKnowledgeProvider",
+        "provider_name": "unifiedKnowledgeRAG",
+        "provider_version": "0.1.0",
+        "contract_version": "knowledge-provider-contract-v1",
+        "manifest_version": "provider-integration-manifest-v1",
+        "component_role": "knowledge_data_plane"
+      },
+      "error": null
+    },
+    {
+      "name": "provider_preflight",
+      "endpoint": "GET /api/provider/preflight",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "bindable": true,
+        "contract_version": "knowledge-provider-contract-v1",
+        "check_count": 6
+      },
+      "error": null
+    },
+    {
+      "name": "provider_source_bindings",
+      "endpoint": "GET /api/provider/source-bindings",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "id": "provider-source-binding-summary-v1",
+        "status": "ready",
+        "source_count": 2,
+        "bindable_source_count": 2,
+        "source_status_counts": {
+          "ready": 2
+        },
+        "recommended_action_counts": {
+          "bind_source_from_control_plane": 2
+        }
+      },
+      "error": null
+    },
+    {
+      "name": "provider_handoff",
+      "endpoint": "GET /api/provider/handoff",
+      "status": "review",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "id": "provider-handoff-bundle-v1",
+        "status": "review",
+        "artifact_count": 35
+      },
+      "error": null
+    }
+  ],
+  "operation_notes": [
+    "This probe validates an already-running provider over HTTP.",
+    "It only calls health, manifest, preflight, source binding, and handoff discovery endpoints.",
+    "External deployment owners still manage TLS, reverse proxy policy, managed secrets, registration, heartbeat governance, audit policy, and source-to-agent binding.",
+    "No provider API credentials were supplied; this is only expected for local or intentionally open deployments."
+  ],
+  "json_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json",
+  "markdown_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.md"
+}

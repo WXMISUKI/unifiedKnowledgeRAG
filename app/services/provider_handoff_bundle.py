@@ -251,6 +251,24 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase9_myprivateagent_local_consumption_readiness",
+        category="local-consumption",
+        path=Path(
+            "docs/integration/myprivateagent-local-consumption/"
+            "phase9-myprivateagent-local-consumption-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase9_myprivateagent_local_consumption_smoke",
+        category="local-consumption-smoke",
+        path=Path(
+            "docs/smoke/myprivateagent-local-consumption/"
+            "phase9-myprivateagent-local-consumption-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -869,6 +887,36 @@ def _artifact_status_and_summary(
                 f"bundle_row_status={_dict_value(summary, 'bundle_row_status', 'unknown')}"
             ),
         )
+    if artifact_id == "phase9_myprivateagent_local_consumption_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; "
+                f"local_consumption_state={payload.get('local_consumption_state', 'review')}; "
+                f"decision={payload.get('decision', 'keep_local_consumption_review')}; "
+                f"local_provider_url={_dict_value(summary, 'local_provider_url', 'http://127.0.0.1:8020')}; "
+                f"local_handoff_ready={bool(_dict_value(summary, 'local_handoff_ready', False))}; "
+                f"runtime_promotion_ready={bool(_dict_value(summary, 'runtime_promotion_ready', False))}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
+    if artifact_id == "phase9_myprivateagent_local_consumption_smoke":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'keep_runtime_defaults')}; "
+                f"passed_checks={_int_value(_dict_value(summary, 'passed_checks', 0), fallback=0)}/"
+                f"{_int_value(_dict_value(summary, 'total_checks', 0), fallback=0)}; "
+                f"failed_checks={_int_value(_dict_value(summary, 'failed_checks', 0), fallback=0)}; "
+                f"readiness_status={_dict_value(summary, 'readiness_status', 'unknown')}; "
+                f"local_consumption_state={_dict_value(summary, 'local_consumption_state', 'unknown')}"
+            ),
+        )
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1102,6 +1150,10 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 8 live URL validation readiness evidence is missing."
     if artifact_id == "phase8_live_url_smoke_consistency_check":
         return "Optional Phase 8 live URL smoke consistency evidence is missing."
+    if artifact_id == "phase9_myprivateagent_local_consumption_readiness":
+        return "Optional Phase 9 MyPrivateAgent local-consumption readiness evidence is missing."
+    if artifact_id == "phase9_myprivateagent_local_consumption_smoke":
+        return "Optional Phase 9 MyPrivateAgent local-consumption smoke evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1172,6 +1224,10 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase8_live_url_validation_readiness"
     if artifact_id == "phase8_live_url_smoke_consistency_check":
         return "regenerate_phase8_live_url_smoke_consistency_check"
+    if artifact_id == "phase9_myprivateagent_local_consumption_readiness":
+        return "regenerate_phase9_myprivateagent_local_consumption_readiness"
+    if artifact_id == "phase9_myprivateagent_local_consumption_smoke":
+        return "regenerate_phase9_myprivateagent_local_consumption_smoke"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1358,6 +1414,22 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 8 live URL smoke consistency check is optional before deployed live validation review; regenerate it after Phase 8 readiness or handoff bundle changes."
+        )
+    if any(
+        artifact["id"] == "phase9_myprivateagent_local_consumption_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 9 MyPrivateAgent local-consumption readiness is optional before caller local-consumption review; regenerate it after Phase 7/8/handoff evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase9_myprivateagent_local_consumption_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 9 MyPrivateAgent local-consumption smoke is optional before caller local-consumption review; regenerate it after Phase 9 readiness or provider contract evidence changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

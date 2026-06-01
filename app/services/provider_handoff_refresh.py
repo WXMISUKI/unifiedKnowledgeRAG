@@ -35,6 +35,12 @@ from app.services.phase8_live_url_validation_readiness import (
 from app.services.phase8_live_url_smoke_consistency_check import (
     export_phase8_live_url_smoke_consistency_check_report,
 )
+from app.services.phase9_myprivateagent_local_consumption_readiness import (
+    export_phase9_myprivateagent_local_consumption_readiness_report,
+)
+from app.services.phase9_myprivateagent_local_consumption_smoke import (
+    export_phase9_myprivateagent_local_consumption_smoke_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -268,16 +274,6 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
-            id="phase6_deployed_handoff_consistency_smoke",
-            category="operations-smoke",
-            output_dir=artifact_base_dir / "docs/smoke/deployed-field-validation",
-            exporter=lambda output_dir: export_phase6_deployed_handoff_consistency_smoke_report(
-                output_dir=output_dir,
-                base_dir=artifact_base_dir,
-            ),
-            status_reader=lambda report: report.status,
-        ),
-        HandoffRefreshStepSpec(
             id="phase3_fp_fn_review",
             category="retrieval-evidence",
             output_dir=artifact_base_dir / "docs/benchmark/chinese-seed/fp-fn-review",
@@ -445,10 +441,21 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
-            id="phase8_live_url_smoke_consistency_check",
-            category="live-url-validation-smoke",
-            output_dir=artifact_base_dir / "docs/smoke/live-url-validation",
-            exporter=lambda output_dir: export_phase8_live_url_smoke_consistency_check_report(
+            id="phase9_myprivateagent_local_consumption_readiness",
+            category="local-consumption",
+            output_dir=artifact_base_dir
+            / "docs/integration/myprivateagent-local-consumption",
+            exporter=lambda output_dir: export_phase9_myprivateagent_local_consumption_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase9_myprivateagent_local_consumption_smoke",
+            category="local-consumption-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/myprivateagent-local-consumption",
+            exporter=lambda output_dir: export_phase9_myprivateagent_local_consumption_smoke_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),
@@ -459,6 +466,26 @@ def default_handoff_refresh_steps(
             category="handoff",
             output_dir=artifact_base_dir / "docs/integration/provider-handoff",
             exporter=lambda output_dir: export_provider_handoff_bundle_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase6_deployed_handoff_consistency_smoke",
+            category="operations-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/deployed-field-validation",
+            exporter=lambda output_dir: export_phase6_deployed_handoff_consistency_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase8_live_url_smoke_consistency_check",
+            category="live-url-validation-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/live-url-validation",
+            exporter=lambda output_dir: export_phase8_live_url_smoke_consistency_check_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

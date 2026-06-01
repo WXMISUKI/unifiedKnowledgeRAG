@@ -3,7 +3,7 @@
 - Report: `phase7-cross-phase-handoff-consistency-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults_until_live_validation`
-- Generated At: `2026-06-01T11:51:13.978464+00:00`
+- Generated At: `2026-06-01T13:01:28.486946+00:00`
 
 ## Summary
 
@@ -23,7 +23,7 @@
 | `phase3_decision_record_alignment` | `True` | `{"contains_keep_runtime_defaults": true}` |
 | `phase4_caller_consumption_smoke_alignment` | `True` | `{"status": "ready"}` |
 | `phase5_graph_boundary_alignment` | `True` | `{"graph_query_planned": true, "status": "ready"}` |
-| `phase6_deployed_field_validation_alignment` | `True` | `{"field_validation_state": "await_live_url", "status": "review"}` |
+| `phase6_deployed_field_validation_alignment` | `True` | `{"field_validation_state": "review", "status": "review"}` |
 
 ## Notes
 
