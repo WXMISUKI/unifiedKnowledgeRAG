@@ -602,3 +602,45 @@ The project SHALL treat a local graph boundary smoke summary as Phase 5 boundary
 - **WHEN** the summary consolidates graph schema discovery or planned query boundaries
 - **THEN** graph query execution, graph storage, entity extraction, ontology workflows, source-to-graph indexing, and GraphRAG retrieval remain behind separate evidence-backed changes
 
+### Requirement: Phase 3 candidate evaluation protocols stay lightweight and review-only
+
+The project SHALL treat Phase 3 retrieval candidate evaluation protocols as lightweight evidence-governance work when they standardize gate review expectations without changing runtime defaults.
+
+#### Scenario: Protocol document is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a Phase 3 retrieval candidate evaluation protocol
+- **THEN** the roadmap records it as Phase 3 evidence-governance work rather than retrieval runtime promotion
+
+#### Scenario: Protocol document preserves provider boundaries
+
+- **WHEN** the protocol defines gate expectations for Qdrant, BGE-M3, hybrid retrieval, hybrid gating, aggregation, or relation-aware grading
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG execution boundaries, and caller ownership remain unchanged until separate evidence-backed promotion changes are approved
+
+### Requirement: Phase 3 runtime diagnostics exports stay lightweight and evaluation-only
+
+The project SHALL treat Phase 3 candidate runtime diagnostics exports as lightweight evidence visibility work when they summarize promotion prerequisites without changing runtime defaults.
+
+#### Scenario: Runtime diagnostics export is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes a Phase 3 candidate runtime diagnostics export
+- **THEN** the roadmap records it as Phase 3 evidence visibility work rather than runtime promotion
+
+#### Scenario: Runtime diagnostics export preserves boundaries
+
+- **WHEN** runtime diagnostics summarize retrieval backend, embedding provider, artifact status, and deployment-evidence presence
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG boundaries, and caller ownership remain unchanged
+
+### Requirement: Phase 3 cross-case FP/FN smoke remains lightweight evidence maintenance
+
+The project SHALL treat Phase 3 hybrid cross-case FP/FN smoke as lightweight evidence maintenance when it validates risk-signal visibility without changing runtime defaults.
+
+#### Scenario: Cross-case smoke is phase-aligned
+
+- **WHEN** an OpenSpec change adds or refreshes cross-case hybrid FP/FN smoke evidence
+- **THEN** the roadmap records it as Phase 3 evidence maintenance and review ergonomics work
+
+#### Scenario: Cross-case smoke preserves boundaries
+
+- **WHEN** cross-case smoke reports false-positive/false-negative risk signals
+- **THEN** runtime defaults, provider HTTP contracts, GraphRAG boundaries, and caller ownership remain unchanged
+

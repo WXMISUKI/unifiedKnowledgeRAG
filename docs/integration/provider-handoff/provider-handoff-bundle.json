@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T01:10:40.140218+00:00",
+  "generated_at": "2026-06-01T01:47:33.344631+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -103,6 +103,26 @@
       "status": "review",
       "summary": "status=review; decision=keep_runtime_defaults; open_gates=7; ready_gates=0; review_gates=3; candidate_gates=4",
       "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase3_candidate_runtime_diagnostics",
+      "category": "retrieval-evidence",
+      "path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; ready_checks=0/6; review_checks=6; blocked_checks=0",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase3_hybrid_cross_case_fp_fn_smoke",
+      "category": "retrieval-evidence",
+      "path": "docs\\smoke\\hybrid-cross-case-fp-fn\\phase3-hybrid-cross-case-fp-fn-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; passed_checks=4/4; false_positive_count=2; false_negative_count=0",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase4_evidence_pack_readiness",

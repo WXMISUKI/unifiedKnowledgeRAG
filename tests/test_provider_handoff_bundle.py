@@ -43,6 +43,18 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "decision=keep_runtime_defaults" in artifacts[
         "phase3_retrieval_promotion_readiness"
     ]["summary"]
+    assert artifacts["phase3_candidate_runtime_diagnostics"]["present"] is True
+    assert artifacts["phase3_candidate_runtime_diagnostics"]["required"] is False
+    assert artifacts["phase3_candidate_runtime_diagnostics"]["status"] == "review"
+    assert "decision=keep_runtime_defaults" in artifacts[
+        "phase3_candidate_runtime_diagnostics"
+    ]["summary"]
+    assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["present"] is True
+    assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["required"] is False
+    assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["status"] == "ready"
+    assert "false_positive_count=2" in artifacts[
+        "phase3_hybrid_cross_case_fp_fn_smoke"
+    ]["summary"]
     assert artifacts["phase4_evidence_pack_readiness"]["present"] is True
     assert artifacts["phase4_evidence_pack_readiness"]["required"] is False
     assert artifacts["phase4_evidence_pack_readiness"]["status"] == "ready"
@@ -199,6 +211,8 @@ def test_provider_handoff_endpoint_returns_current_bundle():
     assert artifacts["phase3_seed_retrieval_baseline"]["status"] == "ready"
     assert artifacts["phase3_fp_fn_review"]["status"] == "ready"
     assert artifacts["phase3_retrieval_promotion_readiness"]["status"] == "review"
+    assert artifacts["phase3_candidate_runtime_diagnostics"]["status"] == "review"
+    assert artifacts["phase3_hybrid_cross_case_fp_fn_smoke"]["status"] == "ready"
     assert artifacts["phase4_evidence_pack_readiness"]["status"] == "ready"
     assert artifacts["phase4_caller_consumption_smoke"]["status"] == "ready"
     assert artifacts["phase5_graph_use_case_readiness"]["status"] == "ready"
@@ -539,4 +553,58 @@ def test_provider_handoff_bundle_keeps_missing_phase3_readiness_evidence_reviewa
     assert artifact["status"] == "review"
     assert artifact["recommended_action"] == (
         "regenerate_phase3_retrieval_promotion_readiness"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase3_runtime_diagnostics_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase3_candidate_runtime_diagnostics",
+            category="retrieval-evidence",
+            path=Path("missing-phase3-runtime-diagnostics.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase3_candidate_runtime_diagnostics"
+    )
+
+
+def test_provider_handoff_bundle_keeps_missing_phase3_hybrid_smoke_reviewable(
+    tmp_path,
+):
+    specs = [
+        HandoffEvidenceSpec(
+            id="phase3_hybrid_cross_case_fp_fn_smoke",
+            category="retrieval-evidence",
+            path=Path("missing-phase3-hybrid-cross-case-fp-fn-smoke.json"),
+            required=False,
+        )
+    ]
+
+    report = build_provider_handoff_bundle_report(
+        base_dir=tmp_path,
+        evidence_specs=specs,
+    )
+
+    assert report.status == "review"
+    artifact = report.evidence_artifacts[0]
+    assert artifact["present"] is False
+    assert artifact["required"] is False
+    assert artifact["status"] == "review"
+    assert artifact["recommended_action"] == (
+        "regenerate_phase3_hybrid_cross_case_fp_fn_smoke"
     )

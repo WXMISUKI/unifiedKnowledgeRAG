@@ -1,0 +1,79 @@
+{
+  "id": "phase3-hybrid-cross-case-fp-fn-smoke-v1",
+  "generated_at": "2026-06-01T01:47:33.333157+00:00",
+  "status": "ready",
+  "checks": [
+    {
+      "name": "baseline_cross_case_coverage",
+      "passed": true,
+      "scenario": "baseline risk case ids are present",
+      "details": {
+        "required_case_ids": [
+          "empty-refund-high-value-auto-compensation",
+          "empty-refund-high-value-auto-compensation-customer-like-2",
+          "logistics-exact-id-customer-like",
+          "refund-high-value-review-customer-like-audit-trace-2"
+        ],
+        "present_case_count": 4
+      },
+      "error": null
+    },
+    {
+      "name": "false_positive_alignment",
+      "passed": true,
+      "scenario": "fp review contains expected empty trap cases",
+      "details": {
+        "expected_false_positive_ids": [
+          "empty-refund-high-value-auto-compensation",
+          "empty-refund-high-value-auto-compensation-customer-like-2"
+        ],
+        "observed_false_positive_count": 2
+      },
+      "error": null
+    },
+    {
+      "name": "positive_control_and_fn_guard",
+      "passed": true,
+      "scenario": "positive controls remain successful while fn count stays zero",
+      "details": {
+        "false_negative_count": 0,
+        "positive_control_ids": [
+          "logistics-exact-id-customer-like",
+          "refund-high-value-review-customer-like-audit-trace-2"
+        ]
+      },
+      "error": null
+    },
+    {
+      "name": "evaluation_protocol_artifact",
+      "passed": true,
+      "scenario": "phase3 evaluation protocol is present",
+      "details": {
+        "present": true,
+        "path": "docs\\benchmark\\chinese-seed\\retrieval-candidate-evaluation-protocol\\phase3-retrieval-candidate-evaluation-protocol.md"
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "risk_case_count": 4,
+    "baseline_total_cases": 29,
+    "false_positive_count": 2,
+    "false_negative_count": 0
+  },
+  "source_paths": {
+    "baseline": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
+    "fp_fn_review": "docs\\benchmark\\chinese-seed\\fp-fn-review\\phase3-fp-fn-review.json",
+    "evaluation_protocol": "docs\\benchmark\\chinese-seed\\retrieval-candidate-evaluation-protocol\\phase3-retrieval-candidate-evaluation-protocol.md"
+  },
+  "notes": [
+    "This smoke validates cross-case FP/FN signal visibility from existing local evidence.",
+    "It is read-only and does not execute retrieval backends.",
+    "Smoke readiness reflects evidence integrity, not runtime promotion approval."
+  ],
+  "json_path": "docs\\smoke\\hybrid-cross-case-fp-fn\\phase3-hybrid-cross-case-fp-fn-smoke.json",
+  "markdown_path": "docs\\smoke\\hybrid-cross-case-fp-fn\\phase3-hybrid-cross-case-fp-fn-smoke.md"
+}

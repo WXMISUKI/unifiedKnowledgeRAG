@@ -81,6 +81,34 @@ The same promotion picture is also exported as machine-readable evidence:
 
 The readiness export is read-only and local. Provider handoff and handoff refresh can surface it as optional review evidence so reviewers do not have to stitch the gap matrix together by hand.
 
+## Phase 3 Candidate Evaluation Protocol
+
+Phase 3 now also has a local candidate evaluation protocol that standardizes promotion-review expectations across candidate gate families:
+
+`docs/benchmark/chinese-seed/retrieval-candidate-evaluation-protocol/phase3-retrieval-candidate-evaluation-protocol.md`
+
+The protocol is intentionally read-only and evaluation-only. It defines required evidence classes for Qdrant, BGE-M3, hybrid retrieval, hybrid gating, aggregation, relation-aware grading, and deployed smoke follow-up, while preserving `keep_runtime_defaults` until separate promotion gates are explicitly closed.
+
+## Phase 3 Candidate Runtime Diagnostics
+
+Phase 3 now also has a machine-readable runtime diagnostics export for candidate promotion prerequisites:
+
+`docs/benchmark/chinese-seed/retrieval-runtime-diagnostics/phase3-candidate-runtime-diagnostics.json`
+
+`docs/benchmark/chinese-seed/retrieval-runtime-diagnostics/phase3-candidate-runtime-diagnostics.md`
+
+The export is read-only and local. It summarizes runtime-adjacent prerequisite checks such as retrieval backend mode, embedding provider and artifact status, readiness export status, and deployed smoke evidence presence, while preserving `keep_runtime_defaults`.
+
+## Phase 3 Hybrid Cross-Case FP/FN Smoke
+
+Phase 3 now also has a compact cross-case smoke artifact for hybrid-risk visibility:
+
+`docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.json`
+
+`docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.md`
+
+The smoke is read-only and local. It verifies that key risk-case coverage, false-positive trap alignment, and positive-control outcomes remain visible in existing baseline and FP/FN evidence without changing runtime defaults.
+
 ## Graph Boundary Preflight
 
 Phase 5 graph work remains use-case driven, but provider preflight now summarizes the graph boundary that already exists: graph schema count, graph ids, graph statuses, and graph store labels. This lets MyPrivateAgent or another control plane discover that graph namespaces are present while still seeing `execution_status=planned`.

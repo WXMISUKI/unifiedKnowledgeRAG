@@ -30,6 +30,9 @@
 - Phase 3 FP/FN review integrated into handoff/refresh and archived (`2026-05-31-add-phase3-fp-fn-review-into-handoff-refresh`), with optional handoff summary row and non-blocking refresh step.
 - Phase 3 retrieval promotion gap matrix documented (`2026-05-31-document-phase3-retrieval-promotion-gap-matrix`), summarizing current Qdrant/BGE-M3/hybrid/aggregation/relation-aware/deployed-smoke promotion gaps in one read-only review artifact.
 - Phase 3 retrieval promotion readiness export implemented and refreshed (`2026-05-31-phase3-retrieval-promotion-readiness-export`), surfacing the gap matrix as machine-readable evidence and adding optional handoff/refresh visibility.
+- Phase 3 retrieval candidate evaluation protocol documented (`2026-06-01-document-phase3-retrieval-candidate-evaluation-protocol`), standardizing gate expectations and required evidence classes across Qdrant/BGE-M3/hybrid/aggregation/relation-aware/deployed-smoke review.
+- Phase 3 candidate runtime diagnostics export implemented and refreshed (`2026-06-01-export-phase3-candidate-runtime-diagnostics`), summarizing runtime-adjacent promotion prerequisites and adding optional handoff/refresh visibility.
+- Phase 3 hybrid cross-case FP/FN smoke implemented and refreshed (`2026-06-01-add-phase3-hybrid-cross-case-fp-fn-smoke`), validating risk-case coverage, false-positive trap alignment, and positive-control stability from local evidence.
 - Deployment readiness operator guide added for Phase 6 operations documentation, translating `review` evidence into operator steps without changing runtime behavior.
 - Deployment readiness configuration reference added for Phase 6 operations documentation, mapping env vars, mounts, and evidence commands to the current deploy-prep state.
 - Deployment readiness runbook added for Phase 6 operations documentation, sequencing review, configuration, refresh, and optional live smoke into a single operator flow.
@@ -68,6 +71,16 @@
   - `docs/smoke/graph-boundary-summary/phase5-graph-boundary-smoke-summary.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase5_graph_boundary_smoke_summary` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase5_graph_boundary_smoke_summary` step)
+- Phase 3 runtime diagnostics refresh additions:
+  - `docs/benchmark/chinese-seed/retrieval-runtime-diagnostics/phase3-candidate-runtime-diagnostics.json`
+  - `docs/benchmark/chinese-seed/retrieval-runtime-diagnostics/phase3-candidate-runtime-diagnostics.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_candidate_runtime_diagnostics` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_candidate_runtime_diagnostics` step)
+- Phase 3 hybrid cross-case smoke refresh additions:
+  - `docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.json`
+  - `docs/smoke/hybrid-cross-case-fp-fn/phase3-hybrid-cross-case-fp-fn-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase3_hybrid_cross_case_fp_fn_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase3_hybrid_cross_case_fp_fn_smoke` step)
 - Refreshed baseline summary:
   - `total_cases=29`
   - `hit_rate=0.9310`
@@ -90,15 +103,14 @@
 
 ## Next Step Plan
 
-1. Keep the Phase 5 graph use-case readiness contract, export, and smoke summary aligned with the graph boundary evidence.
-2. Move to the next roadmap slice only when a new evidence-backed gap appears.
-3. Keep the next benchmark or evidence change bounded and evaluation-only.
-4. Export refreshed evidence before comparing any new gate signal.
-5. Promote nothing by default unless gate evidence clearly passes.
+1. Keep Phase 3 protocol, runtime diagnostics, and cross-case smoke aligned with refreshed benchmark evidence.
+2. Keep all Phase 3 candidate work evaluation-only and preserve runtime defaults.
+3. Export refreshed evidence before comparing any new gate signal.
+4. Promote nothing by default unless gate evidence clearly passes.
 
 ## Latest Refresh
 
-- Run time: `2026-06-01T01:10:40.141514+00:00`
+- Run time: `2026-06-01T01:47:33.345867+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -108,6 +120,9 @@
   - `reindex_readiness`: `ready`
   - `source_binding_summary`: `ready`
   - `phase3_fp_fn_review`: `review`
+  - `phase3_retrieval_promotion_readiness`: `review`
+  - `phase3_candidate_runtime_diagnostics`: `review`
+  - `phase3_hybrid_cross_case_fp_fn_smoke`: `ready`
   - `phase4_evidence_pack_readiness`: `ready`
   - `phase4_caller_consumption_smoke`: `ready`
   - `phase5_graph_use_case_readiness`: `ready`

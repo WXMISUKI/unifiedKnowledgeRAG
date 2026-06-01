@@ -1,0 +1,91 @@
+{
+  "id": "phase3-candidate-runtime-diagnostics-v1",
+  "generated_at": "2026-06-01T01:47:33.331512+00:00",
+  "status": "review",
+  "decision": "keep_runtime_defaults",
+  "summary": {
+    "total_checks": 6,
+    "ready_checks": 0,
+    "review_checks": 6,
+    "blocked_checks": 0,
+    "open_prerequisite_ids": [
+      "candidate_retrieval_backend",
+      "candidate_embedding_provider",
+      "local_embedding_artifact",
+      "provider_api_guard",
+      "phase3_readiness_export",
+      "deployed_smoke_evidence"
+    ]
+  },
+  "runtime_config": {
+    "rag_retrieval_backend": "fixture",
+    "rag_score_threshold": 0.01,
+    "embedding_provider": "mock",
+    "embedding_model": "mock-hash-v1",
+    "embedding_model_path": null,
+    "embedding_local_files_only": false,
+    "qdrant_url": "http://localhost:6333",
+    "qdrant_collection": "knowledge_chunks",
+    "qdrant_vector_name": "text-dense",
+    "qdrant_vector_size": 1024,
+    "provider_api_key_configured": false,
+    "qdrant_api_key_configured": false
+  },
+  "model_artifacts": {
+    "status": "not_configured",
+    "model_path": null,
+    "path_exists": false,
+    "manifest_exists": false
+  },
+  "prerequisites": [
+    {
+      "id": "candidate_retrieval_backend",
+      "status": "review",
+      "summary": "backend=fixture; candidate_backends=qdrant,qdrant-hybrid",
+      "recommended_action": "run_candidate_backend_benchmark_review",
+      "evidence_path": null
+    },
+    {
+      "id": "candidate_embedding_provider",
+      "status": "review",
+      "summary": "embedding_provider=mock; mock_provider_requires_promotion_evidence=true",
+      "recommended_action": "switch_to_candidate_embedding_for_evaluation",
+      "evidence_path": null
+    },
+    {
+      "id": "local_embedding_artifact",
+      "status": "review",
+      "summary": "artifact_status=not_configured; path_exists=False; manifest_exists=False",
+      "recommended_action": "validate_local_embedding_artifact",
+      "evidence_path": null
+    },
+    {
+      "id": "provider_api_guard",
+      "status": "review",
+      "summary": "provider_api_key_configured=False",
+      "recommended_action": "configure_provider_api_key_for_deployment_review",
+      "evidence_path": null
+    },
+    {
+      "id": "phase3_readiness_export",
+      "status": "review",
+      "summary": "status=review; decision=keep_runtime_defaults; open_gates=7",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\benchmark\\chinese-seed\\retrieval-promotion-readiness\\phase3-retrieval-promotion-readiness.json"
+    },
+    {
+      "id": "deployed_smoke_evidence",
+      "status": "review",
+      "summary": "Deployed smoke evidence is not present in local workspace.",
+      "recommended_action": "run_deployed_provider_smoke_after_deployment",
+      "evidence_path": "docs\\integration\\deployed-provider-smoke\\deployed-provider-smoke.json"
+    }
+  ],
+  "notes": [
+    "This report is local, read-only candidate runtime evidence for Phase 3 promotion review.",
+    "It summarizes runtime-adjacent prerequisites but does not change retrieval defaults.",
+    "Deployment-site latency and live URL evidence still require post-deployment validation."
+  ],
+  "json_path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.json",
+  "markdown_path": "docs\\benchmark\\chinese-seed\\retrieval-runtime-diagnostics\\phase3-candidate-runtime-diagnostics.md"
+}
