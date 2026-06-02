@@ -1,0 +1,51 @@
+{
+  "id": "phase11-provider-discovery-smoke-v1",
+  "generated_at": "2026-06-01T13:42:27.433086+00:00",
+  "status": "ready",
+  "decision": "keep_discovery_read_only",
+  "summary": {
+    "total_checks": 4,
+    "passed_checks": 4,
+    "failed_checks": 0
+  },
+  "checks": [
+    {
+      "id": "phase11_profile_present",
+      "required": true,
+      "status": "ready",
+      "summary": "profile_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-provider-integration\\phase11-local-provider-integration-profile.json"
+    },
+    {
+      "id": "provider_integration_probe_bindable",
+      "required": true,
+      "status": "ready",
+      "summary": "bindable=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-binding\\provider-integration-probe.json"
+    },
+    {
+      "id": "provider_contract_smoke_passed",
+      "required": true,
+      "status": "ready",
+      "summary": "contract_smoke_passed=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "handoff_has_phase11_profile_row",
+      "required": true,
+      "status": "ready",
+      "summary": "phase11_profile_row_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    }
+  ],
+  "notes": [
+    "Discovery smoke validates MyPrivateAgent-style provider discovery evidence alignment.",
+    "It does not call mutating endpoints or start external services."
+  ],
+  "json_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-provider-discovery-smoke.json",
+  "markdown_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-provider-discovery-smoke.md"
+}

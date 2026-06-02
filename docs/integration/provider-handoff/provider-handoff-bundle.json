@@ -1,7 +1,7 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-01T13:24:10.065311+00:00",
-  "status": "review",
+  "generated_at": "2026-06-01T13:42:34.632896+00:00",
+  "status": "blocked",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
     "provider_name": "unifiedKnowledgeRAG",
@@ -100,9 +100,9 @@
       "path": "docs\\operations\\deployed-field-validation\\phase6-deployed-field-validation-readiness.json",
       "present": true,
       "required": false,
-      "status": "review",
-      "summary": "status=review; field_validation_state=review; decision=keep_local_review_until_deployed_smoke; live_url_present=True; open_gate_count=3",
-      "recommended_action": "review_evidence_notes"
+      "status": "blocked",
+      "summary": "status=blocked; field_validation_state=blocked; decision=blocked; live_url_present=True; open_gate_count=3",
+      "recommended_action": "resolve_failed_evidence"
     },
     {
       "id": "phase6_deployed_handoff_consistency_smoke",
@@ -322,6 +322,46 @@
       "required": false,
       "status": "ready",
       "summary": "status=ready; decision=keep_provider_side_consumer_probe_review; passed_checks=7/7; failed_checks=0; local_consumer_state=ready_for_local_consumer_probe_review; api_key_mode=not_configured_local_dev; runtime_promotion_status=keep_runtime_defaults",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase11_local_provider_integration_profile",
+      "category": "local-provider-integration",
+      "path": "docs\\integration\\myprivateagent-local-provider-integration\\phase11-local-provider-integration-profile.json",
+      "present": true,
+      "required": false,
+      "status": "blocked",
+      "summary": "status=blocked; integration_state=blocked; decision=resolve_local_integration_blockers; local_provider_url=http://127.0.0.1:8020; api_key_mode=not_configured_local_dev; runtime_promotion_status=keep_runtime_defaults; open_gate_count=2",
+      "recommended_action": "resolve_failed_evidence"
+    },
+    {
+      "id": "phase11_provider_discovery_smoke",
+      "category": "local-provider-integration-smoke",
+      "path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-provider-discovery-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_discovery_read_only; passed_checks=4/4; failed_checks=0",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase11_rag_retrieve_consumption_smoke",
+      "category": "local-provider-integration-smoke",
+      "path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-rag-retrieve-consumption-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_caller_consumption_fail_closed; passed_checks=3/3; failed_checks=0",
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase11_source_binding_preview_smoke",
+      "category": "local-provider-integration-smoke",
+      "path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-source-binding-preview-smoke.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_source_binding_preview_only; passed_checks=3/3; failed_checks=0",
       "recommended_action": "no_action_required"
     },
     {

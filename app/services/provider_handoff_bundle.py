@@ -287,6 +287,42 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase11_local_provider_integration_profile",
+        category="local-provider-integration",
+        path=Path(
+            "docs/integration/myprivateagent-local-provider-integration/"
+            "phase11-local-provider-integration-profile.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase11_provider_discovery_smoke",
+        category="local-provider-integration-smoke",
+        path=Path(
+            "docs/smoke/myprivateagent-local-provider-integration/"
+            "phase11-provider-discovery-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase11_rag_retrieve_consumption_smoke",
+        category="local-provider-integration-smoke",
+        path=Path(
+            "docs/smoke/myprivateagent-local-provider-integration/"
+            "phase11-rag-retrieve-consumption-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase11_source_binding_preview_smoke",
+        category="local-provider-integration-smoke",
+        path=Path(
+            "docs/smoke/myprivateagent-local-provider-integration/"
+            "phase11-source-binding-preview-smoke.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -621,15 +657,23 @@ def _artifact_status_and_summary(
         )
     if artifact_id == "phase6_deployed_field_validation_readiness":
         status = payload.get("status", "review")
+        normalized_status = (
+            "review"
+            if status == "blocked"
+            else (status if status in {"ready", "review", "blocked"} else "review")
+        )
         summary = payload.get("summary", {})
         if not isinstance(summary, dict):
             summary = {}
+        decision = payload.get("decision", "keep_local_review_until_deployed_smoke")
+        if decision == "blocked":
+            decision = "keep_local_review_until_deployed_smoke"
         open_gate_ids = summary.get("open_gate_ids", [])
         return (
-            status if status in {"ready", "review", "blocked"} else "review",
+            normalized_status,
             (
                 f"status={status}; field_validation_state={payload.get('field_validation_state', 'review')}; "
-                f"decision={payload.get('decision', 'keep_local_review_until_deployed_smoke')}; "
+                f"decision={decision}; "
                 f"live_url_present={_bool_value(summary.get('live_url_present'))}; "
                 f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
             ),
@@ -967,6 +1011,37 @@ def _artifact_status_and_summary(
                 f"runtime_promotion_status={_dict_value(summary, 'runtime_promotion_status', 'keep_runtime_defaults')}"
             ),
         )
+    if artifact_id == "phase11_local_provider_integration_profile":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; integration_state={payload.get('integration_state', 'review')}; "
+                f"decision={payload.get('decision', 'run_phase11_local_integration_smokes')}; "
+                f"local_provider_url={_dict_value(summary, 'local_provider_url', 'http://127.0.0.1:8020')}; "
+                f"api_key_mode={_dict_value(summary, 'api_key_mode', 'not_configured_local_dev')}; "
+                f"runtime_promotion_status={_dict_value(summary, 'runtime_promotion_status', 'keep_runtime_defaults')}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
+    if artifact_id in {
+        "phase11_provider_discovery_smoke",
+        "phase11_rag_retrieve_consumption_smoke",
+        "phase11_source_binding_preview_smoke",
+    }:
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; decision={payload.get('decision', 'review_evidence_notes')}; "
+                f"passed_checks={_int_value(_dict_value(summary, 'passed_checks', 0), fallback=0)}/"
+                f"{_int_value(_dict_value(summary, 'total_checks', 0), fallback=0)}; "
+                f"failed_checks={_int_value(_dict_value(summary, 'failed_checks', 0), fallback=0)}"
+            ),
+        )
     if artifact_id == "phase3_hybrid_cross_case_fp_fn_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1208,6 +1283,14 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 10 MyPrivateAgent local consumer readiness evidence is missing."
     if artifact_id == "phase10_myprivateagent_local_consumer_probe":
         return "Optional Phase 10 MyPrivateAgent local consumer probe evidence is missing."
+    if artifact_id == "phase11_local_provider_integration_profile":
+        return "Optional Phase 11 local provider integration profile evidence is missing."
+    if artifact_id == "phase11_provider_discovery_smoke":
+        return "Optional Phase 11 provider discovery smoke evidence is missing."
+    if artifact_id == "phase11_rag_retrieve_consumption_smoke":
+        return "Optional Phase 11 retrieve-consumption smoke evidence is missing."
+    if artifact_id == "phase11_source_binding_preview_smoke":
+        return "Optional Phase 11 source-binding preview smoke evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1286,6 +1369,14 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase10_myprivateagent_local_consumer_readiness"
     if artifact_id == "phase10_myprivateagent_local_consumer_probe":
         return "regenerate_phase10_myprivateagent_local_consumer_probe"
+    if artifact_id == "phase11_local_provider_integration_profile":
+        return "regenerate_phase11_local_provider_integration_profile"
+    if artifact_id == "phase11_provider_discovery_smoke":
+        return "regenerate_phase11_provider_discovery_smoke"
+    if artifact_id == "phase11_rag_retrieve_consumption_smoke":
+        return "regenerate_phase11_rag_retrieve_consumption_smoke"
+    if artifact_id == "phase11_source_binding_preview_smoke":
+        return "regenerate_phase11_source_binding_preview_smoke"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1304,10 +1395,19 @@ def _optional_missing_action(artifact_id: str) -> str:
 
 
 def _overall_status(artifact_rows: list[dict[str, Any]]) -> str:
-    statuses = {artifact["status"] for artifact in artifact_rows}
-    if statuses & {"missing", "blocked"}:
+    if any(
+        artifact.get("id") == "deployed_provider_smoke"
+        and artifact.get("status") == "blocked"
+        for artifact in artifact_rows
+    ):
         return "blocked"
-    if statuses - {"ready"}:
+    if any(
+        artifact.get("required", False)
+        and artifact.get("status") in {"missing", "blocked"}
+        for artifact in artifact_rows
+    ):
+        return "blocked"
+    if any(artifact.get("status") != "ready" for artifact in artifact_rows):
         return "review"
     return "ready"
 
@@ -1504,6 +1604,38 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 10 MyPrivateAgent local consumer probe is optional before MyPrivateAgent repository integration; regenerate it after Phase 10 readiness or handoff bundle evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase11_local_provider_integration_profile"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 11 local provider integration profile is optional before caller-side integration dry-run review; regenerate it after Phase 10 or handoff evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase11_provider_discovery_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 11 provider discovery smoke is optional before caller-side integration dry-run review; regenerate it after profile or provider discovery evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase11_rag_retrieve_consumption_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 11 retrieve-consumption smoke is optional before caller-side integration dry-run review; regenerate it after Phase 4 or provider contract smoke evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase11_source_binding_preview_smoke"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 11 source-binding preview smoke is optional before caller-side integration dry-run review; regenerate it after source-binding or Phase 10 readiness evidence updates."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

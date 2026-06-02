@@ -45,6 +45,12 @@
 - Phase 10 MyPrivateAgent local consumer readiness export implemented and refreshed (`export-phase10-myprivateagent-local-consumer-readiness`), summarizing Phase 9 linkage, provider handoff posture, evidence-pack readiness, graph boundary posture, access-key mode, and runtime-promotion boundary status.
 - Phase 10 MyPrivateAgent local consumer probe implemented and refreshed (`add-phase10-myprivateagent-local-consumer-probe`), validating local access mode, contract coverage, handoff visibility, evidence-pack caller smoke, graph planned-boundary alignment, and runtime-default preservation.
 - Phase 10 MyPrivateAgent local consumer decision record documented (`document-phase10-myprivateagent-local-consumer-decision-record`), explicitly freezing current `ready_for_local_myprivateagent_consumer_probe_review` posture while preserving runtime-default and caller-owned control-plane boundaries.
+- Phase 11 local provider integration dry-run contract documented (`document-phase11-local-provider-integration-contract`), defining provider-side local dry-run scope for discovery, retrieval-consumption, and source-binding preview checks.
+- Phase 11 local provider integration profile export implemented (`add-phase11-unified-knowledge-provider-profile`), summarizing Phase 10 linkage, local URL/API-key assumptions, integration-probe posture, and handoff posture as machine-readable local evidence.
+- Phase 11 provider discovery smoke implemented (`add-phase11-provider-discovery-smoke`), validating profile presence, integration-probe bindability, provider contract smoke pass state, and handoff visibility of Phase 11 profile evidence.
+- Phase 11 retrieval-consumption smoke implemented (`add-phase11-rag-retrieve-consumption-smoke`), validating Phase 4 caller-consumption readiness, provider contract smoke pass state, and runtime-default boundary preservation.
+- Phase 11 source-binding preview smoke implemented (`add-phase11-source-binding-preview-smoke`), validating source-binding readiness and caller-owned binding boundary from local evidence.
+- Phase 11 local provider integration decision record documented (`document-phase11-local-provider-integration-decision-record`), freezing current `ready_for_local_provider_integration_review` posture while preserving runtime and ownership boundaries.
 - Source binding compact summary and aggregate count reuse in handoff/deployed-smoke evidence.
 - Phase 3 customer-like benchmark expansion completed (`2026-05-31-expand-phase3-customer-like-benchmark-cases`) as a historical milestone; that slice first expanded baseline fixture to 24 cases before later extensions moved the canonical baseline to 26 cases.
 - Phase 3 promotion customer-like benchmark expansion completed (`2026-05-31-phase3-expand-promotion-customer-like-cases`), extending the canonical baseline fixture to 29 cases and exposing a second expected-empty false-positive trap for promotion review.
@@ -226,6 +232,26 @@
   - `docs/smoke/myprivateagent-local-consumer-verification/phase10-myprivateagent-local-consumer-probe.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase10_myprivateagent_local_consumer_probe` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes non-blocking `phase10_myprivateagent_local_consumer_probe` step)
+- Phase 11 local provider integration profile additions:
+  - `docs/integration/myprivateagent-local-provider-integration/phase11-local-provider-integration-profile.json`
+  - `docs/integration/myprivateagent-local-provider-integration/phase11-local-provider-integration-profile.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase11_local_provider_integration_profile` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes `phase11_local_provider_integration_profile` step)
+- Phase 11 provider discovery smoke additions:
+  - `docs/smoke/myprivateagent-local-provider-integration/phase11-provider-discovery-smoke.json`
+  - `docs/smoke/myprivateagent-local-provider-integration/phase11-provider-discovery-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase11_provider_discovery_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes `phase11_provider_discovery_smoke` step)
+- Phase 11 retrieval-consumption smoke additions:
+  - `docs/smoke/myprivateagent-local-provider-integration/phase11-rag-retrieve-consumption-smoke.json`
+  - `docs/smoke/myprivateagent-local-provider-integration/phase11-rag-retrieve-consumption-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase11_rag_retrieve_consumption_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes `phase11_rag_retrieve_consumption_smoke` step)
+- Phase 11 source-binding preview smoke additions:
+  - `docs/smoke/myprivateagent-local-provider-integration/phase11-source-binding-preview-smoke.json`
+  - `docs/smoke/myprivateagent-local-provider-integration/phase11-source-binding-preview-smoke.md`
+  - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase11_source_binding_preview_smoke` summary row)
+  - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes `phase11_source_binding_preview_smoke` step)
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -255,9 +281,9 @@
 
 ## Latest Refresh
 
-- Run time: `2026-06-01T13:24:10.071795+00:00`
+- Run time: `2026-06-01T13:39:35.664348+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
-- Refresh status: `review`
+- Refresh status: `blocked`
 - Step summary:
   - `provider_integration_probe`: `ready`
   - `provider_contract_smoke`: `ready` (`9/9` checks)
@@ -276,9 +302,13 @@
   - `phase5_graph_boundary_smoke_summary`: `ready`
   - `phase9_myprivateagent_local_consumption_readiness`: `review`
   - `phase9_myprivateagent_local_consumption_smoke`: `ready`
-  - `phase10_myprivateagent_local_consumer_readiness`: `review`
-  - `phase10_myprivateagent_local_consumer_probe`: `ready`
-  - `provider_handoff_bundle`: `review`
+  - `phase10_myprivateagent_local_consumer_readiness`: `skipped` (blocked by upstream step)
+  - `phase10_myprivateagent_local_consumer_probe`: `skipped` (blocked by upstream step)
+  - `phase11_local_provider_integration_profile`: `skipped` (blocked by upstream step)
+  - `phase11_provider_discovery_smoke`: `skipped` (blocked by upstream step)
+  - `phase11_rag_retrieve_consumption_smoke`: `skipped` (blocked by upstream step)
+  - `phase11_source_binding_preview_smoke`: `skipped` (blocked by upstream step)
+  - `provider_handoff_bundle`: `skipped` (blocked by upstream step)
 
 ## Current Gaps To Close
 

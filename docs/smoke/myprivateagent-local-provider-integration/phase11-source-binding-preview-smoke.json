@@ -1,0 +1,43 @@
+{
+  "id": "phase11-source-binding-preview-smoke-v1",
+  "generated_at": "2026-06-01T13:42:27.288464+00:00",
+  "status": "ready",
+  "decision": "keep_source_binding_preview_only",
+  "summary": {
+    "total_checks": 3,
+    "passed_checks": 3,
+    "failed_checks": 0
+  },
+  "checks": [
+    {
+      "id": "source_binding_summary_ready",
+      "required": true,
+      "status": "ready",
+      "summary": "source_binding_status=ready",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
+    },
+    {
+      "id": "source_binding_policy_owner",
+      "required": true,
+      "status": "ready",
+      "summary": "source_binding_policy_owner=caller",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json"
+    },
+    {
+      "id": "bindable_source_count_positive",
+      "required": true,
+      "status": "ready",
+      "summary": "bindable_sources=2/2",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
+    }
+  ],
+  "notes": [
+    "This smoke validates source-binding preview compatibility for MyPrivateAgent integration review.",
+    "It does not create source-to-agent bindings."
+  ],
+  "json_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-source-binding-preview-smoke.json",
+  "markdown_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-source-binding-preview-smoke.md"
+}

@@ -1,0 +1,62 @@
+{
+  "id": "phase11-local-provider-integration-profile-v1",
+  "generated_at": "2026-06-01T13:42:27.003659+00:00",
+  "status": "blocked",
+  "integration_state": "blocked",
+  "decision": "resolve_local_integration_blockers",
+  "summary": {
+    "total_signals": 4,
+    "required_signals": 4,
+    "ready_signals": 2,
+    "review_signals": 1,
+    "blocked_signals": 1,
+    "local_provider_url": "http://127.0.0.1:8020",
+    "api_key_mode": "not_configured_local_dev",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_binding_policy_owner": "caller",
+    "open_gate_ids": [
+      "phase10_local_consumer_readiness",
+      "provider_handoff_bundle"
+    ]
+  },
+  "signals": [
+    {
+      "id": "phase10_local_consumer_readiness",
+      "required": true,
+      "status": "review",
+      "summary": "status=review; local_consumer_state=ready_for_local_consumer_probe_review",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json"
+    },
+    {
+      "id": "phase10_local_consumer_probe",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; passed_checks=7/7",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.json"
+    },
+    {
+      "id": "provider_integration_probe",
+      "required": true,
+      "status": "ready",
+      "summary": "bindable=True",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-binding\\provider-integration-probe.json"
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    }
+  ],
+  "notes": [
+    "Phase 11 profile is read-only local integration evidence for MyPrivateAgent-style consumption.",
+    "It does not mutate source bindings, switch runtime defaults, or enable GraphRAG execution."
+  ],
+  "json_path": "docs\\integration\\myprivateagent-local-provider-integration\\phase11-local-provider-integration-profile.json",
+  "markdown_path": "docs\\integration\\myprivateagent-local-provider-integration\\phase11-local-provider-integration-profile.md"
+}

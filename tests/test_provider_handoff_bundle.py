@@ -241,6 +241,37 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "passed_checks=" in artifacts[
         "phase10_myprivateagent_local_consumer_probe"
     ]["summary"]
+    assert artifacts["phase11_local_provider_integration_profile"]["present"] is True
+    assert artifacts["phase11_local_provider_integration_profile"]["required"] is False
+    assert artifacts["phase11_local_provider_integration_profile"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "integration_state=" in artifacts[
+        "phase11_local_provider_integration_profile"
+    ]["summary"]
+    assert artifacts["phase11_provider_discovery_smoke"]["present"] is True
+    assert artifacts["phase11_provider_discovery_smoke"]["required"] is False
+    assert artifacts["phase11_provider_discovery_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase11_rag_retrieve_consumption_smoke"]["present"] is True
+    assert artifacts["phase11_rag_retrieve_consumption_smoke"]["required"] is False
+    assert artifacts["phase11_rag_retrieve_consumption_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase11_source_binding_preview_smoke"]["present"] is True
+    assert artifacts["phase11_source_binding_preview_smoke"]["required"] is False
+    assert artifacts["phase11_source_binding_preview_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
     assert artifacts["deployed_provider_smoke"]["present"] in {True, False}
     assert artifacts["deployed_provider_smoke"]["required"] is False
     assert artifacts["deployed_provider_smoke"]["status"] in {

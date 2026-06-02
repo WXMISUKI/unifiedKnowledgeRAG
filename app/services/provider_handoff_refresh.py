@@ -47,6 +47,18 @@ from app.services.phase10_myprivateagent_local_consumer_readiness import (
 from app.services.phase10_myprivateagent_local_consumer_probe import (
     export_phase10_myprivateagent_local_consumer_probe_report,
 )
+from app.services.phase11_local_provider_integration_profile import (
+    export_phase11_local_provider_integration_profile_report,
+)
+from app.services.phase11_provider_discovery_smoke import (
+    export_phase11_provider_discovery_smoke_report,
+)
+from app.services.phase11_rag_retrieve_consumption_smoke import (
+    export_phase11_rag_retrieve_consumption_smoke_report,
+)
+from app.services.phase11_source_binding_preview_smoke import (
+    export_phase11_source_binding_preview_smoke_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -479,10 +491,31 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
+            id="phase11_local_provider_integration_profile",
+            category="local-provider-integration",
+            output_dir=artifact_base_dir
+            / "docs/integration/myprivateagent-local-provider-integration",
+            exporter=lambda output_dir: export_phase11_local_provider_integration_profile_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
             id="provider_handoff_bundle",
             category="handoff",
             output_dir=artifact_base_dir / "docs/integration/provider-handoff",
             exporter=lambda output_dir: export_provider_handoff_bundle_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase11_provider_discovery_smoke",
+            category="local-provider-integration-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/myprivateagent-local-provider-integration",
+            exporter=lambda output_dir: export_phase11_provider_discovery_smoke_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),
@@ -494,6 +527,26 @@ def default_handoff_refresh_steps(
             output_dir=artifact_base_dir
             / "docs/smoke/myprivateagent-local-consumer-verification",
             exporter=lambda output_dir: export_phase10_myprivateagent_local_consumer_probe_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase11_rag_retrieve_consumption_smoke",
+            category="local-provider-integration-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/myprivateagent-local-provider-integration",
+            exporter=lambda output_dir: export_phase11_rag_retrieve_consumption_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase11_source_binding_preview_smoke",
+            category="local-provider-integration-smoke",
+            output_dir=artifact_base_dir / "docs/smoke/myprivateagent-local-provider-integration",
+            exporter=lambda output_dir: export_phase11_source_binding_preview_smoke_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

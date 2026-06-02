@@ -516,6 +516,44 @@ Phase 10 now also has a local consumer verification decision record:
 
 The record freezes the current `ready_for_local_myprivateagent_consumer_probe_review` posture while preserving provider/caller ownership boundaries and runtime-default gates.
 
+## Phase 11 Local Provider Integration Dry-Run Contract
+
+Phase 11 introduces a provider-side local integration dry-run contract:
+
+`docs/integration/myprivateagent-local-provider-integration/phase11-local-provider-integration-contract.md`
+
+The contract defines discovery, retrieval-consumption, and source-binding preview checks for a MyPrivateAgent-style local integration review while keeping the provider read-only and runtime-default boundaries unchanged.
+
+## Phase 11 Local Provider Integration Profile
+
+Phase 11 now has a local integration profile export:
+
+`docs/integration/myprivateagent-local-provider-integration/phase11-local-provider-integration-profile.json`
+
+`docs/integration/myprivateagent-local-provider-integration/phase11-local-provider-integration-profile.md`
+
+The profile summarizes Phase 10 linkage, local URL and API-key mode assumptions, integration probe state, and handoff posture for local dry-run review.
+
+## Phase 11 Local Provider Integration Smokes
+
+Phase 11 also adds three compact smoke artifacts:
+
+`docs/smoke/myprivateagent-local-provider-integration/phase11-provider-discovery-smoke.json`
+
+`docs/smoke/myprivateagent-local-provider-integration/phase11-rag-retrieve-consumption-smoke.json`
+
+`docs/smoke/myprivateagent-local-provider-integration/phase11-source-binding-preview-smoke.json`
+
+These smokes validate discovery compatibility, retrieval-consumption evidence compatibility, and source-binding preview compatibility without mutating provider state.
+
+## Phase 11 Local Provider Integration Decision Record
+
+Phase 11 now also has a local integration decision record:
+
+`docs/integration/myprivateagent-local-provider-integration/phase11-local-provider-integration-decision-record.md`
+
+The record freezes `ready_for_local_provider_integration_review` while preserving caller-owned binding and policy boundaries.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:
