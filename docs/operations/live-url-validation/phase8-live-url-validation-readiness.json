@@ -1,6 +1,6 @@
 {
   "id": "phase8-live-url-validation-readiness-v1",
-  "generated_at": "2026-06-02T03:13:51.670553+00:00",
+  "generated_at": "2026-06-03T01:40:57.634046+00:00",
   "status": "review",
   "live_validation_state": "review",
   "decision": "keep_runtime_defaults_until_live_url_validation",

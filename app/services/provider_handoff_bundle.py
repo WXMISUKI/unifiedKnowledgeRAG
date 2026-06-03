@@ -332,6 +332,15 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase12b_candidate_backend_evaluation_readiness",
+        category="candidate-backend-evaluation",
+        path=Path(
+            "docs/operations/candidate-backend-evaluation-readiness/"
+            "phase12b-candidate-backend-evaluation-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -1078,6 +1087,23 @@ def _artifact_status_and_summary(
                 f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
             ),
         )
+    if artifact_id == "phase12b_candidate_backend_evaluation_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        reference_only_family_ids = summary.get("reference_only_family_ids", [])
+        review_ready_family_ids = summary.get("review_ready_family_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; evaluation_state={payload.get('evaluation_state', 'review')}; "
+                f"decision={payload.get('decision', 'continue_spike')}; "
+                f"strategy_verdict={_dict_value(summary, 'strategy_verdict', 'continue_provider_first_with_candidate_backends')}; "
+                f"review_ready_families={_jsonish_list(review_ready_family_ids if isinstance(review_ready_family_ids, list) else [])}; "
+                f"reference_only_families={_jsonish_list(reference_only_family_ids if isinstance(reference_only_family_ids, list) else [])}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1224,6 +1250,10 @@ def _dict_value(value: Any, key: str, fallback: Any) -> Any:
     return value.get(key, fallback)
 
 
+def _jsonish_list(values: list[Any]) -> str:
+    return json.dumps(values, ensure_ascii=False)
+
+
 def _float_value(value: Any, *, fallback: float) -> float:
     if isinstance(value, bool):
         return fallback
@@ -1316,6 +1346,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 11 source-binding preview smoke evidence is missing."
     if artifact_id == "phase12_local_rag_integration_hardening_profile":
         return "Optional Phase 12 local RAG integration hardening profile evidence is missing."
+    if artifact_id == "phase12b_candidate_backend_evaluation_readiness":
+        return "Optional Phase 12b candidate backend evaluation readiness evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1404,6 +1436,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase11_source_binding_preview_smoke"
     if artifact_id == "phase12_local_rag_integration_hardening_profile":
         return "regenerate_phase12_local_rag_integration_hardening_profile"
+    if artifact_id == "phase12b_candidate_backend_evaluation_readiness":
+        return "regenerate_phase12b_candidate_backend_evaluation_readiness"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1671,6 +1705,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 12 local RAG integration hardening profile is optional for local hardening review; regenerate it after provider contract or readiness evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase12b_candidate_backend_evaluation_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 12b candidate backend evaluation readiness is optional before backend candidate review; regenerate it after Phase 3, Phase 6, or local integration evidence changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

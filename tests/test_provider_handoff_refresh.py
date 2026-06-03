@@ -142,6 +142,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase11_provider_discovery_smoke" in step_ids
     assert "phase11_rag_retrieve_consumption_smoke" in step_ids
     assert "phase11_source_binding_preview_smoke" in step_ids
+    assert "phase12b_candidate_backend_evaluation_readiness" in step_ids
     assert "phase8_live_url_smoke_consistency_check" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
@@ -250,6 +251,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase11_local_provider_integration_profile"
     )
     assert step_ids.index("phase11_local_provider_integration_profile") < step_ids.index(
+        "phase12b_candidate_backend_evaluation_readiness"
+    )
+    assert step_ids.index("phase12b_candidate_backend_evaluation_readiness") < step_ids.index(
         "provider_handoff_bundle"
     )
     assert step_ids.index("provider_handoff_bundle") < step_ids.index(

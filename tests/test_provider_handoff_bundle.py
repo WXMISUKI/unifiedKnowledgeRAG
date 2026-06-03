@@ -76,6 +76,12 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "fusion=rrf" in artifacts[
         "phase3_hybrid_fusion_threshold_calibration"
     ]["summary"]
+    assert artifacts["phase12b_candidate_backend_evaluation_readiness"]["present"] is True
+    assert artifacts["phase12b_candidate_backend_evaluation_readiness"]["required"] is False
+    assert artifacts["phase12b_candidate_backend_evaluation_readiness"]["status"] == "review"
+    assert "strategy_verdict=continue_provider_first_with_candidate_backends" in artifacts[
+        "phase12b_candidate_backend_evaluation_readiness"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"

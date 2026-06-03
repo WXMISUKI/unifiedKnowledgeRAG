@@ -1,6 +1,6 @@
 {
   "id": "phase2-source-format-demand-readiness-v1",
-  "generated_at": "2026-06-02T03:13:51.622121+00:00",
+  "generated_at": "2026-06-03T01:40:57.581256+00:00",
   "status": "ready",
   "decision": "keep_markdown_baseline",
   "baseline_parser": "markdown",

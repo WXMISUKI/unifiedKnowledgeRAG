@@ -62,6 +62,9 @@ from app.services.phase11_source_binding_preview_smoke import (
 from app.services.phase12_local_rag_integration_hardening_profile import (
     export_phase12_local_rag_integration_hardening_profile_report,
 )
+from app.services.phase12b_candidate_backend_evaluation_readiness import (
+    export_phase12b_candidate_backend_evaluation_readiness_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -516,6 +519,19 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: _phase12_local_rag_hardening_status(report),
         ),
         HandoffRefreshStepSpec(
+            id="phase12b_candidate_backend_evaluation_readiness",
+            category="candidate-backend-evaluation",
+            output_dir=artifact_base_dir
+            / "docs/operations/candidate-backend-evaluation-readiness",
+            exporter=lambda output_dir: export_phase12b_candidate_backend_evaluation_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: _phase12b_candidate_backend_evaluation_status(
+                report
+            ),
+        ),
+        HandoffRefreshStepSpec(
             id="provider_handoff_bundle",
             category="handoff",
             output_dir=artifact_base_dir / "docs/integration/provider-handoff",
@@ -827,6 +843,13 @@ def _phase3_fp_fn_step_status(report: Any) -> str:
 
 
 def _phase12_local_rag_hardening_status(report: Any) -> str:
+    status = getattr(report, "status", "review")
+    if status == "blocked":
+        return "review"
+    return status
+
+
+def _phase12b_candidate_backend_evaluation_status(report: Any) -> str:
     status = getattr(report, "status", "review")
     if status == "blocked":
         return "review"

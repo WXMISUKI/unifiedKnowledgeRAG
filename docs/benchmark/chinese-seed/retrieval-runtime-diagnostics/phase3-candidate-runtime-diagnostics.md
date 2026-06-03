@@ -3,7 +3,7 @@
 - Report: `phase3-candidate-runtime-diagnostics-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-02T03:13:51.633857+00:00`
+- Generated At: `2026-06-03T01:40:57.595046+00:00`
 
 ## Summary
 

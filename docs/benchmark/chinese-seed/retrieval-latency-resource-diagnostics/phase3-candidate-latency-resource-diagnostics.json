@@ -1,6 +1,6 @@
 {
   "id": "phase3-candidate-latency-resource-diagnostics-v1",
-  "generated_at": "2026-06-02T03:13:51.635896+00:00",
+  "generated_at": "2026-06-03T01:40:57.597637+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "summary": {

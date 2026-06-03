@@ -3,7 +3,7 @@
 - Report: `phase6-bge-m3-vs-mock-fixture-diagnostics-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-02T03:13:51.604921+00:00`
+- Generated At: `2026-06-03T01:40:57.559989+00:00`
 
 ## Summary
 
