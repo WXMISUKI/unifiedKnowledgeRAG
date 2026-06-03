@@ -1,15 +1,15 @@
 {
   "id": "phase11-local-provider-integration-profile-v1",
-  "generated_at": "2026-06-01T13:42:27.003659+00:00",
-  "status": "blocked",
-  "integration_state": "blocked",
-  "decision": "resolve_local_integration_blockers",
+  "generated_at": "2026-06-02T03:13:51.684796+00:00",
+  "status": "review",
+  "integration_state": "ready_for_local_provider_integration_review",
+  "decision": "run_phase11_local_integration_smokes",
   "summary": {
     "total_signals": 4,
     "required_signals": 4,
     "ready_signals": 2,
-    "review_signals": 1,
-    "blocked_signals": 1,
+    "review_signals": 2,
+    "blocked_signals": 0,
     "local_provider_url": "http://127.0.0.1:8020",
     "api_key_mode": "not_configured_local_dev",
     "runtime_promotion_status": "keep_runtime_defaults",
@@ -47,8 +47,8 @@
     {
       "id": "provider_handoff_bundle",
       "required": true,
-      "status": "blocked",
-      "summary": "status=blocked",
+      "status": "review",
+      "summary": "status=review",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     }

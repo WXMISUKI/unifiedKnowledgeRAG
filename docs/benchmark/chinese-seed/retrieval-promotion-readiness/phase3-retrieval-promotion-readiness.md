@@ -3,7 +3,7 @@
 - Report: `phase3-retrieval-promotion-readiness-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-01T13:24:10.018313+00:00`
+- Generated At: `2026-06-02T03:13:51.632137+00:00`
 - Gap Matrix: `docs/benchmark/chinese-seed/retrieval-promotion-readiness/phase3-retrieval-promotion-gap-matrix.md`
 
 ## Summary

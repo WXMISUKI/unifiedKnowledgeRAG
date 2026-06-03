@@ -1018,3 +1018,82 @@ The project SHALL treat Phase 11 MyPrivateAgent local provider integration dry-r
 - **WHEN** Phase 11 dry-run evidence is generated
 - **THEN** it does not imply runtime default promotion, GraphRAG execution enablement, source-to-agent binding mutation, or caller control-plane ownership transfer
 
+### Requirement: Phase 12 open-source RAG engine evaluation remains provider-first
+
+The project SHALL treat mature open-source RAG engines and platforms as evidence-backed candidates or references before any runtime replacement is considered.
+
+#### Scenario: Short-term roadmap prioritizes MyPrivateAgent local RAG consumption
+
+- **WHEN** the open-source RAG engine roadmap is reviewed
+- **THEN** it identifies local MyPrivateAgent RAG consumption as the short-term priority
+- **AND** it preserves the current provider HTTP contract, evidence pack, handoff, source-binding preview, and local verification artifacts as the integration surface
+
+#### Scenario: Medium-term roadmap evaluates optional backend spikes
+
+- **WHEN** Haystack, RAGFlow, LightRAG, pgvector, Qdrant, BGE-M3, or another RAG engine is considered
+- **THEN** the roadmap treats it as an optional backend spike that must be compared through shared benchmark, citation, latency, deployment, and operations evidence
+
+#### Scenario: Long-term roadmap preserves engine replaceability
+
+- **WHEN** a future change proposes engine-agnostic backend selection
+- **THEN** it keeps caller-facing provider contracts stable and hides framework-specific response shapes behind provider-owned adapters
+
+### Requirement: Platform projects remain external references unless separately approved
+
+The project SHALL keep platform-style open-source projects as product references or external integrations unless a separate evidence-backed change proves that a narrow backend capability belongs inside this provider.
+
+#### Scenario: Platform capabilities do not move into the provider
+
+- **WHEN** Dify, Langflow, RAGFlow, or another platform project is reviewed
+- **THEN** workflow orchestration, agent identity, approval, audit, registration, heartbeat governance, source-to-agent binding, and final answer policy remain caller or external platform responsibilities
+
+#### Scenario: Candidate review does not imply runtime promotion
+
+- **WHEN** an open-source RAG candidate shows useful local evidence
+- **THEN** Qdrant, BGE-M3, hybrid retrieval, pgvector, GraphRAG, rerankers, answer composition, and parser expansion remain non-default until a separate promotion change closes the required gates
+
+### Requirement: Local RAG integration hardening precedes backend migration
+
+The project SHALL complete a local MyPrivateAgent RAG integration hardening slice before considering any retrieval backend migration.
+
+#### Scenario: Local integration hardening is the short-term acceptance gate
+
+- **WHEN** short-term roadmap execution is planned
+- **THEN** it must execute the local MyPrivateAgent RAG integration hardening slice
+- **AND** it keeps endpoint contracts, evidence-pack semantics, and local API assumptions explicit and stable
+
+#### Scenario: Local hardening remains read-only
+
+- **WHEN** hardening artifacts are executed locally
+- **THEN** they remain read-only exports or smoke checks
+- **AND** runtime retrieval defaults, GraphRAG execution, and parser defaults remain unchanged
+
+### Requirement: Local RAG integration hardening surfaces explicit assumptions
+
+The project SHALL expose short-term local integration assumptions as explicit evidence inputs and not implicit environment behavior.
+
+#### Scenario: Local integration assumptions are explicit
+
+- **WHEN** the hardening profile is exported
+- **THEN** it records local base URL, API-key mode (`not_configured_local_dev` or `provider_key_protected_api`), and required smoke dependencies
+
+#### Scenario: Source and policy boundaries remain explicit
+
+- **WHEN** integration hardening is reviewed
+- **THEN** it states that source-to-agent binding, final answer policy, and caller orchestration remain external caller responsibilities
+
+### Requirement: Local retrieve consumption remains fail-closed
+
+The project SHALL keep local retrieval consumption checks constrained to fail-closed evidence behavior.
+
+#### Scenario: Fail-closed local retrieval behavior is preserved
+
+- **WHEN** retrieval return is empty or insufficient
+- **THEN** `insufficient_evidence` + reason and `use_only_returned_citations` behavior is preserved and exported for local integration review
+
+#### Scenario: Hardening smoke validates consumption contracts
+
+- **WHEN** hardening smoke runs
+- **THEN** it checks phase4 caller-consumption readiness and provider contract smoke alignment
+- **AND** it records a local integration verdict without mutating runtime behavior
+

@@ -1,6 +1,6 @@
 {
   "id": "phase7-cross-phase-handoff-consistency-smoke-v1",
-  "generated_at": "2026-06-01T13:24:10.047060+00:00",
+  "generated_at": "2026-06-02T03:13:51.667794+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults_until_live_validation",
   "summary": {

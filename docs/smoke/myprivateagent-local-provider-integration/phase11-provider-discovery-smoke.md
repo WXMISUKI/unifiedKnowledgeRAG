@@ -3,7 +3,7 @@
 - Report: `phase11-provider-discovery-smoke-v1`
 - Status: `ready`
 - Decision: `keep_discovery_read_only`
-- Generated At: `2026-06-01T13:42:27.433086+00:00`
+- Generated At: `2026-06-02T03:13:51.703006+00:00`
 
 ## Summary
 

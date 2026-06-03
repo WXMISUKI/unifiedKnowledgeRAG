@@ -4,7 +4,7 @@
 - Status: `review`
 - Local Consumption State: `review`
 - Decision: `keep_local_consumption_review`
-- Generated At: `2026-06-01T13:24:10.051524+00:00`
+- Generated At: `2026-06-02T03:13:51.673383+00:00`
 
 ## Summary
 

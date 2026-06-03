@@ -59,6 +59,9 @@ from app.services.phase11_rag_retrieve_consumption_smoke import (
 from app.services.phase11_source_binding_preview_smoke import (
     export_phase11_source_binding_preview_smoke_report,
 )
+from app.services.phase12_local_rag_integration_hardening_profile import (
+    export_phase12_local_rag_integration_hardening_profile_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -502,6 +505,17 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
+            id="phase12_local_rag_integration_hardening_profile",
+            category="local-rag-hardening",
+            output_dir=artifact_base_dir
+            / "docs/integration/myprivateagent-local-rag-integration-hardening",
+            exporter=lambda output_dir: export_phase12_local_rag_integration_hardening_profile_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: _phase12_local_rag_hardening_status(report),
+        ),
+        HandoffRefreshStepSpec(
             id="provider_handoff_bundle",
             category="handoff",
             output_dir=artifact_base_dir / "docs/integration/provider-handoff",
@@ -810,3 +824,10 @@ def _phase3_fp_fn_step_status(report: Any) -> str:
     fp_count = getattr(report, "false_positive_count", 0)
     fn_count = getattr(report, "false_negative_count", 0)
     return "review" if (fp_count > 0 or fn_count > 0) else "ready"
+
+
+def _phase12_local_rag_hardening_status(report: Any) -> str:
+    status = getattr(report, "status", "review")
+    if status == "blocked":
+        return "review"
+    return status

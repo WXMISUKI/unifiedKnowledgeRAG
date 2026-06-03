@@ -1,0 +1,68 @@
+{
+  "id": "phase12-local-rag-integration-hardening-smoke-v1",
+  "generated_at": "2026-06-02T03:13:50.185116+00:00",
+  "status": "blocked",
+  "decision": "confirm_local_rag_integration_hardening",
+  "summary": {
+    "total_checks": 6,
+    "passed_checks": 5,
+    "failed_checks": 1,
+    "handoff_artifact_count": 44
+  },
+  "checks": [
+    {
+      "id": "phase12_local_rag_integration_hardening_profile_present",
+      "required": true,
+      "status": "ready",
+      "summary": "phase12_profile_present=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-local-rag-integration-hardening\\phase12-local-rag-integration-hardening-profile.json"
+    },
+    {
+      "id": "provider_contract_manifest_check",
+      "required": true,
+      "status": "ready",
+      "summary": "provider_contract_manifest_passed=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "provider_contract_smoke_ready",
+      "required": true,
+      "status": "ready",
+      "summary": "provider_contract_smoke_passed=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "provider_handoff_consistency",
+      "required": true,
+      "status": "blocked",
+      "summary": "provider_handoff_status=review",
+      "recommended_action": "resolve_provider_handoff_issue",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "phase11_source_binding_preview_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "phase11_source_binding_preview_smoke_ready=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-source-binding-preview-smoke.json"
+    },
+    {
+      "id": "phase11_rag_retrieve_consumption_readiness",
+      "required": true,
+      "status": "ready",
+      "summary": "phase11_rag_retrieve_consumption_smoke_ready=true",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-rag-retrieve-consumption-smoke.json"
+    }
+  ],
+  "notes": [
+    "Smoke is read-only and for local MyPrivateAgent integration hardening review.",
+    "No runtime execution changes and no source-to-agent binding mutation are performed."
+  ],
+  "json_path": "docs\\smoke\\myprivateagent-local-rag-integration-hardening\\phase12-local-rag-integration-hardening-smoke.json",
+  "markdown_path": "docs\\smoke\\myprivateagent-local-rag-integration-hardening\\phase12-local-rag-integration-hardening-smoke.md"
+}

@@ -554,6 +554,27 @@ Phase 11 now also has a local integration decision record:
 
 The record freezes `ready_for_local_provider_integration_review` while preserving caller-owned binding and policy boundaries.
 
+## Phase 12 Open-Source RAG Engine Evaluation
+
+Phase 12 records the current strategic selection boundary for mature open-source RAG engines:
+
+`docs/roadmap/open_source_rag_engine_evaluation_roadmap.md`
+
+The decision is `continue_provider_first_with_candidate_backends`. The short-term priority is smooth local MyPrivateAgent RAG consumption through the existing provider contract, evidence pack, handoff, source-binding preview, and local integration smoke artifacts. LlamaIndex remains the current lightweight baseline while Qdrant, BGE-M3, hybrid retrieval, pgvector, Haystack, RAGFlow, LightRAG, and GraphRAG-related options stay behind evidence-backed candidate gates.
+
+This phase is intentionally strategy and evaluation oriented. It does not replace the provider with a platform, does not promote runtime defaults, does not add heavy parser dependencies, and does not move caller control-plane responsibilities into this project. Dify, Langflow, and RAGFlow-style platform capabilities remain product references or external integrations unless a separate evidence-backed change approves a narrow provider-owned backend capability.
+
+### Phase 12a Local RAG Integration Hardening (Execution Slice)
+
+Before any candidate backend migration, the first execution slice under Phase 12 is local MyPrivateAgent RAG integration hardening:
+
+- normalize local URL and API-key mode assumptions,
+- harden contract and evidence readiness outputs for local consumers,
+- add a deterministic local hardening smoke for manifest, preflight, retrieval-consumption, source-binding preview, and phase4/phase10/phase11 linkage,
+- keep all outputs read-only and keep `keep_runtime_defaults` as the default decision.
+
+This keeps the project practical for immediate local integration while preserving long-term backend evaluation agility.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

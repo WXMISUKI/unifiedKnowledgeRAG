@@ -323,6 +323,15 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase12_local_rag_integration_hardening_profile",
+        category="local-rag-hardening",
+        path=Path(
+            "docs/integration/myprivateagent-local-rag-integration-hardening/"
+            "phase12-local-rag-integration-hardening-profile.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -1055,6 +1064,20 @@ def _artifact_status_and_summary(
                 f"false_negative_count={_int_value(summary.get('false_negative_count'), fallback=0)}"
             ),
         )
+    if artifact_id == "phase12_local_rag_integration_hardening_profile":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; hardening_state={payload.get('hardening_state', 'review')}; "
+                f"decision={payload.get('decision', 'resolve_phase12_hardening_blockers')}; "
+                f"local_provider_url={_dict_value(summary, 'local_provider_url', 'http://127.0.0.1:8020')}; "
+                f"api_key_mode={_dict_value(summary, 'api_key_mode', 'not_configured_local_dev')}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1291,6 +1314,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 11 retrieve-consumption smoke evidence is missing."
     if artifact_id == "phase11_source_binding_preview_smoke":
         return "Optional Phase 11 source-binding preview smoke evidence is missing."
+    if artifact_id == "phase12_local_rag_integration_hardening_profile":
+        return "Optional Phase 12 local RAG integration hardening profile evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1377,6 +1402,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase11_rag_retrieve_consumption_smoke"
     if artifact_id == "phase11_source_binding_preview_smoke":
         return "regenerate_phase11_source_binding_preview_smoke"
+    if artifact_id == "phase12_local_rag_integration_hardening_profile":
+        return "regenerate_phase12_local_rag_integration_hardening_profile"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1636,6 +1663,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 11 source-binding preview smoke is optional before caller-side integration dry-run review; regenerate it after source-binding or Phase 10 readiness evidence updates."
+        )
+    if any(
+        artifact["id"] == "phase12_local_rag_integration_hardening_profile"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 12 local RAG integration hardening profile is optional for local hardening review; regenerate it after provider contract or readiness evidence updates."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

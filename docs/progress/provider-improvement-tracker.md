@@ -86,12 +86,17 @@
 - Phase 6 Qdrant deployment/backup/recovery contract documented (`document-phase6-qdrant-deployment-backup-recovery-contract`), defining operator-facing evidence gates before any Qdrant runtime promotion review.
 - Phase 6 Qdrant vector-store readiness export implemented and refreshed (`export-phase6-qdrant-vector-store-readiness`), consolidating deployment/reindex/contract/candidate evidence into a machine-readable review artifact with optional handoff visibility.
 - Phase 6 Qdrant backup/restore smoke implemented and refreshed (`add-phase6-qdrant-backup-restore-smoke`), validating prerequisite evidence coverage in a compact read-only smoke artifact.
+- Phase 12 MyPrivateAgent local RAG integration hardening contract documented (`document-phase12-local-rag-integration-hardening`).
+- Phase 12 local RAG integration hardening profile export implemented and refreshed (`export-phase12-local-rag-integration-hardening-profile`).
+- Phase 12 local RAG integration hardening smoke implemented and refreshed (`add-phase12-local-rag-integration-hardening-smoke`).
+- Phase 12 local RAG integration hardening decision record documented (`document-phase12-local-rag-integration-hardening-decision-record`)，冻结当前本地 hardening 阶段的 `keep_runtime_defaults` review posture。
 
 ## In Progress
 
 - Keep local evidence artifacts aligned with current code/spec state after each accepted slice.
 - Evidence refresh stage is now operationalized and should be maintained through:
   `python scripts/export_provider_handoff_refresh.py`
+- Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 
 ## Benchmark Fixture Scope
 
@@ -252,6 +257,12 @@
   - `docs/smoke/myprivateagent-local-provider-integration/phase11-source-binding-preview-smoke.md`
   - `docs/integration/provider-handoff/provider-handoff-bundle.json` (includes optional `phase11_source_binding_preview_smoke` summary row)
   - `docs/integration/provider-handoff-refresh/provider-handoff-refresh.json` (includes `phase11_source_binding_preview_smoke` step)
+- Phase 12 open-source RAG engine evaluation roadmap:
+  - `docs/roadmap/open_source_rag_engine_evaluation_roadmap.md`
+  - Strategy verdict: `continue_provider_first_with_candidate_backends`
+  - Short-term priority: MyPrivateAgent local RAG consumption through existing provider contracts
+  - Medium-term priority: optional backend spikes for Haystack, RAGFlow, LightRAG, pgvector, and continued Qdrant/BGE-M3 evidence
+  - Long-term priority: engine-agnostic provider adapters without exposing framework-specific response shapes to callers
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -270,45 +281,78 @@
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
-- Continue next smallest Phase 3 slice on evaluation-only gating candidates with cross-case coverage, and avoid single-case overfitting.
+- Keep open-source RAG engine adoption behind Phase 12 candidate evaluation; do not replace the provider with a platform or promote a backend by popularity alone.
+- Continue MyPrivateAgent local RAG integration hardening before adding optional backend spikes.
 
 ## Next Step Plan
 
-1. Keep Phase 3 protocol, runtime diagnostics, and cross-case smoke aligned with refreshed benchmark evidence.
-2. Keep all Phase 3 candidate work evaluation-only and preserve runtime defaults.
-3. Export refreshed evidence before comparing any new gate signal.
-4. Promote nothing by default unless gate evidence clearly passes.
+1. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
+2. Keep local evidence artifacts synchronized after each phase 10/11/3/6 bridge refresh:
+   - `python scripts/export_phase12_local_rag_integration_hardening_profile.py`
+   - `python scripts/export_phase12_local_rag_integration_hardening_smoke.py`
+   - `python scripts/export_provider_handoff_bundle.py`
+   - `python scripts/export_provider_handoff_refresh.py`
+3. Continue Phase 12 read-only hardening review until `phase10_myprivateagent_local_consumer_readiness`、`phase11_local_provider_integration_profile` 和 `provider_handoff_bundle` 都转 ready。
+4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
+5. Define shared candidate evidence before adding Haystack, RAGFlow, LightRAG, pgvector, or other backend spikes.
+6. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, and operations gates clearly pass.
+
+## Open Slice
+
+- Phase 12a: MyPrivateAgent Local RAG Integration Hardening
+  - Status: `completed`
+  - Change: `phase12-local-rag-integration-hardening`
+  - Gate target: local consume/readiness hardening, not runtime promotion.
 
 ## Latest Refresh
 
-- Run time: `2026-06-01T13:39:35.664348+00:00`
+- Run time: `2026-06-02T02:48:51.296818+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
-- Refresh status: `blocked`
+- Refresh status: `review`
 - Step summary:
   - `provider_integration_probe`: `ready`
-  - `provider_contract_smoke`: `ready` (`9/9` checks)
+  - `provider_contract_smoke`: `ready`
   - `deployment_readiness`: `review`
   - `reindex_readiness`: `ready`
+  - `phase6_bge_m3_artifact_readiness`: `review`
+  - `phase6_bge_m3_vs_mock_fixture_diagnostics`: `review`
+  - `phase6_bge_m3_comparison_smoke`: `ready`
+  - `phase6_qdrant_vector_store_readiness`: `review`
+  - `phase6_qdrant_backup_restore_smoke`: `ready`
+  - `phase6_qdrant_bge_private_network_promotion_readiness`: `review`
+  - `phase6_qdrant_bge_private_network_promotion_smoke`: `ready`
   - `source_binding_summary`: `ready`
+  - `phase2_source_format_demand_readiness`: `ready`
+  - `phase2_unsupported_format_negative_control_smoke`: `ready`
+  - `phase6_deployed_field_validation_readiness`: `review`
   - `phase3_fp_fn_review`: `review`
   - `phase3_retrieval_promotion_readiness`: `review`
   - `phase3_candidate_runtime_diagnostics`: `review`
   - `phase3_candidate_latency_resource_diagnostics`: `review`
+  - `phase3_hybrid_fusion_threshold_calibration`: `review`
   - `phase3_hybrid_cross_case_fp_fn_smoke`: `ready`
   - `phase3_aggregation_relation_negative_control_smoke`: `ready`
+  - `phase3_hybrid_runtime_promotion_decision_readiness`: `review`
+  - `phase3_hybrid_runtime_promotion_decision_smoke`: `ready`
   - `phase4_evidence_pack_readiness`: `ready`
   - `phase4_caller_consumption_smoke`: `ready`
   - `phase5_graph_use_case_readiness`: `ready`
   - `phase5_graph_boundary_smoke_summary`: `ready`
+  - `phase7_provider_release_readiness`: `review`
+  - `phase7_cross_phase_handoff_consistency_smoke`: `ready`
+  - `phase8_live_url_validation_readiness`: `review`
   - `phase9_myprivateagent_local_consumption_readiness`: `review`
   - `phase9_myprivateagent_local_consumption_smoke`: `ready`
-  - `phase10_myprivateagent_local_consumer_readiness`: `skipped` (blocked by upstream step)
-  - `phase10_myprivateagent_local_consumer_probe`: `skipped` (blocked by upstream step)
-  - `phase11_local_provider_integration_profile`: `skipped` (blocked by upstream step)
-  - `phase11_provider_discovery_smoke`: `skipped` (blocked by upstream step)
-  - `phase11_rag_retrieve_consumption_smoke`: `skipped` (blocked by upstream step)
-  - `phase11_source_binding_preview_smoke`: `skipped` (blocked by upstream step)
-  - `provider_handoff_bundle`: `skipped` (blocked by upstream step)
+  - `phase10_myprivateagent_local_consumer_readiness`: `review`
+  - `phase11_local_provider_integration_profile`: `review`
+  - `phase12_local_rag_integration_hardening_profile`: `review`
+  - `provider_handoff_bundle`: `review`
+  - `phase11_provider_discovery_smoke`: `ready`
+  - `phase10_myprivateagent_local_consumer_probe`: `ready`
+  - `phase11_rag_retrieve_consumption_smoke`: `ready`
+  - `phase11_source_binding_preview_smoke`: `ready`
+  - `phase6_deployed_handoff_consistency_smoke`: `ready`
+  - `phase8_live_url_smoke_consistency_check`: `ready`
 
 ## Current Gaps To Close
 

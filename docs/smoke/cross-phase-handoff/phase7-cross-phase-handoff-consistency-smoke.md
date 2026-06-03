@@ -3,7 +3,7 @@
 - Report: `phase7-cross-phase-handoff-consistency-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults_until_live_validation`
-- Generated At: `2026-06-01T13:24:10.047060+00:00`
+- Generated At: `2026-06-02T03:13:51.667794+00:00`
 
 ## Summary
 
