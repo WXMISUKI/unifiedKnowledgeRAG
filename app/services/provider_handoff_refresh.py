@@ -68,6 +68,9 @@ from app.services.phase12b_candidate_backend_evaluation_readiness import (
 from app.services.phase12c_pgvector_candidate_backend_readiness import (
     export_phase12c_pgvector_candidate_backend_readiness_report,
 )
+from app.services.phase12d_pgvector_live_probe_readiness import (
+    export_phase12d_pgvector_live_probe_readiness_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -548,6 +551,16 @@ def default_handoff_refresh_steps(
             ),
         ),
         HandoffRefreshStepSpec(
+            id="phase12d_pgvector_live_probe_readiness",
+            category="candidate-backend-evaluation",
+            output_dir=artifact_base_dir / "docs/operations/pgvector-live-probe-readiness",
+            exporter=lambda output_dir: export_phase12d_pgvector_live_probe_readiness_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: _phase12d_pgvector_live_probe_status(report),
+        ),
+        HandoffRefreshStepSpec(
             id="provider_handoff_bundle",
             category="handoff",
             output_dir=artifact_base_dir / "docs/integration/provider-handoff",
@@ -880,6 +893,13 @@ def _phase12c_pgvector_candidate_backend_status(report: Any) -> str:
 
 
 def _phase12c_pgvector_candidate_backend_status(report: Any) -> str:
+    status = getattr(report, "status", "review")
+    if status == "blocked":
+        return "review"
+    return status
+
+
+def _phase12d_pgvector_live_probe_status(report: Any) -> str:
     status = getattr(report, "status", "review")
     if status == "blocked":
         return "review"

@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-03T02:12:27.724051+00:00",
+  "generated_at": "2026-06-03T02:41:59.371404+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -392,6 +392,16 @@
       "required": false,
       "status": "blocked",
       "summary": "status=blocked; evaluation_state=pgvector_candidate_configuration_blocked; decision=keep_current_default; strategy_verdict=continue_provider_first_with_candidate_backends; pgvector_database_url_present=False; review_ready_families=[\"provider_integration_gate\", \"candidate_evidence_gate\"]; ready_families=[]; blocked_families=[\"pgvector_configuration_gate\"]; open_gate_count=15",
+      "recommended_action": "resolve_failed_evidence"
+    },
+    {
+      "id": "phase12d_pgvector_live_probe_readiness",
+      "category": "candidate-backend-evaluation",
+      "path": "docs\\operations\\pgvector-live-probe-readiness\\phase12d-pgvector-live-probe-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "blocked",
+      "summary": "status=blocked; evaluation_state=pgvector_probe_configuration_blocked; decision=keep_current_default; strategy_verdict=continue_provider_first_with_candidate_backends; pgvector_database_url_present=False; pgvector_driver_available=False; review_ready_families=[]; ready_families=[\"candidate_evidence_bridge_gate\"]; blocked_families=[\"pgvector_probe_gate\", \"pgvector_runtime_gate\"]; open_gate_count=9",
       "recommended_action": "resolve_failed_evidence"
     },
     {

@@ -144,6 +144,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase11_source_binding_preview_smoke" in step_ids
     assert "phase12b_candidate_backend_evaluation_readiness" in step_ids
     assert "phase12c_pgvector_candidate_backend_readiness" in step_ids
+    assert "phase12d_pgvector_live_probe_readiness" in step_ids
     assert "phase8_live_url_smoke_consistency_check" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
@@ -258,6 +259,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase12c_pgvector_candidate_backend_readiness"
     )
     assert step_ids.index("phase12c_pgvector_candidate_backend_readiness") < step_ids.index(
+        "phase12d_pgvector_live_probe_readiness"
+    )
+    assert step_ids.index("phase12d_pgvector_live_probe_readiness") < step_ids.index(
         "provider_handoff_bundle"
     )
     assert step_ids.index("provider_handoff_bundle") < step_ids.index(

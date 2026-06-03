@@ -3,7 +3,7 @@
 - Report: `phase2-source-format-demand-readiness-v1`
 - Status: `ready`
 - Decision: `keep_markdown_baseline`
-- Generated At: `2026-06-03T02:12:27.632373+00:00`
+- Generated At: `2026-06-03T02:41:59.278541+00:00`
 - Baseline Parser: `markdown`
 - Deferred Formats: `pdf, word, excel, ocr, table-structure`
 - Contract Doc: `docs\operations\source-format-demand\phase2-parser-expansion-demand-contract.md`

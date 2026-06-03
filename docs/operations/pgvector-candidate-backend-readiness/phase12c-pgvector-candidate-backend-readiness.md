@@ -5,7 +5,7 @@
 - Evaluation State: `pgvector_candidate_configuration_blocked`
 - Decision: `keep_current_default`
 - Strategy Verdict: `continue_provider_first_with_candidate_backends`
-- Generated At: `2026-06-03T02:12:27.711980+00:00`
+- Generated At: `2026-06-03T02:41:59.356738+00:00`
 
 ## Summary
 

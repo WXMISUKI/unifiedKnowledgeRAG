@@ -2,7 +2,7 @@
 
 - Report: `reindex-readiness-v1`
 - Status: `ready`
-- Generated At: `2026-06-03T02:12:27.610553+00:00`
+- Generated At: `2026-06-03T02:41:59.257418+00:00`
 - Retrieval Backend: `fixture`
 - Source Dir: `app\data\sources`
 - Index Dir: `app\data\indexes\llamaindex`

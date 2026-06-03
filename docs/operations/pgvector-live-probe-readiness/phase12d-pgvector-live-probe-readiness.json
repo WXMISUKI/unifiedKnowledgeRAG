@@ -1,0 +1,192 @@
+{
+  "id": "phase12d-pgvector-live-probe-readiness-v1",
+  "generated_at": "2026-06-03T02:41:59.359091+00:00",
+  "status": "blocked",
+  "evaluation_state": "pgvector_probe_configuration_blocked",
+  "decision": "keep_current_default",
+  "summary": {
+    "strategy_verdict": "continue_provider_first_with_candidate_backends",
+    "candidate_backend_id": "pgvector",
+    "candidate_backend_kind": "postgresql_native_vector_search_live_probe",
+    "probe_mode": "optional_psycopg_live_probe",
+    "pgvector_database_url_present": false,
+    "pgvector_driver_available": false,
+    "pgvector_connection_attempted": false,
+    "pgvector_connection_status": "blocked",
+    "pgvector_extension_installed": false,
+    "pgvector_schema_exists": false,
+    "pgvector_table_exists": false,
+    "pgvector_index_exists": false,
+    "pgvector_server_version": "unknown",
+    "pgvector_schema": "public",
+    "pgvector_table": "knowledge_chunks",
+    "pgvector_index_name": "knowledge_chunks_embedding_idx",
+    "pgvector_vector_size": 1024,
+    "probe_timeout_seconds": 5,
+    "open_gate_ids": [
+      "pgvector_configuration",
+      "pgvector_driver",
+      "pgvector_connection",
+      "pgvector_extension",
+      "pgvector_schema",
+      "pgvector_table",
+      "pgvector_index",
+      "phase12c_pgvector_candidate_backend_readiness",
+      "phase12b_candidate_backend_evaluation_readiness"
+    ],
+    "review_ready_family_ids": [],
+    "ready_family_ids": [
+      "candidate_evidence_bridge_gate"
+    ],
+    "blocked_family_ids": [
+      "pgvector_probe_gate",
+      "pgvector_runtime_gate"
+    ]
+  },
+  "signals": [
+    {
+      "id": "pgvector_configuration",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; connection_mode=not_configured_local_dev; database_url_present=False; schema=public; table=knowledge_chunks; index_name=knowledge_chunks_embedding_idx; vector_size=1024; probe_timeout_seconds=5; next_step=configure_pgvector_database_url",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "pgvector_driver",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; driver_available=False; driver_module=psycopg; next_step=configure_pgvector_database_url",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "pgvector_connection",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; connection_attempted=False; connection_mode=not_configured_local_dev",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "pgvector_extension",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; vector_extension_installed=False; next_step=restore_connection",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "pgvector_schema",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; schema_exists=False; next_step=restore_connection",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "pgvector_table",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; table_exists=False; next_step=restore_connection",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "pgvector_index",
+      "required": true,
+      "status": "blocked",
+      "summary": "status=blocked; index_exists=False; next_step=restore_connection",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+    },
+    {
+      "id": "phase12c_pgvector_candidate_backend_readiness",
+      "required": false,
+      "status": "blocked",
+      "summary": "status=blocked; evaluation_state=pgvector_candidate_configuration_blocked; decision=keep_current_default",
+      "recommended_action": "regenerate_phase12c_pgvector_candidate_backend_readiness",
+      "evidence_path": "docs/operations/pgvector-candidate-backend-readiness/phase12c-pgvector-candidate-backend-readiness.json"
+    },
+    {
+      "id": "phase12b_candidate_backend_evaluation_readiness",
+      "required": false,
+      "status": "review",
+      "summary": "status=review; strategy_verdict=continue_provider_first_with_candidate_backends",
+      "recommended_action": "regenerate_phase12b_candidate_backend_evaluation_readiness",
+      "evidence_path": "docs/operations/candidate-backend-evaluation-readiness/phase12b-candidate-backend-evaluation-readiness.json"
+    }
+  ],
+  "candidate_families": [
+    {
+      "id": "pgvector_probe_gate",
+      "label": "PGVector Probe Gate",
+      "status": "blocked",
+      "decision": "keep_current_default",
+      "summary": "required_ready=0/3; optional_open=0; required_ids=[\"pgvector_configuration\", \"pgvector_driver\", \"pgvector_connection\"]",
+      "required_signal_ids": [
+        "pgvector_configuration",
+        "pgvector_driver",
+        "pgvector_connection"
+      ],
+      "optional_signal_ids": [],
+      "evidence_paths": [
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS",
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS",
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+      ],
+      "notes": [
+        "This family keeps the live pgvector probe explicit while avoiding runtime promotion."
+      ]
+    },
+    {
+      "id": "pgvector_runtime_gate",
+      "label": "PGVector Runtime Gate",
+      "status": "blocked",
+      "decision": "keep_current_default",
+      "summary": "required_ready=0/4; optional_open=0; required_ids=[\"pgvector_extension\", \"pgvector_schema\", \"pgvector_table\", \"pgvector_index\"]",
+      "required_signal_ids": [
+        "pgvector_extension",
+        "pgvector_schema",
+        "pgvector_table",
+        "pgvector_index"
+      ],
+      "optional_signal_ids": [],
+      "evidence_paths": [
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS",
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS",
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS",
+        "environment:PGVECTOR_DATABASE_URL,PGVECTOR_SCHEMA,PGVECTOR_TABLE,PGVECTOR_INDEX_NAME,PGVECTOR_VECTOR_SIZE,PGVECTOR_PROBE_TIMEOUT_SECONDS"
+      ],
+      "notes": [
+        "This family checks the minimum runtime posture needed for a realistic pgvector candidate review."
+      ]
+    },
+    {
+      "id": "candidate_evidence_bridge_gate",
+      "label": "Candidate Evidence Bridge Gate",
+      "status": "ready",
+      "decision": "continue_spike",
+      "summary": "required_ready=0/0; optional_open=2; required_ids=[]",
+      "required_signal_ids": [],
+      "optional_signal_ids": [
+        "phase12c_pgvector_candidate_backend_readiness",
+        "phase12b_candidate_backend_evaluation_readiness"
+      ],
+      "evidence_paths": [
+        "docs/operations/pgvector-candidate-backend-readiness/phase12c-pgvector-candidate-backend-readiness.json",
+        "docs/operations/candidate-backend-evaluation-readiness/phase12b-candidate-backend-evaluation-readiness.json"
+      ],
+      "notes": [
+        "This family keeps the earlier candidate evidence visible next to the live probe."
+      ]
+    }
+  ],
+  "notes": [
+    "Phase 12d is read-only and keeps runtime defaults unchanged.",
+    "The live probe is optional and intentionally does not write to PostgreSQL or rebuild indexes.",
+    "pgvector remains candidate-only until a separate promotion change closes the required gates."
+  ],
+  "json_path": "docs\\operations\\pgvector-live-probe-readiness\\phase12d-pgvector-live-probe-readiness.json",
+  "markdown_path": "docs\\operations\\pgvector-live-probe-readiness\\phase12d-pgvector-live-probe-readiness.md"
+}
