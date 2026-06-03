@@ -1,0 +1,177 @@
+{
+  "id": "phase12e-pgvector-local-probe-environment-readiness-v1",
+  "generated_at": "2026-06-03T03:41:22.382067+00:00",
+  "status": "ready",
+  "evaluation_state": "ready_for_pgvector_local_probe_environment_review",
+  "decision": "continue_spike",
+  "summary": {
+    "strategy_verdict": "continue_provider_first_with_candidate_backends",
+    "candidate_backend_id": "pgvector",
+    "candidate_backend_kind": "postgresql_native_vector_search_local_probe_environment",
+    "optional_dependency_present": true,
+    "compose_example_present": true,
+    "init_sql_present": true,
+    "runbook_present": true,
+    "config_reference_present": true,
+    "env_example_pgvector_block_present": true,
+    "phase12d_report_status": "blocked",
+    "handoff_bundle_visible": true,
+    "handoff_refresh_visible": true,
+    "open_gate_ids": [],
+    "ready_family_ids": [
+      "pgvector_local_environment_pack",
+      "pgvector_probe_bridge"
+    ],
+    "review_ready_family_ids": [],
+    "blocked_family_ids": []
+  },
+  "supporting_artifacts": [
+    {
+      "id": "optional_dependency_file",
+      "category": "dependency",
+      "path": "requirements-pgvector.txt",
+      "status": "ready",
+      "summary": "status=ready; optional_dependency=psycopg[binary]; install_scope=local_probe_only",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "compose_profile_example",
+      "category": "compose",
+      "path": "docker-compose.pgvector.example.yml",
+      "status": "ready",
+      "summary": "status=ready; compose_image=pgvector/pgvector:pg16; port_mapping=5433:5432; profile=pgvector",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "init_sql",
+      "category": "sql",
+      "path": "docker/pgvector/init.sql",
+      "status": "ready",
+      "summary": "status=ready; extension=vector; schema=unified_knowledge_rag; table=knowledge_chunks; index=knowledge_chunks_embedding_idx",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "runbook",
+      "category": "docs",
+      "path": "docs/operations/pgvector-local-probe-environment/runbook.md",
+      "status": "ready",
+      "summary": "status=ready; runbook=present; scope=optional_local_probe_environment",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "config_reference",
+      "category": "docs",
+      "path": "docs/operations/pgvector-local-probe-environment/config-reference.md",
+      "status": "ready",
+      "summary": "status=ready; config_reference=present; scope=pgvector_environment_contract",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "env_example_pgvector_block",
+      "category": "env",
+      "path": ".env.example",
+      "status": "ready",
+      "summary": "status=ready; env_block=present; pgvector_schema=unified_knowledge_rag; pgvector_table=knowledge_chunks",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "phase12d_live_probe_readiness_report",
+      "category": "bridge-evidence",
+      "path": "docs/operations/pgvector-live-probe-readiness/phase12d-pgvector-live-probe-readiness.json",
+      "status": "ready",
+      "summary": "status=ready; phase12d_report_status=blocked; phase12d_decision=keep_current_default",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "provider_handoff_bundle_visibility",
+      "category": "handoff",
+      "path": "docs/integration/provider-handoff/provider-handoff-bundle.json",
+      "status": "ready",
+      "summary": "status=ready; phase12e_visible=True",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    },
+    {
+      "id": "provider_handoff_refresh_visibility",
+      "category": "handoff",
+      "path": "docs/integration/provider-handoff-refresh/provider-handoff-refresh.json",
+      "status": "ready",
+      "summary": "status=ready; phase12e_visible=True",
+      "present": true,
+      "required": true,
+      "recommended_action": "no_action_required"
+    }
+  ],
+  "environment_families": [
+    {
+      "id": "pgvector_local_environment_pack",
+      "label": "PGVector Local Environment Pack",
+      "status": "ready",
+      "decision": "continue_spike",
+      "summary": "required_ready=6/6; optional_open=0; required_ids=[\"optional_dependency_file\", \"compose_profile_example\", \"init_sql\", \"runbook\", \"config_reference\", \"env_example_pgvector_block\"]",
+      "required_artifact_ids": [
+        "optional_dependency_file",
+        "compose_profile_example",
+        "init_sql",
+        "runbook",
+        "config_reference",
+        "env_example_pgvector_block"
+      ],
+      "optional_artifact_ids": [],
+      "evidence_paths": [
+        "requirements-pgvector.txt",
+        "docker-compose.pgvector.example.yml",
+        "docker/pgvector/init.sql",
+        "docs/operations/pgvector-local-probe-environment/runbook.md",
+        "docs/operations/pgvector-local-probe-environment/config-reference.md",
+        ".env.example"
+      ],
+      "notes": [
+        "This family packages the optional local setup needed to exercise the pgvector probe."
+      ]
+    },
+    {
+      "id": "pgvector_probe_bridge",
+      "label": "PGVector Probe Bridge",
+      "status": "ready",
+      "decision": "continue_spike",
+      "summary": "required_ready=3/3; optional_open=0; required_ids=[\"phase12d_live_probe_readiness_report\", \"provider_handoff_bundle_visibility\", \"provider_handoff_refresh_visibility\"]",
+      "required_artifact_ids": [
+        "phase12d_live_probe_readiness_report",
+        "provider_handoff_bundle_visibility",
+        "provider_handoff_refresh_visibility"
+      ],
+      "optional_artifact_ids": [],
+      "evidence_paths": [
+        "docs/operations/pgvector-live-probe-readiness/phase12d-pgvector-live-probe-readiness.json",
+        "docs/integration/provider-handoff/provider-handoff-bundle.json",
+        "docs/integration/provider-handoff-refresh/provider-handoff-refresh.json"
+      ],
+      "notes": [
+        "This family keeps the live probe and handoff visibility aligned with the local environment package."
+      ]
+    }
+  ],
+  "notes": [
+    "This report is local and read-only evidence for the optional pgvector probe environment.",
+    "It packages the developer-owned setup needed to run the live probe without promoting pgvector to a runtime default.",
+    "Phase 12d may remain blocked until the local environment is applied and the optional probe is rerun."
+  ],
+  "json_path": "docs\\operations\\pgvector-local-probe-environment\\phase12e-pgvector-local-probe-environment-readiness.json",
+  "markdown_path": "docs\\operations\\pgvector-local-probe-environment\\phase12e-pgvector-local-probe-environment-readiness.md"
+}

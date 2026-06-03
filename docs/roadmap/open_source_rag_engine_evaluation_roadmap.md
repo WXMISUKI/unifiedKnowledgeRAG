@@ -33,6 +33,7 @@ Required short-term posture:
 - Keep local `PROVIDER_API_KEY` assumptions simple and explicit for local testing.
 - Keep GraphRAG discovery as planned-boundary evidence, not execution.
 - Keep Qdrant, BGE-M3, hybrid retrieval, aggregation, and relation-aware grading as candidate/review evidence until all promotion gates close.
+- Keep the Phase 12e local pgvector probe environment optional and explicit until the live probe can be rerun locally.
 
 Recommended next short-term task families:
 

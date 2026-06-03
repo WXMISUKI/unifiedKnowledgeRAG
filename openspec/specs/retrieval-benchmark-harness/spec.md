@@ -1101,3 +1101,21 @@ The retrieval benchmark harness SHALL keep graph-aware or platform candidates be
 - **WHEN** Dify, Langflow, RAGFlow, or another platform candidate is evaluated for product capability comparison
 - **THEN** the evaluation may be recorded as `reference_only` without adding provider dependencies or changing provider runtime behavior
 
+### Requirement: Phase 12e pgvector local probe environment evidence can be exported locally
+
+The retrieval benchmark harness SHALL export a local Phase 12e pgvector local probe environment readiness report that consolidates optional dependency, compose profile, init SQL, and runbook evidence into a shared review artifact.
+
+#### Scenario: Local environment report is exported
+
+- **WHEN** the Phase 12e pgvector local probe environment readiness export runs
+- **THEN** it produces a JSON report and a Markdown report for local review
+
+#### Scenario: Local environment package remains reviewable
+
+- **WHEN** the local probe environment artifacts are generated
+- **THEN** the report records optional dependency, compose profile, init SQL, and runbook state without changing runtime defaults
+
+#### Scenario: Local environment package preserves candidate-only boundaries
+
+- **WHEN** the pgvector local probe environment evidence is reviewed
+- **THEN** the result is still candidate-only and it does not promote pgvector to a runtime backend

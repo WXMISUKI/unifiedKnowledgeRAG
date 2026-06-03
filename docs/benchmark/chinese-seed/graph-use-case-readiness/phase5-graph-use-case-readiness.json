@@ -1,6 +1,6 @@
 {
   "id": "phase5-graph-use-case-readiness-v1",
-  "generated_at": "2026-06-03T02:41:59.315121+00:00",
+  "generated_at": "2026-06-03T03:41:22.324505+00:00",
   "status": "ready",
   "decision": "keep_graph_query_planned",
   "contract_path": "docs\\benchmark\\chinese-seed\\graph-use-case-readiness\\phase5-graph-use-case-readiness-contract.md",

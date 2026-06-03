@@ -1,6 +1,6 @@
 {
   "id": "phase10-myprivateagent-local-consumer-readiness-v1",
-  "generated_at": "2026-06-03T02:41:59.335820+00:00",
+  "generated_at": "2026-06-03T03:41:22.351808+00:00",
   "status": "review",
   "local_consumer_state": "ready_for_local_consumer_probe_review",
   "decision": "run_local_consumer_probe_before_myprivateagent_integration",
@@ -53,7 +53,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "review",
-      "summary": "status=review; evidence_artifacts=47",
+      "summary": "status=review; evidence_artifacts=48",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },

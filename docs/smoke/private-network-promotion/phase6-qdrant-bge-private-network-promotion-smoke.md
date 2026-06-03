@@ -3,7 +3,7 @@
 - Report: `phase6-qdrant-bge-private-network-promotion-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-03T02:41:59.274353+00:00`
+- Generated At: `2026-06-03T03:41:22.269625+00:00`
 
 ## Checks
 

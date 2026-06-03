@@ -3,7 +3,7 @@
 - Report: `phase3-candidate-latency-resource-diagnostics-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-03T02:41:59.293173+00:00`
+- Generated At: `2026-06-03T03:41:22.295715+00:00`
 
 ## Summary
 

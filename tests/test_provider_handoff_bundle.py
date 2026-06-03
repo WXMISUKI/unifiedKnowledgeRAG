@@ -94,6 +94,16 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "pgvector_driver_available=False" in artifacts[
         "phase12d_pgvector_live_probe_readiness"
     ]["summary"]
+    assert artifacts["phase12e_pgvector_local_probe_environment_readiness"]["present"] is True
+    assert artifacts["phase12e_pgvector_local_probe_environment_readiness"]["required"] is False
+    assert artifacts["phase12e_pgvector_local_probe_environment_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "phase12d_report_status=" in artifacts[
+        "phase12e_pgvector_local_probe_environment_readiness"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"

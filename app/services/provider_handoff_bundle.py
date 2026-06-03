@@ -359,6 +359,15 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase12e_pgvector_local_probe_environment_readiness",
+        category="candidate-backend-evaluation",
+        path=Path(
+            "docs/operations/pgvector-local-probe-environment/"
+            "phase12e-pgvector-local-probe-environment-readiness.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -1163,6 +1172,27 @@ def _artifact_status_and_summary(
                 f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
             ),
         )
+    if artifact_id == "phase12e_pgvector_local_probe_environment_readiness":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        ready_family_ids = summary.get("ready_family_ids", [])
+        review_ready_family_ids = summary.get("review_ready_family_ids", [])
+        blocked_family_ids = summary.get("blocked_family_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; evaluation_state={payload.get('evaluation_state', 'review')}; "
+                f"decision={payload.get('decision', 'continue_spike')}; "
+                f"strategy_verdict={_dict_value(summary, 'strategy_verdict', 'continue_provider_first_with_candidate_backends')}; "
+                f"phase12d_report_status={_dict_value(summary, 'phase12d_report_status', 'missing')}; "
+                f"optional_dependency_present={_bool_value(summary.get('optional_dependency_present', False))}; "
+                f"ready_families={_jsonish_list(ready_family_ids if isinstance(ready_family_ids, list) else [])}; "
+                f"review_ready_families={_jsonish_list(review_ready_family_ids if isinstance(review_ready_family_ids, list) else [])}; "
+                f"blocked_families={_jsonish_list(blocked_family_ids if isinstance(blocked_family_ids, list) else [])}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1411,6 +1441,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 12c pgvector candidate backend readiness evidence is missing."
     if artifact_id == "phase12d_pgvector_live_probe_readiness":
         return "Optional Phase 12d pgvector live probe readiness evidence is missing."
+    if artifact_id == "phase12e_pgvector_local_probe_environment_readiness":
+        return "Optional Phase 12e pgvector local probe environment readiness evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1505,6 +1537,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase12c_pgvector_candidate_backend_readiness"
     if artifact_id == "phase12d_pgvector_live_probe_readiness":
         return "regenerate_phase12d_pgvector_live_probe_readiness"
+    if artifact_id == "phase12e_pgvector_local_probe_environment_readiness":
+        return "regenerate_phase12e_pgvector_local_probe_environment_readiness"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1796,6 +1830,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 12d pgvector live probe readiness is optional before pgvector probe review; regenerate it after PostgreSQL or pgvector runtime posture changes."
+        )
+    if any(
+        artifact["id"] == "phase12e_pgvector_local_probe_environment_readiness"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 12e pgvector local probe environment readiness is optional before pgvector local setup review; regenerate it after the local environment package or handoff chain changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-03T02:41:59.371404+00:00",
+  "generated_at": "2026-06-03T03:41:22.397877+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -403,6 +403,16 @@
       "status": "blocked",
       "summary": "status=blocked; evaluation_state=pgvector_probe_configuration_blocked; decision=keep_current_default; strategy_verdict=continue_provider_first_with_candidate_backends; pgvector_database_url_present=False; pgvector_driver_available=False; review_ready_families=[]; ready_families=[\"candidate_evidence_bridge_gate\"]; blocked_families=[\"pgvector_probe_gate\", \"pgvector_runtime_gate\"]; open_gate_count=9",
       "recommended_action": "resolve_failed_evidence"
+    },
+    {
+      "id": "phase12e_pgvector_local_probe_environment_readiness",
+      "category": "candidate-backend-evaluation",
+      "path": "docs\\operations\\pgvector-local-probe-environment\\phase12e-pgvector-local-probe-environment-readiness.json",
+      "present": true,
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; evaluation_state=ready_for_pgvector_local_probe_environment_review; decision=continue_spike; strategy_verdict=continue_provider_first_with_candidate_backends; phase12d_report_status=blocked; optional_dependency_present=True; ready_families=[\"pgvector_local_environment_pack\", \"pgvector_probe_bridge\"]; review_ready_families=[]; blocked_families=[]; open_gate_count=0",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase3_hybrid_cross_case_fp_fn_smoke",

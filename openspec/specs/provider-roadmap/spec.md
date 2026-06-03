@@ -1052,6 +1052,19 @@ The project SHALL keep platform-style open-source projects as product references
 - **WHEN** an open-source RAG candidate shows useful local evidence
 - **THEN** Qdrant, BGE-M3, hybrid retrieval, pgvector, GraphRAG, rerankers, answer composition, and parser expansion remain non-default until a separate promotion change closes the required gates
 
+### Requirement: Phase 12e pgvector local probe environment remains optional and local
+The project SHALL treat the Phase 12e pgvector local probe environment as a local setup slice that packages optional dependency, compose, init SQL, and runbook evidence without changing runtime defaults or ownership boundaries.
+
+#### Scenario: Local environment package is exported
+
+- **WHEN** the pgvector local probe environment readiness report is exported
+- **THEN** it records the optional dependency file, compose profile, init SQL, runbook, and local environment contract as review evidence
+
+#### Scenario: Local environment package stays developer-owned
+
+- **WHEN** the pgvector local probe environment is reviewed
+- **THEN** it remains optional and local-only, and it does not move PostgreSQL governance, migration policy, or runtime defaults into the provider
+
 ### Requirement: Local RAG integration hardening precedes backend migration
 
 The project SHALL complete a local MyPrivateAgent RAG integration hardening slice before considering any retrieval backend migration.
@@ -1096,4 +1109,3 @@ The project SHALL keep local retrieval consumption checks constrained to fail-cl
 - **WHEN** hardening smoke runs
 - **THEN** it checks phase4 caller-consumption readiness and provider contract smoke alignment
 - **AND** it records a local integration verdict without mutating runtime behavior
-
