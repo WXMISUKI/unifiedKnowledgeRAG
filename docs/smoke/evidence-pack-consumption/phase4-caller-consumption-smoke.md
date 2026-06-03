@@ -2,7 +2,7 @@
 
 - Report: `phase4-caller-consumption-smoke-v1`
 - Status: `passed`
-- Generated At: `2026-06-03T01:40:57.619829+00:00`
+- Generated At: `2026-06-03T02:12:27.669000+00:00`
 - Contract Doc: `docs\benchmark\chinese-seed\evidence-pack-consumption-contract\phase4-evidence-pack-consumption-contract.md`
 
 ## Summary

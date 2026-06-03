@@ -1,6 +1,6 @@
 {
   "id": "phase6-bge-m3-artifact-readiness-v1",
-  "generated_at": "2026-06-03T01:40:57.555840+00:00",
+  "generated_at": "2026-06-03T02:12:27.612112+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "summary": {

@@ -3,7 +3,7 @@
 - Report: `phase6-bge-m3-artifact-readiness-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-03T01:40:57.555840+00:00`
+- Generated At: `2026-06-03T02:12:27.612112+00:00`
 
 ## Summary
 

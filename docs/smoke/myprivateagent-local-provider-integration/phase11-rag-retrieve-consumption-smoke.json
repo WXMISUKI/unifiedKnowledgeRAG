@@ -1,6 +1,6 @@
 {
   "id": "phase11-rag-retrieve-consumption-smoke-v1",
-  "generated_at": "2026-06-03T01:40:57.680104+00:00",
+  "generated_at": "2026-06-03T02:12:27.731683+00:00",
   "status": "ready",
   "decision": "keep_caller_consumption_fail_closed",
   "summary": {

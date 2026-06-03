@@ -264,6 +264,7 @@
   - Medium-term priority: optional backend spikes for Haystack, RAGFlow, LightRAG, pgvector, and continued Qdrant/BGE-M3 evidence
   - Long-term priority: engine-agnostic provider adapters without exposing framework-specific response shapes to callers
 - Phase 12b candidate backend evaluation readiness implemented and refreshed (`phase12b-candidate-backend-evaluation-readiness`), consolidating Phase 3/6/12a evidence into one review artifact with reference-only candidates kept explicit.
+- Phase 12c pgvector candidate backend readiness implemented and refreshed (`phase12c-pgvector-candidate-backend-readiness`), keeping pgvector configuration-driven and candidate-only while runtime defaults remain unchanged.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -282,19 +283,20 @@
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
-- Keep open-source RAG engine adoption behind Phase 12b candidate evaluation; do not replace the provider with a platform or promote a backend by popularity alone.
-- Continue optional backend spikes only after the Phase 12b candidate evaluation readiness review is accepted.
+- Keep open-source RAG engine adoption behind Phase 12c candidate evaluation; do not replace the provider with a platform or promote a backend by popularity alone.
+- Continue optional backend spikes only after the Phase 12c pgvector candidate readiness review is accepted.
 
 ## Next Step Plan
 
 1. Keep local evidence artifacts synchronized after each phase 12b/10/11/3/6 bridge refresh:
    - `python scripts/export_phase12_local_rag_integration_hardening_profile.py`
    - `python scripts/export_phase12b_candidate_backend_evaluation_readiness.py`
+   - `python scripts/export_phase12c_pgvector_candidate_backend_readiness.py`
    - `python scripts/export_phase12_local_rag_integration_hardening_smoke.py`
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 12b readiness report to choose the first backend spike only after the review-ready families stay stable.
+3. Use the Phase 12b and Phase 12c readiness reports to choose the first backend spike only after the review-ready families stay stable.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, and operations gates clearly pass.
 
@@ -308,10 +310,14 @@
   - Status: `review`
   - Change: `phase12b-candidate-backend-evaluation-readiness`
   - Gate target: evidence-backed candidate review, not runtime promotion.
+- Phase 12c: PGVector Candidate Backend Readiness
+  - Status: `review`
+  - Change: `phase12c-pgvector-candidate-backend-readiness`
+  - Gate target: pgvector-specific candidate review, not runtime promotion.
 
 ## Latest Refresh
 
-- Run time: `2026-06-03T01:40:57.687808+00:00`
+- Run time: `2026-06-03T02:12:27.739459+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -352,6 +358,7 @@
   - `phase11_local_provider_integration_profile`: `review`
   - `phase12_local_rag_integration_hardening_profile`: `review`
   - `phase12b_candidate_backend_evaluation_readiness`: `review`
+  - `phase12c_pgvector_candidate_backend_readiness`: `review`
   - `provider_handoff_bundle`: `review`
   - `phase11_provider_discovery_smoke`: `ready`
   - `phase10_myprivateagent_local_consumer_probe`: `ready`
@@ -368,6 +375,7 @@
 - The deployment readiness runbook sequences the operator guide, config reference, refresh commands, and optional deployed smoke into a single deployment-prep flow.
 - Handoff bundle remains `review` because deployment readiness is `review` and optional deployed smoke evidence is not present for a live URL.
 - Phase 12b candidate backend evaluation readiness is `review` because the current evidence remains review-level and the reference-only family is still comparison-only.
+- Phase 12c pgvector candidate backend readiness is `review` because `PGVECTOR_DATABASE_URL` is not configured locally and the candidate remains configuration-gated.
 - Phase 3 candidate latency/resource diagnostics is `review` by design because it is a local evidence-only export that still depends on deployment/runtime posture and deployed smoke context.
 - Phase 3 aggregation/relation negative-control smoke is `ready` because the positive split-chunk control, the same-document negative control, and the relation-aware unsupported-case label all match current local evidence.
 - Runtime promotion gates remain open for Phase 3 and GraphRAG execution; current evidence is candidate-level, not production approval.

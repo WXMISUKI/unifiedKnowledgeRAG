@@ -82,6 +82,12 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "strategy_verdict=continue_provider_first_with_candidate_backends" in artifacts[
         "phase12b_candidate_backend_evaluation_readiness"
     ]["summary"]
+    assert artifacts["phase12c_pgvector_candidate_backend_readiness"]["present"] is True
+    assert artifacts["phase12c_pgvector_candidate_backend_readiness"]["required"] is False
+    assert artifacts["phase12c_pgvector_candidate_backend_readiness"]["status"] == "blocked"
+    assert "pgvector_database_url_present=False" in artifacts[
+        "phase12c_pgvector_candidate_backend_readiness"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"

@@ -1,6 +1,6 @@
 {
   "id": "phase3-fp-fn-review-v1",
-  "generated_at": "2026-06-03T01:40:57.587271+00:00",
+  "generated_at": "2026-06-03T02:12:27.638222+00:00",
   "source_report_path": "docs\\benchmark\\chinese-seed\\retrieval-candidates\\fixture-chinese-seed-baseline.json",
   "total_cases": 32,
   "false_positive_count": 3,

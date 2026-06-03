@@ -3,7 +3,7 @@
 - Report: `phase8-live-url-smoke-consistency-check-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults_until_live_url_validation`
-- Generated At: `2026-06-03T01:40:57.686564+00:00`
+- Generated At: `2026-06-03T02:12:27.737951+00:00`
 
 ## Summary
 
@@ -26,7 +26,7 @@
 | Check | Required | Status | Summary | Recommended Action |
 |---|---|---|---|---|
 | `phase8_live_url_validation_readiness` | `True` | `ready` | artifact_present=true; status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3 | `no_action_required` |
-| `provider_handoff_bundle` | `True` | `ready` | artifact_present=true; status=review; artifact_count=45 | `no_action_required` |
+| `provider_handoff_bundle` | `True` | `ready` | artifact_present=true; status=review; artifact_count=46 | `no_action_required` |
 | `provider_handoff_bundle_row` | `True` | `ready` | bundle_row_present=true; bundle_row_status=review; bundle_row_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3 | `no_action_required` |
 | `status_alignment` | `True` | `ready` | readiness_status=review; bundle_row_status=review | `no_action_required` |
 | `live_validation_state_alignment` | `True` | `ready` | expected=review; bundle_summary=status=review; live_validation_state=review; decision=keep_runtime_defaults_until_live_url_validation; deployed_smoke_present=True; deployed_smoke_status=review; live_url_present=True; open_gate_count=3 | `no_action_required` |
