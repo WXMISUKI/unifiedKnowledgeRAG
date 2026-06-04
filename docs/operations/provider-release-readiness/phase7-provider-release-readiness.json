@@ -1,6 +1,6 @@
 {
   "id": "phase7-provider-release-readiness-v1",
-  "generated_at": "2026-06-03T03:41:22.332652+00:00",
+  "generated_at": "2026-06-04T03:48:11.423917+00:00",
   "status": "review",
   "release_state": "ready_for_local_handoff",
   "decision": "keep_runtime_defaults",

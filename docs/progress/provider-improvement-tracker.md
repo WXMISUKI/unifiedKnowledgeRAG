@@ -267,6 +267,7 @@
 - Phase 12c pgvector candidate backend readiness implemented and refreshed (`phase12c-pgvector-candidate-backend-readiness`), keeping pgvector configuration-driven and candidate-only while runtime defaults remain unchanged.
 - Phase 12d pgvector live probe readiness implemented and refreshed (`phase12d-pgvector-live-probe-readiness`), adding an optional PostgreSQL-backed probe while runtime defaults remain unchanged.
 - Phase 12e pgvector local probe environment readiness implemented and refreshed (`phase12e-pgvector-local-probe-environment-readiness`), packaging the optional local pgvector setup needed to rerun the live probe without changing runtime defaults.
+- Phase 12f pgvector local live probe execution readiness implemented and refreshed (`phase12f-pgvector-local-live-probe-execution-readiness`), capturing the rerun path for the live probe without changing runtime defaults.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -285,8 +286,8 @@
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
-- Keep open-source RAG engine adoption behind Phase 12d live-probe review; do not replace the provider with a platform or promote a backend by popularity alone.
-- Continue optional backend spikes only after the Phase 12e pgvector local probe environment review is accepted.
+- Keep open-source RAG engine adoption behind Phase 12f live-probe execution review; do not replace the provider with a platform or promote a backend by popularity alone.
+- Continue optional backend spikes only after the Phase 12f pgvector local live probe execution review is accepted.
 
 ## Next Step Plan
 
@@ -296,11 +297,12 @@
    - `python scripts/export_phase12c_pgvector_candidate_backend_readiness.py`
    - `python scripts/export_phase12d_pgvector_live_probe_readiness.py`
    - `python scripts/export_phase12e_pgvector_local_probe_environment_readiness.py`
+   - `python scripts/export_phase12f_pgvector_local_live_probe_execution_readiness.py`
    - `python scripts/export_phase12_local_rag_integration_hardening_smoke.py`
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 12b, Phase 12c, Phase 12d, and Phase 12e readiness reports to choose the next backend spike only after the review-ready families stay stable.
+3. Use the Phase 12b, Phase 12c, Phase 12d, Phase 12e, and Phase 12f readiness reports to choose the next backend spike only after the review-ready families stay stable.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, and operations gates clearly pass.
 
@@ -322,14 +324,18 @@
   - Status: `review`
   - Change: `phase12d-pgvector-live-probe-readiness`
   - Gate target: pgvector live probe evidence, not runtime promotion.
-- Phase 12e: PGVector Local Probe Environment Readiness
+- Phase 12f: PGVector Local Live Probe Execution Readiness
   - Status: `review`
-  - Change: `phase12e-pgvector-local-probe-environment-readiness`
-  - Gate target: optional local pgvector environment packaging, not runtime promotion.
+  - Change: `phase12f-pgvector-local-live-probe-execution-readiness`
+  - Gate target: optional local pgvector live probe rerun path, not runtime promotion.
+- Phase 12f: PGVector Local Live Probe Execution Readiness
+  - Status: `review`
+  - Change: `phase12f-pgvector-local-live-probe-execution-readiness`
+  - Gate target: optional local pgvector live probe rerun path, not runtime promotion.
 
 ## Latest Refresh
 
-- Run time: `2026-06-03T03:36:45.806832+00:00`
+- Run time: `2026-06-04T03:48:11.496747+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -373,6 +379,7 @@
   - `phase12b_candidate_backend_evaluation_readiness`: `review`
   - `phase12c_pgvector_candidate_backend_readiness`: `review`
   - `phase12d_pgvector_live_probe_readiness`: `review`
+  - `phase12f_pgvector_local_live_probe_execution_readiness`: `review`
   - `provider_handoff_bundle`: `review`
   - `phase11_provider_discovery_smoke`: `ready`
   - `phase10_myprivateagent_local_consumer_probe`: `ready`
@@ -391,6 +398,7 @@
 - Phase 12b candidate backend evaluation readiness is `review` because the current evidence remains review-level and the reference-only family is still comparison-only.
 - Phase 12c pgvector candidate backend readiness is `review` because `PGVECTOR_DATABASE_URL` is not configured locally and the candidate remains configuration-gated.
 - Phase 12d pgvector live probe readiness is `review` because `PGVECTOR_DATABASE_URL` and the optional `psycopg` driver are not configured locally, so the live probe remains optional.
+- Phase 12f pgvector local live probe execution readiness is `review` because the rerun path is ready but the live probe still needs to be refreshed after local execution.
 - Phase 3 candidate latency/resource diagnostics is `review` by design because it is a local evidence-only export that still depends on deployment/runtime posture and deployed smoke context.
 - Phase 3 aggregation/relation negative-control smoke is `ready` because the positive split-chunk control, the same-document negative control, and the relation-aware unsupported-case label all match current local evidence.
 - Runtime promotion gates remain open for Phase 3 and GraphRAG execution; current evidence is candidate-level, not production approval.

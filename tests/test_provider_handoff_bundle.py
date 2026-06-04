@@ -104,6 +104,16 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "phase12d_report_status=" in artifacts[
         "phase12e_pgvector_local_probe_environment_readiness"
     ]["summary"]
+    assert artifacts["phase12f_pgvector_local_live_probe_execution_readiness"]["present"] is True
+    assert artifacts["phase12f_pgvector_local_live_probe_execution_readiness"]["required"] is False
+    assert artifacts["phase12f_pgvector_local_live_probe_execution_readiness"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "phase12d_live_probe_status=" in artifacts[
+        "phase12f_pgvector_local_live_probe_execution_readiness"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"

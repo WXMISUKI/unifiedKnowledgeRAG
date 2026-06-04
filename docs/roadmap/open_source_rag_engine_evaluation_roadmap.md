@@ -34,6 +34,7 @@ Required short-term posture:
 - Keep GraphRAG discovery as planned-boundary evidence, not execution.
 - Keep Qdrant, BGE-M3, hybrid retrieval, aggregation, and relation-aware grading as candidate/review evidence until all promotion gates close.
 - Keep the Phase 12e local pgvector probe environment optional and explicit until the live probe can be rerun locally.
+- Keep the Phase 12f local live-probe execution rerun optional and explicit until the refreshed live probe evidence is accepted.
 
 Recommended next short-term task families:
 
