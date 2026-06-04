@@ -1,6 +1,6 @@
 {
   "id": "phase12c-pgvector-candidate-backend-readiness-v1",
-  "generated_at": "2026-06-04T06:27:59.237017+00:00",
+  "generated_at": "2026-06-04T07:37:45.563553+00:00",
   "status": "blocked",
   "evaluation_state": "pgvector_candidate_configuration_blocked",
   "decision": "keep_current_default",

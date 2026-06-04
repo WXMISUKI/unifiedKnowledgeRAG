@@ -80,6 +80,9 @@ from app.services.phase12f_pgvector_local_live_probe_execution_readiness import 
 from app.services.phase13_provider_roadmap_decision_checkpoint import (
     export_phase13_provider_roadmap_decision_checkpoint_report,
 )
+from app.services.phase14_myprivateagent_provider_integration_acceptance_checkpoint import (
+    export_phase14_myprivateagent_provider_integration_acceptance_checkpoint_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -607,16 +610,6 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
-            id="provider_handoff_bundle",
-            category="handoff",
-            output_dir=artifact_base_dir / "docs/integration/provider-handoff",
-            exporter=lambda output_dir: export_provider_handoff_bundle_report(
-                output_dir=output_dir,
-                base_dir=artifact_base_dir,
-            ),
-            status_reader=lambda report: report.status,
-        ),
-        HandoffRefreshStepSpec(
             id="phase11_provider_discovery_smoke",
             category="local-provider-integration-smoke",
             output_dir=artifact_base_dir / "docs/smoke/myprivateagent-local-provider-integration",
@@ -652,6 +645,27 @@ def default_handoff_refresh_steps(
             category="local-provider-integration-smoke",
             output_dir=artifact_base_dir / "docs/smoke/myprivateagent-local-provider-integration",
             exporter=lambda output_dir: export_phase11_source_binding_preview_smoke_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+            category="roadmap-checkpoint",
+            output_dir=artifact_base_dir
+            / "docs/integration/myprivateagent-provider-integration-acceptance",
+            exporter=lambda output_dir: export_phase14_myprivateagent_provider_integration_acceptance_checkpoint_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="provider_handoff_bundle",
+            category="handoff",
+            output_dir=artifact_base_dir / "docs/integration/provider-handoff",
+            exporter=lambda output_dir: export_provider_handoff_bundle_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

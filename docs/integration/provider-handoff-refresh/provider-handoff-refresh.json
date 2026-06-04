@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-04T06:27:59.277381+00:00",
+  "generated_at": "2026-06-04T07:37:45.647569+00:00",
   "status": "review",
   "steps": [
     {
@@ -508,18 +508,6 @@
       "error": null
     },
     {
-      "id": "provider_handoff_bundle",
-      "category": "handoff",
-      "status": "review",
-      "output_paths": [
-        "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
-        "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"
-      ],
-      "recommended_action": "review_evidence_notes",
-      "summary": "status=review; report_status=review",
-      "error": null
-    },
-    {
       "id": "phase11_provider_discovery_smoke",
       "category": "local-provider-integration-smoke",
       "status": "ready",
@@ -565,6 +553,30 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 3, \"total_checks\": 3}",
+      "error": null
+    },
+    {
+      "id": "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "category": "roadmap-checkpoint",
+      "status": "review",
+      "output_paths": [
+        "docs\\integration\\myprivateagent-provider-integration-acceptance\\phase14-myprivateagent-provider-integration-acceptance-checkpoint.json",
+        "docs\\integration\\myprivateagent-provider-integration-acceptance\\phase14-myprivateagent-provider-integration-acceptance-checkpoint.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; summary={\"blocked_signal_ids\": [], \"blocked_signals\": 0, \"blocker_category\": \"handoff_visibility\", \"handoff_status\": \"review\", \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"phase10_status\": \"review\", \"phase11_status\": \"review\", \"phase13_status\": \"review\", \"ready_signal_ids\": [\"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\"], \"ready_signals\": 4, \"required_signals\": 9, \"review_signal_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"review_signals\": 5, \"roadmap_focus\": \"myprivateagent_repo_side_trial\", \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 9, \"trial_readiness\": \"review_for_myprivateagent_repo_side_trial\"}",
+      "error": null
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "category": "handoff",
+      "status": "review",
+      "output_paths": [
+        "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
+        "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"
+      ],
+      "recommended_action": "review_evidence_notes",
+      "summary": "status=review; report_status=review",
       "error": null
     },
     {

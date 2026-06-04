@@ -585,6 +585,16 @@ The default recommendation is to resume provider integration hardening, keep pgv
 
 This phase is intentionally read-only and review-oriented. It does not promote runtime defaults, does not start a new backend benchmark loop, and does not move caller ownership boundaries into this project.
 
+## Phase 14 MyPrivateAgent Provider Integration Acceptance Checkpoint
+
+Phase 14 is the next acceptance slice after the Phase 10, Phase 11, and Phase 13 evidence chain.
+
+Its job is to answer whether the provider is ready for a MyPrivateAgent repo-side trial from a project-wide perspective, using the existing local consumer, local provider integration, roadmap posture, and handoff evidence.
+
+The default recommendation is to approve repo-side trial only when the provider evidence, handoff visibility, and local environment posture are all ready. When they are not, the checkpoint should classify the blocker explicitly so the next action stays obvious.
+
+This phase is intentionally read-only and acceptance-oriented. It does not create source-to-agent binding, does not promote runtime defaults, does not change backend selection, and does not move caller control-plane ownership into this project.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

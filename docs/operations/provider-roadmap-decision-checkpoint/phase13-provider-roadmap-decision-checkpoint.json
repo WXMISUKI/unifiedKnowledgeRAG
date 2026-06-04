@@ -1,6 +1,6 @@
 {
   "id": "phase13-provider-roadmap-decision-checkpoint-v1",
-  "generated_at": "2026-06-04T06:27:59.253130+00:00",
+  "generated_at": "2026-06-04T07:37:45.594422+00:00",
   "status": "review",
   "checkpoint_state": "ready_for_provider_integration_hardening",
   "decision": "resume_provider_integration_hardening",
@@ -111,7 +111,7 @@
       "category": "handoff",
       "path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json",
       "status": "review",
-      "summary": "status=review; decision=review_evidence_notes; evidence_artifacts=49; phase13_present=False",
+      "summary": "status=review; decision=review_evidence_notes; evidence_artifacts=50; phase13_present=True",
       "present": true,
       "required": true,
       "recommended_action": "review_evidence_notes"
@@ -121,7 +121,7 @@
       "category": "handoff",
       "path": "docs\\integration\\provider-handoff-refresh\\provider-handoff-refresh.json",
       "status": "review",
-      "summary": "status=review; decision=review_evidence_notes; steps=48; phase13_present=False",
+      "summary": "status=review; decision=review_evidence_notes; steps=49; phase13_present=True",
       "present": true,
       "required": true,
       "recommended_action": "review_evidence_notes"

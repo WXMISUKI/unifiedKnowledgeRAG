@@ -269,6 +269,7 @@
 - Phase 12e pgvector local probe environment readiness implemented and refreshed (`phase12e-pgvector-local-probe-environment-readiness`), packaging the optional local pgvector setup needed to rerun the live probe without changing runtime defaults.
 - Phase 12f pgvector local live probe execution readiness implemented and refreshed (`phase12f-pgvector-local-live-probe-execution-readiness`), capturing the rerun path for the live probe without changing runtime defaults.
 - Phase 13 provider roadmap decision checkpoint implemented and refreshed (`2026-06-04-phase13-provider-roadmap-decision-checkpoint`), choosing provider integration hardening as the next focus while keeping pgvector candidate-only.
+- Phase 14 MyPrivateAgent provider integration acceptance checkpoint proposed (`phase14-myprivateagent-provider-integration-acceptance-checkpoint`), defining the repo-side trial acceptance slice that stays provider-first and read-only.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -289,6 +290,7 @@
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
+- Move the next roadmap slice to Phase 14 repo-side trial acceptance instead of reopening backend-specific tuning loops.
 
 ## Next Step Plan
 
@@ -301,12 +303,13 @@
    - `python scripts/export_phase12f_pgvector_local_live_probe_execution_readiness.py`
    - `python scripts/export_phase12_local_rag_integration_hardening_smoke.py`
    - `python scripts/export_phase13_provider_roadmap_decision_checkpoint.py`
+   - `python scripts/export_phase14_myprivateagent_provider_integration_acceptance_checkpoint.py`
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 13 checkpoint to choose the next slice: resume provider integration hardening first and do not start a Phase 12g pgvector tuning loop by default.
+3. Use the Phase 14 checkpoint to decide repo-side trial readiness and keep the next slice acceptance-oriented rather than backend-specific.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
-5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, and operations gates clearly pass.
+5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
 
 ## Open Slice
 
@@ -334,10 +337,14 @@
   - Status: `completed`
   - Change: `2026-06-04-phase13-provider-roadmap-decision-checkpoint`
   - Gate target: global next-slice decision, not backend promotion.
+- Phase 14: MyPrivateAgent Provider Integration Acceptance Checkpoint
+  - Status: `active`
+  - Change: `phase14-myprivateagent-provider-integration-acceptance-checkpoint`
+  - Gate target: repo-side trial acceptance, not runtime promotion.
 
 ## Latest Refresh
 
-- Run time: `2026-06-04T06:27:59.277381+00:00`
+- Run time: `2026-06-04T07:37:45.647569+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -388,6 +395,7 @@
   - `phase10_myprivateagent_local_consumer_probe`: `ready`
   - `phase11_rag_retrieve_consumption_smoke`: `ready`
   - `phase11_source_binding_preview_smoke`: `ready`
+  - `phase14_myprivateagent_provider_integration_acceptance_checkpoint`: `review`
   - `phase6_deployed_handoff_consistency_smoke`: `ready`
   - `phase8_live_url_smoke_consistency_check`: `ready`
 

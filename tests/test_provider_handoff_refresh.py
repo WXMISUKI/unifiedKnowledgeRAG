@@ -142,6 +142,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase11_provider_discovery_smoke" in step_ids
     assert "phase11_rag_retrieve_consumption_smoke" in step_ids
     assert "phase11_source_binding_preview_smoke" in step_ids
+    assert "phase14_myprivateagent_provider_integration_acceptance_checkpoint" in step_ids
     assert "phase12b_candidate_backend_evaluation_readiness" in step_ids
     assert "phase12c_pgvector_candidate_backend_readiness" in step_ids
     assert "phase12d_pgvector_live_probe_readiness" in step_ids
@@ -273,12 +274,6 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert step_ids.index("phase12f_pgvector_local_live_probe_execution_readiness") < step_ids.index(
         "phase13_provider_roadmap_decision_checkpoint"
     )
-    assert step_ids.index("phase13_provider_roadmap_decision_checkpoint") < step_ids.index(
-        "provider_handoff_bundle"
-    )
-    assert step_ids.index("provider_handoff_bundle") < step_ids.index(
-        "phase11_provider_discovery_smoke"
-    )
     assert step_ids.index("phase11_provider_discovery_smoke") < step_ids.index(
         "phase10_myprivateagent_local_consumer_probe"
     )
@@ -287,6 +282,18 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     )
     assert step_ids.index("phase11_rag_retrieve_consumption_smoke") < step_ids.index(
         "phase11_source_binding_preview_smoke"
+    )
+    assert step_ids.index("phase11_source_binding_preview_smoke") < step_ids.index(
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    )
+    assert step_ids.index(
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    ) < step_ids.index("provider_handoff_bundle")
+    assert step_ids.index("phase13_provider_roadmap_decision_checkpoint") < step_ids.index(
+        "provider_handoff_bundle"
+    )
+    assert step_ids.index("provider_handoff_bundle") < step_ids.index(
+        "phase6_deployed_handoff_consistency_smoke"
     )
     assert step_ids.index(
         "phase12b_candidate_backend_evaluation_readiness"

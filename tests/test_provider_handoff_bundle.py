@@ -124,6 +124,22 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "candidate_backend_posture=" in artifacts[
         "phase13_provider_roadmap_decision_checkpoint"
     ]["summary"]
+    assert artifacts[
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    ]["present"] is True
+    assert artifacts[
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    ]["required"] is False
+    assert artifacts[
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    ]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "roadmap_focus=myprivateagent_repo_side_trial" in artifacts[
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"

@@ -5,7 +5,7 @@
 - Checkpoint State: `ready_for_provider_integration_hardening`
 - Decision: `resume_provider_integration_hardening`
 - Strategy Verdict: `continue_provider_first_with_candidate_backends`
-- Generated At: `2026-06-04T06:27:59.253130+00:00`
+- Generated At: `2026-06-04T07:37:45.594422+00:00`
 
 ## Summary
 
@@ -43,8 +43,8 @@
 | `phase12d_pgvector_live_probe_readiness` | `candidate-backend-evaluation` | `True` | `blocked` | `status=blocked; evaluation_state=pgvector_probe_configuration_blocked; decision=keep_current_default; strategy_verdict=continue_provider_first_with_candidate_backends; pgvector_database_url_present=False; pgvector_driver_available=False; review_ready_families=[]; ready_families=["candidate_evidence_bridge_gate"]; blocked_families=["pgvector_probe_gate", "pgvector_runtime_gate"]; open_gate_count=9` | `resolve_failed_evidence` |
 | `phase12e_pgvector_local_probe_environment_readiness` | `candidate-backend-evaluation` | `True` | `ready` | `status=ready; evaluation_state=ready_for_pgvector_local_probe_environment_review; decision=continue_spike; strategy_verdict=continue_provider_first_with_candidate_backends; phase12d_report_status=blocked; optional_dependency_present=True; ready_families=["pgvector_local_environment_pack", "pgvector_probe_bridge"]; review_ready_families=[]; blocked_families=[]; open_gate_count=0` | `no_action_required` |
 | `phase12f_pgvector_local_live_probe_execution_readiness` | `candidate-backend-evaluation` | `True` | `review` | `status=review; execution_state=ready_for_local_live_probe_rerun; decision=continue_spike; strategy_verdict=continue_provider_first_with_candidate_backends; phase12e_environment_status=ready; phase12d_live_probe_status=blocked; rerun_required=True; ready_families=["pgvector_local_execution_pack", "pgvector_handoff_bridge"]; review_ready_families=[]; blocked_families=[]; open_gate_count=1` | `review_evidence_notes` |
-| `provider_handoff_bundle` | `handoff` | `True` | `review` | `status=review; decision=review_evidence_notes; evidence_artifacts=49; phase13_present=False` | `review_evidence_notes` |
-| `provider_handoff_refresh` | `handoff` | `True` | `review` | `status=review; decision=review_evidence_notes; steps=48; phase13_present=False` | `review_evidence_notes` |
+| `provider_handoff_bundle` | `handoff` | `True` | `review` | `status=review; decision=review_evidence_notes; evidence_artifacts=50; phase13_present=True` | `review_evidence_notes` |
+| `provider_handoff_refresh` | `handoff` | `True` | `review` | `status=review; decision=review_evidence_notes; steps=49; phase13_present=True` | `review_evidence_notes` |
 
 ## Notes
 
