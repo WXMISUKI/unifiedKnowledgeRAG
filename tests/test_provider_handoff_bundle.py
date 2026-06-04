@@ -114,6 +114,16 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "phase12d_live_probe_status=" in artifacts[
         "phase12f_pgvector_local_live_probe_execution_readiness"
     ]["summary"]
+    assert artifacts["phase13_provider_roadmap_decision_checkpoint"]["present"] is True
+    assert artifacts["phase13_provider_roadmap_decision_checkpoint"]["required"] is False
+    assert artifacts["phase13_provider_roadmap_decision_checkpoint"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "candidate_backend_posture=" in artifacts[
+        "phase13_provider_roadmap_decision_checkpoint"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"
@@ -306,6 +316,11 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert artifacts["phase11_source_binding_preview_smoke"]["present"] is True
     assert artifacts["phase11_source_binding_preview_smoke"]["required"] is False
     assert artifacts["phase11_source_binding_preview_smoke"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert artifacts["phase13_provider_roadmap_decision_checkpoint"]["status"] in {
         "ready",
         "review",
         "blocked",

@@ -35,6 +35,7 @@ Required short-term posture:
 - Keep Qdrant, BGE-M3, hybrid retrieval, aggregation, and relation-aware grading as candidate/review evidence until all promotion gates close.
 - Keep the Phase 12e local pgvector probe environment optional and explicit until the live probe can be rerun locally.
 - Keep the Phase 12f local live-probe execution rerun optional and explicit until the refreshed live probe evidence is accepted.
+- Run the Phase 13 provider roadmap decision checkpoint before any new backend-specific tuning pass so the next slice is chosen from the full evidence chain.
 
 Recommended next short-term task families:
 

@@ -77,6 +77,9 @@ from app.services.phase12e_pgvector_local_probe_environment_readiness import (
 from app.services.phase12f_pgvector_local_live_probe_execution_readiness import (
     export_phase12f_pgvector_local_live_probe_execution_readiness_report,
 )
+from app.services.phase13_provider_roadmap_decision_checkpoint import (
+    export_phase13_provider_roadmap_decision_checkpoint_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -591,6 +594,17 @@ def default_handoff_refresh_steps(
             status_reader=lambda report: _phase12f_pgvector_local_live_probe_execution_status(
                 report
             ),
+        ),
+        HandoffRefreshStepSpec(
+            id="phase13_provider_roadmap_decision_checkpoint",
+            category="roadmap-checkpoint",
+            output_dir=artifact_base_dir
+            / "docs/operations/provider-roadmap-decision-checkpoint",
+            exporter=lambda output_dir: export_phase13_provider_roadmap_decision_checkpoint_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
         ),
         HandoffRefreshStepSpec(
             id="provider_handoff_bundle",

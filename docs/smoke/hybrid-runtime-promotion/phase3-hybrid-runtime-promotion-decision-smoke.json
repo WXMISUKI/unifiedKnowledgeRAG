@@ -1,6 +1,6 @@
 {
   "id": "phase3-hybrid-runtime-promotion-decision-smoke-v1",
-  "generated_at": "2026-06-04T03:48:11.412685+00:00",
+  "generated_at": "2026-06-04T06:27:59.195788+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults",
   "checks": [

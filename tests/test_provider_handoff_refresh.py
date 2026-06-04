@@ -147,6 +147,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase12d_pgvector_live_probe_readiness" in step_ids
     assert "phase12e_pgvector_local_probe_environment_readiness" in step_ids
     assert "phase12f_pgvector_local_live_probe_execution_readiness" in step_ids
+    assert "phase13_provider_roadmap_decision_checkpoint" in step_ids
     assert "phase8_live_url_smoke_consistency_check" in step_ids
     assert step_ids.index("source_binding_summary") < step_ids.index(
         "phase3_fp_fn_review"
@@ -270,6 +271,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
         "phase12f_pgvector_local_live_probe_execution_readiness"
     )
     assert step_ids.index("phase12f_pgvector_local_live_probe_execution_readiness") < step_ids.index(
+        "phase13_provider_roadmap_decision_checkpoint"
+    )
+    assert step_ids.index("phase13_provider_roadmap_decision_checkpoint") < step_ids.index(
         "provider_handoff_bundle"
     )
     assert step_ids.index("provider_handoff_bundle") < step_ids.index(

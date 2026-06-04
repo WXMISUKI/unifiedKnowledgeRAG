@@ -1,6 +1,6 @@
 {
   "id": "phase12d-pgvector-live-probe-readiness-v1",
-  "generated_at": "2026-06-04T03:48:11.462024+00:00",
+  "generated_at": "2026-06-04T06:27:59.238979+00:00",
   "status": "blocked",
   "evaluation_state": "pgvector_probe_configuration_blocked",
   "decision": "keep_current_default",

@@ -377,6 +377,15 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase13_provider_roadmap_decision_checkpoint",
+        category="roadmap-checkpoint",
+        path=Path(
+            "docs/operations/provider-roadmap-decision-checkpoint/"
+            "phase13-provider-roadmap-decision-checkpoint.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -1224,6 +1233,29 @@ def _artifact_status_and_summary(
                 f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
             ),
         )
+    if artifact_id == "phase13_provider_roadmap_decision_checkpoint":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        ready_family_ids = summary.get("ready_family_ids", [])
+        review_ready_family_ids = summary.get("review_ready_family_ids", [])
+        blocked_family_ids = summary.get("blocked_family_ids", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; checkpoint_state={payload.get('checkpoint_state', 'review')}; "
+                f"decision={payload.get('decision', 'review_evidence_notes')}; "
+                f"strategy_verdict={_dict_value(summary, 'strategy_verdict', 'continue_provider_first_with_candidate_backends')}; "
+                f"roadmap_focus={_dict_value(summary, 'roadmap_focus', 'resume_provider_integration_hardening')}; "
+                f"candidate_backend_posture={_dict_value(summary, 'candidate_backend_posture', 'pause_pgvector_until_live_probe_executed')}; "
+                f"phase12d_status={_dict_value(summary, 'phase12d_status', 'missing')}; "
+                f"phase12f_status={_dict_value(summary, 'phase12f_status', 'missing')}; "
+                f"ready_families={_jsonish_list(ready_family_ids if isinstance(ready_family_ids, list) else [])}; "
+                f"review_ready_families={_jsonish_list(review_ready_family_ids if isinstance(review_ready_family_ids, list) else [])}; "
+                f"blocked_families={_jsonish_list(blocked_family_ids if isinstance(blocked_family_ids, list) else [])}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}"
+            ),
+        )
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         status = payload.get("status", "review")
         summary = payload.get("summary", {})
@@ -1476,6 +1508,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
         return "Optional Phase 12e pgvector local probe environment readiness evidence is missing."
     if artifact_id == "phase12f_pgvector_local_live_probe_execution_readiness":
         return "Optional Phase 12f pgvector local live probe execution readiness evidence is missing."
+    if artifact_id == "phase13_provider_roadmap_decision_checkpoint":
+        return "Optional Phase 13 provider roadmap decision checkpoint evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1574,6 +1608,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return "regenerate_phase12e_pgvector_local_probe_environment_readiness"
     if artifact_id == "phase12f_pgvector_local_live_probe_execution_readiness":
         return "regenerate_phase12f_pgvector_local_live_probe_execution_readiness"
+    if artifact_id == "phase13_provider_roadmap_decision_checkpoint":
+        return "regenerate_phase13_provider_roadmap_decision_checkpoint"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1881,6 +1917,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 12f pgvector local live probe execution readiness is optional before local rerun review; regenerate it after the rerun path or handoff chain changes."
+        )
+    if any(
+        artifact["id"] == "phase13_provider_roadmap_decision_checkpoint"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 13 provider roadmap decision checkpoint is optional before the next roadmap slice; regenerate it after the candidate evidence chain or handoff chain changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

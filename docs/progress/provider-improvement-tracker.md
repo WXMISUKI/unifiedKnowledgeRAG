@@ -268,6 +268,7 @@
 - Phase 12d pgvector live probe readiness implemented and refreshed (`phase12d-pgvector-live-probe-readiness`), adding an optional PostgreSQL-backed probe while runtime defaults remain unchanged.
 - Phase 12e pgvector local probe environment readiness implemented and refreshed (`phase12e-pgvector-local-probe-environment-readiness`), packaging the optional local pgvector setup needed to rerun the live probe without changing runtime defaults.
 - Phase 12f pgvector local live probe execution readiness implemented and refreshed (`phase12f-pgvector-local-live-probe-execution-readiness`), capturing the rerun path for the live probe without changing runtime defaults.
+- Phase 13 provider roadmap decision checkpoint implemented and refreshed (`2026-06-04-phase13-provider-roadmap-decision-checkpoint`), choosing provider integration hardening as the next focus while keeping pgvector candidate-only.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -286,8 +287,8 @@
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
-- Keep open-source RAG engine adoption behind Phase 12f live-probe execution review; do not replace the provider with a platform or promote a backend by popularity alone.
-- Continue optional backend spikes only after the Phase 12f pgvector local live probe execution review is accepted.
+- Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
+- Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
 
 ## Next Step Plan
 
@@ -299,10 +300,11 @@
    - `python scripts/export_phase12e_pgvector_local_probe_environment_readiness.py`
    - `python scripts/export_phase12f_pgvector_local_live_probe_execution_readiness.py`
    - `python scripts/export_phase12_local_rag_integration_hardening_smoke.py`
+   - `python scripts/export_phase13_provider_roadmap_decision_checkpoint.py`
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 12b, Phase 12c, Phase 12d, Phase 12e, and Phase 12f readiness reports to choose the next backend spike only after the review-ready families stay stable.
+3. Use the Phase 13 checkpoint to choose the next slice: resume provider integration hardening first and do not start a Phase 12g pgvector tuning loop by default.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, and operations gates clearly pass.
 
@@ -328,14 +330,14 @@
   - Status: `review`
   - Change: `phase12f-pgvector-local-live-probe-execution-readiness`
   - Gate target: optional local pgvector live probe rerun path, not runtime promotion.
-- Phase 12f: PGVector Local Live Probe Execution Readiness
-  - Status: `review`
-  - Change: `phase12f-pgvector-local-live-probe-execution-readiness`
-  - Gate target: optional local pgvector live probe rerun path, not runtime promotion.
+- Phase 13: Provider Roadmap Decision Checkpoint
+  - Status: `completed`
+  - Change: `2026-06-04-phase13-provider-roadmap-decision-checkpoint`
+  - Gate target: global next-slice decision, not backend promotion.
 
 ## Latest Refresh
 
-- Run time: `2026-06-04T03:48:11.496747+00:00`
+- Run time: `2026-06-04T06:27:59.277381+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -380,6 +382,7 @@
   - `phase12c_pgvector_candidate_backend_readiness`: `review`
   - `phase12d_pgvector_live_probe_readiness`: `review`
   - `phase12f_pgvector_local_live_probe_execution_readiness`: `review`
+  - `phase13_provider_roadmap_decision_checkpoint`: `review`
   - `provider_handoff_bundle`: `review`
   - `phase11_provider_discovery_smoke`: `ready`
   - `phase10_myprivateagent_local_consumer_probe`: `ready`

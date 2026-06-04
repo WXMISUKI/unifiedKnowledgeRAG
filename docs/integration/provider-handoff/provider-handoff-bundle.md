@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-04T03:48:11.482832+00:00`
+- Generated At: `2026-06-04T06:27:59.265296+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -52,6 +52,7 @@
 | `phase12d_pgvector_live_probe_readiness` | `candidate-backend-evaluation` | `True` | `blocked` | status=blocked; evaluation_state=pgvector_probe_configuration_blocked; decision=keep_current_default; strategy_verdict=continue_provider_first_with_candidate_backends; pgvector_database_url_present=False; pgvector_driver_available=False; review_ready_families=[]; ready_families=["candidate_evidence_bridge_gate"]; blocked_families=["pgvector_probe_gate", "pgvector_runtime_gate"]; open_gate_count=9 | `resolve_failed_evidence` |
 | `phase12e_pgvector_local_probe_environment_readiness` | `candidate-backend-evaluation` | `True` | `ready` | status=ready; evaluation_state=ready_for_pgvector_local_probe_environment_review; decision=continue_spike; strategy_verdict=continue_provider_first_with_candidate_backends; phase12d_report_status=blocked; optional_dependency_present=True; ready_families=["pgvector_local_environment_pack", "pgvector_probe_bridge"]; review_ready_families=[]; blocked_families=[]; open_gate_count=0 | `no_action_required` |
 | `phase12f_pgvector_local_live_probe_execution_readiness` | `candidate-backend-evaluation` | `True` | `review` | status=review; execution_state=ready_for_local_live_probe_rerun; decision=continue_spike; strategy_verdict=continue_provider_first_with_candidate_backends; phase12e_environment_status=ready; phase12d_live_probe_status=blocked; rerun_required=True; ready_families=["pgvector_local_execution_pack", "pgvector_handoff_bridge"]; review_ready_families=[]; blocked_families=[]; open_gate_count=1 | `review_evidence_notes` |
+| `phase13_provider_roadmap_decision_checkpoint` | `roadmap-checkpoint` | `True` | `review` | status=review; checkpoint_state=ready_for_provider_integration_hardening; decision=resume_provider_integration_hardening; strategy_verdict=continue_provider_first_with_candidate_backends; roadmap_focus=resume_provider_integration_hardening; candidate_backend_posture=pause_pgvector_until_live_probe_executed; phase12d_status=blocked; phase12f_status=review; ready_families=[]; review_ready_families=["roadmap_evidence_chain", "handoff_visibility"]; blocked_families=[]; open_gate_count=26 | `review_evidence_notes` |
 | `phase3_hybrid_cross_case_fp_fn_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; passed_checks=4/4; false_positive_count=3; false_negative_count=0 | `no_action_required` |
 | `phase3_aggregation_relation_negative_control_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000 | `no_action_required` |
 | `phase3_hybrid_runtime_promotion_decision_readiness` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; review_state=review; required_signals=14; ready_signals=6; open_gates=9; open_gate_count=9 | `review_evidence_notes` |

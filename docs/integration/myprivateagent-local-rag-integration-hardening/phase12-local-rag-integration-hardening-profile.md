@@ -4,7 +4,7 @@
 - Status: `review`
 - Hardening State: `ready_for_local_rag_hardening_review`
 - Decision: `run_phase12_local_rag_integration_hardening_smoke`
-- Generated At: `2026-06-04T03:48:11.446787+00:00`
+- Generated At: `2026-06-04T06:27:59.224994+00:00`
 
 ## Summary
 

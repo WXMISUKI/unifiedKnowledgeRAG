@@ -1,6 +1,6 @@
 {
   "id": "phase12e-pgvector-local-probe-environment-readiness-v1",
-  "generated_at": "2026-06-04T03:48:11.465621+00:00",
+  "generated_at": "2026-06-04T06:27:59.242775+00:00",
   "status": "ready",
   "evaluation_state": "ready_for_pgvector_local_probe_environment_review",
   "decision": "continue_spike",

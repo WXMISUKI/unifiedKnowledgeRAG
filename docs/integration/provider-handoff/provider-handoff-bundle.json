@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-04T03:48:11.482832+00:00",
+  "generated_at": "2026-06-04T06:27:59.265296+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -422,6 +422,16 @@
       "required": false,
       "status": "review",
       "summary": "status=review; execution_state=ready_for_local_live_probe_rerun; decision=continue_spike; strategy_verdict=continue_provider_first_with_candidate_backends; phase12e_environment_status=ready; phase12d_live_probe_status=blocked; rerun_required=True; ready_families=[\"pgvector_local_execution_pack\", \"pgvector_handoff_bridge\"]; review_ready_families=[]; blocked_families=[]; open_gate_count=1",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase13_provider_roadmap_decision_checkpoint",
+      "category": "roadmap-checkpoint",
+      "path": "docs\\operations\\provider-roadmap-decision-checkpoint\\phase13-provider-roadmap-decision-checkpoint.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; checkpoint_state=ready_for_provider_integration_hardening; decision=resume_provider_integration_hardening; strategy_verdict=continue_provider_first_with_candidate_backends; roadmap_focus=resume_provider_integration_hardening; candidate_backend_posture=pause_pgvector_until_live_probe_executed; phase12d_status=blocked; phase12f_status=review; ready_families=[]; review_ready_families=[\"roadmap_evidence_chain\", \"handoff_visibility\"]; blocked_families=[]; open_gate_count=26",
       "recommended_action": "review_evidence_notes"
     },
     {

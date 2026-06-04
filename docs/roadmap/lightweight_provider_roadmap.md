@@ -575,6 +575,16 @@ Before any candidate backend migration, the first execution slice under Phase 12
 
 This keeps the project practical for immediate local integration while preserving long-term backend evaluation agility.
 
+## Phase 13 Provider Roadmap Decision Checkpoint
+
+Phase 13 is the next global decision slice after the Phase 12 candidate evidence chain.
+
+Its job is to read the current Phase 12b through Phase 12f evidence, read the handoff posture, and choose the next small slice from a project-wide perspective rather than a pgvector-local momentum perspective.
+
+The default recommendation is to resume provider integration hardening, keep pgvector candidate-only, and avoid opening a Phase 12g tuning loop unless fresh evidence clearly justifies it.
+
+This phase is intentionally read-only and review-oriented. It does not promote runtime defaults, does not start a new backend benchmark loop, and does not move caller ownership boundaries into this project.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:
