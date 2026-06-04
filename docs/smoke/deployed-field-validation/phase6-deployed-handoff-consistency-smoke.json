@@ -1,6 +1,6 @@
 {
   "id": "phase6-deployed-handoff-consistency-smoke-v1",
-  "generated_at": "2026-06-04T07:37:45.642087+00:00",
+  "generated_at": "2026-06-04T09:31:25.548878+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults",
   "summary": {
@@ -27,7 +27,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "ready",
-      "summary": "artifact_present=true; status=review; artifact_count=51",
+      "summary": "artifact_present=true; status=review; artifact_count=52",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },

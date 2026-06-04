@@ -143,6 +143,7 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     assert "phase11_rag_retrieve_consumption_smoke" in step_ids
     assert "phase11_source_binding_preview_smoke" in step_ids
     assert "phase14_myprivateagent_provider_integration_acceptance_checkpoint" in step_ids
+    assert "phase15_myprivateagent_repo_side_trial_dispatch_package" in step_ids
     assert "phase12b_candidate_backend_evaluation_readiness" in step_ids
     assert "phase12c_pgvector_candidate_backend_readiness" in step_ids
     assert "phase12d_pgvector_live_probe_readiness" in step_ids
@@ -288,6 +289,9 @@ def test_default_handoff_refresh_runs_source_binding_before_bundle():
     )
     assert step_ids.index(
         "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
+    ) < step_ids.index("phase15_myprivateagent_repo_side_trial_dispatch_package")
+    assert step_ids.index(
+        "phase15_myprivateagent_repo_side_trial_dispatch_package"
     ) < step_ids.index("provider_handoff_bundle")
     assert step_ids.index("phase13_provider_roadmap_decision_checkpoint") < step_ids.index(
         "provider_handoff_bundle"

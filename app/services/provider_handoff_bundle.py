@@ -1,4 +1,4 @@
-import json
+﻿import json
 from collections import Counter
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
@@ -391,6 +391,15 @@ DEFAULT_EVIDENCE_SPECS = [
         path=Path(
             "docs/integration/myprivateagent-provider-integration-acceptance/"
             "phase14-myprivateagent-provider-integration-acceptance-checkpoint.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
+        id="phase15_myprivateagent_repo_side_trial_dispatch_package",
+        category="roadmap-checkpoint",
+        path=Path(
+            "docs/integration/myprivateagent-repo-side-trial-dispatch/"
+            "phase15-myprivateagent-repo-side-trial-dispatch-package.json"
         ),
         required=False,
     ),
@@ -1387,6 +1396,22 @@ def _artifact_status_and_summary(
                 f"graph_error_code={summary.get('graph_error_code', 'unknown')}"
             ),
         )
+    if artifact_id == "phase15_myprivateagent_repo_side_trial_dispatch_package":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        caller_checklist = summary.get("caller_checklist", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; dispatch_state={_dict_value(summary, 'dispatch_state', 'review_for_repo_side_trial_dispatch')}; "
+                f"blocker_category={_dict_value(summary, 'blocker_category', 'review')}; "
+                f"phase14_status={_dict_value(summary, 'phase14_status', 'missing')}; "
+                f"handoff_status={_dict_value(summary, 'handoff_status', 'missing')}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}; "
+                f"caller_checklist_count={_int_value(len(caller_checklist) if isinstance(caller_checklist, list) else 0, fallback=0)}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -1548,6 +1573,11 @@ def _optional_missing_summary(artifact_id: str) -> str:
             "Optional Phase 14 MyPrivateAgent provider integration acceptance "
             "checkpoint evidence is missing."
         )
+    if artifact_id == "phase15_myprivateagent_repo_side_trial_dispatch_package":
+        return (
+            "Optional Phase 15 MyPrivateAgent repo-side trial dispatch package "
+            "evidence is missing."
+        )
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1652,6 +1682,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         return (
             "regenerate_phase14_myprivateagent_provider_integration_acceptance_checkpoint"
         )
+    if artifact_id == "phase15_myprivateagent_repo_side_trial_dispatch_package":
+        return "regenerate_phase15_myprivateagent_repo_side_trial_dispatch_package"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1977,6 +2009,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
             "Phase 14 MyPrivateAgent provider integration acceptance checkpoint is optional before repo-side trial review; regenerate it after local consumer, local provider integration, or handoff evidence changes."
         )
     if any(
+        artifact["id"] == "phase15_myprivateagent_repo_side_trial_dispatch_package"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 15 MyPrivateAgent repo-side trial dispatch package is optional before repo-side trial dispatch; regenerate it after Phase 14 or handoff evidence changes."
+        )
+    if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"
         and not artifact["present"]
         for artifact in artifact_rows
@@ -2041,3 +2081,4 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
             "Phase 5 graph boundary smoke summary is optional before graph review; regenerate it after provider contract smoke changes."
         )
     return notes
+

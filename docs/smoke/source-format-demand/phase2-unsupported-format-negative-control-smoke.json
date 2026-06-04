@@ -1,6 +1,6 @@
 {
   "id": "phase2-unsupported-format-negative-control-smoke-v1",
-  "generated_at": "2026-06-04T07:37:45.427650+00:00",
+  "generated_at": "2026-06-04T09:31:25.442897+00:00",
   "status": "ready",
   "decision": "keep_markdown_baseline",
   "readiness_report_path": "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.json",

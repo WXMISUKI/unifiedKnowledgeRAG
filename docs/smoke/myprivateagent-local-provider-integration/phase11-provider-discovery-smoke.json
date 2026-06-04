@@ -1,6 +1,6 @@
 {
   "id": "phase11-provider-discovery-smoke-v1",
-  "generated_at": "2026-06-04T07:37:45.598422+00:00",
+  "generated_at": "2026-06-04T09:31:25.524936+00:00",
   "status": "ready",
   "decision": "keep_discovery_read_only",
   "summary": {

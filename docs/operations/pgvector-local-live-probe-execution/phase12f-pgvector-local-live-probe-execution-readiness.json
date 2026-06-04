@@ -1,6 +1,6 @@
 {
   "id": "phase12f-pgvector-local-live-probe-execution-readiness-v1",
-  "generated_at": "2026-06-04T07:37:45.583753+00:00",
+  "generated_at": "2026-06-04T09:31:25.517495+00:00",
   "status": "review",
   "execution_state": "ready_for_local_live_probe_rerun",
   "decision": "continue_spike",

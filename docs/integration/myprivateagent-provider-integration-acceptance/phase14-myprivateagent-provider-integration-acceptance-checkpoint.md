@@ -4,7 +4,7 @@
 - Status: `review`
 - Acceptance State: `review_for_myprivateagent_repo_side_trial`
 - Decision: `refresh_provider_integration_evidence`
-- Generated At: `2026-06-04T07:37:45.614822+00:00`
+- Generated At: `2026-06-04T09:31:25.532811+00:00`
 
 ## Summary
 
@@ -41,8 +41,8 @@
 | `phase11_rag_retrieve_consumption_smoke` | `True` | `ready` | status=ready; rag_retrieve_state=ready; passed_checks=3/3 | `no_action_required` |
 | `phase11_source_binding_preview_smoke` | `True` | `ready` | status=ready; source_binding_preview_state=ready; passed_checks=3/3 | `no_action_required` |
 | `phase13_provider_roadmap_decision_checkpoint` | `True` | `review` | status=review; checkpoint_state=ready_for_provider_integration_hardening; decision=resume_provider_integration_hardening; roadmap_focus=resume_provider_integration_hardening; candidate_backend_posture=pause_pgvector_until_live_probe_executed; phase12d_status=blocked; phase12f_status=review | `review_evidence_notes` |
-| `provider_handoff_bundle` | `True` | `review` | status=review; decision=review_evidence_notes; evidence_artifacts=50 | `review_evidence_notes` |
-| `provider_handoff_refresh` | `True` | `review` | status=review; decision=review_evidence_notes; steps=49 | `review_evidence_notes` |
+| `provider_handoff_bundle` | `True` | `review` | status=review; decision=review_evidence_notes; evidence_artifacts=52 | `review_evidence_notes` |
+| `provider_handoff_refresh` | `True` | `review` | status=review; decision=review_evidence_notes; steps=51 | `review_evidence_notes` |
 
 ## Notes
 

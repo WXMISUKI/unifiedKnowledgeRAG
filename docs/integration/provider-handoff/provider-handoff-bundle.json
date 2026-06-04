@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-04T07:37:45.637260+00:00",
+  "generated_at": "2026-06-04T09:31:25.546756+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -442,6 +442,16 @@
       "required": false,
       "status": "review",
       "summary": "status=review; acceptance_state=review_for_myprivateagent_repo_side_trial; decision=refresh_provider_integration_evidence; roadmap_focus=myprivateagent_repo_side_trial; blocker_category=handoff_visibility; phase10_status=review; phase11_status=review; phase13_status=review; handoff_status=review; ready_signals=[\"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\"]; review_signals=[\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"]; blocked_signals=[]; open_gate_count=5",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase15_myprivateagent_repo_side_trial_dispatch_package",
+      "category": "roadmap-checkpoint",
+      "path": "docs\\integration\\myprivateagent-repo-side-trial-dispatch\\phase15-myprivateagent-repo-side-trial-dispatch-package.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; dispatch_state=review_for_repo_side_trial_dispatch; blocker_category=handoff_visibility; phase14_status=review; handoff_status=review; open_gate_count=6; caller_checklist_count=3",
       "recommended_action": "review_evidence_notes"
     },
     {

@@ -595,6 +595,16 @@ The default recommendation is to approve repo-side trial only when the provider 
 
 This phase is intentionally read-only and acceptance-oriented. It does not create source-to-agent binding, does not promote runtime defaults, does not change backend selection, and does not move caller control-plane ownership into this project.
 
+## Phase 15 MyPrivateAgent Repo-Side Trial Dispatch Package
+
+Phase 15 turns the Phase 10, Phase 11, Phase 13, and Phase 14 evidence chain into a caller-facing dispatch package that MyPrivateAgent can consume without stitching multiple reports together.
+
+Its job is to tell the caller whether the provider is ready to dispatch a repo-side trial, what blocker category applies if it is not, and which follow-up actions should happen next. The package stays local, read-only, and provider-first.
+
+The default recommendation is to dispatch the repo-side trial only when provider evidence, handoff visibility, and local environment posture are all ready. When they are not, the dispatch package should make the next action explicit instead of starting a trial or changing runtime defaults.
+
+This phase is intentionally read-only and dispatch-oriented. It does not create source-to-agent binding, does not execute a repo-side trial, does not promote runtime defaults, does not change backend selection, and does not move caller control-plane ownership into this project.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

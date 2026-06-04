@@ -3,7 +3,7 @@
 - Report: `phase11-rag-retrieve-consumption-smoke-v1`
 - Status: `ready`
 - Decision: `keep_caller_consumption_fail_closed`
-- Generated At: `2026-06-04T07:37:45.605538+00:00`
+- Generated At: `2026-06-04T09:31:25.528488+00:00`
 
 ## Summary
 

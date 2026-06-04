@@ -1,6 +1,6 @@
 {
   "id": "phase6-qdrant-vector-store-readiness-v1",
-  "generated_at": "2026-06-04T07:37:45.398958+00:00",
+  "generated_at": "2026-06-04T09:31:25.430121+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "deployment_readiness": {

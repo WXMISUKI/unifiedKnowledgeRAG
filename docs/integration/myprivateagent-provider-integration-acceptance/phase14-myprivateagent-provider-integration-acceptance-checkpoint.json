@@ -1,6 +1,6 @@
 {
   "id": "phase14-myprivateagent-provider-integration-acceptance-checkpoint-v1",
-  "generated_at": "2026-06-04T07:37:45.614822+00:00",
+  "generated_at": "2026-06-04T09:31:25.532811+00:00",
   "status": "review",
   "acceptance_state": "review_for_myprivateagent_repo_side_trial",
   "decision": "refresh_provider_integration_evidence",
@@ -103,7 +103,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "review",
-      "summary": "status=review; decision=review_evidence_notes; evidence_artifacts=50",
+      "summary": "status=review; decision=review_evidence_notes; evidence_artifacts=52",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -111,7 +111,7 @@
       "id": "provider_handoff_refresh",
       "required": true,
       "status": "review",
-      "summary": "status=review; decision=review_evidence_notes; steps=49",
+      "summary": "status=review; decision=review_evidence_notes; steps=51",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff-refresh\\provider-handoff-refresh.json"
     }

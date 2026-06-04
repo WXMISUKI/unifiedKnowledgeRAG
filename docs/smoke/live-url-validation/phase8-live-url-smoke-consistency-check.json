@@ -1,6 +1,6 @@
 {
   "id": "phase8-live-url-smoke-consistency-check-v1",
-  "generated_at": "2026-06-04T07:37:45.645298+00:00",
+  "generated_at": "2026-06-04T09:31:25.550612+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults_until_live_url_validation",
   "summary": {
@@ -29,7 +29,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "ready",
-      "summary": "artifact_present=true; status=review; artifact_count=51",
+      "summary": "artifact_present=true; status=review; artifact_count=52",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },

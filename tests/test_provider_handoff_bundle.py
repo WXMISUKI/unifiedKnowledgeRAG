@@ -140,6 +140,19 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     assert "roadmap_focus=myprivateagent_repo_side_trial" in artifacts[
         "phase14_myprivateagent_provider_integration_acceptance_checkpoint"
     ]["summary"]
+    assert artifacts[
+        "phase15_myprivateagent_repo_side_trial_dispatch_package"
+    ]["present"] is True
+    assert artifacts[
+        "phase15_myprivateagent_repo_side_trial_dispatch_package"
+    ]["required"] is False
+    assert artifacts[
+        "phase15_myprivateagent_repo_side_trial_dispatch_package"
+    ]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"
