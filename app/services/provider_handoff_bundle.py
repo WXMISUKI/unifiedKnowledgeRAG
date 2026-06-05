@@ -404,6 +404,15 @@ DEFAULT_EVIDENCE_SPECS = [
         required=False,
     ),
     HandoffEvidenceSpec(
+        id="phase16_myprivateagent_minimal_access_loop",
+        category="roadmap-checkpoint",
+        path=Path(
+            "docs/integration/myprivateagent-minimal-access-loop/"
+            "phase16-myprivateagent-minimal-access-loop.json"
+        ),
+        required=False,
+    ),
+    HandoffEvidenceSpec(
         id="phase3_hybrid_cross_case_fp_fn_smoke",
         category="retrieval-evidence",
         path=Path(
@@ -1412,6 +1421,22 @@ def _artifact_status_and_summary(
                 f"caller_checklist_count={_int_value(len(caller_checklist) if isinstance(caller_checklist, list) else 0, fallback=0)}"
             ),
         )
+    if artifact_id == "phase16_myprivateagent_minimal_access_loop":
+        status = payload.get("status", "review")
+        summary = payload.get("summary", {})
+        open_gate_ids = summary.get("open_gate_ids", [])
+        caller_checklist = summary.get("caller_checklist", [])
+        return (
+            status if status in {"ready", "review", "blocked"} else "review",
+            (
+                f"status={status}; access_loop_state={_dict_value(summary, 'access_loop_state', 'review_for_minimal_access_loop')}; "
+                f"blocker_category={_dict_value(summary, 'blocker_category', 'review')}; "
+                f"phase15_status={_dict_value(summary, 'phase15_status', 'missing')}; "
+                f"handoff_status={_dict_value(summary, 'handoff_status', 'missing')}; "
+                f"open_gate_count={_int_value(len(open_gate_ids) if isinstance(open_gate_ids, list) else 0, fallback=0)}; "
+                f"caller_checklist_count={_int_value(len(caller_checklist) if isinstance(caller_checklist, list) else 0, fallback=0)}"
+            ),
+        )
     return "review", "Unknown evidence artifact shape."
 
 
@@ -1578,6 +1603,8 @@ def _optional_missing_summary(artifact_id: str) -> str:
             "Optional Phase 15 MyPrivateAgent repo-side trial dispatch package "
             "evidence is missing."
         )
+    if artifact_id == "phase16_myprivateagent_minimal_access_loop":
+        return "Optional Phase 16 MyPrivateAgent minimal access loop evidence is missing."
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "Optional Phase 3 aggregation/relation negative-control smoke evidence is missing."
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -1684,6 +1711,8 @@ def _optional_missing_action(artifact_id: str) -> str:
         )
     if artifact_id == "phase15_myprivateagent_repo_side_trial_dispatch_package":
         return "regenerate_phase15_myprivateagent_repo_side_trial_dispatch_package"
+    if artifact_id == "phase16_myprivateagent_minimal_access_loop":
+        return "regenerate_phase16_myprivateagent_minimal_access_loop"
     if artifact_id == "phase3_aggregation_relation_negative_control_smoke":
         return "regenerate_phase3_aggregation_relation_negative_control_smoke"
     if artifact_id == "phase3_hybrid_runtime_promotion_decision_readiness":
@@ -2015,6 +2044,14 @@ def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:
     ):
         notes.append(
             "Phase 15 MyPrivateAgent repo-side trial dispatch package is optional before repo-side trial dispatch; regenerate it after Phase 14 or handoff evidence changes."
+        )
+    if any(
+        artifact["id"] == "phase16_myprivateagent_minimal_access_loop"
+        and not artifact["present"]
+        for artifact in artifact_rows
+    ):
+        notes.append(
+            "Phase 16 MyPrivateAgent minimal access loop is optional before repo-side trial execution; regenerate it after Phase 15 or handoff evidence changes."
         )
     if any(
         artifact["id"] == "phase3_hybrid_cross_case_fp_fn_smoke"

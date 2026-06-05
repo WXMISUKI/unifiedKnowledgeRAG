@@ -3,7 +3,7 @@
 - Report: `phase6-qdrant-vector-store-readiness-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-04T09:31:25.430121+00:00`
+- Generated At: `2026-06-05T01:13:11.837600+00:00`
 
 ## Signals
 

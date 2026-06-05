@@ -86,6 +86,9 @@ from app.services.phase14_myprivateagent_provider_integration_acceptance_checkpo
 from app.services.phase15_myprivateagent_repo_side_trial_dispatch_package import (
     export_phase15_myprivateagent_repo_side_trial_dispatch_package_report,
 )
+from app.services.phase16_myprivateagent_minimal_access_loop import (
+    export_phase16_myprivateagent_minimal_access_loop_report,
+)
 from app.services.provider_contract_smoke import export_provider_contract_smoke_report
 from app.services.provider_handoff_bundle import export_provider_handoff_bundle_report
 from app.services.phase3_retrieval_promotion_readiness import (
@@ -670,6 +673,17 @@ def default_handoff_refresh_steps(
             output_dir=artifact_base_dir
             / "docs/integration/myprivateagent-repo-side-trial-dispatch",
             exporter=lambda output_dir: export_phase15_myprivateagent_repo_side_trial_dispatch_package_report(
+                output_dir=output_dir,
+                base_dir=artifact_base_dir,
+            ),
+            status_reader=lambda report: report.status,
+        ),
+        HandoffRefreshStepSpec(
+            id="phase16_myprivateagent_minimal_access_loop",
+            category="roadmap-checkpoint",
+            output_dir=artifact_base_dir
+            / "docs/integration/myprivateagent-minimal-access-loop",
+            exporter=lambda output_dir: export_phase16_myprivateagent_minimal_access_loop_report(
                 output_dir=output_dir,
                 base_dir=artifact_base_dir,
             ),

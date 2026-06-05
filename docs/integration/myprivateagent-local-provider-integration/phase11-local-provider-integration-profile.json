@@ -1,6 +1,6 @@
 {
   "id": "phase11-local-provider-integration-profile-v1",
-  "generated_at": "2026-06-04T09:31:25.493999+00:00",
+  "generated_at": "2026-06-05T01:13:11.913583+00:00",
   "status": "review",
   "integration_state": "ready_for_local_provider_integration_review",
   "decision": "run_phase11_local_integration_smokes",

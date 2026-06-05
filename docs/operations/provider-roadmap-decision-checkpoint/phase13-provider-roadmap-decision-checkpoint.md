@@ -5,7 +5,7 @@
 - Checkpoint State: `ready_for_provider_integration_hardening`
 - Decision: `resume_provider_integration_hardening`
 - Strategy Verdict: `continue_provider_first_with_candidate_backends`
-- Generated At: `2026-06-04T09:31:25.523012+00:00`
+- Generated At: `2026-06-05T01:13:11.946464+00:00`
 
 ## Summary
 

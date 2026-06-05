@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-04T09:31:25.546756+00:00",
+  "generated_at": "2026-06-05T01:13:11.979264+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -452,6 +452,16 @@
       "required": false,
       "status": "review",
       "summary": "status=review; dispatch_state=review_for_repo_side_trial_dispatch; blocker_category=handoff_visibility; phase14_status=review; handoff_status=review; open_gate_count=6; caller_checklist_count=3",
+      "recommended_action": "review_evidence_notes"
+    },
+    {
+      "id": "phase16_myprivateagent_minimal_access_loop",
+      "category": "roadmap-checkpoint",
+      "path": "docs\\integration\\myprivateagent-minimal-access-loop\\phase16-myprivateagent-minimal-access-loop.json",
+      "present": true,
+      "required": false,
+      "status": "review",
+      "summary": "status=review; access_loop_state=review_for_minimal_access_loop; blocker_category=handoff_visibility; phase15_status=review; handoff_status=review; open_gate_count=7; caller_checklist_count=3",
       "recommended_action": "review_evidence_notes"
     },
     {

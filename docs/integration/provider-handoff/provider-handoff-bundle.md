@@ -2,7 +2,7 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-04T09:31:25.546756+00:00`
+- Generated At: `2026-06-05T01:13:11.979264+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -55,6 +55,7 @@
 | `phase13_provider_roadmap_decision_checkpoint` | `roadmap-checkpoint` | `True` | `review` | status=review; checkpoint_state=ready_for_provider_integration_hardening; decision=resume_provider_integration_hardening; strategy_verdict=continue_provider_first_with_candidate_backends; roadmap_focus=resume_provider_integration_hardening; candidate_backend_posture=pause_pgvector_until_live_probe_executed; phase12d_status=blocked; phase12f_status=review; ready_families=[]; review_ready_families=["roadmap_evidence_chain", "handoff_visibility"]; blocked_families=[]; open_gate_count=26 | `review_evidence_notes` |
 | `phase14_myprivateagent_provider_integration_acceptance_checkpoint` | `roadmap-checkpoint` | `True` | `review` | status=review; acceptance_state=review_for_myprivateagent_repo_side_trial; decision=refresh_provider_integration_evidence; roadmap_focus=myprivateagent_repo_side_trial; blocker_category=handoff_visibility; phase10_status=review; phase11_status=review; phase13_status=review; handoff_status=review; ready_signals=["phase10_myprivateagent_local_consumer_probe", "phase11_provider_discovery_smoke", "phase11_rag_retrieve_consumption_smoke", "phase11_source_binding_preview_smoke"]; review_signals=["phase10_myprivateagent_local_consumer_readiness", "phase11_local_provider_integration_profile", "phase13_provider_roadmap_decision_checkpoint", "provider_handoff_bundle", "provider_handoff_refresh"]; blocked_signals=[]; open_gate_count=5 | `review_evidence_notes` |
 | `phase15_myprivateagent_repo_side_trial_dispatch_package` | `roadmap-checkpoint` | `True` | `review` | status=review; dispatch_state=review_for_repo_side_trial_dispatch; blocker_category=handoff_visibility; phase14_status=review; handoff_status=review; open_gate_count=6; caller_checklist_count=3 | `review_evidence_notes` |
+| `phase16_myprivateagent_minimal_access_loop` | `roadmap-checkpoint` | `True` | `review` | status=review; access_loop_state=review_for_minimal_access_loop; blocker_category=handoff_visibility; phase15_status=review; handoff_status=review; open_gate_count=7; caller_checklist_count=3 | `review_evidence_notes` |
 | `phase3_hybrid_cross_case_fp_fn_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; passed_checks=4/4; false_positive_count=3; false_negative_count=0 | `no_action_required` |
 | `phase3_aggregation_relation_negative_control_smoke` | `retrieval-evidence` | `True` | `ready` | status=ready; decision=keep_runtime_defaults; total_checks=4; passed_checks=4; failed_checks=0; relation_unsupported_count=1; expected_empty_pass_rate=1.0000 | `no_action_required` |
 | `phase3_hybrid_runtime_promotion_decision_readiness` | `retrieval-evidence` | `True` | `review` | status=review; decision=keep_runtime_defaults; review_state=review; required_signals=14; ready_signals=6; open_gates=9; open_gate_count=9 | `review_evidence_notes` |

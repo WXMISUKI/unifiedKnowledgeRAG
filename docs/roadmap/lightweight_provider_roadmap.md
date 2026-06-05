@@ -605,6 +605,16 @@ The default recommendation is to dispatch the repo-side trial only when provider
 
 This phase is intentionally read-only and dispatch-oriented. It does not create source-to-agent binding, does not execute a repo-side trial, does not promote runtime defaults, does not change backend selection, and does not move caller control-plane ownership into this project.
 
+## Phase 16 MyPrivateAgent Minimal Access Loop
+
+Phase 16 turns the Phase 10, Phase 11, Phase 13, Phase 14, and Phase 15 evidence chain into a single caller-facing access loop report that MyPrivateAgent can use to decide whether the minimum access path is ready for a real repo-side trial.
+
+Its job is to keep the access path small and explicit: the report should tell the caller whether the minimum loop is ready, which blocker category applies if it is not, and what the next action should be. The package stays local, read-only, and provider-first.
+
+The default recommendation is to begin the repo-side trial only when provider evidence, handoff visibility, and local environment posture are all ready. When they are not, the access loop report should make the next action explicit instead of starting a trial or changing runtime defaults.
+
+This phase is intentionally read-only and access-oriented. It does not create source-to-agent binding, does not execute a repo-side trial, does not promote runtime defaults, does not change backend selection, and does not move caller control-plane ownership into this project.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

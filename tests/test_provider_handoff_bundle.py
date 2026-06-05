@@ -153,6 +153,16 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
         "review",
         "blocked",
     }
+    assert artifacts["phase16_myprivateagent_minimal_access_loop"]["present"] is True
+    assert artifacts["phase16_myprivateagent_minimal_access_loop"]["required"] is False
+    assert artifacts["phase16_myprivateagent_minimal_access_loop"]["status"] in {
+        "ready",
+        "review",
+        "blocked",
+    }
+    assert "access_loop_state=" in artifacts[
+        "phase16_myprivateagent_minimal_access_loop"
+    ]["summary"]
     assert artifacts["phase6_bge_m3_artifact_readiness"]["present"] is True
     assert artifacts["phase6_bge_m3_artifact_readiness"]["required"] is False
     assert artifacts["phase6_bge_m3_artifact_readiness"]["status"] == "review"

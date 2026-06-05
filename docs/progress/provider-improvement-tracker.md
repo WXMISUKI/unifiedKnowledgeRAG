@@ -290,7 +290,7 @@
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
-- Move the next roadmap slice to Phase 15 repo-side trial dispatch instead of reopening backend-specific tuning loops.
+- Move the next roadmap slice to Phase 16 minimal access loop instead of reopening backend-specific tuning loops.
 
 ## Next Step Plan
 
@@ -304,10 +304,11 @@
    - `python scripts/export_phase12_local_rag_integration_hardening_smoke.py`
    - `python scripts/export_phase13_provider_roadmap_decision_checkpoint.py`
    - `python scripts/export_phase15_myprivateagent_repo_side_trial_dispatch_package.py`
+   - `python scripts/export_phase16_myprivateagent_minimal_access_loop.py`
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 14 checkpoint to decide repo-side trial readiness and keep the next slice acceptance-oriented rather than backend-specific.
+3. Use the Phase 16 access loop report to decide repo-side trial readiness and keep the next slice access-oriented rather than backend-specific.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
 
@@ -338,13 +339,17 @@
   - Change: `2026-06-04-phase13-provider-roadmap-decision-checkpoint`
   - Gate target: global next-slice decision, not backend promotion.
 - Phase 15: MyPrivateAgent Repo-Side Trial Dispatch Package
-  - Status: `active`
+  - Status: `completed`
   - Change: `phase15-myprivateagent-repo-side-trial-dispatch-package`
   - Gate target: repo-side trial dispatch, not runtime promotion.
+- Phase 16: MyPrivateAgent Minimal Access Loop
+  - Status: `active`
+  - Change: `phase16-myprivateagent-minimal-access-loop`
+  - Gate target: minimal access loop, not runtime promotion.
 
 ## Latest Refresh
 
-  - Run time: `2026-06-04T17:32:27.1540944+08:00`
+  - Run time: `2026-06-05T01:13:11.984453+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -395,8 +400,9 @@
   - `phase10_myprivateagent_local_consumer_probe`: `ready`
   - `phase11_rag_retrieve_consumption_smoke`: `ready`
   - `phase11_source_binding_preview_smoke`: `ready`
-    - `phase14_myprivateagent_provider_integration_acceptance_checkpoint`: `review`
-    - `phase15_myprivateagent_repo_side_trial_dispatch_package`: `review`
+  - `phase14_myprivateagent_provider_integration_acceptance_checkpoint`: `review`
+  - `phase15_myprivateagent_repo_side_trial_dispatch_package`: `review`
+  - `phase16_myprivateagent_minimal_access_loop`: `review`
   - `phase6_deployed_handoff_consistency_smoke`: `ready`
   - `phase8_live_url_smoke_consistency_check`: `ready`
 
