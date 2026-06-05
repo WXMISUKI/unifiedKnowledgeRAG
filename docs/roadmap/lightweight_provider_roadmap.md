@@ -633,6 +633,18 @@ This phase is intentionally read-only and gate-oriented. It does not execute the
 
 After this phase, the evidence-chain work should stop expanding unless a real repo-side trial exposes a concrete provider bug. The next useful slice is Phase 19 MyPrivateAgent repo-side trial outcome capture, preferably driven from the MyPrivateAgent repository.
 
+## Phase 24 Document RAG Trial Readiness Closure
+
+Phase 24 closes the provider-side document RAG readiness question for a MyPrivateAgent repo-side trial:
+
+`docs/integration/myprivateagent-document-rag-trial-readiness/phase24-document-rag-trial-readiness.json`
+
+`docs/integration/myprivateagent-document-rag-trial-readiness/phase24-document-rag-trial-readiness.md`
+
+The closure report intentionally reuses the simplified primitive access gate from Phase 18: provider contract smoke, Phase 10 local consumer probe, Phase 11 provider discovery smoke, Phase 11 retrieve-consumption smoke, and Phase 11 source-binding preview smoke. When those primitive signals are ready, Phase 24 returns `decision=go` even if older review-context reports remain visible as non-blocking notes.
+
+This phase is read-only and provider-side. It does not execute the MyPrivateAgent trial, create source-to-agent binding, promote retrieval defaults, start live deployment validation, rebuild indexes, execute GraphRAG, or move caller control-plane ownership into this project. The next action is to begin the MyPrivateAgent repo-side document RAG trial and capture the outcome in the caller repository.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

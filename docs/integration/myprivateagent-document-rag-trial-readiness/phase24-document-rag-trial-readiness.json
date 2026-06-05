@@ -1,0 +1,145 @@
+{
+  "id": "phase24-document-rag-trial-readiness-v1",
+  "generated_at": "2026-06-05T07:54:27.335439+00:00",
+  "status": "ready",
+  "trial_readiness_state": "ready_for_repo_side_document_rag_trial",
+  "decision": "go",
+  "summary": {
+    "roadmap_phase": "Phase 24",
+    "roadmap_focus": "external_knowledge_provider_document_rag_readiness_closure",
+    "local_provider_url": "http://127.0.0.1:8020",
+    "primitive_gate_status": "ready",
+    "primitive_signal_count": 5,
+    "ready_primitive_signal_ids": [
+      "provider_contract_smoke",
+      "phase10_myprivateagent_local_consumer_probe",
+      "phase11_provider_discovery_smoke",
+      "phase11_rag_retrieve_consumption_smoke",
+      "phase11_source_binding_preview_smoke"
+    ],
+    "review_primitive_signal_ids": [],
+    "blocked_primitive_signal_ids": [],
+    "review_context_signal_count": 7,
+    "open_review_context_signal_ids": [
+      "phase10_myprivateagent_local_consumer_readiness",
+      "phase11_local_provider_integration_profile"
+    ],
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "retrieval_backend_promotion_status": "not_promoted_by_this_report",
+    "graph_execution_status": "planned_boundary_only",
+    "source_binding_policy_owner": "caller",
+    "trial_execution_owner": "MyPrivateAgent"
+  },
+  "primitive_signals": [
+    {
+      "id": "provider_contract_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; passed=True; failed=0; total=9",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json"
+    },
+    {
+      "id": "phase10_myprivateagent_local_consumer_probe",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_provider_side_consumer_probe_review",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-probe.json"
+    },
+    {
+      "id": "phase11_provider_discovery_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_discovery_read_only",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-provider-discovery-smoke.json"
+    },
+    {
+      "id": "phase11_rag_retrieve_consumption_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_caller_consumption_fail_closed",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-rag-retrieve-consumption-smoke.json"
+    },
+    {
+      "id": "phase11_source_binding_preview_smoke",
+      "required": true,
+      "status": "ready",
+      "summary": "status=ready; decision=keep_source_binding_preview_only",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\smoke\\myprivateagent-local-provider-integration\\phase11-source-binding-preview-smoke.json"
+    }
+  ],
+  "review_context_signals": [
+    {
+      "id": "phase10_myprivateagent_local_consumer_readiness",
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=run_local_consumer_probe_before_myprivateagent_integration",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\myprivateagent-local-consumer-verification\\phase10-myprivateagent-local-consumer-readiness.json"
+    },
+    {
+      "id": "phase11_local_provider_integration_profile",
+      "required": false,
+      "status": "review",
+      "summary": "status=review; decision=run_phase11_local_integration_smokes",
+      "recommended_action": "review_evidence_notes",
+      "evidence_path": "docs\\integration\\myprivateagent-local-provider-integration\\phase11-local-provider-integration-profile.json"
+    },
+    {
+      "id": "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=approve_myprivateagent_repo_side_trial",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-provider-integration-acceptance\\phase14-myprivateagent-provider-integration-acceptance-checkpoint.json"
+    },
+    {
+      "id": "phase15_myprivateagent_repo_side_trial_dispatch_package",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=dispatch_myprivateagent_repo_side_trial",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-repo-side-trial-dispatch\\phase15-myprivateagent-repo-side-trial-dispatch-package.json"
+    },
+    {
+      "id": "phase16_myprivateagent_minimal_access_loop",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready; decision=begin_myprivateagent_repo_side_trial",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\myprivateagent-minimal-access-loop\\phase16-myprivateagent-minimal-access-loop.json"
+    },
+    {
+      "id": "provider_handoff_bundle",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
+    },
+    {
+      "id": "provider_handoff_refresh",
+      "required": false,
+      "status": "ready",
+      "summary": "status=ready",
+      "recommended_action": "no_action_required",
+      "evidence_path": "docs\\integration\\provider-handoff-refresh\\provider-handoff-refresh.json"
+    }
+  ],
+  "caller_next_actions": [
+    "begin_myprivateagent_repo_side_document_rag_trial",
+    "capture_trial_outcome_in_myprivateagent"
+  ],
+  "notes": [
+    "This report is a local read-only provider closure artifact for MyPrivateAgent document RAG trial readiness.",
+    "Review-context signals remain visible but do not block the primitive access gate.",
+    "MyPrivateAgent owns repo-side trial execution, source-to-agent binding, audit policy, and final answer behavior.",
+    "This report does not promote retrieval defaults, execute GraphRAG, start a server, rebuild indexes, or download models."
+  ],
+  "json_path": "docs\\integration\\myprivateagent-document-rag-trial-readiness\\phase24-document-rag-trial-readiness.json",
+  "markdown_path": "docs\\integration\\myprivateagent-document-rag-trial-readiness\\phase24-document-rag-trial-readiness.md"
+}

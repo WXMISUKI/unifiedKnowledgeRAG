@@ -274,6 +274,7 @@
 - Phase 16 MyPrivateAgent minimal access loop implemented and archived (`phase16-myprivateagent-minimal-access-loop`), exposing a single caller-facing access verdict for repo-side trial review.
 - Phase 17 access-focused handoff visibility implemented and archived (`phase17-access-focused-handoff-visibility`), separating MyPrivateAgent access visibility from unrelated broader handoff review evidence.
 - Phase 18 MyPrivateAgent access gate simplification implemented (`phase18-myprivateagent-access-gate-simplification`), making primitive access signals the repo-side trial gate while preserving Phase 10/11/13/14/15/16 and handoff reports as review context.
+- Phase 24 document RAG trial readiness closure implemented (`phase24-document-rag-readiness-closure`), producing a provider-side `decision=go` readout for MyPrivateAgent repo-side document RAG trial readiness while keeping review-context evidence non-blocking.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -312,7 +313,7 @@
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 16 access loop report and Phase 18 simplified access gate to start the MyPrivateAgent repo-side trial path instead of adding more provider-side evidence-chain phases.
+3. Use the Phase 24 document RAG trial readiness closure to start the MyPrivateAgent repo-side document RAG trial path instead of adding more provider-side evidence-chain phases.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
 
@@ -358,6 +359,10 @@
   - Status: `completed`
   - Change: `phase18-myprivateagent-access-gate-simplification`
   - Gate target: primitive access gate simplification, not runtime promotion or repo-side trial execution.
+- Phase 24: Document RAG Trial Readiness Closure
+  - Status: `completed`
+  - Change: `phase24-document-rag-readiness-closure`
+  - Gate target: provider-side go/review/blocked closure for MyPrivateAgent document RAG repo-side trial, not runtime promotion or trial execution.
 
 ## Latest Refresh
 
@@ -432,7 +437,7 @@
 - Phase 3 candidate latency/resource diagnostics is `review` by design because it is a local evidence-only export that still depends on deployment/runtime posture and deployed smoke context.
 - Phase 3 aggregation/relation negative-control smoke is `ready` because the positive split-chunk control, the same-document negative control, and the relation-aware unsupported-case label all match current local evidence.
 - Runtime promotion gates remain open for Phase 3 and GraphRAG execution; current evidence is candidate-level, not production approval.
-- MyPrivateAgent minimal access gate is now `ready`; remaining Phase 10/11/13 review context is non-blocking for the repo-side trial and should be resolved only if the real trial exposes a concrete blocker.
+- MyPrivateAgent document RAG trial readiness is now `ready` with `decision=go`; remaining Phase 10/11 review context is non-blocking and should be resolved only if the real trial exposes a concrete blocker.
 
 
 
