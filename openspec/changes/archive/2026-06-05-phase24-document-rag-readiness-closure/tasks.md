@@ -13,6 +13,6 @@
 ## 3. Verification And Archive
 
 - [x] 3.1 Run focused Phase 24 tests and provider contract smoke tests.
-- [ ] 3.2 Run `openspec validate --all --strict`.
+- [x] 3.2 Run `openspec validate --all --strict`.
 - [x] 3.3 Refresh the Phase 24 closure artifact.
-- [ ] 3.4 Archive the OpenSpec change after specs are synchronized.
+- [x] 3.4 Archive the OpenSpec change after specs are synchronized.
