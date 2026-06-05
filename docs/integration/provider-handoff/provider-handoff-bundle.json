@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-05T01:54:02.056506+00:00",
+  "generated_at": "2026-06-05T02:20:54.408654+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -14,8 +14,51 @@
     ]
   },
   "access_focused_visibility": {
-    "status": "review",
+    "status": "ready",
+    "primitive_artifact_ids": [
+      "phase10_myprivateagent_local_consumer_probe",
+      "phase11_provider_discovery_smoke",
+      "phase11_rag_retrieve_consumption_smoke",
+      "phase11_source_binding_preview_smoke",
+      "provider_contract_smoke"
+    ],
+    "ready_primitive_artifact_ids": [
+      "phase10_myprivateagent_local_consumer_probe",
+      "phase11_provider_discovery_smoke",
+      "phase11_rag_retrieve_consumption_smoke",
+      "phase11_source_binding_preview_smoke",
+      "provider_contract_smoke"
+    ],
+    "review_primitive_artifact_ids": [],
+    "blocked_primitive_artifact_ids": [],
+    "missing_primitive_artifact_ids": [],
+    "review_context_artifact_ids": [
+      "phase10_myprivateagent_local_consumer_readiness",
+      "phase11_local_provider_integration_profile",
+      "phase13_provider_roadmap_decision_checkpoint",
+      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "phase15_myprivateagent_repo_side_trial_dispatch_package"
+    ],
+    "ready_review_context_artifact_ids": [
+      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "phase15_myprivateagent_repo_side_trial_dispatch_package"
+    ],
+    "open_review_context_artifact_ids": [
+      "phase10_myprivateagent_local_consumer_readiness",
+      "phase11_local_provider_integration_profile",
+      "phase13_provider_roadmap_decision_checkpoint"
+    ],
+    "blocked_review_context_artifact_ids": [],
+    "primitive_count": 5,
+    "ready_primitive_count": 5,
+    "review_primitive_count": 0,
+    "blocked_primitive_count": 0,
+    "missing_primitive_count": 0,
+    "review_context_count": 5,
+    "open_review_context_count": 3,
+    "blocked_review_context_count": 0,
     "tracked_artifact_ids": [
+      "provider_contract_smoke",
       "phase10_myprivateagent_local_consumer_readiness",
       "phase10_myprivateagent_local_consumer_probe",
       "phase11_local_provider_integration_profile",
@@ -27,29 +70,28 @@
       "phase15_myprivateagent_repo_side_trial_dispatch_package"
     ],
     "ready_artifact_ids": [
+      "provider_contract_smoke",
       "phase10_myprivateagent_local_consumer_probe",
       "phase11_provider_discovery_smoke",
       "phase11_rag_retrieve_consumption_smoke",
-      "phase11_source_binding_preview_smoke"
+      "phase11_source_binding_preview_smoke",
+      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "phase15_myprivateagent_repo_side_trial_dispatch_package"
     ],
     "review_artifact_ids": [
       "phase10_myprivateagent_local_consumer_readiness",
       "phase11_local_provider_integration_profile",
-      "phase13_provider_roadmap_decision_checkpoint",
-      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
-      "phase15_myprivateagent_repo_side_trial_dispatch_package"
+      "phase13_provider_roadmap_decision_checkpoint"
     ],
     "blocked_artifact_ids": [],
     "open_gate_ids": [
       "phase10_myprivateagent_local_consumer_readiness",
       "phase11_local_provider_integration_profile",
-      "phase13_provider_roadmap_decision_checkpoint",
-      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
-      "phase15_myprivateagent_repo_side_trial_dispatch_package"
+      "phase13_provider_roadmap_decision_checkpoint"
     ],
-    "tracked_artifact_count": 9,
-    "ready_artifact_count": 4,
-    "review_artifact_count": 5,
+    "tracked_artifact_count": 10,
+    "ready_artifact_count": 7,
+    "review_artifact_count": 3,
     "blocked_artifact_count": 0
   },
   "evidence_artifacts": [
@@ -479,9 +521,9 @@
       "path": "docs\\integration\\myprivateagent-provider-integration-acceptance\\phase14-myprivateagent-provider-integration-acceptance-checkpoint.json",
       "present": true,
       "required": false,
-      "status": "review",
-      "summary": "status=review; acceptance_state=review_for_myprivateagent_repo_side_trial; decision=refresh_provider_integration_evidence; roadmap_focus=myprivateagent_repo_side_trial; blocker_category=handoff_visibility; phase10_status=review; phase11_status=review; phase13_status=review; handoff_status=review; ready_signals=[\"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\"]; review_signals=[\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"]; blocked_signals=[]; open_gate_count=5",
-      "recommended_action": "review_evidence_notes"
+      "status": "ready",
+      "summary": "status=ready; acceptance_state=ready_for_myprivateagent_repo_side_trial; decision=approve_myprivateagent_repo_side_trial; roadmap_focus=myprivateagent_repo_side_trial; blocker_category=none; phase10_status=review; phase11_status=review; phase13_status=review; handoff_status=ready; ready_signals=[\"provider_contract_smoke\", \"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"]; review_signals=[\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\"]; blocked_signals=[]; open_gate_count=3",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase15_myprivateagent_repo_side_trial_dispatch_package",
@@ -489,9 +531,9 @@
       "path": "docs\\integration\\myprivateagent-repo-side-trial-dispatch\\phase15-myprivateagent-repo-side-trial-dispatch-package.json",
       "present": true,
       "required": false,
-      "status": "review",
-      "summary": "status=review; dispatch_state=review_for_repo_side_trial_dispatch; blocker_category=handoff_visibility; phase14_status=review; handoff_status=review; open_gate_count=6; caller_checklist_count=3",
-      "recommended_action": "review_evidence_notes"
+      "status": "ready",
+      "summary": "status=ready; dispatch_state=ready_for_repo_side_trial_dispatch; blocker_category=none; phase14_status=ready; handoff_status=ready; open_gate_count=3; caller_checklist_count=2",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase16_myprivateagent_minimal_access_loop",
@@ -499,9 +541,9 @@
       "path": "docs\\integration\\myprivateagent-minimal-access-loop\\phase16-myprivateagent-minimal-access-loop.json",
       "present": true,
       "required": false,
-      "status": "review",
-      "summary": "status=review; access_loop_state=review_for_minimal_access_loop; blocker_category=handoff_visibility; phase15_status=review; handoff_status=review; open_gate_count=7; caller_checklist_count=3",
-      "recommended_action": "review_evidence_notes"
+      "status": "ready",
+      "summary": "status=ready; access_loop_state=ready_for_minimal_access_loop; blocker_category=none; phase15_status=ready; handoff_status=ready; open_gate_count=3; caller_checklist_count=2",
+      "recommended_action": "no_action_required"
     },
     {
       "id": "phase3_hybrid_cross_case_fp_fn_smoke",

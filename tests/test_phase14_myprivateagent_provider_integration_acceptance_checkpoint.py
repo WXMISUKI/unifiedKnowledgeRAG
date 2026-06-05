@@ -37,11 +37,12 @@ def test_build_phase14_acceptance_checkpoint_classifies_missing_handoff_visibili
         base_dir=tmp_path
     )
 
-    assert report.status == "blocked"
-    assert report.acceptance_state == "blocked_for_myprivateagent_repo_side_trial"
-    assert report.summary["blocker_category"] == "handoff_visibility"
+    assert report.status == "ready"
+    assert report.acceptance_state == "ready_for_myprivateagent_repo_side_trial"
+    assert report.summary["blocker_category"] == "none"
     assert "provider_handoff_bundle" in report.summary["blocked_signal_ids"]
     assert "provider_handoff_refresh" in report.summary["blocked_signal_ids"]
+    assert "provider_handoff_bundle" not in report.summary["missing_primitive_signal_ids"]
     assert render_phase14_myprivateagent_provider_integration_acceptance_checkpoint_markdown(
         report
     ).startswith("# Phase 14 MyPrivateAgent Provider Integration Acceptance Checkpoint")
@@ -65,6 +66,16 @@ def test_export_phase14_acceptance_checkpoint_writes_outputs(tmp_path):
 
 
 def _seed_phase14_ready_evidence(base_dir: Path, *, include_handoff: bool = True) -> None:
+    _write_json(
+        base_dir / "docs/smoke/provider-contract/provider-contract-smoke.json",
+        {
+            "passed": True,
+            "summary": {
+                "total_checks": 8,
+                "failed_checks": 0,
+            },
+        },
+    )
     _write_json(
         base_dir
         / "docs/integration/myprivateagent-local-consumer-verification/"

@@ -623,6 +623,16 @@ Its job is to make the access path easier to read: the full bundle and refresh r
 
 This phase is intentionally read-only and visibility-oriented. It does not delete unrelated evidence, does not create a new trial runner, does not promote runtime defaults, and does not move caller control-plane ownership into this project.
 
+## Phase 18 MyPrivateAgent Access Gate Simplification
+
+Phase 18 simplifies the MyPrivateAgent repo-side trial gate so the provider can stop extending the evidence chain and move toward real integration.
+
+Its job is to separate primitive access blockers from review-only context. The primitive gate is limited to provider contract smoke, Phase 10 local consumer probe, Phase 11 provider discovery smoke, Phase 11 retrieve-consumption smoke, and Phase 11 source-binding preview smoke. Phase 10 readiness, Phase 11 profile, Phase 13 checkpoint, Phase 14 acceptance, Phase 15 dispatch, Phase 16 access loop, full handoff bundle, and handoff refresh remain visible as review context but do not block the minimal access gate by themselves.
+
+This phase is intentionally read-only and gate-oriented. It does not execute the MyPrivateAgent repo-side trial, create source-to-agent binding, promote runtime defaults, change backend selection, or move caller control-plane ownership into this project.
+
+After this phase, the evidence-chain work should stop expanding unless a real repo-side trial exposes a concrete provider bug. The next useful slice is Phase 19 MyPrivateAgent repo-side trial outcome capture, preferably driven from the MyPrivateAgent repository.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

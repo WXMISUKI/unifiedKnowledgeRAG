@@ -4,6 +4,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
 
+from app.services.myprivateagent_access_gate import (
+    build_myprivateagent_access_gate,
+    myprivateagent_access_gate_to_dict,
+)
 from app.services.deployment_readiness import export_deployment_readiness_report
 from app.services.phase4_evidence_pack_readiness import (
     export_phase4_evidence_pack_readiness_report,
@@ -963,6 +967,7 @@ def _operation_notes(steps: list[dict[str, Any]]) -> list[str]:
 def _access_focused_visibility(step_rows: list[dict[str, Any]]) -> dict[str, Any]:
     by_id = {row["id"]: row for row in step_rows}
     tracked_ids = [
+        "provider_contract_smoke",
         "phase10_myprivateagent_local_consumer_readiness",
         "phase10_myprivateagent_local_consumer_probe",
         "phase11_local_provider_integration_profile",
@@ -972,6 +977,7 @@ def _access_focused_visibility(step_rows: list[dict[str, Any]]) -> dict[str, Any
         "phase13_provider_roadmap_decision_checkpoint",
         "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
         "phase15_myprivateagent_repo_side_trial_dispatch_package",
+        "phase16_myprivateagent_minimal_access_loop",
     ]
     bundle_row = by_id.get("provider_handoff_bundle")
     if bundle_row is not None:
@@ -986,13 +992,13 @@ def _access_focused_visibility(step_rows: list[dict[str, Any]]) -> dict[str, Any
                 },
             }
     tracked_rows = [by_id[step_id] for step_id in tracked_ids if step_id in by_id]
-    statuses = [row.get("status", "review") for row in tracked_rows]
+    gate = build_myprivateagent_access_gate(tracked_rows)
     ready_ids = [row["id"] for row in tracked_rows if row.get("status") == "ready"]
     review_ids = [row["id"] for row in tracked_rows if row.get("status") == "review"]
     blocked_ids = [row["id"] for row in tracked_rows if row.get("status") == "blocked"]
     open_gate_ids = [row["id"] for row in tracked_rows if row.get("status") != "ready"]
     return {
-        "status": _overall_status(tracked_rows),
+        **myprivateagent_access_gate_to_dict(gate, id_key="step"),
         "tracked_step_ids": tracked_ids,
         "ready_step_ids": ready_ids,
         "review_step_ids": review_ids,

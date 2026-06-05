@@ -5,6 +5,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from app.services.myprivateagent_access_gate import (
+    build_myprivateagent_access_gate,
+    myprivateagent_access_gate_to_dict,
+)
 from app.services.provider_manifest import build_provider_integration_manifest
 
 
@@ -488,6 +492,7 @@ DEFAULT_EVIDENCE_SPECS = [
 ]
 
 ACCESS_FOCUSED_ARTIFACT_IDS = {
+    "provider_contract_smoke",
     "phase10_myprivateagent_local_consumer_readiness",
     "phase10_myprivateagent_local_consumer_probe",
     "phase11_local_provider_integration_profile",
@@ -1780,13 +1785,14 @@ def _access_focused_visibility(artifact_rows: list[dict[str, Any]]) -> dict[str,
     tracked_rows = [
         artifact for artifact in artifact_rows if artifact.get("id") in ACCESS_FOCUSED_ARTIFACT_IDS
     ]
+    gate = build_myprivateagent_access_gate(tracked_rows)
     tracked_ids = [artifact["id"] for artifact in tracked_rows]
     ready_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") == "ready"]
     review_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") == "review"]
     blocked_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") == "blocked"]
     open_gate_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") != "ready"]
     return {
-        "status": _overall_status(tracked_rows),
+        **myprivateagent_access_gate_to_dict(gate, id_key="artifact"),
         "tracked_artifact_ids": tracked_ids,
         "ready_artifact_ids": ready_ids,
         "review_artifact_ids": review_ids,

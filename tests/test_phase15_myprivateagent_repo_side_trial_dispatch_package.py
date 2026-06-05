@@ -37,7 +37,7 @@ def test_build_phase15_dispatch_package_reports_repo_side_trial_ready(tmp_path):
 
 
 def test_build_phase15_dispatch_package_classifies_missing_provider_evidence(tmp_path):
-    _seed_phase15_ready_evidence(tmp_path, include_phase10_readiness=False)
+    _seed_phase15_ready_evidence(tmp_path, include_phase10_probe=False)
 
     report = build_phase15_myprivateagent_repo_side_trial_dispatch_package_report(
         base_dir=tmp_path
@@ -46,7 +46,7 @@ def test_build_phase15_dispatch_package_classifies_missing_provider_evidence(tmp
     assert report.status == "blocked"
     assert report.dispatch_state == "blocked_for_repo_side_trial_dispatch"
     assert report.summary["blocker_category"] == "provider_evidence"
-    assert "phase10_myprivateagent_local_consumer_readiness" in report.summary[
+    assert "phase10_myprivateagent_local_consumer_probe" in report.summary[
         "blocked_signal_ids"
     ]
 
@@ -58,11 +58,12 @@ def test_build_phase15_dispatch_package_classifies_missing_handoff_visibility(tm
         base_dir=tmp_path
     )
 
-    assert report.status == "blocked"
-    assert report.dispatch_state == "blocked_for_repo_side_trial_dispatch"
-    assert report.summary["blocker_category"] == "handoff_visibility"
+    assert report.status == "ready"
+    assert report.dispatch_state == "ready_for_repo_side_trial_dispatch"
+    assert report.summary["blocker_category"] == "none"
     assert "provider_handoff_bundle" in report.summary["blocked_signal_ids"]
     assert "provider_handoff_refresh" in report.summary["blocked_signal_ids"]
+    assert "provider_handoff_bundle" not in report.summary["missing_primitive_signal_ids"]
     assert render_phase15_myprivateagent_repo_side_trial_dispatch_package_markdown(
         report
     ).startswith("# Phase 15 MyPrivateAgent Repo-Side Trial Dispatch Package")
@@ -78,14 +79,14 @@ def test_build_phase15_dispatch_package_classifies_external_environment(tmp_path
         base_dir=tmp_path
     )
 
-    assert report.status == "review"
-    assert report.dispatch_state == "review_for_repo_side_trial_dispatch"
-    assert report.summary["blocker_category"] == "external_environment"
+    assert report.status == "ready"
+    assert report.dispatch_state == "ready_for_repo_side_trial_dispatch"
+    assert report.summary["blocker_category"] == "none"
     assert "phase14_myprivateagent_provider_integration_acceptance_checkpoint" in report.summary[
         "review_signal_ids"
     ]
     assert "phase14_myprivateagent_provider_integration_acceptance_checkpoint" in report.summary[
-        "open_gate_ids"
+        "open_review_context_signal_ids"
     ]
 
 
@@ -110,9 +111,20 @@ def _seed_phase15_ready_evidence(
     base_dir: Path,
     *,
     include_phase10_readiness: bool = True,
+    include_phase10_probe: bool = True,
     include_handoff: bool = True,
     phase14_blocker_category: str = "none",
 ) -> None:
+    _write_json(
+        base_dir / "docs/smoke/provider-contract/provider-contract-smoke.json",
+        {
+            "passed": True,
+            "summary": {
+                "total_checks": 8,
+                "failed_checks": 0,
+            },
+        },
+    )
     if include_phase10_readiness:
         _write_json(
             base_dir
@@ -127,18 +139,19 @@ def _seed_phase15_ready_evidence(
                 },
             },
         )
-    _write_json(
-        base_dir
-        / "docs/smoke/myprivateagent-local-consumer-verification/"
-        / "phase10-myprivateagent-local-consumer-probe.json",
-        {
-            "status": "ready",
-            "summary": {
-                "total_checks": 4,
-                "passed_checks": 4,
+    if include_phase10_probe:
+        _write_json(
+            base_dir
+            / "docs/smoke/myprivateagent-local-consumer-verification/"
+            / "phase10-myprivateagent-local-consumer-probe.json",
+            {
+                "status": "ready",
+                "summary": {
+                    "total_checks": 4,
+                    "passed_checks": 4,
+                },
             },
-        },
-    )
+        )
     _write_json(
         base_dir
         / "docs/integration/myprivateagent-local-provider-integration/"

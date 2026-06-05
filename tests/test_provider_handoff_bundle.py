@@ -409,6 +409,7 @@ def test_provider_handoff_bundle_exposes_access_focused_visibility(tmp_path):
     assert report.status == "blocked"
     assert report.access_focused_visibility["status"] == "ready"
     assert report.access_focused_visibility["tracked_artifact_ids"] == [
+        "provider_contract_smoke",
         "phase10_myprivateagent_local_consumer_readiness",
         "phase10_myprivateagent_local_consumer_probe",
         "phase11_local_provider_integration_profile",
@@ -418,6 +419,16 @@ def test_provider_handoff_bundle_exposes_access_focused_visibility(tmp_path):
         "phase13_provider_roadmap_decision_checkpoint",
         "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
         "phase15_myprivateagent_repo_side_trial_dispatch_package",
+    ]
+    assert report.access_focused_visibility["primitive_artifact_ids"] == [
+        "phase10_myprivateagent_local_consumer_probe",
+        "phase11_provider_discovery_smoke",
+        "phase11_rag_retrieve_consumption_smoke",
+        "phase11_source_binding_preview_smoke",
+        "provider_contract_smoke",
+    ]
+    assert "phase10_myprivateagent_local_consumer_readiness" in report.access_focused_visibility[
+        "ready_review_context_artifact_ids"
     ]
     assert report.access_focused_visibility["open_gate_ids"] == []
     assert "phase3_retrieval_promotion_readiness" not in report.access_focused_visibility[
@@ -1647,6 +1658,16 @@ def test_provider_handoff_bundle_keeps_missing_phase6_private_network_promotion_
 
 
 def _seed_access_focused_visibility_evidence(base_dir: Path) -> None:
+    _write_json(
+        base_dir / "docs/smoke/provider-contract/provider-contract-smoke.json",
+        {
+            "passed": True,
+            "summary": {
+                "total_checks": 8,
+                "failed_checks": 0,
+            },
+        },
+    )
     _write_json(
         base_dir
         / "docs/integration/myprivateagent-local-consumer-verification/"

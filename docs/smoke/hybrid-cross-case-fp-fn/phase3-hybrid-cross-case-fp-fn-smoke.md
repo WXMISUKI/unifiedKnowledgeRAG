@@ -2,7 +2,7 @@
 
 - Report: `phase3-hybrid-cross-case-fp-fn-smoke-v1`
 - Status: `passed`
-- Generated At: `2026-06-05T01:54:01.939559+00:00`
+- Generated At: `2026-06-05T02:20:53.503843+00:00`
 - Baseline Source: `docs\benchmark\chinese-seed\retrieval-candidates\fixture-chinese-seed-baseline.json`
 - FP/FN Source: `docs\benchmark\chinese-seed\fp-fn-review\phase3-fp-fn-review.json`
 - Protocol Source: `docs\benchmark\chinese-seed\retrieval-candidate-evaluation-protocol\phase3-retrieval-candidate-evaluation-protocol.md`

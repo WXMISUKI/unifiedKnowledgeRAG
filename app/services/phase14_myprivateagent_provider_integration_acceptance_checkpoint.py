@@ -4,6 +4,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
 
+from app.services.myprivateagent_access_gate import build_myprivateagent_access_gate
+
 
 PHASE14_MYPRIVATEAGENT_PROVIDER_INTEGRATION_ACCEPTANCE_CHECKPOINT_ID = (
     "phase14-myprivateagent-provider-integration-acceptance-checkpoint-v1"
@@ -50,6 +52,7 @@ PHASE10_READINESS_PATH = Path(
     "docs/integration/myprivateagent-local-consumer-verification/"
     "phase10-myprivateagent-local-consumer-readiness.json"
 )
+PROVIDER_CONTRACT_SMOKE_PATH = Path("docs/smoke/provider-contract/provider-contract-smoke.json")
 PHASE10_PROBE_PATH = Path(
     "docs/smoke/myprivateagent-local-consumer-verification/"
     "phase10-myprivateagent-local-consumer-probe.json"
@@ -84,8 +87,15 @@ PROVIDER_HANDOFF_REFRESH_PATH = Path(
 
 SIGNAL_SPECS: list[AcceptanceSignalSpec] = [
     AcceptanceSignalSpec(
+        id="provider_contract_smoke",
+        path=PROVIDER_CONTRACT_SMOKE_PATH,
+        summary_builder=lambda payload: _provider_contract_smoke_summary(payload),
+        missing_action="regenerate_provider_contract_smoke",
+    ),
+    AcceptanceSignalSpec(
         id="phase10_myprivateagent_local_consumer_readiness",
         path=PHASE10_READINESS_PATH,
+        required=False,
         summary_builder=lambda payload: _phase10_readiness_summary(payload),
         missing_action="regenerate_phase10_myprivateagent_local_consumer_readiness",
     ),
@@ -98,6 +108,7 @@ SIGNAL_SPECS: list[AcceptanceSignalSpec] = [
     AcceptanceSignalSpec(
         id="phase11_local_provider_integration_profile",
         path=PHASE11_PROFILE_PATH,
+        required=False,
         summary_builder=lambda payload: _phase11_profile_summary(payload),
         missing_action="regenerate_phase11_local_provider_integration_profile",
     ),
@@ -128,18 +139,21 @@ SIGNAL_SPECS: list[AcceptanceSignalSpec] = [
     AcceptanceSignalSpec(
         id="phase13_provider_roadmap_decision_checkpoint",
         path=PHASE13_ROADMAP_CHECKPOINT_PATH,
+        required=False,
         summary_builder=lambda payload: _phase13_summary(payload),
         missing_action="regenerate_phase13_provider_roadmap_decision_checkpoint",
     ),
     AcceptanceSignalSpec(
         id="provider_handoff_bundle",
         path=PROVIDER_HANDOFF_BUNDLE_PATH,
+        required=False,
         summary_builder=lambda payload: _handoff_bundle_summary(payload),
         missing_action="regenerate_provider_handoff_bundle",
     ),
     AcceptanceSignalSpec(
         id="provider_handoff_refresh",
         path=PROVIDER_HANDOFF_REFRESH_PATH,
+        required=False,
         summary_builder=lambda payload: _handoff_refresh_summary(payload),
         missing_action="regenerate_provider_handoff_refresh",
     ),
@@ -196,6 +210,9 @@ def build_phase14_myprivateagent_provider_integration_acceptance_checkpoint_repo
         decision = "approve_myprivateagent_repo_side_trial"
 
     blocker_category = _blocker_category(signals=signals)
+    access_gate = build_myprivateagent_access_gate(
+        [{"id": signal.id, "status": signal.status} for signal in signals]
+    )
     ready_signal_ids = [signal.id for signal in signals if signal.status == "ready"]
     review_signal_ids = [signal.id for signal in signals if signal.status == "review"]
     blocked_signal_ids = [signal.id for signal in signals if signal.status == "blocked"]
@@ -211,6 +228,13 @@ def build_phase14_myprivateagent_provider_integration_acceptance_checkpoint_repo
             "roadmap_focus": "myprivateagent_repo_side_trial",
             "trial_readiness": acceptance_state,
             "blocker_category": blocker_category,
+            "access_gate_status": access_gate.status,
+            "primitive_signal_ids": access_gate.primitive_ids,
+            "ready_primitive_signal_ids": access_gate.ready_primitive_ids,
+            "review_primitive_signal_ids": access_gate.review_primitive_ids,
+            "blocked_primitive_signal_ids": access_gate.blocked_primitive_ids,
+            "missing_primitive_signal_ids": access_gate.missing_primitive_ids,
+            "open_review_context_signal_ids": access_gate.review_context_open_ids,
             "phase10_status": phase10_status,
             "phase11_status": phase11_status,
             "phase13_status": phase13_status,
@@ -373,6 +397,18 @@ def _phase10_readiness_summary(payload: dict[str, Any] | None) -> str:
     )
 
 
+def _provider_contract_smoke_summary(payload: dict[str, Any] | None) -> str:
+    if not isinstance(payload, dict):
+        return "status=missing"
+    summary = _summary_dict(payload)
+    return (
+        f"status={_access_focused_status_for_signal('provider_contract_smoke', payload)}; "
+        f"passed={payload.get('passed', 'unknown')}; "
+        f"total_checks={_dict_value(summary, 'total_checks', 'unknown')}; "
+        f"failed_checks={_dict_value(summary, 'failed_checks', 'unknown')}"
+    )
+
+
 def _phase10_probe_summary(payload: dict[str, Any] | None) -> str:
     if not isinstance(payload, dict):
         return "status=missing"
@@ -466,35 +502,11 @@ def _handoff_refresh_summary(payload: dict[str, Any] | None) -> str:
 
 
 def _blocker_category(*, signals: list[AcceptanceSignal]) -> str:
-    signal_map = {signal.id: signal for signal in signals}
-    bundle = signal_map.get("provider_handoff_bundle")
-    refresh = signal_map.get("provider_handoff_refresh")
-    if any(signal is None or signal.status != "ready" for signal in (bundle, refresh)):
-        return "handoff_visibility"
-
-    phase13_signal = signal_map["phase13_provider_roadmap_decision_checkpoint"]
-    phase13_payload = _read_json_if_present(PHASE13_ROADMAP_CHECKPOINT_PATH)
-    phase13_summary = _summary_dict(phase13_payload)
-    if phase13_signal.status in {"review", "blocked"} and (
-        _dict_value(phase13_summary, "phase12d_status", "missing") in {"review", "blocked"}
-        or _dict_value(phase13_summary, "phase12f_status", "missing") in {"review", "blocked"}
-    ):
-        return "external_environment"
-
-    phase10_ids = {
-        "phase10_myprivateagent_local_consumer_readiness",
-        "phase10_myprivateagent_local_consumer_probe",
-    }
-    phase11_ids = {
-        "phase11_local_provider_integration_profile",
-        "phase11_provider_discovery_smoke",
-        "phase11_rag_retrieve_consumption_smoke",
-        "phase11_source_binding_preview_smoke",
-    }
-    if any(signal_map[signal_id].status != "ready" for signal_id in phase10_ids | phase11_ids):
+    access_gate = build_myprivateagent_access_gate(
+        [{"id": signal.id, "status": signal.status} for signal in signals]
+    )
+    if access_gate.status != "ready":
         return "provider_contract_evidence"
-    if phase13_signal.status != "ready":
-        return "roadmap_posture"
     return "none"
 
 
@@ -538,6 +550,8 @@ def _dict_value(payload: dict[str, Any], key: str, default: Any) -> Any:
 
 
 def _access_focused_status_for_signal(artifact_id: str, payload: dict[str, Any]) -> str:
+    if artifact_id == "provider_contract_smoke":
+        return "ready" if payload.get("passed") is True else "blocked"
     if artifact_id not in {"provider_handoff_bundle", "provider_handoff_refresh"}:
         return _normalize_status(payload.get("status", "review"))
     access_focused_visibility = _access_focused_visibility_payload(payload)

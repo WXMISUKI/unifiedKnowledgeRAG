@@ -4,6 +4,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
 
+from app.services.myprivateagent_access_gate import build_myprivateagent_access_gate
+
 
 PHASE16_MYPRIVATEAGENT_MINIMAL_ACCESS_LOOP_ID = (
     "phase16-myprivateagent-minimal-access-loop-v1"
@@ -51,6 +53,7 @@ PHASE10_READINESS_PATH = Path(
     "docs/integration/myprivateagent-local-consumer-verification/"
     "phase10-myprivateagent-local-consumer-readiness.json"
 )
+PROVIDER_CONTRACT_SMOKE_PATH = Path("docs/smoke/provider-contract/provider-contract-smoke.json")
 PHASE10_PROBE_PATH = Path(
     "docs/smoke/myprivateagent-local-consumer-verification/"
     "phase10-myprivateagent-local-consumer-probe.json"
@@ -93,8 +96,15 @@ PROVIDER_HANDOFF_REFRESH_PATH = Path(
 
 SIGNAL_SPECS: list[AccessLoopSignalSpec] = [
     AccessLoopSignalSpec(
+        id="provider_contract_smoke",
+        path=PROVIDER_CONTRACT_SMOKE_PATH,
+        summary_builder=lambda payload: _provider_contract_smoke_summary(payload),
+        missing_action="regenerate_provider_contract_smoke",
+    ),
+    AccessLoopSignalSpec(
         id="phase10_myprivateagent_local_consumer_readiness",
         path=PHASE10_READINESS_PATH,
+        required=False,
         summary_builder=lambda payload: _phase10_readiness_summary(payload),
         missing_action="regenerate_phase10_myprivateagent_local_consumer_readiness",
     ),
@@ -107,6 +117,7 @@ SIGNAL_SPECS: list[AccessLoopSignalSpec] = [
     AccessLoopSignalSpec(
         id="phase11_local_provider_integration_profile",
         path=PHASE11_PROFILE_PATH,
+        required=False,
         summary_builder=lambda payload: _phase11_profile_summary(payload),
         missing_action="regenerate_phase11_local_provider_integration_profile",
     ),
@@ -137,12 +148,14 @@ SIGNAL_SPECS: list[AccessLoopSignalSpec] = [
     AccessLoopSignalSpec(
         id="phase13_provider_roadmap_decision_checkpoint",
         path=PHASE13_ROADMAP_CHECKPOINT_PATH,
+        required=False,
         summary_builder=lambda payload: _phase13_summary(payload),
         missing_action="regenerate_phase13_provider_roadmap_decision_checkpoint",
     ),
     AccessLoopSignalSpec(
         id="phase14_myprivateagent_provider_integration_acceptance_checkpoint",
         path=PHASE14_ACCEPTANCE_CHECKPOINT_PATH,
+        required=False,
         summary_builder=lambda payload: _phase14_summary(payload),
         missing_action=(
             "regenerate_phase14_myprivateagent_provider_integration_acceptance_checkpoint"
@@ -151,18 +164,21 @@ SIGNAL_SPECS: list[AccessLoopSignalSpec] = [
     AccessLoopSignalSpec(
         id="phase15_myprivateagent_repo_side_trial_dispatch_package",
         path=PHASE15_DISPATCH_PACKAGE_PATH,
+        required=False,
         summary_builder=lambda payload: _phase15_summary(payload),
         missing_action="regenerate_phase15_myprivateagent_repo_side_trial_dispatch_package",
     ),
     AccessLoopSignalSpec(
         id="provider_handoff_bundle",
         path=PROVIDER_HANDOFF_BUNDLE_PATH,
+        required=False,
         summary_builder=lambda payload: _handoff_bundle_summary(payload),
         missing_action="regenerate_provider_handoff_bundle",
     ),
     AccessLoopSignalSpec(
         id="provider_handoff_refresh",
         path=PROVIDER_HANDOFF_REFRESH_PATH,
+        required=False,
         summary_builder=lambda payload: _handoff_refresh_summary(payload),
         missing_action="regenerate_provider_handoff_refresh",
     ),
@@ -227,6 +243,9 @@ def build_phase16_myprivateagent_minimal_access_loop_report(
         decision = "begin_myprivateagent_repo_side_trial"
 
     blocker_category = _blocker_category(signals=signals, base_dir=base_dir)
+    access_gate = build_myprivateagent_access_gate(
+        [{"id": signal.id, "status": signal.status} for signal in signals]
+    )
     ready_signal_ids = [signal.id for signal in signals if signal.status == "ready"]
     review_signal_ids = [signal.id for signal in signals if signal.status == "review"]
     blocked_signal_ids = [signal.id for signal in signals if signal.status == "blocked"]
@@ -243,6 +262,13 @@ def build_phase16_myprivateagent_minimal_access_loop_report(
             "roadmap_focus": "myprivateagent_minimal_access_loop",
             "access_loop_state": access_loop_state,
             "blocker_category": blocker_category,
+            "access_gate_status": access_gate.status,
+            "primitive_signal_ids": access_gate.primitive_ids,
+            "ready_primitive_signal_ids": access_gate.ready_primitive_ids,
+            "review_primitive_signal_ids": access_gate.review_primitive_ids,
+            "blocked_primitive_signal_ids": access_gate.blocked_primitive_ids,
+            "missing_primitive_signal_ids": access_gate.missing_primitive_ids,
+            "open_review_context_signal_ids": access_gate.review_context_open_ids,
             "phase10_status": phase10_status,
             "phase11_status": phase11_status,
             "phase13_status": phase13_status,
@@ -420,6 +446,18 @@ def _phase10_readiness_summary(payload: dict[str, Any] | None) -> str:
     )
 
 
+def _provider_contract_smoke_summary(payload: dict[str, Any] | None) -> str:
+    if not isinstance(payload, dict):
+        return "status=missing"
+    summary = _summary_dict(payload)
+    return (
+        f"status={_access_focused_status_for_signal('provider_contract_smoke', payload)}; "
+        f"passed={payload.get('passed', 'unknown')}; "
+        f"total_checks={_dict_value(summary, 'total_checks', 'unknown')}; "
+        f"failed_checks={_dict_value(summary, 'failed_checks', 'unknown')}"
+    )
+
+
 def _phase10_probe_summary(payload: dict[str, Any] | None) -> str:
     if not isinstance(payload, dict):
         return "status=missing"
@@ -544,34 +582,11 @@ def _handoff_refresh_summary(payload: dict[str, Any] | None) -> str:
 
 
 def _blocker_category(*, signals: list[AccessLoopSignal], base_dir: Path) -> str:
-    signal_map = {signal.id: signal for signal in signals}
-    bundle = signal_map.get("provider_handoff_bundle")
-    refresh = signal_map.get("provider_handoff_refresh")
-    if any(signal is None or signal.status != "ready" for signal in (bundle, refresh)):
-        return "handoff_visibility"
-
-    phase14_payload = _read_json_if_present(base_dir / PHASE14_ACCEPTANCE_CHECKPOINT_PATH)
-    phase14_summary = _summary_dict(phase14_payload)
-    if _dict_value(phase14_summary, "blocker_category", "review") == "external_environment":
-        return "external_local_environment"
-
-    phase15_signal = signal_map["phase15_myprivateagent_repo_side_trial_dispatch_package"]
-    phase10_11_ids = {
-        "phase10_myprivateagent_local_consumer_readiness",
-        "phase10_myprivateagent_local_consumer_probe",
-        "phase11_local_provider_integration_profile",
-        "phase11_provider_discovery_smoke",
-        "phase11_rag_retrieve_consumption_smoke",
-        "phase11_source_binding_preview_smoke",
-    }
-    if any(signal_map[signal_id].status != "ready" for signal_id in phase10_11_ids):
+    access_gate = build_myprivateagent_access_gate(
+        [{"id": signal.id, "status": signal.status} for signal in signals]
+    )
+    if access_gate.status != "ready":
         return "provider_evidence"
-    if phase15_signal.status != "ready":
-        return "external_local_environment"
-    if signal_map["phase13_provider_roadmap_decision_checkpoint"].status != "ready":
-        return "external_local_environment"
-    if signal_map["phase14_myprivateagent_provider_integration_acceptance_checkpoint"].status != "ready":
-        return "external_local_environment"
     return "none"
 
 
@@ -581,21 +596,8 @@ def _caller_checklist(*, blocker_category: str, status: str) -> list[str]:
             "begin_myprivateagent_repo_side_trial",
             "capture_trial_outcome_and_refresh_evidence",
         ]
-    if blocker_category == "handoff_visibility":
-        return [
-            "regenerate_provider_handoff_bundle",
-            "regenerate_provider_handoff_refresh",
-            "rerun_phase16_minimal_access_loop",
-        ]
-    if blocker_category == "external_local_environment":
-        return [
-            "repair_local_environment_and_phase14_preconditions",
-            "rerun_phase14_myprivateagent_provider_integration_acceptance_checkpoint",
-            "rerun_phase15_myprivateagent_repo_side_trial_dispatch_package",
-            "rerun_phase16_minimal_access_loop",
-        ]
     return [
-        "regenerate_phase10_phase11_phase13_phase14_phase15_evidence",
+        "regenerate_provider_contract_phase10_phase11_evidence",
         "rerun_phase16_minimal_access_loop",
     ]
 
@@ -640,6 +642,8 @@ def _dict_value(payload: dict[str, Any], key: str, default: Any) -> Any:
 
 
 def _access_focused_status_for_signal(artifact_id: str, payload: dict[str, Any]) -> str:
+    if artifact_id == "provider_contract_smoke":
+        return "ready" if payload.get("passed") is True else "blocked"
     if artifact_id not in {"provider_handoff_bundle", "provider_handoff_refresh"}:
         return _normalize_status(payload.get("status", "review"))
     access_focused_visibility = _access_focused_visibility_payload(payload)

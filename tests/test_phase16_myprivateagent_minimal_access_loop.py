@@ -56,11 +56,12 @@ def test_build_phase16_access_loop_classifies_missing_handoff_visibility(tmp_pat
 
     report = build_phase16_myprivateagent_minimal_access_loop_report(base_dir=tmp_path)
 
-    assert report.status == "blocked"
-    assert report.access_loop_state == "blocked_for_minimal_access_loop"
-    assert report.summary["blocker_category"] == "handoff_visibility"
+    assert report.status == "ready"
+    assert report.access_loop_state == "ready_for_minimal_access_loop"
+    assert report.summary["blocker_category"] == "none"
     assert "provider_handoff_bundle" in report.summary["blocked_signal_ids"]
     assert "provider_handoff_refresh" in report.summary["blocked_signal_ids"]
+    assert "provider_handoff_bundle" not in report.summary["missing_primitive_signal_ids"]
     assert render_phase16_myprivateagent_minimal_access_loop_markdown(
         report
     ).startswith("# Phase 16 MyPrivateAgent Minimal Access Loop")
@@ -74,14 +75,14 @@ def test_build_phase16_access_loop_classifies_external_environment(tmp_path):
 
     report = build_phase16_myprivateagent_minimal_access_loop_report(base_dir=tmp_path)
 
-    assert report.status == "review"
-    assert report.access_loop_state == "review_for_minimal_access_loop"
-    assert report.summary["blocker_category"] == "external_local_environment"
+    assert report.status == "ready"
+    assert report.access_loop_state == "ready_for_minimal_access_loop"
+    assert report.summary["blocker_category"] == "none"
     assert "phase14_myprivateagent_provider_integration_acceptance_checkpoint" in report.summary[
         "review_signal_ids"
     ]
     assert "phase14_myprivateagent_provider_integration_acceptance_checkpoint" in report.summary[
-        "open_gate_ids"
+        "open_review_context_signal_ids"
     ]
 
 
@@ -110,6 +111,16 @@ def _seed_phase16_ready_evidence(
     handoff_overall_status: str = "ready",
     handoff_access_status: str = "ready",
 ) -> None:
+    _write_json(
+        base_dir / "docs/smoke/provider-contract/provider-contract-smoke.json",
+        {
+            "passed": True,
+            "summary": {
+                "total_checks": 8,
+                "failed_checks": 0,
+            },
+        },
+    )
     _write_json(
         base_dir
         / "docs/integration/myprivateagent-local-consumer-verification/"

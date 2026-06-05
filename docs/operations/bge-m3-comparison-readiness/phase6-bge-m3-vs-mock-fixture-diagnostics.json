@@ -1,6 +1,6 @@
 {
   "id": "phase6-bge-m3-vs-mock-fixture-diagnostics-v1",
-  "generated_at": "2026-06-05T01:54:01.899218+00:00",
+  "generated_at": "2026-06-05T02:20:53.460011+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "summary": {

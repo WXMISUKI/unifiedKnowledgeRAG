@@ -1,6 +1,6 @@
 {
   "id": "phase5-graph-boundary-smoke-summary-v1",
-  "generated_at": "2026-06-05T01:54:01.958180+00:00",
+  "generated_at": "2026-06-05T02:20:53.524000+00:00",
   "status": "ready",
   "decision": "keep_graph_query_planned",
   "source_smoke_path": "docs\\smoke\\provider-contract\\provider-contract-smoke.json",

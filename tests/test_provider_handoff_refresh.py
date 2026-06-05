@@ -62,7 +62,11 @@ def test_handoff_refresh_exposes_access_focused_visibility(tmp_path):
     report = refresh_provider_handoff_evidence(
         output_dir=tmp_path / "refresh",
         steps=[
-            _step(tmp_path, "integration", "ready"),
+            _step(tmp_path, "provider_contract_smoke", "ready"),
+            _step(tmp_path, "phase10_myprivateagent_local_consumer_probe", "ready"),
+            _step(tmp_path, "phase11_provider_discovery_smoke", "ready"),
+            _step(tmp_path, "phase11_rag_retrieve_consumption_smoke", "ready"),
+            _step(tmp_path, "phase11_source_binding_preview_smoke", "ready"),
             HandoffRefreshStepSpec(
                 id="provider_handoff_bundle",
                 category="handoff",
@@ -76,6 +80,14 @@ def test_handoff_refresh_exposes_access_focused_visibility(tmp_path):
     assert report.status == "review"
     assert report.access_focused_visibility["status"] == "ready"
     assert report.access_focused_visibility["ready_step_ids"] == [
+        "provider_contract_smoke",
+        "phase10_myprivateagent_local_consumer_probe",
+        "phase11_provider_discovery_smoke",
+        "phase11_rag_retrieve_consumption_smoke",
+        "phase11_source_binding_preview_smoke",
+        "provider_handoff_bundle",
+    ]
+    assert report.access_focused_visibility["ready_review_context_step_ids"] == [
         "provider_handoff_bundle",
     ]
     assert "## Access-Focused Visibility" in render_provider_handoff_refresh_markdown(report)

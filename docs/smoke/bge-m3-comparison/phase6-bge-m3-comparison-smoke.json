@@ -1,6 +1,6 @@
 {
   "id": "phase6-bge-m3-comparison-smoke-v1",
-  "generated_at": "2026-06-05T01:54:01.901513+00:00",
+  "generated_at": "2026-06-05T02:20:53.462661+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults",
   "checks": [

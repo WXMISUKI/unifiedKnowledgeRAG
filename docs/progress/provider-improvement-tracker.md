@@ -270,6 +270,10 @@
 - Phase 12f pgvector local live probe execution readiness implemented and refreshed (`phase12f-pgvector-local-live-probe-execution-readiness`), capturing the rerun path for the live probe without changing runtime defaults.
 - Phase 13 provider roadmap decision checkpoint implemented and refreshed (`2026-06-04-phase13-provider-roadmap-decision-checkpoint`), choosing provider integration hardening as the next focus while keeping pgvector candidate-only.
 - Phase 14 MyPrivateAgent provider integration acceptance checkpoint implemented and archived (`phase14-myprivateagent-provider-integration-acceptance-checkpoint`), confirming repo-side trial acceptance while keeping provider-first and read-only boundaries intact.
+- Phase 15 MyPrivateAgent repo-side trial dispatch package implemented and archived (`phase15-myprivateagent-repo-side-trial-dispatch-package`), packaging caller-facing dispatch evidence without executing the trial or promoting runtime defaults.
+- Phase 16 MyPrivateAgent minimal access loop implemented and archived (`phase16-myprivateagent-minimal-access-loop`), exposing a single caller-facing access verdict for repo-side trial review.
+- Phase 17 access-focused handoff visibility implemented and archived (`phase17-access-focused-handoff-visibility`), separating MyPrivateAgent access visibility from unrelated broader handoff review evidence.
+- Phase 18 MyPrivateAgent access gate simplification implemented (`phase18-myprivateagent-access-gate-simplification`), making primitive access signals the repo-side trial gate while preserving Phase 10/11/13/14/15/16 and handoff reports as review context.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -290,7 +294,7 @@
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
-- Move the next roadmap slice to Phase 17 access-focused handoff visibility instead of reopening backend-specific tuning loops.
+- Move the next roadmap slice to Phase 19 MyPrivateAgent repo-side trial outcome capture instead of reopening provider-side evidence-chain tuning loops.
 
 ## Next Step Plan
 
@@ -308,7 +312,7 @@
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 16 access loop report to decide repo-side trial readiness and the Phase 17 access-focused visibility view to keep the next slice access-oriented rather than backend-specific.
+3. Use the Phase 16 access loop report and Phase 18 simplified access gate to start the MyPrivateAgent repo-side trial path instead of adding more provider-side evidence-chain phases.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
 
@@ -347,13 +351,17 @@
   - Change: `phase16-myprivateagent-minimal-access-loop`
   - Gate target: minimal access loop, not runtime promotion.
 - Phase 17: Access-Focused Handoff Visibility
-  - Status: `active`
+  - Status: `completed`
   - Change: `phase17-access-focused-handoff-visibility`
   - Gate target: access-focused handoff visibility, not runtime promotion.
+- Phase 18: MyPrivateAgent Access Gate Simplification
+  - Status: `completed`
+  - Change: `phase18-myprivateagent-access-gate-simplification`
+  - Gate target: primitive access gate simplification, not runtime promotion or repo-side trial execution.
 
 ## Latest Refresh
 
-  - Run time: `2026-06-05T01:13:11.984453+00:00`
+  - Run time: `2026-06-05T02:20:53.642220+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -404,9 +412,9 @@
   - `phase10_myprivateagent_local_consumer_probe`: `ready`
   - `phase11_rag_retrieve_consumption_smoke`: `ready`
   - `phase11_source_binding_preview_smoke`: `ready`
-  - `phase14_myprivateagent_provider_integration_acceptance_checkpoint`: `review`
-  - `phase15_myprivateagent_repo_side_trial_dispatch_package`: `review`
-  - `phase16_myprivateagent_minimal_access_loop`: `review`
+  - `phase14_myprivateagent_provider_integration_acceptance_checkpoint`: `ready`
+  - `phase15_myprivateagent_repo_side_trial_dispatch_package`: `ready`
+  - `phase16_myprivateagent_minimal_access_loop`: `ready`
   - `phase6_deployed_handoff_consistency_smoke`: `ready`
   - `phase8_live_url_smoke_consistency_check`: `ready`
 
@@ -424,6 +432,7 @@
 - Phase 3 candidate latency/resource diagnostics is `review` by design because it is a local evidence-only export that still depends on deployment/runtime posture and deployed smoke context.
 - Phase 3 aggregation/relation negative-control smoke is `ready` because the positive split-chunk control, the same-document negative control, and the relation-aware unsupported-case label all match current local evidence.
 - Runtime promotion gates remain open for Phase 3 and GraphRAG execution; current evidence is candidate-level, not production approval.
+- MyPrivateAgent minimal access gate is now `ready`; remaining Phase 10/11/13 review context is non-blocking for the repo-side trial and should be resolved only if the real trial exposes a concrete blocker.
 
 
 
