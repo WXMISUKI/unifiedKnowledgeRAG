@@ -25,6 +25,7 @@ class ProviderHandoffBundleReport:
     generated_at: str
     status: str
     provider: dict[str, Any]
+    access_focused_visibility: dict[str, Any]
     evidence_artifacts: list[dict[str, Any]]
     operation_notes: list[str] = field(default_factory=list)
     json_path: Path | None = None
@@ -486,6 +487,18 @@ DEFAULT_EVIDENCE_SPECS = [
     ),
 ]
 
+ACCESS_FOCUSED_ARTIFACT_IDS = {
+    "phase10_myprivateagent_local_consumer_readiness",
+    "phase10_myprivateagent_local_consumer_probe",
+    "phase11_local_provider_integration_profile",
+    "phase11_provider_discovery_smoke",
+    "phase11_rag_retrieve_consumption_smoke",
+    "phase11_source_binding_preview_smoke",
+    "phase13_provider_roadmap_decision_checkpoint",
+    "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+    "phase15_myprivateagent_repo_side_trial_dispatch_package",
+}
+
 
 def build_provider_handoff_bundle_report(
     *,
@@ -498,6 +511,7 @@ def build_provider_handoff_bundle_report(
         _artifact_row(base_dir=base_dir, spec=spec)
         for spec in specs
     ]
+    access_focused_visibility = _access_focused_visibility(artifact_rows)
     return ProviderHandoffBundleReport(
         id=PROVIDER_HANDOFF_BUNDLE_ID,
         generated_at=datetime.now(UTC).isoformat(),
@@ -511,6 +525,7 @@ def build_provider_handoff_bundle_report(
             "component_role": manifest.component_role,
             "compatible_control_planes": manifest.compatible_control_planes,
         },
+        access_focused_visibility=access_focused_visibility,
         evidence_artifacts=artifact_rows,
         operation_notes=_operation_notes(artifact_rows),
     )
@@ -535,16 +550,28 @@ def render_provider_handoff_bundle_markdown(
         "",
         f"- Report: `{report.id}`",
         f"- Status: `{report.status}`",
+        f"- Access Focused Visibility: `{report.access_focused_visibility.get('status', 'review')}`",
         f"- Generated At: `{report.generated_at}`",
         f"- Provider: `{report.provider['provider_id']}`",
         f"- Contract: `{report.provider['contract_version']}`",
         f"- Manifest: `{report.provider['manifest_version']}`",
         "",
+        "## Access-Focused Visibility",
+        "",
+        "| Metric | Value |",
+        "|---|---|",
+    ]
+    for key, value in report.access_focused_visibility.items():
+        lines.append(f"| `{key}` | `{_format_value(value)}` |")
+    lines.extend(
+        [
+            "",
         "## Evidence Artifacts",
         "",
         "| Artifact | Category | Present | Status | Summary | Recommended Action |",
         "|---|---|---|---|---|---|",
-    ]
+        ]
+    )
     for artifact in report.evidence_artifacts:
         lines.append(
             f"| `{artifact['id']}` | `{artifact['category']}` | "
@@ -581,6 +608,7 @@ def export_provider_handoff_bundle_report(
         generated_at=report.generated_at,
         status=report.status,
         provider=report.provider,
+        access_focused_visibility=report.access_focused_visibility,
         evidence_artifacts=report.evidence_artifacts,
         operation_notes=report.operation_notes,
         json_path=json_path,
@@ -1746,6 +1774,35 @@ def _overall_status(artifact_rows: list[dict[str, Any]]) -> str:
     if any(artifact.get("status") != "ready" for artifact in artifact_rows):
         return "review"
     return "ready"
+
+
+def _access_focused_visibility(artifact_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    tracked_rows = [
+        artifact for artifact in artifact_rows if artifact.get("id") in ACCESS_FOCUSED_ARTIFACT_IDS
+    ]
+    tracked_ids = [artifact["id"] for artifact in tracked_rows]
+    ready_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") == "ready"]
+    review_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") == "review"]
+    blocked_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") == "blocked"]
+    open_gate_ids = [artifact["id"] for artifact in tracked_rows if artifact.get("status") != "ready"]
+    return {
+        "status": _overall_status(tracked_rows),
+        "tracked_artifact_ids": tracked_ids,
+        "ready_artifact_ids": ready_ids,
+        "review_artifact_ids": review_ids,
+        "blocked_artifact_ids": blocked_ids,
+        "open_gate_ids": open_gate_ids,
+        "tracked_artifact_count": len(tracked_rows),
+        "ready_artifact_count": len(ready_ids),
+        "review_artifact_count": len(review_ids),
+        "blocked_artifact_count": len(blocked_ids),
+    }
+
+
+def _format_value(value: Any) -> str:
+    if isinstance(value, (list, dict)):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value)
 
 
 def _operation_notes(artifact_rows: list[dict[str, Any]]) -> list[str]:

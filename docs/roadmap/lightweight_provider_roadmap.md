@@ -615,6 +615,14 @@ The default recommendation is to begin the repo-side trial only when provider ev
 
 This phase is intentionally read-only and access-oriented. It does not create source-to-agent binding, does not execute a repo-side trial, does not promote runtime defaults, does not change backend selection, and does not move caller control-plane ownership into this project.
 
+## Phase 17 Access-Focused Handoff Visibility
+
+Phase 17 keeps the existing handoff bundle and refresh artifacts, but adds an access-focused visibility view so MyPrivateAgent can judge repo-side trial readiness without unrelated review-only evidence acting like a blocker.
+
+Its job is to make the access path easier to read: the full bundle and refresh reports can remain review-level for broader operations evidence, while the access-focused view tells the caller whether the MyPrivateAgent chain itself is ready.
+
+This phase is intentionally read-only and visibility-oriented. It does not delete unrelated evidence, does not create a new trial runner, does not promote runtime defaults, and does not move caller control-plane ownership into this project.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

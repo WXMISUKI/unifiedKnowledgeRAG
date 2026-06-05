@@ -290,7 +290,7 @@
 - Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
-- Move the next roadmap slice to Phase 16 minimal access loop instead of reopening backend-specific tuning loops.
+- Move the next roadmap slice to Phase 17 access-focused handoff visibility instead of reopening backend-specific tuning loops.
 
 ## Next Step Plan
 
@@ -308,7 +308,7 @@
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 16 access loop report to decide repo-side trial readiness and keep the next slice access-oriented rather than backend-specific.
+3. Use the Phase 16 access loop report to decide repo-side trial readiness and the Phase 17 access-focused visibility view to keep the next slice access-oriented rather than backend-specific.
 4. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 5. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
 
@@ -343,9 +343,13 @@
   - Change: `phase15-myprivateagent-repo-side-trial-dispatch-package`
   - Gate target: repo-side trial dispatch, not runtime promotion.
 - Phase 16: MyPrivateAgent Minimal Access Loop
-  - Status: `active`
+  - Status: `completed`
   - Change: `phase16-myprivateagent-minimal-access-loop`
   - Gate target: minimal access loop, not runtime promotion.
+- Phase 17: Access-Focused Handoff Visibility
+  - Status: `active`
+  - Change: `phase17-access-focused-handoff-visibility`
+  - Gate target: access-focused handoff visibility, not runtime promotion.
 
 ## Latest Refresh
 

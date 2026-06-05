@@ -35,6 +35,22 @@ def test_build_phase16_access_loop_reports_ready(tmp_path):
     assert all(signal.status == "ready" for signal in report.signals)
 
 
+def test_build_phase16_access_loop_uses_access_focused_handoff_visibility(tmp_path):
+    _seed_phase16_ready_evidence(
+        tmp_path,
+        handoff_overall_status="review",
+        handoff_access_status="ready",
+    )
+
+    report = build_phase16_myprivateagent_minimal_access_loop_report(base_dir=tmp_path)
+
+    assert report.status == "ready"
+    assert report.summary["blocker_category"] == "none"
+    assert report.summary["handoff_status"] == "ready"
+    assert "provider_handoff_bundle" not in report.summary["blocked_signal_ids"]
+    assert "provider_handoff_refresh" not in report.summary["blocked_signal_ids"]
+
+
 def test_build_phase16_access_loop_classifies_missing_handoff_visibility(tmp_path):
     _seed_phase16_ready_evidence(tmp_path, include_handoff=False)
 
@@ -91,6 +107,8 @@ def _seed_phase16_ready_evidence(
     *,
     include_handoff: bool = True,
     phase14_blocker_category: str = "none",
+    handoff_overall_status: str = "ready",
+    handoff_access_status: str = "ready",
 ) -> None:
     _write_json(
         base_dir
@@ -242,8 +260,27 @@ def _seed_phase16_ready_evidence(
         _write_json(
             base_dir / "docs/integration/provider-handoff/provider-handoff-bundle.json",
             {
-                "status": "ready",
+                "status": handoff_overall_status,
                 "decision": "continue_provider_first_with_candidate_backends",
+                "access_focused_visibility": {
+                    "status": handoff_access_status,
+                    "tracked_artifact_ids": [
+                        "phase10_myprivateagent_local_consumer_readiness",
+                        "phase10_myprivateagent_local_consumer_probe",
+                        "phase11_local_provider_integration_profile",
+                        "phase11_provider_discovery_smoke",
+                        "phase11_rag_retrieve_consumption_smoke",
+                        "phase11_source_binding_preview_smoke",
+                        "phase13_provider_roadmap_decision_checkpoint",
+                        "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+                        "phase15_myprivateagent_repo_side_trial_dispatch_package",
+                    ],
+                    "open_gate_ids": []
+                    if handoff_access_status == "ready"
+                    else [
+                        "phase10_myprivateagent_local_consumer_readiness",
+                    ],
+                },
                 "evidence_artifacts": [
                     {"id": "phase15_myprivateagent_repo_side_trial_dispatch_package"}
                 ],
@@ -252,8 +289,28 @@ def _seed_phase16_ready_evidence(
         _write_json(
             base_dir / "docs/integration/provider-handoff-refresh/provider-handoff-refresh.json",
             {
-                "status": "ready",
+                "status": handoff_overall_status,
                 "decision": "continue_provider_first_with_candidate_backends",
+                "access_focused_visibility": {
+                    "status": handoff_access_status,
+                    "tracked_step_ids": [
+                        "phase10_myprivateagent_local_consumer_readiness",
+                        "phase10_myprivateagent_local_consumer_probe",
+                        "phase11_local_provider_integration_profile",
+                        "phase11_provider_discovery_smoke",
+                        "phase11_rag_retrieve_consumption_smoke",
+                        "phase11_source_binding_preview_smoke",
+                        "phase13_provider_roadmap_decision_checkpoint",
+                        "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+                        "phase15_myprivateagent_repo_side_trial_dispatch_package",
+                        "provider_handoff_bundle",
+                    ],
+                    "open_gate_ids": []
+                    if handoff_access_status == "ready"
+                    else [
+                        "phase10_myprivateagent_local_consumer_readiness",
+                    ],
+                },
                 "steps": [
                     {"id": "phase15_myprivateagent_repo_side_trial_dispatch_package"}
                 ],

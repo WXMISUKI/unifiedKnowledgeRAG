@@ -3,7 +3,7 @@
 - Report: `phase3-hybrid-runtime-promotion-decision-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-05T01:13:11.885966+00:00`
+- Generated At: `2026-06-05T01:54:01.951598+00:00`
 
 ## Checks
 

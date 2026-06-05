@@ -4,7 +4,7 @@
 - Status: `review`
 - Access Loop State: `review_for_minimal_access_loop`
 - Decision: `refresh_provider_access_evidence`
-- Generated At: `2026-06-05T01:13:11.966838+00:00`
+- Generated At: `2026-06-05T01:54:02.040379+00:00`
 
 ## Summary
 
@@ -53,8 +53,8 @@
 | `phase13_provider_roadmap_decision_checkpoint` | `True` | `review` | status=review; checkpoint_state=ready_for_provider_integration_hardening; decision=resume_provider_integration_hardening; roadmap_focus=resume_provider_integration_hardening; candidate_backend_posture=pause_pgvector_until_live_probe_executed; phase12d_status=blocked; phase12f_status=review | `review_evidence_notes` |
 | `phase14_myprivateagent_provider_integration_acceptance_checkpoint` | `True` | `review` | status=review; acceptance_state=review_for_myprivateagent_repo_side_trial; decision=refresh_provider_integration_evidence; roadmap_focus=myprivateagent_repo_side_trial; blocker_category=handoff_visibility; phase10_status=review; phase11_status=review; phase13_status=review | `review_evidence_notes` |
 | `phase15_myprivateagent_repo_side_trial_dispatch_package` | `True` | `review` | status=review; dispatch_state=review_for_repo_side_trial_dispatch; blocker_category=handoff_visibility; phase14_status=review; handoff_status=review; caller_checklist_count=3 | `review_evidence_notes` |
-| `provider_handoff_bundle` | `True` | `review` | status=review; decision=review_evidence_notes; evidence_artifacts=52 | `review_evidence_notes` |
-| `provider_handoff_refresh` | `True` | `review` | status=review; decision=review_evidence_notes; steps=51 | `review_evidence_notes` |
+| `provider_handoff_bundle` | `True` | `review` | status=review; overall_status=review; access_focused_status=review; decision=review_evidence_notes; evidence_artifacts=53 | `review_evidence_notes` |
+| `provider_handoff_refresh` | `True` | `review` | status=review; overall_status=review; access_focused_status=review; decision=review_evidence_notes; steps=52 | `review_evidence_notes` |
 
 ## Notes
 

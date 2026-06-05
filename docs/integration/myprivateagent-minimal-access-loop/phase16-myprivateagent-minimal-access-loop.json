@@ -1,6 +1,6 @@
 {
   "id": "phase16-myprivateagent-minimal-access-loop-v1",
-  "generated_at": "2026-06-05T01:13:11.966838+00:00",
+  "generated_at": "2026-06-05T01:54:02.040379+00:00",
   "status": "review",
   "access_loop_state": "review_for_minimal_access_loop",
   "decision": "refresh_provider_access_evidence",
@@ -137,7 +137,7 @@
       "id": "provider_handoff_bundle",
       "required": true,
       "status": "review",
-      "summary": "status=review; decision=review_evidence_notes; evidence_artifacts=52",
+      "summary": "status=review; overall_status=review; access_focused_status=review; decision=review_evidence_notes; evidence_artifacts=53",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff\\provider-handoff-bundle.json"
     },
@@ -145,7 +145,7 @@
       "id": "provider_handoff_refresh",
       "required": true,
       "status": "review",
-      "summary": "status=review; decision=review_evidence_notes; steps=51",
+      "summary": "status=review; overall_status=review; access_focused_status=review; decision=review_evidence_notes; steps=52",
       "recommended_action": "review_evidence_notes",
       "evidence_path": "docs\\integration\\provider-handoff-refresh\\provider-handoff-refresh.json"
     }

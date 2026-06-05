@@ -1,7 +1,49 @@
 {
   "id": "provider-handoff-refresh-v1",
-  "generated_at": "2026-06-05T01:13:11.984453+00:00",
+  "generated_at": "2026-06-05T01:54:02.063376+00:00",
   "status": "review",
+  "access_focused_visibility": {
+    "status": "review",
+    "tracked_step_ids": [
+      "phase10_myprivateagent_local_consumer_readiness",
+      "phase10_myprivateagent_local_consumer_probe",
+      "phase11_local_provider_integration_profile",
+      "phase11_provider_discovery_smoke",
+      "phase11_rag_retrieve_consumption_smoke",
+      "phase11_source_binding_preview_smoke",
+      "phase13_provider_roadmap_decision_checkpoint",
+      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "phase15_myprivateagent_repo_side_trial_dispatch_package",
+      "provider_handoff_bundle"
+    ],
+    "ready_step_ids": [
+      "phase10_myprivateagent_local_consumer_probe",
+      "phase11_provider_discovery_smoke",
+      "phase11_rag_retrieve_consumption_smoke",
+      "phase11_source_binding_preview_smoke"
+    ],
+    "review_step_ids": [
+      "phase10_myprivateagent_local_consumer_readiness",
+      "phase11_local_provider_integration_profile",
+      "phase13_provider_roadmap_decision_checkpoint",
+      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "phase15_myprivateagent_repo_side_trial_dispatch_package",
+      "provider_handoff_bundle"
+    ],
+    "blocked_step_ids": [],
+    "open_gate_ids": [
+      "phase10_myprivateagent_local_consumer_readiness",
+      "phase11_local_provider_integration_profile",
+      "phase13_provider_roadmap_decision_checkpoint",
+      "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+      "phase15_myprivateagent_repo_side_trial_dispatch_package",
+      "provider_handoff_bundle"
+    ],
+    "tracked_step_count": 10,
+    "ready_step_count": 4,
+    "review_step_count": 6,
+    "blocked_step_count": 0
+  },
   "steps": [
     {
       "id": "provider_integration_probe",
@@ -13,6 +55,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; bindable=True",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -25,6 +68,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed\": 0, \"passed\": 9, \"total\": 9}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -37,6 +81,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; report_status=review",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -49,6 +94,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; report_status=ready",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -61,6 +107,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"embedding_provider_candidate\", \"model_path_and_manifest_presence\", \"required_file_inventory\", \"checksum_coverage\", \"private_network_copy_posture\"], \"ready_signals\": 1, \"review_signals\": 5, \"total_signals\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -73,6 +120,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"artifact_readiness_linkage\", \"quality_non_regression_visibility\"], \"ready_signals\": 5, \"review_signals\": 2, \"total_signals\": 7}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -85,6 +133,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 6, \"total_checks\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -97,6 +146,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"ready_signals\": 3, \"review_signals\": 3, \"total_signals\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -109,6 +159,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 4, \"total_checks\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -121,6 +172,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_gate_ids\": [\"qdrant_vector_store_readiness\", \"bge_m3_artifact_readiness\", \"bge_m3_comparison_diagnostics\", \"phase3_runtime_diagnostics\", \"phase3_latency_diagnostics\", \"deployment_readiness\", \"phase3_fp_fn_review\", \"phase3_hybrid_calibration\", \"deployed_provider_smoke\"], \"ready_signals\": 3, \"required_signals\": 9, \"review_signals\": 9, \"total_signals\": 12}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -133,6 +185,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 10, \"total_checks\": 10}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -145,6 +198,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; report_status=ready",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -157,6 +211,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"bindable_sources\": 2, \"format_expansion_demand_signal\": false, \"markdown_only_sources\": 2, \"non_markdown_sources\": 0, \"open_gate_count\": 0, \"parser_ready_documents\": 2, \"parser_status_counts\": {\"ready\": 2}, \"recommended_action_counts\": {\"bind_source_from_control_plane\": 2}, \"source_binding_ready\": true, \"source_binding_status\": \"ready\", \"source_status_counts\": {\"ready\": 2}, \"supported_format_counts\": {\"markdown\": 2}, \"total_sources\": 2, \"unsupported_documents\": 0}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -169,6 +224,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"format_expansion_demand_signal\": false, \"non_markdown_sources\": 0, \"parser_ready_documents\": 2, \"passed_checks\": 5, \"status\": \"ready\", \"total_checks\": 5, \"unsupported_documents\": 0}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -181,6 +237,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"live_url_present\": true, \"open_gate_ids\": [\"deployment_readiness\", \"provider_handoff_bundle\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -193,6 +250,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -205,6 +263,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_gates\": 0, \"candidate_gates\": 4, \"open_gates\": 7, \"ready_gates\": 0, \"review_gates\": 3, \"supporting_evidence_ready\": 2, \"total_gates\": 7}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -217,6 +276,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_checks\": 0, \"open_prerequisite_ids\": [\"candidate_retrieval_backend\", \"candidate_embedding_provider\", \"local_embedding_artifact\", \"provider_api_guard\", \"phase3_readiness_export\", \"deployed_smoke_evidence\"], \"ready_checks\": 0, \"review_checks\": 6, \"total_checks\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -229,6 +289,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"deployment_readiness_snapshot\", \"runtime_diagnostics_snapshot\", \"local_embedding_artifact\", \"provider_api_guard\", \"deployed_smoke_evidence\"], \"ready_signals\": 1, \"review_signals\": 5, \"total_signals\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -241,6 +302,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_signal_ids\": [\"hybrid_empty_stress_negative_control\", \"cross_case_fp_fn_context\", \"runtime_threshold_alignment\"], \"ready_signals\": 3, \"review_signals\": 3, \"total_signals\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -253,6 +315,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"baseline_total_cases\": 32, \"failed\": 0, \"false_negative_count\": 0, \"false_positive_count\": 3, \"passed\": 4, \"risk_case_count\": 4, \"total\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -265,6 +328,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"expected_empty_pass_rate\": 1.0, \"failed_checks\": 0, \"open_check_ids\": [], \"passed_checks\": 4, \"relation_unsupported_count\": 1, \"total_checks\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -277,6 +341,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_gate_ids\": [\"phase3_retrieval_promotion_readiness\", \"phase3_candidate_runtime_diagnostics\", \"phase3_candidate_latency_resource_diagnostics\", \"phase3_hybrid_fusion_threshold_calibration\", \"phase6_bge_m3_artifact_readiness\", \"phase6_bge_m3_vs_mock_fixture_diagnostics\", \"phase6_qdrant_vector_store_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 6, \"required_signals\": 14, \"review_signals\": 9, \"total_signals\": 15}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -289,6 +354,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 16, \"total_checks\": 16}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -301,6 +367,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"evidence_pack_checks_passed\": true, \"ready_artifacts\": 5, \"required_artifacts\": 2, \"required_ready_artifacts\": 2, \"review_artifacts\": 0, \"smoke_passed\": true, \"total_artifacts\": 5}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -313,6 +380,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"answerable_checks\": 1, \"contract_doc_present\": 1, \"failed\": 0, \"insufficient_checks\": 1, \"passed\": 3, \"total\": 3}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -325,6 +393,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"graph_ids\": [\"ecommerce_order_graph\"], \"graph_query_planned\": true, \"graph_query_status\": \"planned\", \"graph_schema_count\": 1, \"graph_stores\": {\"ecommerce_order_graph\": \"neo4j_planned\"}, \"preflight_graph_boundary_ready\": true, \"ready_artifacts\": 3, \"required_artifacts\": 3, \"required_ready_artifacts\": 3, \"review_artifacts\": 0, \"smoke_check_count\": 9, \"smoke_checks_passed\": true, \"smoke_graph_check_passed\": true, \"total_artifacts\": 3}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -337,6 +406,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"blocked_artifacts\": 0, \"entity_type_count\": 4, \"graph_checks_passed\": 2, \"graph_error_code\": \"GRAPH_NOT_IMPLEMENTED\", \"graph_ids\": [\"ecommerce_order_graph\"], \"graph_query_planned\": true, \"graph_query_status\": \"planned\", \"graph_schema_count\": 1, \"graph_status\": \"planned\", \"graph_store\": \"neo4j_planned\", \"ready_artifacts\": 3, \"relation_type_count\": 3, \"required_artifacts\": 3, \"required_ready_artifacts\": 3, \"review_artifacts\": 0, \"smoke_checks_passed\": true, \"smoke_checks_ready\": 9, \"smoke_checks_total\": 9, \"source_smoke_passed\": true, \"total_artifacts\": 3}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -349,6 +419,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"open_gate_ids\": [\"phase3_hybrid_runtime_promotion_decision_readiness\", \"phase6_deployment_readiness\", \"phase6_deployed_field_validation_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\"], \"ready_for_local_provider_handoff\": true, \"ready_for_runtime_default_promotion\": false, \"ready_signals\": 11, \"required_signals\": 4, \"review_signals\": 4, \"total_signals\": 15}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -361,6 +432,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"open_gate_ids\": [], \"passed_checks\": 6, \"total_checks\": 6}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -373,6 +445,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signals\": 0, \"deployed_smoke_present\": true, \"deployed_smoke_status\": \"review\", \"live_url_present\": true, \"open_gate_ids\": [\"phase6_deployed_field_validation_readiness\", \"phase7_provider_release_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 1, \"required_signals\": 3, \"review_signals\": 3, \"total_signals\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -385,6 +458,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_signals\": 0, \"local_handoff_ready\": true, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase7_provider_release_readiness\", \"phase8_live_url_validation_readiness\", \"deployed_provider_smoke\"], \"ready_signals\": 5, \"required_signals\": 4, \"review_signals\": 3, \"runtime_promotion_ready\": false, \"total_signals\": 8}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -397,6 +471,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"local_consumption_state\": \"review\", \"local_handoff_ready\": true, \"passed_checks\": 7, \"readiness_status\": \"review\", \"runtime_promotion_ready\": false, \"total_checks\": 7}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -409,6 +484,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_signals\": 0, \"graph_boundary_ready\": true, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase9_myprivateagent_local_consumption_readiness\", \"provider_handoff_bundle\", \"deployed_provider_smoke\"], \"phase4_evidence_pack_ready\": true, \"phase9_local_handoff_ready\": true, \"ready_signals\": 5, \"required_signals\": 7, \"review_signals\": 3, \"runtime_promotion_ready\": false, \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 8}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -421,6 +497,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_signals\": 0, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase10_local_consumer_readiness\", \"provider_handoff_bundle\"], \"ready_signals\": 2, \"required_signals\": 4, \"review_signals\": 2, \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -433,6 +510,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_signals\": 0, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase10_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"provider_handoff_bundle\"], \"rag_retrieve_consumption_required\": true, \"ready_signals\": 4, \"required_signals\": 7, \"review_signals\": 3, \"source_binding_preview_required\": true, \"total_signals\": 7}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -445,6 +523,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"api_key_mode\": \"not_configured_local_dev\", \"blocked_family_ids\": [], \"blocked_signals\": 0, \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase12_local_rag_integration_hardening_profile\", \"phase11_local_provider_integration_profile\", \"provider_contract_smoke\", \"provider_handoff_bundle\", \"deployment_readiness\", \"phase3_retrieval_promotion_readiness\", \"phase3_candidate_runtime_diagnostics\", \"phase3_candidate_latency_resource_diagnostics\", \"phase6_bge_m3_artifact_readiness\", \"phase6_qdrant_vector_store_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\", \"phase6_deployed_field_validation_readiness\", \"phase3_fp_fn_review\", \"phase3_hybrid_runtime_promotion_decision_readiness\", \"phase6_bge_m3_vs_mock_fixture_diagnostics\"], \"ready_family_ids\": [], \"ready_signals\": 10, \"reference_only_candidates\": [\"Haystack\", \"RAGFlow\", \"LightRAG\", \"pgvector\"], \"reference_only_family_ids\": [\"reference_only_candidates\"], \"required_signals\": 15, \"review_ready_family_ids\": [\"local_provider_integration_gate\", \"retrieval_quality_candidates\", \"storage_and_private_network_candidates\", \"deployment_and_ops_candidates\"], \"review_signals\": 15, \"strategy_verdict\": \"continue_provider_first_with_candidate_backends\", \"total_signals\": 25}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -457,6 +536,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_family_ids\": [\"pgvector_configuration_gate\"], \"blocked_signals\": 1, \"candidate_backend_id\": \"pgvector\", \"candidate_backend_kind\": \"postgresql_native_vector_search\", \"open_gate_ids\": [\"pgvector_connection_posture\", \"phase12_local_rag_integration_hardening_profile\", \"phase11_local_provider_integration_profile\", \"provider_contract_smoke\", \"provider_handoff_bundle\", \"deployment_readiness\", \"phase3_retrieval_promotion_readiness\", \"phase3_candidate_runtime_diagnostics\", \"phase3_candidate_latency_resource_diagnostics\", \"phase3_fp_fn_review\", \"phase6_bge_m3_artifact_readiness\", \"phase6_qdrant_vector_store_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\", \"phase6_deployed_field_validation_readiness\", \"phase12b_candidate_backend_evaluation_readiness\"], \"pgvector_database_url_present\": false, \"pgvector_index_name\": \"knowledge_chunks_embedding_idx\", \"pgvector_schema\": \"public\", \"pgvector_table\": \"knowledge_chunks\", \"pgvector_vector_size\": 1024, \"ready_family_ids\": [], \"ready_signals\": 3, \"required_signals\": 7, \"review_ready_family_ids\": [\"provider_integration_gate\", \"candidate_evidence_gate\"], \"review_signals\": 14, \"strategy_verdict\": \"continue_provider_first_with_candidate_backends\", \"total_signals\": 18}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -469,6 +549,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_family_ids\": [\"pgvector_probe_gate\", \"pgvector_runtime_gate\"], \"candidate_backend_id\": \"pgvector\", \"candidate_backend_kind\": \"postgresql_native_vector_search_live_probe\", \"open_gate_ids\": [\"pgvector_configuration\", \"pgvector_driver\", \"pgvector_connection\", \"pgvector_extension\", \"pgvector_schema\", \"pgvector_table\", \"pgvector_index\", \"phase12c_pgvector_candidate_backend_readiness\", \"phase12b_candidate_backend_evaluation_readiness\"], \"pgvector_connection_attempted\": false, \"pgvector_connection_status\": \"blocked\", \"pgvector_database_url_present\": false, \"pgvector_driver_available\": false, \"pgvector_extension_installed\": false, \"pgvector_index_exists\": false, \"pgvector_index_name\": \"knowledge_chunks_embedding_idx\", \"pgvector_schema\": \"public\", \"pgvector_schema_exists\": false, \"pgvector_server_version\": \"unknown\", \"pgvector_table\": \"knowledge_chunks\", \"pgvector_table_exists\": false, \"pgvector_vector_size\": 1024, \"probe_mode\": \"optional_psycopg_live_probe\", \"probe_timeout_seconds\": 5, \"ready_family_ids\": [\"candidate_evidence_bridge_gate\"], \"review_ready_family_ids\": [], \"strategy_verdict\": \"continue_provider_first_with_candidate_backends\"}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -481,6 +562,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"blocked_family_ids\": [], \"candidate_backend_id\": \"pgvector\", \"candidate_backend_kind\": \"postgresql_native_vector_search_local_probe_environment\", \"compose_example_present\": true, \"config_reference_present\": true, \"env_example_pgvector_block_present\": true, \"handoff_bundle_visible\": true, \"handoff_refresh_visible\": true, \"init_sql_present\": true, \"open_gate_ids\": [], \"optional_dependency_present\": true, \"phase12d_report_status\": \"blocked\", \"ready_family_ids\": [\"pgvector_local_environment_pack\", \"pgvector_probe_bridge\"], \"review_ready_family_ids\": [], \"runbook_present\": true, \"strategy_verdict\": \"continue_provider_first_with_candidate_backends\"}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -493,6 +575,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_family_ids\": [], \"candidate_backend_id\": \"pgvector\", \"candidate_backend_kind\": \"postgresql_native_vector_search_local_live_probe_execution\", \"execution_ready\": true, \"execution_state\": \"ready_for_local_live_probe_rerun\", \"open_gate_ids\": [\"phase12d_live_probe_readiness_report\"], \"phase12d_live_probe_status\": \"blocked\", \"phase12e_environment_status\": \"ready\", \"ready_family_ids\": [\"pgvector_local_execution_pack\", \"pgvector_handoff_bridge\"], \"rerun_required\": true, \"rerun_target\": \"python scripts/export_phase12d_pgvector_live_probe_readiness.py\", \"review_ready_family_ids\": [], \"strategy_verdict\": \"continue_provider_first_with_candidate_backends\"}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -505,6 +588,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_family_ids\": [], \"candidate_backend_posture\": \"pause_pgvector_until_live_probe_executed\", \"next_step_tasks\": [\"refresh_provider_integration_handoff_evidence\", \"keep_pgvector_candidate_only_and_pause_deeper_spikes\", \"rerun_phase12d_only_after_local_environment_is_ready\"], \"open_gate_ids\": [\"phase12_local_rag_integration_hardening_profile\", \"phase11_local_provider_integration_profile\", \"provider_contract_smoke\", \"provider_handoff_bundle\", \"deployment_readiness\", \"phase3_retrieval_promotion_readiness\", \"phase3_candidate_runtime_diagnostics\", \"phase3_candidate_latency_resource_diagnostics\", \"phase6_bge_m3_artifact_readiness\", \"phase6_qdrant_vector_store_readiness\", \"phase6_qdrant_bge_private_network_promotion_readiness\", \"phase6_deployed_field_validation_readiness\", \"phase3_fp_fn_review\", \"phase3_hybrid_runtime_promotion_decision_readiness\", \"phase6_bge_m3_vs_mock_fixture_diagnostics\", \"pgvector_connection_posture\", \"phase12b_candidate_backend_evaluation_readiness\", \"pgvector_configuration\", \"pgvector_driver\", \"pgvector_connection\", \"pgvector_extension\", \"pgvector_schema\", \"pgvector_table\", \"pgvector_index\", \"phase12c_pgvector_candidate_backend_readiness\", \"phase12d_live_probe_readiness_report\"], \"phase12b_status\": \"review\", \"phase12c_status\": \"blocked\", \"phase12d_status\": \"blocked\", \"phase12e_status\": \"ready\", \"phase12f_status\": \"review\", \"provider_handoff_bundle_status\": \"review\", \"provider_handoff_refresh_status\": \"review\", \"ready_family_ids\": [], \"review_ready_family_ids\": [\"roadmap_evidence_chain\", \"handoff_visibility\"], \"roadmap_focus\": \"resume_provider_integration_hardening\", \"strategy_verdict\": \"continue_provider_first_with_candidate_backends\"}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -517,6 +601,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 4, \"total_checks\": 4}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -529,6 +614,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"api_key_mode\": \"not_configured_local_dev\", \"failed_checks\": 0, \"local_consumer_state\": \"ready_for_local_consumer_probe_review\", \"local_provider_url\": \"http://127.0.0.1:8020\", \"passed_checks\": 7, \"readiness_status\": \"review\", \"runtime_promotion_status\": \"keep_runtime_defaults\", \"total_checks\": 7}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -541,6 +627,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 3, \"total_checks\": 3}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -553,6 +640,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"failed_checks\": 0, \"passed_checks\": 3, \"total_checks\": 3}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -565,6 +653,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signal_ids\": [], \"blocked_signals\": 0, \"blocker_category\": \"handoff_visibility\", \"handoff_status\": \"review\", \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"phase10_status\": \"review\", \"phase11_status\": \"review\", \"phase13_status\": \"review\", \"ready_signal_ids\": [\"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\"], \"ready_signals\": 4, \"required_signals\": 9, \"review_signal_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"review_signals\": 5, \"roadmap_focus\": \"myprivateagent_repo_side_trial\", \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 9, \"trial_readiness\": \"review_for_myprivateagent_repo_side_trial\"}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -577,6 +666,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"blocked_signal_ids\": [], \"blocked_signals\": 0, \"blocker_category\": \"handoff_visibility\", \"caller_checklist\": [\"regenerate_provider_handoff_bundle\", \"regenerate_provider_handoff_refresh\", \"rerun_phase15_repo_side_trial_dispatch_package\"], \"dispatch_state\": \"review_for_repo_side_trial_dispatch\", \"handoff_status\": \"review\", \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"phase14_myprivateagent_provider_integration_acceptance_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"phase10_status\": \"review\", \"phase11_status\": \"review\", \"phase13_status\": \"review\", \"phase14_status\": \"review\", \"ready_signal_ids\": [\"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\"], \"ready_signals\": 4, \"required_signals\": 10, \"review_signal_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"phase14_myprivateagent_provider_integration_acceptance_checkpoint\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"review_signals\": 6, \"roadmap_focus\": \"myprivateagent_repo_side_trial_dispatch\", \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 10}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -589,6 +679,7 @@
       ],
       "recommended_action": "review_evidence_notes",
       "summary": "status=review; summary={\"access_loop_state\": \"review_for_minimal_access_loop\", \"access_sequence\": [\"discover_provider\", \"confirm_evidence_pack\", \"review_handoff_bundle\", \"review_phase15_dispatch\", \"attempt_repo_side_trial\"], \"blocked_signal_ids\": [], \"blocked_signals\": 0, \"blocker_category\": \"handoff_visibility\", \"caller_checklist\": [\"regenerate_provider_handoff_bundle\", \"regenerate_provider_handoff_refresh\", \"rerun_phase16_minimal_access_loop\"], \"handoff_status\": \"review\", \"local_provider_url\": \"http://127.0.0.1:8020\", \"open_gate_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"phase14_myprivateagent_provider_integration_acceptance_checkpoint\", \"phase15_myprivateagent_repo_side_trial_dispatch_package\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"phase10_status\": \"review\", \"phase11_status\": \"review\", \"phase13_status\": \"review\", \"phase14_status\": \"review\", \"phase15_status\": \"review\", \"ready_signal_ids\": [\"phase10_myprivateagent_local_consumer_probe\", \"phase11_provider_discovery_smoke\", \"phase11_rag_retrieve_consumption_smoke\", \"phase11_source_binding_preview_smoke\"], \"ready_signals\": 4, \"required_signals\": 11, \"review_signal_ids\": [\"phase10_myprivateagent_local_consumer_readiness\", \"phase11_local_provider_integration_profile\", \"phase13_provider_roadmap_decision_checkpoint\", \"phase14_myprivateagent_provider_integration_acceptance_checkpoint\", \"phase15_myprivateagent_repo_side_trial_dispatch_package\", \"provider_handoff_bundle\", \"provider_handoff_refresh\"], \"review_signals\": 7, \"roadmap_focus\": \"myprivateagent_minimal_access_loop\", \"runtime_promotion_status\": \"keep_runtime_defaults\", \"source_binding_policy_owner\": \"caller\", \"total_signals\": 11}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -600,7 +691,46 @@
         "docs\\integration\\provider-handoff\\provider-handoff-bundle.md"
       ],
       "recommended_action": "review_evidence_notes",
-      "summary": "status=review; report_status=review",
+      "summary": "status=review; access_focused_status=review; report_status=review",
+      "access_focused_visibility": {
+        "status": "review",
+        "tracked_artifact_ids": [
+          "phase10_myprivateagent_local_consumer_readiness",
+          "phase10_myprivateagent_local_consumer_probe",
+          "phase11_local_provider_integration_profile",
+          "phase11_provider_discovery_smoke",
+          "phase11_rag_retrieve_consumption_smoke",
+          "phase11_source_binding_preview_smoke",
+          "phase13_provider_roadmap_decision_checkpoint",
+          "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+          "phase15_myprivateagent_repo_side_trial_dispatch_package"
+        ],
+        "ready_artifact_ids": [
+          "phase10_myprivateagent_local_consumer_probe",
+          "phase11_provider_discovery_smoke",
+          "phase11_rag_retrieve_consumption_smoke",
+          "phase11_source_binding_preview_smoke"
+        ],
+        "review_artifact_ids": [
+          "phase10_myprivateagent_local_consumer_readiness",
+          "phase11_local_provider_integration_profile",
+          "phase13_provider_roadmap_decision_checkpoint",
+          "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+          "phase15_myprivateagent_repo_side_trial_dispatch_package"
+        ],
+        "blocked_artifact_ids": [],
+        "open_gate_ids": [
+          "phase10_myprivateagent_local_consumer_readiness",
+          "phase11_local_provider_integration_profile",
+          "phase13_provider_roadmap_decision_checkpoint",
+          "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+          "phase15_myprivateagent_repo_side_trial_dispatch_package"
+        ],
+        "tracked_artifact_count": 9,
+        "ready_artifact_count": 4,
+        "review_artifact_count": 5,
+        "blocked_artifact_count": 0
+      },
       "error": null
     },
     {
@@ -613,6 +743,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"failed_checks\": 0, \"field_validation_state\": \"review\", \"live_url_present\": true, \"open_gate_count\": 3, \"passed_checks\": 8, \"readiness_status\": \"review\", \"total_checks\": 8}",
+      "access_focused_visibility": null,
       "error": null
     },
     {
@@ -625,6 +756,7 @@
       ],
       "recommended_action": "no_action_required",
       "summary": "status=ready; summary={\"bundle_row_status\": \"review\", \"bundle_status\": \"review\", \"deployed_smoke_present\": true, \"deployed_smoke_status\": \"review\", \"failed_checks\": 0, \"live_url_present\": true, \"live_validation_state\": \"review\", \"open_gate_count\": 3, \"passed_checks\": 10, \"readiness_status\": \"review\", \"total_checks\": 10}",
+      "access_focused_visibility": null,
       "error": null
     }
   ],

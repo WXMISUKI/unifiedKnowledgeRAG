@@ -4,7 +4,7 @@
 - Status: `review`
 - Local Consumer State: `ready_for_local_consumer_probe_review`
 - Decision: `run_local_consumer_probe_before_myprivateagent_integration`
-- Generated At: `2026-06-05T01:13:11.910174+00:00`
+- Generated At: `2026-06-05T01:54:01.977832+00:00`
 
 ## Summary
 
@@ -32,7 +32,7 @@
 | `phase10_local_consumer_verification_contract` | `True` | `ready` | contract_present=true | `no_action_required` |
 | `phase9_myprivateagent_local_consumption_readiness` | `True` | `review` | status=review; local_consumption_state=review; local_handoff_ready=True | `review_evidence_notes` |
 | `phase9_myprivateagent_local_consumption_smoke` | `True` | `ready` | status=ready; passed_checks=7/7 | `no_action_required` |
-| `provider_handoff_bundle` | `True` | `review` | status=review; evidence_artifacts=52 | `review_evidence_notes` |
+| `provider_handoff_bundle` | `True` | `review` | status=review; evidence_artifacts=53 | `review_evidence_notes` |
 | `phase4_evidence_pack_readiness` | `True` | `ready` | status=ready; decision=keep_caller_ownership | `no_action_required` |
 | `phase4_caller_consumption_smoke` | `True` | `ready` | status=ready; passed_checks=3/3 | `no_action_required` |
 | `provider_contract_smoke` | `True` | `ready` | passed=True; checks=9/9 | `no_action_required` |

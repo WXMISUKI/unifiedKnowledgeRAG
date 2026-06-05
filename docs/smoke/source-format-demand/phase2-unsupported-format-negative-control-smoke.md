@@ -3,7 +3,7 @@
 - Report: `phase2-unsupported-format-negative-control-smoke-v1`
 - Status: `ready`
 - Decision: `keep_markdown_baseline`
-- Generated At: `2026-06-05T01:13:11.852478+00:00`
+- Generated At: `2026-06-05T01:54:01.918880+00:00`
 - Readiness Report: `docs\operations\source-format-demand\phase2-source-format-demand-readiness.json`
 
 ## Summary

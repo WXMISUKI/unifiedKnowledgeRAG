@@ -167,6 +167,7 @@ class ProviderHandoffRefreshReport:
     id: str
     generated_at: str
     status: str
+    access_focused_visibility: dict[str, Any]
     steps: list[dict[str, Any]]
     operation_notes: list[str] = field(default_factory=list)
     json_path: Path | None = None
@@ -739,10 +740,12 @@ def refresh_provider_handoff_evidence(
         step_rows.append(row)
         blocked = row["status"] == "blocked"
 
+    access_focused_visibility = _access_focused_visibility(step_rows)
     report = ProviderHandoffRefreshReport(
         id=PROVIDER_HANDOFF_REFRESH_ID,
         generated_at=datetime.now(UTC).isoformat(),
         status=_overall_status(step_rows),
+        access_focused_visibility=access_focused_visibility,
         steps=step_rows,
         operation_notes=_operation_notes(step_rows),
     )
@@ -768,13 +771,25 @@ def render_provider_handoff_refresh_markdown(
         "",
         f"- Report: `{report.id}`",
         f"- Status: `{report.status}`",
+        f"- Access Focused Visibility: `{report.access_focused_visibility.get('status', 'review')}`",
         f"- Generated At: `{report.generated_at}`",
         "",
-        "## Refresh Steps",
+        "## Access-Focused Visibility",
         "",
-        "| Step | Category | Status | Output Paths | Recommended Action | Summary |",
-        "|---|---|---|---|---|---|",
+        "| Metric | Value |",
+        "|---|---|",
     ]
+    for key, value in report.access_focused_visibility.items():
+        lines.append(f"| `{key}` | `{_format_value(value)}` |")
+    lines.extend(
+        [
+            "",
+            "## Refresh Steps",
+            "",
+            "| Step | Category | Status | Output Paths | Recommended Action | Summary |",
+            "|---|---|---|---|---|---|",
+        ]
+    )
     for step in report.steps:
         output_paths = ", ".join(f"`{path}`" for path in step["output_paths"]) or "`none`"
         lines.append(
@@ -817,6 +832,7 @@ def _run_step(step: HandoffRefreshStepSpec) -> dict[str, Any]:
         "output_paths": _output_paths(report),
         "recommended_action": _recommended_action(status),
         "summary": _step_summary(status, report),
+        "access_focused_visibility": _access_focused_visibility_payload(report),
         "error": None,
     }
 
@@ -844,6 +860,7 @@ def _export_refresh_report(
         id=report.id,
         generated_at=report.generated_at,
         status=report.status,
+        access_focused_visibility=report.access_focused_visibility,
         steps=report.steps,
         operation_notes=report.operation_notes,
         json_path=json_path,
@@ -891,14 +908,27 @@ def _recommended_action(status: str) -> str:
 
 
 def _step_summary(status: str, report: Any) -> str:
+    access_focused_visibility = _access_focused_visibility_payload(report)
     if hasattr(report, "summary"):
         summary = json.dumps(
             getattr(report, "summary"),
             ensure_ascii=False,
             sort_keys=True,
         )
+        if access_focused_visibility is not None:
+            return (
+                f"status={status}; "
+                f"access_focused_status={access_focused_visibility.get('status', 'review')}; "
+                f"summary={summary}"
+            )
         return f"status={status}; summary={summary}"
     if hasattr(report, "status"):
+        if access_focused_visibility is not None:
+            return (
+                f"status={status}; "
+                f"access_focused_status={access_focused_visibility.get('status', 'review')}; "
+                f"report_status={getattr(report, 'status')}"
+            )
         return f"status={status}; report_status={getattr(report, 'status')}"
     if hasattr(report, "bindable"):
         return f"status={status}; bindable={getattr(report, 'bindable')}"
@@ -928,6 +958,62 @@ def _operation_notes(steps: list[dict[str, Any]]) -> list[str]:
     if any(step["status"] in {"blocked", "skipped"} for step in steps):
         notes.append("Refresh stopped or skipped later steps because a blocking issue was detected.")
     return notes
+
+
+def _access_focused_visibility(step_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    by_id = {row["id"]: row for row in step_rows}
+    tracked_ids = [
+        "phase10_myprivateagent_local_consumer_readiness",
+        "phase10_myprivateagent_local_consumer_probe",
+        "phase11_local_provider_integration_profile",
+        "phase11_provider_discovery_smoke",
+        "phase11_rag_retrieve_consumption_smoke",
+        "phase11_source_binding_preview_smoke",
+        "phase13_provider_roadmap_decision_checkpoint",
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+        "phase15_myprivateagent_repo_side_trial_dispatch_package",
+    ]
+    bundle_row = by_id.get("provider_handoff_bundle")
+    if bundle_row is not None:
+        bundle_visibility = bundle_row.get("access_focused_visibility")
+        if isinstance(bundle_visibility, dict):
+            tracked_ids.append("provider_handoff_bundle")
+            by_id = {
+                **by_id,
+                "provider_handoff_bundle": {
+                    **bundle_row,
+                    "status": bundle_visibility.get("status", bundle_row.get("status", "review")),
+                },
+            }
+    tracked_rows = [by_id[step_id] for step_id in tracked_ids if step_id in by_id]
+    statuses = [row.get("status", "review") for row in tracked_rows]
+    ready_ids = [row["id"] for row in tracked_rows if row.get("status") == "ready"]
+    review_ids = [row["id"] for row in tracked_rows if row.get("status") == "review"]
+    blocked_ids = [row["id"] for row in tracked_rows if row.get("status") == "blocked"]
+    open_gate_ids = [row["id"] for row in tracked_rows if row.get("status") != "ready"]
+    return {
+        "status": _overall_status(tracked_rows),
+        "tracked_step_ids": tracked_ids,
+        "ready_step_ids": ready_ids,
+        "review_step_ids": review_ids,
+        "blocked_step_ids": blocked_ids,
+        "open_gate_ids": open_gate_ids,
+        "tracked_step_count": len(tracked_rows),
+        "ready_step_count": len(ready_ids),
+        "review_step_count": len(review_ids),
+        "blocked_step_count": len(blocked_ids),
+    }
+
+
+def _access_focused_visibility_payload(report: Any) -> dict[str, Any] | None:
+    visibility = getattr(report, "access_focused_visibility", None)
+    return visibility if isinstance(visibility, dict) else None
+
+
+def _format_value(value: Any) -> str:
+    if isinstance(value, (list, dict)):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value)
 
 
 def _export_phase3_fp_fn_review_nonblocking(

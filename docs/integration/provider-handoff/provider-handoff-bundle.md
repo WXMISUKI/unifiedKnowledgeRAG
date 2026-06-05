@@ -2,10 +2,26 @@
 
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
-- Generated At: `2026-06-05T01:13:11.979264+00:00`
+- Access Focused Visibility: `review`
+- Generated At: `2026-06-05T01:54:02.056506+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
+
+## Access-Focused Visibility
+
+| Metric | Value |
+|---|---|
+| `status` | `review` |
+| `tracked_artifact_ids` | `["phase10_myprivateagent_local_consumer_readiness", "phase10_myprivateagent_local_consumer_probe", "phase11_local_provider_integration_profile", "phase11_provider_discovery_smoke", "phase11_rag_retrieve_consumption_smoke", "phase11_source_binding_preview_smoke", "phase13_provider_roadmap_decision_checkpoint", "phase14_myprivateagent_provider_integration_acceptance_checkpoint", "phase15_myprivateagent_repo_side_trial_dispatch_package"]` |
+| `ready_artifact_ids` | `["phase10_myprivateagent_local_consumer_probe", "phase11_provider_discovery_smoke", "phase11_rag_retrieve_consumption_smoke", "phase11_source_binding_preview_smoke"]` |
+| `review_artifact_ids` | `["phase10_myprivateagent_local_consumer_readiness", "phase11_local_provider_integration_profile", "phase13_provider_roadmap_decision_checkpoint", "phase14_myprivateagent_provider_integration_acceptance_checkpoint", "phase15_myprivateagent_repo_side_trial_dispatch_package"]` |
+| `blocked_artifact_ids` | `[]` |
+| `open_gate_ids` | `["phase10_myprivateagent_local_consumer_readiness", "phase11_local_provider_integration_profile", "phase13_provider_roadmap_decision_checkpoint", "phase14_myprivateagent_provider_integration_acceptance_checkpoint", "phase15_myprivateagent_repo_side_trial_dispatch_package"]` |
+| `tracked_artifact_count` | `9` |
+| `ready_artifact_count` | `4` |
+| `review_artifact_count` | `5` |
+| `blocked_artifact_count` | `0` |
 
 ## Evidence Artifacts
 

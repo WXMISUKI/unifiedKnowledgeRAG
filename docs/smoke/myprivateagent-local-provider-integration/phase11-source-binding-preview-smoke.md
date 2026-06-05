@@ -3,7 +3,7 @@
 - Report: `phase11-source-binding-preview-smoke-v1`
 - Status: `ready`
 - Decision: `keep_source_binding_preview_only`
-- Generated At: `2026-06-05T01:13:11.955162+00:00`
+- Generated At: `2026-06-05T01:54:02.027810+00:00`
 
 ## Summary
 

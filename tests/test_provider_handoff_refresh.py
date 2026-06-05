@@ -16,6 +16,7 @@ class FakeRefreshReport:
     status: str
     json_path: Path
     markdown_path: Path
+    access_focused_visibility: dict[str, object] | None = None
 
 
 def test_handoff_refresh_reports_ready_when_all_steps_ready(tmp_path):
@@ -35,6 +36,49 @@ def test_handoff_refresh_reports_ready_when_all_steps_ready(tmp_path):
     markdown = report.markdown_path.read_text(encoding="utf-8")
     assert payload["id"] == "provider-handoff-refresh-v1"
     assert "# Provider Handoff Evidence Refresh" in markdown
+
+
+def test_handoff_refresh_exposes_access_focused_visibility(tmp_path):
+    def bundle_step(output_dir: Path) -> FakeRefreshReport:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        json_path = output_dir / "provider-handoff-bundle.json"
+        markdown_path = output_dir / "provider-handoff-bundle.md"
+        json_path.write_text("{}", encoding="utf-8")
+        markdown_path.write_text("# bundle\n", encoding="utf-8")
+        return FakeRefreshReport(
+            status="review",
+            json_path=json_path,
+            markdown_path=markdown_path,
+            access_focused_visibility={
+                "status": "ready",
+                "tracked_step_ids": [
+                    "phase10_myprivateagent_local_consumer_readiness",
+                    "phase10_myprivateagent_local_consumer_probe",
+                ],
+                "open_gate_ids": [],
+            },
+        )
+
+    report = refresh_provider_handoff_evidence(
+        output_dir=tmp_path / "refresh",
+        steps=[
+            _step(tmp_path, "integration", "ready"),
+            HandoffRefreshStepSpec(
+                id="provider_handoff_bundle",
+                category="handoff",
+                output_dir=tmp_path / "bundle",
+                exporter=bundle_step,
+                status_reader=lambda report: report.status,
+            ),
+        ],
+    )
+
+    assert report.status == "review"
+    assert report.access_focused_visibility["status"] == "ready"
+    assert report.access_focused_visibility["ready_step_ids"] == [
+        "provider_handoff_bundle",
+    ]
+    assert "## Access-Focused Visibility" in render_provider_handoff_refresh_markdown(report)
 
 
 def test_handoff_refresh_preserves_review_state(tmp_path):

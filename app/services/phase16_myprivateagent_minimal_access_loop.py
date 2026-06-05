@@ -395,7 +395,7 @@ def _build_signal(
             evidence_path=str(spec.path),
         )
 
-    status = _normalize_status(payload.get("status", "review"))
+    status = _access_focused_status_for_signal(spec.id, payload)
     summary_builder = spec.summary_builder or (lambda current: f"status={status}")
     summary = summary_builder(payload)
     return AccessLoopSignal(
@@ -509,8 +509,16 @@ def _handoff_bundle_summary(payload: dict[str, Any] | None) -> str:
     if not isinstance(payload, dict):
         return "status=missing"
     evidence_artifacts = payload.get("evidence_artifacts", [])
+    access_focused_visibility = _access_focused_visibility_payload(payload)
+    access_focused_status = (
+        _normalize_status(access_focused_visibility.get("status", "review"))
+        if isinstance(access_focused_visibility, dict)
+        else _normalize_status(payload.get("status"))
+    )
     return (
-        f"status={_normalize_status(payload.get('status'))}; "
+        f"status={access_focused_status}; "
+        f"overall_status={_normalize_status(payload.get('status'))}; "
+        f"access_focused_status={access_focused_status}; "
         f"decision={payload.get('decision', 'review_evidence_notes')}; "
         f"evidence_artifacts={len(evidence_artifacts) if isinstance(evidence_artifacts, list) else 0}"
     )
@@ -520,8 +528,16 @@ def _handoff_refresh_summary(payload: dict[str, Any] | None) -> str:
     if not isinstance(payload, dict):
         return "status=missing"
     steps = payload.get("steps", [])
+    access_focused_visibility = _access_focused_visibility_payload(payload)
+    access_focused_status = (
+        _normalize_status(access_focused_visibility.get("status", "review"))
+        if isinstance(access_focused_visibility, dict)
+        else _normalize_status(payload.get("status"))
+    )
     return (
-        f"status={_normalize_status(payload.get('status'))}; "
+        f"status={access_focused_status}; "
+        f"overall_status={_normalize_status(payload.get('status'))}; "
+        f"access_focused_status={access_focused_status}; "
         f"decision={payload.get('decision', 'review_evidence_notes')}; "
         f"steps={len(steps) if isinstance(steps, list) else 0}"
     )
@@ -621,6 +637,24 @@ def _summary_dict(payload: dict[str, Any] | None) -> dict[str, Any]:
 
 def _dict_value(payload: dict[str, Any], key: str, default: Any) -> Any:
     return payload.get(key, default) if isinstance(payload, dict) else default
+
+
+def _access_focused_status_for_signal(artifact_id: str, payload: dict[str, Any]) -> str:
+    if artifact_id not in {"provider_handoff_bundle", "provider_handoff_refresh"}:
+        return _normalize_status(payload.get("status", "review"))
+    access_focused_visibility = _access_focused_visibility_payload(payload)
+    if isinstance(access_focused_visibility, dict):
+        return _normalize_status(access_focused_visibility.get("status", "review"))
+    return _normalize_status(payload.get("status", "review"))
+
+
+def _access_focused_visibility_payload(
+    payload: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return None
+    visibility = payload.get("access_focused_visibility")
+    return visibility if isinstance(visibility, dict) else None
 
 
 def _int_value(value: Any, *, fallback: int) -> int:

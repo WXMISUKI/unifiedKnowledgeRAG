@@ -401,6 +401,33 @@ def test_provider_handoff_bundle_summarizes_default_evidence():
     )
 
 
+def test_provider_handoff_bundle_exposes_access_focused_visibility(tmp_path):
+    _seed_access_focused_visibility_evidence(tmp_path)
+
+    report = build_provider_handoff_bundle_report(base_dir=tmp_path)
+
+    assert report.status == "blocked"
+    assert report.access_focused_visibility["status"] == "ready"
+    assert report.access_focused_visibility["tracked_artifact_ids"] == [
+        "phase10_myprivateagent_local_consumer_readiness",
+        "phase10_myprivateagent_local_consumer_probe",
+        "phase11_local_provider_integration_profile",
+        "phase11_provider_discovery_smoke",
+        "phase11_rag_retrieve_consumption_smoke",
+        "phase11_source_binding_preview_smoke",
+        "phase13_provider_roadmap_decision_checkpoint",
+        "phase14_myprivateagent_provider_integration_acceptance_checkpoint",
+        "phase15_myprivateagent_repo_side_trial_dispatch_package",
+    ]
+    assert report.access_focused_visibility["open_gate_ids"] == []
+    assert "phase3_retrieval_promotion_readiness" not in report.access_focused_visibility[
+        "tracked_artifact_ids"
+    ]
+    markdown = render_provider_handoff_bundle_markdown(report)
+    assert "## Access-Focused Visibility" in markdown
+    assert "tracked_artifact_ids" in markdown
+
+
 def test_provider_handoff_bundle_blocks_missing_evidence(tmp_path):
     specs = [
         HandoffEvidenceSpec(
@@ -1617,3 +1644,146 @@ def test_provider_handoff_bundle_keeps_missing_phase6_private_network_promotion_
     assert artifact["recommended_action"] == (
         "regenerate_phase6_qdrant_bge_private_network_promotion_smoke"
     )
+
+
+def _seed_access_focused_visibility_evidence(base_dir: Path) -> None:
+    _write_json(
+        base_dir
+        / "docs/integration/myprivateagent-local-consumer-verification/"
+        / "phase10-myprivateagent-local-consumer-readiness.json",
+        {
+            "status": "ready",
+            "local_consumer_state": "ready_for_local_consumer_probe",
+            "summary": {
+                "runtime_promotion_status": "keep_runtime_defaults",
+                "source_binding_policy_owner": "caller",
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/smoke/myprivateagent-local-consumer-verification/"
+        / "phase10-myprivateagent-local-consumer-probe.json",
+        {
+            "status": "ready",
+            "decision": "continue_local_consumer_probe",
+            "summary": {
+                "total_checks": 4,
+                "passed_checks": 4,
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/integration/myprivateagent-local-provider-integration/"
+        / "phase11-local-provider-integration-profile.json",
+        {
+            "status": "ready",
+            "integration_state": "ready_for_local_provider_integration",
+            "summary": {
+                "local_provider_url": "http://127.0.0.1:8020",
+                "api_key_mode": "not_configured_local_dev",
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/smoke/myprivateagent-local-provider-integration/"
+        / "phase11-provider-discovery-smoke.json",
+        {
+            "status": "ready",
+            "summary": {
+                "provider_discovery_state": "ready",
+                "total_checks": 3,
+                "passed_checks": 3,
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/smoke/myprivateagent-local-provider-integration/"
+        / "phase11-rag-retrieve-consumption-smoke.json",
+        {
+            "status": "ready",
+            "summary": {
+                "rag_retrieve_state": "ready",
+                "total_checks": 3,
+                "passed_checks": 3,
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/smoke/myprivateagent-local-provider-integration/"
+        / "phase11-source-binding-preview-smoke.json",
+        {
+            "status": "ready",
+            "summary": {
+                "source_binding_preview_state": "ready",
+                "total_checks": 3,
+                "passed_checks": 3,
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/operations/provider-roadmap-decision-checkpoint/"
+        / "phase13-provider-roadmap-decision-checkpoint.json",
+        {
+            "status": "ready",
+            "checkpoint_state": "ready_for_provider_integration_hardening",
+            "decision": "continue_provider_first_with_candidate_backends",
+            "summary": {
+                "roadmap_focus": "resume_provider_integration_hardening",
+                "candidate_backend_posture": "pause_pgvector_until_live_probe_executed",
+                "phase12d_status": "ready",
+                "phase12f_status": "ready",
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/integration/myprivateagent-provider-integration-acceptance/"
+        / "phase14-myprivateagent-provider-integration-acceptance-checkpoint.json",
+        {
+            "status": "ready",
+            "acceptance_state": "ready_for_myprivateagent_repo_side_trial",
+            "decision": "approve_myprivateagent_repo_side_trial",
+            "summary": {
+                "roadmap_focus": "myprivateagent_repo_side_trial",
+                "blocker_category": "none",
+                "phase10_status": "ready",
+                "phase11_status": "ready",
+                "phase13_status": "ready",
+                "handoff_status": "ready",
+            },
+        },
+    )
+    _write_json(
+        base_dir
+        / "docs/integration/myprivateagent-repo-side-trial-dispatch/"
+        / "phase15-myprivateagent-repo-side-trial-dispatch-package.json",
+        {
+            "status": "ready",
+            "dispatch_state": "ready_for_repo_side_trial_dispatch",
+            "decision": "dispatch_myprivateagent_repo_side_trial",
+            "summary": {
+                "roadmap_focus": "myprivateagent_repo_side_trial_dispatch",
+                "blocker_category": "none",
+                "phase10_status": "ready",
+                "phase11_status": "ready",
+                "phase13_status": "ready",
+                "phase14_status": "ready",
+                "handoff_status": "ready",
+                "caller_checklist": [
+                    "dispatch_myprivateagent_repo_side_trial",
+                    "capture_trial_outcome_and_refresh_evidence",
+                ],
+            },
+        },
+    )
+
+
+def _write_json(path: Path, payload: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
