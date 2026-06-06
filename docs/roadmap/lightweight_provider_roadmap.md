@@ -657,6 +657,25 @@ The report consumes an explicit MyPrivateAgent trial outcome JSON file and class
 
 This phase is read-only and provider-side. It does not execute MyPrivateAgent code, call provider HTTP endpoints, create source-to-agent binding, promote retrieval defaults, start live deployment validation, rebuild indexes, execute GraphRAG, or move caller control-plane ownership into this project.
 
+## Post-Access Workstream Rebaseline
+
+After Phase 25, the access-readiness chain is closed for the current MyPrivateAgent document RAG trial path:
+
+`docs/roadmap/provider-workstream-rebaseline/provider-workstream-rebaseline.json`
+
+`docs/roadmap/provider-workstream-rebaseline/provider-workstream-rebaseline.md`
+
+The rebaseline changes the project posture from sequential readiness phases to trigger-driven workstreams:
+
+- MyPrivateAgent access readiness: `closed`
+- Provider bugfix: `active_if_triggered` by real caller trial failures
+- Corpus/parser expansion: `deferred` until real non-Markdown corpus demand appears
+- Retrieval backend promotion: `candidate_only` until quality, citation, latency, deployment, and operations gates pass
+- GraphRAG execution: `deferred` until relationship-heavy use cases and ownership are explicit
+- Deployment operations: `active_if_triggered` by a deployment owner or real deployment environment
+
+Future OpenSpec changes should declare their trigger condition rather than continuing the access-readiness phase chain. This avoids a Phase 26 readiness loop while keeping the provider ready to respond to concrete bugs, corpus needs, backend promotion evidence, deployment requests, or graph-heavy use cases.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

@@ -34,6 +34,11 @@ The project SHALL define phase gates with concrete outcomes and evidence so futu
 - **THEN** the roadmap treats Phase 25 as a feedback-closure slice that records provider follow-up posture
 - **AND** it does not create another readiness gate, execute the caller trial, promote runtime defaults, or move caller control-plane responsibilities into the provider
 
+#### Scenario: Post-access changes declare a trigger condition
+- **WHEN** a future OpenSpec change is proposed after the provider workstream rebaseline
+- **THEN** it declares a trigger condition such as real trial bug, corpus/parser demand, backend promotion evidence, deployment-owner request, graph-heavy use case, or explicit maintenance rationale
+- **AND** it does not continue the access-readiness phase chain unless the trigger is a real caller trial issue
+
 ### Requirement: Provider roadmap keeps GraphRAG optional and use-case driven
 The project SHALL keep GraphRAG storage and graph query execution behind a separate phase gate until a concrete relationship-heavy business use case is defined.
 

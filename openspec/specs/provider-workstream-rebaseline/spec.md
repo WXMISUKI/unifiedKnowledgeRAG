@@ -1,0 +1,39 @@
+# provider-workstream-rebaseline Specification
+
+## Purpose
+TBD - created by archiving change rebaseline-provider-workstreams-after-access-closure. Update Purpose after archive.
+## Requirements
+### Requirement: Provider publishes post-access workstream rebaseline
+The system SHALL publish a read-only workstream rebaseline after MyPrivateAgent access readiness and live trial feedback are closed.
+
+#### Scenario: Access readiness chain is closed
+- **WHEN** Phase 24 trial readiness is `go` and Phase 25 live trial feedback reports `no_provider_action_required`
+- **THEN** the rebaseline marks the access-readiness workstream as `closed`
+- **AND** it recommends not opening another access-readiness phase unless a future real trial exposes a concrete provider issue
+
+#### Scenario: Provider bugfix lane is trigger-driven
+- **WHEN** no provider-owned live trial blocker is present
+- **THEN** the provider bugfix workstream is `active_if_triggered`
+- **AND** its trigger condition is a real caller trial bug or provider failure evidence
+
+#### Scenario: Backend lane remains candidate-only
+- **WHEN** retrieval backend promotion evidence remains review-level or candidate-only
+- **THEN** the retrieval backend workstream is `candidate_only`
+- **AND** runtime defaults remain unchanged
+
+#### Scenario: Parser and GraphRAG lanes remain deferred
+- **WHEN** there is no real corpus parser demand and no relationship-heavy graph use case
+- **THEN** parser expansion and GraphRAG workstreams are `deferred`
+- **AND** the report records the trigger conditions required to activate them
+
+### Requirement: Workstream rebaseline remains read-only
+The workstream rebaseline SHALL NOT mutate provider runtime behavior or caller-owned control-plane decisions.
+
+#### Scenario: Rebaseline report is exported
+- **WHEN** the export command runs
+- **THEN** it writes JSON and Markdown artifacts without calling provider HTTP endpoints, refreshing all evidence, changing retrieval defaults, creating source bindings, adding parsers, rebuilding indexes, or executing GraphRAG
+
+#### Scenario: Future work requires trigger conditions
+- **WHEN** a future OpenSpec change is proposed after this rebaseline
+- **THEN** it declares whether it is triggered by a real trial bug, corpus/parser demand, backend promotion evidence, deployment-owner request, graph-heavy use case, or another explicit rationale
+

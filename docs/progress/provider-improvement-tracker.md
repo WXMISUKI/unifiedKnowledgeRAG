@@ -276,6 +276,7 @@
 - Phase 18 MyPrivateAgent access gate simplification implemented (`phase18-myprivateagent-access-gate-simplification`), making primitive access signals the repo-side trial gate while preserving Phase 10/11/13/14/15/16 and handoff reports as review context.
 - Phase 24 document RAG trial readiness closure implemented (`phase24-document-rag-readiness-closure`), producing a provider-side `decision=go` readout for MyPrivateAgent repo-side document RAG trial readiness while keeping review-context evidence non-blocking.
 - Phase 25 MyPrivateAgent live trial outcome feedback closure implemented (`phase25-myprivateagent-live-trial-outcome-feedback`), consuming an explicit MyPrivateAgent live trial outcome file and recording whether the provider needs no action, review, or a focused fix.
+- Post-access provider workstream rebaseline implemented (`rebaseline-provider-workstreams-after-access-closure`), closing the MyPrivateAgent access-readiness chain and moving future work to trigger-driven lanes instead of Phase 26 readiness expansion.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -297,6 +298,7 @@
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
 - Use Phase 25 MyPrivateAgent live trial outcome feedback as the provider-side closure point instead of reopening provider-side evidence-chain tuning loops.
+- Do not continue to Phase 26 access-readiness work unless a future real caller trial exposes a concrete provider-owned issue.
 
 ## Next Step Plan
 
@@ -316,8 +318,9 @@
 2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
 3. Use the Phase 24 document RAG trial readiness closure to start the MyPrivateAgent repo-side document RAG trial path instead of adding more provider-side evidence-chain phases.
 4. Use Phase 25 feedback output to decide whether a focused provider fix is needed after real MyPrivateAgent trials.
-5. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
-6. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
+5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
+6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
+7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
 
 ## Open Slice
 
@@ -369,6 +372,10 @@
   - Status: `completed`
   - Change: `phase25-myprivateagent-live-trial-outcome-feedback`
   - Gate target: provider-side no-action/review/blocked feedback from an explicit caller trial outcome, not readiness expansion or trial execution.
+- Post-Access Workstream Rebaseline
+  - Status: `completed`
+  - Change: `rebaseline-provider-workstreams-after-access-closure`
+  - Gate target: close access-readiness chain and require future changes to declare concrete trigger conditions.
 
 ## Latest Refresh
 
