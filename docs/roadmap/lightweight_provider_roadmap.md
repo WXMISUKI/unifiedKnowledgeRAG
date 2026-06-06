@@ -737,6 +737,23 @@ The trial exports:
 
 This loop validates a markdown corpus before formal source registration. It can produce a `go`, `review`, or `blocked` decision over file presence, chunkability, retrieved evidence, and citation allowlist behavior. It does not mutate the default provider source catalog, expose the source through provider HTTP APIs, create source bindings, run formal ingestion jobs, persist index lifecycle state, promote retrieval backends, parse raw PDFs, start OCR services, execute GraphRAG, or run MyPrivateAgent orchestration.
 
+## Local Corpus Caller Handoff
+
+After a local business corpus trial returns `go`, the provider can export a caller-facing review package:
+
+```powershell
+python scripts/export_local_corpus_caller_handoff.py `
+  --trial-report docs/local-run/business-corpus-trial/local-business-corpus-trial.json
+```
+
+The handoff exports:
+
+`docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.json`
+
+`docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.md`
+
+The status `ready_for_caller_review` means the caller can inspect the source id, markdown artifact, overlay, chunks, generated citations, and trial boundaries before deciding whether to propose formal binding or source registration. It is not production registration and does not mutate source catalog, run ingestion jobs, create source bindings, execute MyPrivateAgent orchestration, promote retrieval backends, or execute GraphRAG.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

@@ -181,6 +181,24 @@ docs/local-run/business-corpus-trial/local-business-corpus-trial.md
 
 这个 trial 会写本地 source overlay、chunk evidence 和 cited answer 报告，但不会修改默认 `GET /api/rag/sources` catalog，不会创建正式 ingestion job，不会写 index lifecycle，不会创建 source binding，也不会切换检索后端或执行 GraphRAG。
 
+### 本地语料调用方交接包
+
+当本地业务语料 trial 为 `go` 后，可以导出调用方 review 包：
+
+```powershell
+python scripts/export_local_corpus_caller_handoff.py `
+  --trial-report docs/local-run/business-corpus-trial/local-business-corpus-trial.json
+```
+
+默认输出：
+
+```text
+docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.json
+docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.md
+```
+
+该 handoff 会把 source id、markdown artifact、overlay、chunks、trial 状态、引用策略和下一步动作汇总给调用方审查。`ready_for_caller_review` 只表示可以进入调用方 review，不代表正式注册 source、创建绑定、执行 MyPrivateAgent 编排或改变 provider 默认 catalog。
+
 ## 轻量容器部署
 
 项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：

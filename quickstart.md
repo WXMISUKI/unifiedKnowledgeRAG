@@ -75,3 +75,22 @@ docs/local-run/business-corpus-trial/local-business-corpus-trial.md
 
 This is a pre-registration trial. It does not modify the default source catalog
 or expose the trial source through provider HTTP APIs.
+
+# Export caller handoff for local corpus
+
+When the local business corpus trial is `go`, package it for caller review:
+
+```powershell
+python scripts/export_local_corpus_caller_handoff.py `
+  --trial-report docs/local-run/business-corpus-trial/local-business-corpus-trial.json
+```
+
+Default outputs:
+
+```text
+docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.json
+docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.md
+```
+
+`ready_for_caller_review` means the caller can review the local artifacts before
+formal binding or source registration. It is not production registration.
