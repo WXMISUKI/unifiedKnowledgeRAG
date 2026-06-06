@@ -693,6 +693,27 @@ It exports:
 
 The report returns `go`, `review`, or `blocked` by checking the already-running local service through `/live`, `/ready`, `/health`, provider manifest, preflight, RAG retrieve, and RAG answer. It is intentionally local and lightweight: it does not start the server, download models, start Qdrant/pgvector, rebuild indexes, create source bindings, promote retrieval defaults, or execute GraphRAG.
 
+## PDF Derived Markdown Corpus Trial
+
+Raw PDF remains outside provider ingestion. A small local trial can still evaluate whether the first pages of a real PDF are useful RAG material by extracting text into a markdown artifact first:
+
+```powershell
+python scripts/export_pdf_derived_markdown_trial.py `
+  --pdf-path "<local-pdf-path>" `
+  --max-pages 5 `
+  --query "公司主营业务是什么？"
+```
+
+The trial exports:
+
+`docs/local-run/pdf-derived-corpus/company_profile_2025_trial.md`
+
+`docs/local-run/pdf-derived-corpus/pdf-derived-markdown-trial.json`
+
+`docs/local-run/pdf-derived-corpus/pdf-derived-markdown-trial.md`
+
+This is a local corpus-quality probe, not parser promotion. It does not register raw PDF as a supported ingestion format, does not start OCR/Layout services, does not add PaddleOCR as a dependency, does not promote retrieval backends, and does not execute GraphRAG. If text extraction is insufficient, PaddleOCR or PP-Structure should remain external providers that produce derived text/markdown for the provider to consume later.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

@@ -278,6 +278,7 @@
 - Phase 25 MyPrivateAgent live trial outcome feedback closure implemented (`phase25-myprivateagent-live-trial-outcome-feedback`), consuming an explicit MyPrivateAgent live trial outcome file and recording whether the provider needs no action, review, or a focused fix.
 - Post-access provider workstream rebaseline implemented (`rebaseline-provider-workstreams-after-access-closure`), closing the MyPrivateAgent access-readiness chain and moving future work to trigger-driven lanes instead of Phase 26 readiness expansion.
 - Local usable run loop implemented (`add-local-usable-run-loop`), giving the already-running local provider a compact `go` / `review` / `blocked` check over probes, manifest, preflight, retrieve evidence, and cited answer without reopening access-readiness phases or promoting runtime defaults.
+- PDF-derived markdown corpus trial implemented (`add-pdf-derived-markdown-corpus-trial`), allowing a small page range from a real local PDF to be converted into local markdown trial evidence while keeping raw PDF ingestion unsupported by provider defaults.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -381,6 +382,10 @@
   - Status: `completed`
   - Change: `add-local-usable-run-loop`
   - Gate target: local day-1 usability after `uvicorn` startup, not deployment, backend promotion, source binding, or GraphRAG execution.
+- PDF-Derived Markdown Corpus Trial
+  - Status: `completed`
+  - Change: `add-pdf-derived-markdown-corpus-trial`
+  - Gate target: first-five-page PDF-to-markdown local corpus trial, not raw PDF ingestion support, OCR dependency adoption, source binding, backend promotion, or GraphRAG execution.
 
 ## Latest Refresh
 

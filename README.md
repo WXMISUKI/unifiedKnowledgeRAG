@@ -137,6 +137,27 @@ docs/local-run/local-usable-run-loop.md
 
 该报告只验证已经运行的本地 provider：`/live`、`/ready`、`/health`、provider manifest、preflight、RAG retrieve 和 RAG answer。`Decision: go` 表示本地服务可以进入调用方试接；`review` 表示需要检查 fixture query、source id 或本地语料；`blocked` 表示服务不可达或合同路径失败。它不会启动服务、下载模型、启动 Qdrant/pgvector、重建索引、创建 source binding、切换检索默认值或执行 GraphRAG。
 
+### PDF 派生 Markdown 本地试验
+
+当前 provider ingestion 仍只支持 markdown，raw PDF 会保持 `unsupported_format`。如果要先验证一份真实 PDF 是否适合进入 RAG，可以先跑本地 PDF 派生 markdown trial：
+
+```powershell
+python scripts/export_pdf_derived_markdown_trial.py `
+  --pdf-path "D:\xwechat_files\wxid_pc6sc451nt9022_dea0\msg\file\2026-06\公司简介2025年10月27日(1).pdf" `
+  --max-pages 5 `
+  --query "公司主营业务是什么？"
+```
+
+默认输出：
+
+```text
+docs/local-run/pdf-derived-corpus/company_profile_2025_trial.md
+docs/local-run/pdf-derived-corpus/pdf-derived-markdown-trial.json
+docs/local-run/pdf-derived-corpus/pdf-derived-markdown-trial.md
+```
+
+这个 trial 只处理 PDF 派生出来的 markdown，不会把 raw PDF 注册为正式 source，不会启动 OCR 服务、下载模型、切换检索后端、创建 source binding 或执行 GraphRAG。若 PDF 是扫描件或本地 Python 缺少 PDF text extractor，应先用外部 PaddleOCR/PP-Structure 服务生成文本或 markdown，再进入 provider 的 markdown 试用链路。
+
 ## 轻量容器部署
 
 项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：

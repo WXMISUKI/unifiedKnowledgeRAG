@@ -718,6 +718,12 @@ The system SHALL expose a read-only pre-ingestion diagnostic surface for configu
 - **WHEN** a configured document has a format other than markdown in this slice
 - **THEN** the document diagnostic reports `format_supported=false`, `parser_status=unsupported_format`, and does not attempt to parse the file
 
+#### Scenario: Raw PDF remains unsupported by provider ingestion
+
+- **WHEN** a configured document source path points to a raw PDF in this slice
+- **THEN** provider ingestion preflight reports the document as unsupported instead of parsing it directly
+- **AND** the caller can use a separate PDF-derived markdown trial before proposing formal parser expansion
+
 #### Scenario: Missing source file is diagnosed
 
 - **WHEN** a configured document source file is missing
