@@ -645,6 +645,18 @@ The closure report intentionally reuses the simplified primitive access gate fro
 
 This phase is read-only and provider-side. It does not execute the MyPrivateAgent trial, create source-to-agent binding, promote retrieval defaults, start live deployment validation, rebuild indexes, execute GraphRAG, or move caller control-plane ownership into this project. The next action is to begin the MyPrivateAgent repo-side document RAG trial and capture the outcome in the caller repository.
 
+## Phase 25 MyPrivateAgent Live Trial Outcome Feedback Closure
+
+Phase 25 records the result of a real MyPrivateAgent live trial from the provider side:
+
+`docs/integration/myprivateagent-live-trial-outcome-feedback/phase25-myprivateagent-live-trial-outcome-feedback.json`
+
+`docs/integration/myprivateagent-live-trial-outcome-feedback/phase25-myprivateagent-live-trial-outcome-feedback.md`
+
+The report consumes an explicit MyPrivateAgent trial outcome JSON file and classifies provider follow-up as `no_provider_action_required`, `provider_review_required`, or `provider_blocked`. This is a feedback closure, not a new readiness chain. When the caller-side live trial succeeds with provider retrieve evidence, the provider access-readiness loop should close and future work should only proceed from concrete trial bugs, real corpus/parser demand, or separately approved backend promotion gates.
+
+This phase is read-only and provider-side. It does not execute MyPrivateAgent code, call provider HTTP endpoints, create source-to-agent binding, promote retrieval defaults, start live deployment validation, rebuild indexes, execute GraphRAG, or move caller control-plane ownership into this project.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

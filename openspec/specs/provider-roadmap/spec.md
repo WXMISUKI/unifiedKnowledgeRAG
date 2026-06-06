@@ -29,6 +29,11 @@ The project SHALL define phase gates with concrete outcomes and evidence so futu
 - **WHEN** a future change adds evaluation-only or candidate-only behavior
 - **THEN** it avoids changing default runtime behavior unless the relevant phase gate says promotion criteria are met
 
+#### Scenario: Phase 25 closes caller trial feedback without expanding readiness
+- **WHEN** MyPrivateAgent provides a live trial outcome after Phase 24 readiness returned `go`
+- **THEN** the roadmap treats Phase 25 as a feedback-closure slice that records provider follow-up posture
+- **AND** it does not create another readiness gate, execute the caller trial, promote runtime defaults, or move caller control-plane responsibilities into the provider
+
 ### Requirement: Provider roadmap keeps GraphRAG optional and use-case driven
 The project SHALL keep GraphRAG storage and graph query execution behind a separate phase gate until a concrete relationship-heavy business use case is defined.
 
@@ -1343,3 +1348,4 @@ The project SHALL keep the simplified MyPrivateAgent access gate read-only and p
 - **WHEN** broader deployment, backend candidate, live URL, or promotion evidence remains in `review`
 - **THEN** the full provider handoff bundle and refresh reports may remain `review`
 - **AND** the access-focused gate still reports the minimal MyPrivateAgent access posture separately
+

@@ -1,0 +1,54 @@
+{
+  "id": "phase25-myprivateagent-live-trial-outcome-feedback-v1",
+  "generated_at": "2026-06-06T06:38:10.240406+00:00",
+  "status": "ready",
+  "provider_action": "no_provider_action_required",
+  "reason_code": "caller_live_trial_passed",
+  "recommended_next_actions": [
+    "close_provider_access_readiness_loop",
+    "keep_runtime_defaults_unchanged",
+    "only_open_provider_fix_if_future_trial_exposes_a_concrete_provider_bug"
+  ],
+  "summary": {
+    "roadmap_phase": "Phase 25",
+    "roadmap_focus": "myprivateagent_live_trial_outcome_feedback_closure",
+    "trial_outcome_path": "D:\\AI\\AIcode\\MyPrivateAgent\\docs\\integration\\domain-agent-live-grounded-answer-trial\\domain-agent-live-grounded-answer-trial.json",
+    "input_status": "ready",
+    "live_trial_status": "go",
+    "provider_retrieve_status": "ready",
+    "document_count": 3,
+    "evidence_pack_status": "answerable",
+    "allowed_citation_count": 3,
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "retrieval_backend_promotion_status": "not_promoted_by_this_report",
+    "graph_execution_status": "planned_boundary_only",
+    "source_binding_policy_owner": "caller",
+    "trial_execution_owner": "MyPrivateAgent"
+  },
+  "trial_outcome_evidence": {
+    "trial_outcome_path": "D:\\AI\\AIcode\\MyPrivateAgent\\docs\\integration\\domain-agent-live-grounded-answer-trial\\domain-agent-live-grounded-answer-trial.json",
+    "input_status": "ready",
+    "live_trial_status": "go",
+    "reason_code": "live_grounded_answer_trial_ready",
+    "provider_base_url": "http://127.0.0.1:8020",
+    "agent_id": "ecommerce_support",
+    "domain": "refund.policy",
+    "query": "退款政策是什么？",
+    "provider_retrieve_status": "ready",
+    "provider_retrieve_reason_code": "provider_retrieve_ready",
+    "document_count": 3,
+    "evidence_pack_status": "answerable",
+    "citation_policy": "use_only_returned_citations",
+    "allowed_citation_count": 3,
+    "blockers": [],
+    "warnings": []
+  },
+  "notes": [
+    "This report is a provider-side feedback closure over an explicit MyPrivateAgent live trial outcome file.",
+    "It does not execute MyPrivateAgent, call provider HTTP endpoints, create source-to-agent bindings, or mutate provider runtime defaults.",
+    "MyPrivateAgent owns trial execution, final answer policy, source binding policy, and audit behavior.",
+    "Provider follow-up should be opened only when this report identifies a provider-owned review or blocked state."
+  ],
+  "json_path": "docs\\integration\\myprivateagent-live-trial-outcome-feedback\\phase25-myprivateagent-live-trial-outcome-feedback.json",
+  "markdown_path": "docs\\integration\\myprivateagent-live-trial-outcome-feedback\\phase25-myprivateagent-live-trial-outcome-feedback.md"
+}
