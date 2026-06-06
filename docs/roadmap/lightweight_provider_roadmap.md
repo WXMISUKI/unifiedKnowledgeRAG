@@ -714,6 +714,29 @@ The trial exports:
 
 This is a local corpus-quality probe, not parser promotion. It does not register raw PDF as a supported ingestion format, does not start OCR/Layout services, does not add PaddleOCR as a dependency, does not promote retrieval backends, and does not execute GraphRAG. If text extraction is insufficient, PaddleOCR or PP-Structure should remain external providers that produce derived text/markdown for the provider to consume later.
 
+## Local Business Corpus Trial Loop
+
+After a local markdown artifact exists, the next lightweight check is a pre-registration business corpus trial:
+
+```powershell
+python scripts/export_local_business_corpus_trial.py `
+  --markdown-path docs/local-run/pdf-derived-corpus/company_profile_2025_trial.md `
+  --source-id company_profile_2025_trial `
+  --query "公司主营业务是什么？"
+```
+
+The trial exports:
+
+`docs/local-run/business-corpus-trial/local-business-corpus-source.json`
+
+`docs/local-run/business-corpus-trial/local-business-corpus-chunks.json`
+
+`docs/local-run/business-corpus-trial/local-business-corpus-trial.json`
+
+`docs/local-run/business-corpus-trial/local-business-corpus-trial.md`
+
+This loop validates a markdown corpus before formal source registration. It can produce a `go`, `review`, or `blocked` decision over file presence, chunkability, retrieved evidence, and citation allowlist behavior. It does not mutate the default provider source catalog, expose the source through provider HTTP APIs, create source bindings, run formal ingestion jobs, persist index lifecycle state, promote retrieval backends, parse raw PDFs, start OCR services, execute GraphRAG, or run MyPrivateAgent orchestration.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

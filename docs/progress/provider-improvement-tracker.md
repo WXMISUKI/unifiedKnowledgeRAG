@@ -279,6 +279,7 @@
 - Post-access provider workstream rebaseline implemented (`rebaseline-provider-workstreams-after-access-closure`), closing the MyPrivateAgent access-readiness chain and moving future work to trigger-driven lanes instead of Phase 26 readiness expansion.
 - Local usable run loop implemented (`add-local-usable-run-loop`), giving the already-running local provider a compact `go` / `review` / `blocked` check over probes, manifest, preflight, retrieve evidence, and cited answer without reopening access-readiness phases or promoting runtime defaults.
 - PDF-derived markdown corpus trial implemented (`add-pdf-derived-markdown-corpus-trial`), allowing a small page range from a real local PDF to be converted into local markdown trial evidence while keeping raw PDF ingestion unsupported by provider defaults.
+- Local business corpus trial loop implemented (`add-local-business-corpus-trial-loop`), validating a local markdown business corpus with source overlay, chunk evidence, retrieval, and cited answer checks before formal source registration.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -386,6 +387,10 @@
   - Status: `completed`
   - Change: `add-pdf-derived-markdown-corpus-trial`
   - Gate target: first-five-page PDF-to-markdown local corpus trial, not raw PDF ingestion support, OCR dependency adoption, source binding, backend promotion, or GraphRAG execution.
+- Local Business Corpus Trial Loop
+  - Status: `completed`
+  - Change: `add-local-business-corpus-trial-loop`
+  - Gate target: pre-registration markdown business corpus trial, not default source catalog mutation, formal ingestion, source binding, backend promotion, raw PDF parsing, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
 
 ## Latest Refresh
 

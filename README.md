@@ -158,6 +158,29 @@ docs/local-run/pdf-derived-corpus/pdf-derived-markdown-trial.md
 
 这个 trial 只处理 PDF 派生出来的 markdown，不会把 raw PDF 注册为正式 source，不会启动 OCR 服务、下载模型、切换检索后端、创建 source binding 或执行 GraphRAG。若 PDF 是扫描件或本地 Python 缺少 PDF text extractor，应先用外部 PaddleOCR/PP-Structure 服务生成文本或 markdown，再进入 provider 的 markdown 试用链路。
 
+### 本地业务 Markdown 语料试用
+
+当 PDF 或其他来源已经生成 markdown 后，可以先跑本地业务语料 trial，判断这份资料是否值得后续正式注册为 provider source：
+
+```powershell
+python scripts/export_local_business_corpus_trial.py `
+  --markdown-path docs/local-run/pdf-derived-corpus/company_profile_2025_trial.md `
+  --source-id company_profile_2025_trial `
+  --title "公司简介 2025 trial" `
+  --query "公司主营业务是什么？"
+```
+
+默认输出：
+
+```text
+docs/local-run/business-corpus-trial/local-business-corpus-source.json
+docs/local-run/business-corpus-trial/local-business-corpus-chunks.json
+docs/local-run/business-corpus-trial/local-business-corpus-trial.json
+docs/local-run/business-corpus-trial/local-business-corpus-trial.md
+```
+
+这个 trial 会写本地 source overlay、chunk evidence 和 cited answer 报告，但不会修改默认 `GET /api/rag/sources` catalog，不会创建正式 ingestion job，不会写 index lifecycle，不会创建 source binding，也不会切换检索后端或执行 GraphRAG。
+
 ## 轻量容器部署
 
 项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：

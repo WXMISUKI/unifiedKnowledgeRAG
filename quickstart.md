@@ -50,3 +50,28 @@ docs/local-run/pdf-derived-corpus/pdf-derived-markdown-trial.md
 If the current Python environment does not have a PDF text extractor, use an
 environment with `pypdf` or run external OCR/Layout first and keep the provider
 focused on the derived markdown.
+
+# Try a local business markdown corpus
+
+After a markdown artifact is available, run a local business corpus trial before
+formal source registration:
+
+```powershell
+python scripts/export_local_business_corpus_trial.py `
+  --markdown-path docs/local-run/pdf-derived-corpus/company_profile_2025_trial.md `
+  --source-id company_profile_2025_trial `
+  --title "公司简介 2025 trial" `
+  --query "公司主营业务是什么？"
+```
+
+Default outputs:
+
+```text
+docs/local-run/business-corpus-trial/local-business-corpus-source.json
+docs/local-run/business-corpus-trial/local-business-corpus-chunks.json
+docs/local-run/business-corpus-trial/local-business-corpus-trial.json
+docs/local-run/business-corpus-trial/local-business-corpus-trial.md
+```
+
+This is a pre-registration trial. It does not modify the default source catalog
+or expose the trial source through provider HTTP APIs.
