@@ -277,6 +277,7 @@
 - Phase 24 document RAG trial readiness closure implemented (`phase24-document-rag-readiness-closure`), producing a provider-side `decision=go` readout for MyPrivateAgent repo-side document RAG trial readiness while keeping review-context evidence non-blocking.
 - Phase 25 MyPrivateAgent live trial outcome feedback closure implemented (`phase25-myprivateagent-live-trial-outcome-feedback`), consuming an explicit MyPrivateAgent live trial outcome file and recording whether the provider needs no action, review, or a focused fix.
 - Post-access provider workstream rebaseline implemented (`rebaseline-provider-workstreams-after-access-closure`), closing the MyPrivateAgent access-readiness chain and moving future work to trigger-driven lanes instead of Phase 26 readiness expansion.
+- Local usable run loop implemented (`add-local-usable-run-loop`), giving the already-running local provider a compact `go` / `review` / `blocked` check over probes, manifest, preflight, retrieve evidence, and cited answer without reopening access-readiness phases or promoting runtime defaults.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -376,6 +377,10 @@
   - Status: `completed`
   - Change: `rebaseline-provider-workstreams-after-access-closure`
   - Gate target: close access-readiness chain and require future changes to declare concrete trigger conditions.
+- Local Usable Run Loop
+  - Status: `completed`
+  - Change: `add-local-usable-run-loop`
+  - Gate target: local day-1 usability after `uvicorn` startup, not deployment, backend promotion, source binding, or GraphRAG execution.
 
 ## Latest Refresh
 

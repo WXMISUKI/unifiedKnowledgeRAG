@@ -676,6 +676,23 @@ The rebaseline changes the project posture from sequential readiness phases to t
 
 Future OpenSpec changes should declare their trigger condition rather than continuing the access-readiness phase chain. This avoids a Phase 26 readiness loop while keeping the provider ready to respond to concrete bugs, corpus needs, backend promotion evidence, deployment requests, or graph-heavy use cases.
 
+## Local Usable Run Loop
+
+The local run-loop is the day-1 check after a developer starts the provider with `uvicorn`:
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_local_usable_run_loop.py `
+  --base-url http://127.0.0.1:8020
+```
+
+It exports:
+
+`docs/local-run/local-usable-run-loop.json`
+
+`docs/local-run/local-usable-run-loop.md`
+
+The report returns `go`, `review`, or `blocked` by checking the already-running local service through `/live`, `/ready`, `/health`, provider manifest, preflight, RAG retrieve, and RAG answer. It is intentionally local and lightweight: it does not start the server, download models, start Qdrant/pgvector, rebuild indexes, create source bindings, promote retrieval defaults, or execute GraphRAG.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

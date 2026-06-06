@@ -1,0 +1,128 @@
+{
+  "id": "local-usable-run-loop-v1",
+  "generated_at": "2026-06-06T07:35:13.461006+00:00",
+  "base_url": "http://127.0.0.1:8020",
+  "decision": "go",
+  "reason_code": "local_provider_usable",
+  "query": "客户三天未发货能否退款？",
+  "source_id": "refund_policy_docs",
+  "top_k": 3,
+  "summary": {
+    "decision": "go",
+    "ready_checks": 7,
+    "review_checks": 0,
+    "blocked_checks": 0,
+    "retrieve_document_count": 3,
+    "retrieve_evidence_pack_status": "answerable",
+    "retrieve_allowed_citation_count": 3,
+    "answer_status": "answered",
+    "answer_citation_count": 3,
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "backend_promotion_status": "not_promoted_by_local_run_loop",
+    "graph_execution_status": "not_executed"
+  },
+  "checks": [
+    {
+      "name": "live_probe",
+      "endpoint": "GET /live",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "service": "unifiedKnowledgeProvider",
+        "status": "live"
+      },
+      "error": null
+    },
+    {
+      "name": "ready_probe",
+      "endpoint": "GET /ready",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "status": "ok"
+      },
+      "error": null
+    },
+    {
+      "name": "health_readiness",
+      "endpoint": "GET /health",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "service": "unifiedKnowledgeProvider",
+        "status": "ok",
+        "rag_status": "ready",
+        "answer_status": "ready"
+      },
+      "error": null
+    },
+    {
+      "name": "provider_manifest",
+      "endpoint": "GET /api/provider/manifest",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "provider_id": "unifiedKnowledgeProvider",
+        "contract_version": "knowledge-provider-contract-v1",
+        "manifest_version": "provider-integration-manifest-v1"
+      },
+      "error": null
+    },
+    {
+      "name": "provider_preflight",
+      "endpoint": "GET /api/provider/preflight",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "bindable": true,
+        "contract_version": "knowledge-provider-contract-v1",
+        "check_count": 6
+      },
+      "error": null
+    },
+    {
+      "name": "rag_retrieve",
+      "endpoint": "POST /api/rag/retrieve",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "ok": true,
+        "document_count": 3,
+        "evidence_pack_status": "answerable",
+        "allowed_citation_count": 3
+      },
+      "error": null
+    },
+    {
+      "name": "rag_answer",
+      "endpoint": "POST /api/rag/answer",
+      "status": "ready",
+      "passed": true,
+      "http_status_code": 200,
+      "details": {
+        "answer_status": "answered",
+        "citation_count": 3
+      },
+      "error": null
+    }
+  ],
+  "recommended_actions": [
+    "use_http_127_0_0_1_8020_as_local_provider_url",
+    "connect_myprivateagent_to_local_provider_when_needed",
+    "keep_runtime_defaults_unchanged"
+  ],
+  "notes": [
+    "This report validates an already-running local provider service.",
+    "It does not start uvicorn, download models, start Docker/Qdrant/pgvector, rebuild indexes, create source bindings, promote retrieval defaults, or execute GraphRAG.",
+    "The default query and source are fixture-friendly local smoke inputs, not production corpus approval.",
+    "No provider API key was supplied; this is expected for default local development."
+  ],
+  "json_path": "docs\\local-run\\local-usable-run-loop.json",
+  "markdown_path": "docs\\local-run\\local-usable-run-loop.md"
+}

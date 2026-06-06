@@ -1,8 +1,7 @@
 # provider-workstream-rebaseline Specification
 
-## Purpose
-TBD - created by archiving change rebaseline-provider-workstreams-after-access-closure. Update Purpose after archive.
-## Requirements
+## MODIFIED Requirements
+
 ### Requirement: Provider publishes post-access workstream rebaseline
 The system SHALL publish a read-only workstream rebaseline after MyPrivateAgent access readiness and live trial feedback are closed.
 
@@ -30,15 +29,3 @@ The system SHALL publish a read-only workstream rebaseline after MyPrivateAgent 
 - **WHEN** the user goal is local service usability rather than deployment
 - **THEN** the workstream baseline allows a local run-loop smoke that validates an already-running service
 - **AND** it does not reopen access-readiness phases or promote backend candidates
-
-### Requirement: Workstream rebaseline remains read-only
-The workstream rebaseline SHALL NOT mutate provider runtime behavior or caller-owned control-plane decisions.
-
-#### Scenario: Rebaseline report is exported
-- **WHEN** the export command runs
-- **THEN** it writes JSON and Markdown artifacts without calling provider HTTP endpoints, refreshing all evidence, changing retrieval defaults, creating source bindings, adding parsers, rebuilding indexes, or executing GraphRAG
-
-#### Scenario: Future work requires trigger conditions
-- **WHEN** a future OpenSpec change is proposed after this rebaseline
-- **THEN** it declares whether it is triggered by a real trial bug, corpus/parser demand, backend promotion evidence, deployment-owner request, graph-heavy use case, or another explicit rationale
-

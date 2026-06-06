@@ -121,6 +121,22 @@ Provider error envelope 保持 `ok=false`、`result=null`、`error.code` 和 `er
 conda run -n GRAPHRAG uvicorn app.main:app --reload --port 8020
 ```
 
+启动后，可以在另一个终端导出本地最小可用闭环报告：
+
+```powershell
+conda run -n GRAPHRAG python scripts/export_local_usable_run_loop.py `
+  --base-url http://127.0.0.1:8020
+```
+
+默认输出：
+
+```text
+docs/local-run/local-usable-run-loop.json
+docs/local-run/local-usable-run-loop.md
+```
+
+该报告只验证已经运行的本地 provider：`/live`、`/ready`、`/health`、provider manifest、preflight、RAG retrieve 和 RAG answer。`Decision: go` 表示本地服务可以进入调用方试接；`review` 表示需要检查 fixture query、source id 或本地语料；`blocked` 表示服务不可达或合同路径失败。它不会启动服务、下载模型、启动 Qdrant/pgvector、重建索引、创建 source binding、切换检索默认值或执行 GraphRAG。
+
 ## 轻量容器部署
 
 项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：
