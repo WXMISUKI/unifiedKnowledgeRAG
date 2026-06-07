@@ -1,0 +1,950 @@
+[
+  {
+    "chunk_id": "chunk-1",
+    "citation": "company_profile_2025_trial#chunk-1",
+    "text": "<!-- artifact_id: company_profile_2025_trial_paddleocr_pdf_pages_1_5 source_id: company_profile_2025_trial parser_id: paddleocr-http-ocr-provider-v1 original_file: D:\\xwechat_files\\wxid_pc6sc451nt9022_dea0\\msg\\file\\2026-06\\公司简介2025年10月27日(1).pdf -->",
+    "char_count": 249
+  },
+  {
+    "chunk_id": "chunk-2",
+    "citation": "company_profile_2025_trial#chunk-2",
+    "text": "<!-- citation: company_profile_2025_trial#page-1 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-3",
+    "citation": "company_profile_2025_trial#chunk-3",
+    "text": "江苏交通工程咨询监理有限公司",
+    "char_count": 14
+  },
+  {
+    "chunk_id": "chunk-4",
+    "citation": "company_profile_2025_trial#chunk-4",
+    "text": "<!-- citation: company_profile_2025_trial#page-1 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-5",
+    "citation": "company_profile_2025_trial#chunk-5",
+    "text": "<!-- citation: company_profile_2025_trial#page-1 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-6",
+    "citation": "company_profile_2025_trial#chunk-6",
+    "text": "J.S.TRAFFIC ENGINEERING CONSULTING & SUPERVISIoNCO., LTD",
+    "char_count": 56
+  },
+  {
+    "chunk_id": "chunk-7",
+    "citation": "company_profile_2025_trial#chunk-7",
+    "text": "<!-- citation: company_profile_2025_trial#page-1 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-8",
+    "citation": "company_profile_2025_trial#chunk-8",
+    "text": "<!-- citation: company_profile_2025_trial#page-1 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-9",
+    "citation": "company_profile_2025_trial#chunk-9",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-10",
+    "citation": "company_profile_2025_trial#chunk-10",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-11",
+    "citation": "company_profile_2025_trial#chunk-11",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-12",
+    "citation": "company_profile_2025_trial#chunk-12",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-13",
+    "citation": "company_profile_2025_trial#chunk-13",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-14",
+    "citation": "company_profile_2025_trial#chunk-14",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-15",
+    "citation": "company_profile_2025_trial#chunk-15",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-16",
+    "citation": "company_profile_2025_trial#chunk-16",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-17",
+    "citation": "company_profile_2025_trial#chunk-17",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-18",
+    "citation": "company_profile_2025_trial#chunk-18",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-19",
+    "citation": "company_profile_2025_trial#chunk-19",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-20",
+    "citation": "company_profile_2025_trial#chunk-20",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-21",
+    "citation": "company_profile_2025_trial#chunk-21",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-22",
+    "citation": "company_profile_2025_trial#chunk-22",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-23",
+    "citation": "company_profile_2025_trial#chunk-23",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-24",
+    "citation": "company_profile_2025_trial#chunk-24",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-25",
+    "citation": "company_profile_2025_trial#chunk-25",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-26",
+    "citation": "company_profile_2025_trial#chunk-26",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-27",
+    "citation": "company_profile_2025_trial#chunk-27",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-28",
+    "citation": "company_profile_2025_trial#chunk-28",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-29",
+    "citation": "company_profile_2025_trial#chunk-29",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-30",
+    "citation": "company_profile_2025_trial#chunk-30",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-31",
+    "citation": "company_profile_2025_trial#chunk-31",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-32",
+    "citation": "company_profile_2025_trial#chunk-32",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-33",
+    "citation": "company_profile_2025_trial#chunk-33",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-34",
+    "citation": "company_profile_2025_trial#chunk-34",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-35",
+    "citation": "company_profile_2025_trial#chunk-35",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-36",
+    "citation": "company_profile_2025_trial#chunk-36",
+    "text": "五、近年来主要监理业绩……",
+    "char_count": 13
+  },
+  {
+    "chunk_id": "chunk-37",
+    "citation": "company_profile_2025_trial#chunk-37",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-38",
+    "citation": "company_profile_2025_trial#chunk-38",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-39",
+    "citation": "company_profile_2025_trial#chunk-39",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-40",
+    "citation": "company_profile_2025_trial#chunk-40",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-41",
+    "citation": "company_profile_2025_trial#chunk-41",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-42",
+    "citation": "company_profile_2025_trial#chunk-42",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-43",
+    "citation": "company_profile_2025_trial#chunk-43",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-44",
+    "citation": "company_profile_2025_trial#chunk-44",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-45",
+    "citation": "company_profile_2025_trial#chunk-45",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-46",
+    "citation": "company_profile_2025_trial#chunk-46",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-47",
+    "citation": "company_profile_2025_trial#chunk-47",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-48",
+    "citation": "company_profile_2025_trial#chunk-48",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-49",
+    "citation": "company_profile_2025_trial#chunk-49",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-50",
+    "citation": "company_profile_2025_trial#chunk-50",
+    "text": "十一、主要获奖证书………",
+    "char_count": 12
+  },
+  {
+    "chunk_id": "chunk-51",
+    "citation": "company_profile_2025_trial#chunk-51",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-52",
+    "citation": "company_profile_2025_trial#chunk-52",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-53",
+    "citation": "company_profile_2025_trial#chunk-53",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-54",
+    "citation": "company_profile_2025_trial#chunk-54",
+    "text": "十二、桥梁工程预制拼装监理实践……",
+    "char_count": 17
+  },
+  {
+    "chunk_id": "chunk-55",
+    "citation": "company_profile_2025_trial#chunk-55",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-56",
+    "citation": "company_profile_2025_trial#chunk-56",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-57",
+    "citation": "company_profile_2025_trial#chunk-57",
+    "text": "<!-- citation: company_profile_2025_trial#page-3 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-58",
+    "citation": "company_profile_2025_trial#chunk-58",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-59",
+    "citation": "company_profile_2025_trial#chunk-59",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-60",
+    "citation": "company_profile_2025_trial#chunk-60",
+    "text": "江苏交通工程咨询监理有限公司成立于1993年5月，拥有公路工程监理甲级、",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-61",
+    "citation": "company_profile_2025_trial#chunk-61",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-62",
+    "citation": "company_profile_2025_trial#chunk-62",
+    "text": "水运工程监理甲级、特殊独立大桥监理专项、特殊独立隧道监理专项、机电工程监",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-63",
+    "citation": "company_profile_2025_trial#chunk-63",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-64",
+    "citation": "company_profile_2025_trial#chunk-64",
+    "text": "理专项资质、市政公用工程监理乙级、公路工程综合乙级试验检测资质；公司通过",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-65",
+    "citation": "company_profile_2025_trial#chunk-65",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-66",
+    "citation": "company_profile_2025_trial#chunk-66",
+    "text": "了IS09001质量管理体系认证、IS014001环境管理体系认证、GB/T28001职业健康安",
+    "char_count": 48
+  },
+  {
+    "chunk_id": "chunk-67",
+    "citation": "company_profile_2025_trial#chunk-67",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-68",
+    "citation": "company_profile_2025_trial#chunk-68",
+    "text": "全管理体系认证，是江苏省科委、江苏省工商局和江苏省科协确认的“AAA”级信誉",
+    "char_count": 38
+  },
+  {
+    "chunk_id": "chunk-69",
+    "citation": "company_profile_2025_trial#chunk-69",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-70",
+    "citation": "company_profile_2025_trial#chunk-70",
+    "text": "企业、江苏省文明单位、江苏省交通建设监理协会副理事长单位、中国交通监理常",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-71",
+    "citation": "company_profile_2025_trial#chunk-71",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-72",
+    "citation": "company_profile_2025_trial#chunk-72",
+    "text": "务理事单位；2016年度监理信用评价交通运输部、上海市“AA”级、江苏省、福建",
+    "char_count": 39
+  },
+  {
+    "chunk_id": "chunk-73",
+    "citation": "company_profile_2025_trial#chunk-73",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-74",
+    "citation": "company_profile_2025_trial#chunk-74",
+    "text": "省、河北省、云南省“A”级企业。",
+    "char_count": 16
+  },
+  {
+    "chunk_id": "chunk-75",
+    "citation": "company_profile_2025_trial#chunk-75",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-76",
+    "citation": "company_profile_2025_trial#chunk-76",
+    "text": "公司主要经营高等级公路、大型桥梁和隧道工程及水运工程的施工监理、技术",
+    "char_count": 34
+  },
+  {
+    "chunk_id": "chunk-77",
+    "citation": "company_profile_2025_trial#chunk-77",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-78",
+    "citation": "company_profile_2025_trial#chunk-78",
+    "text": "咨询、技术服务，工程项目管理，建设工程的项目管理、技术咨询，市政公用工程",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-79",
+    "citation": "company_profile_2025_trial#chunk-79",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-80",
+    "citation": "company_profile_2025_trial#chunk-80",
+    "text": "监理。公司设市场开发部、财务审计部、办公室、中心试验室，现有员工478名，",
+    "char_count": 37
+  },
+  {
+    "chunk_id": "chunk-81",
+    "citation": "company_profile_2025_trial#chunk-81",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-82",
+    "citation": "company_profile_2025_trial#chunk-82",
+    "text": "高、中级技术人员285名，有国家注册工程师261名，其中：住建部注册结构师1人、",
+    "char_count": 40
+  },
+  {
+    "chunk_id": "chunk-83",
+    "citation": "company_profile_2025_trial#chunk-83",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-84",
+    "citation": "company_profile_2025_trial#chunk-84",
+    "text": "住建部注册造价工程师5人、住建部注册监理工程师30人、国家注册咨询工程师15",
+    "char_count": 38
+  },
+  {
+    "chunk_id": "chunk-85",
+    "citation": "company_profile_2025_trial#chunk-85",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-86",
+    "citation": "company_profile_2025_trial#chunk-86",
+    "text": "人、国家注册招标师33人、交通运输部注册监理工程师177人（含专业、交通运输",
+    "char_count": 38
+  },
+  {
+    "chunk_id": "chunk-87",
+    "citation": "company_profile_2025_trial#chunk-87",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-88",
+    "citation": "company_profile_2025_trial#chunk-88",
+    "text": "部注册造价工程师8人、交通运输部公路工程试验检测工程师46人、交通运输部公",
+    "char_count": 37
+  },
+  {
+    "chunk_id": "chunk-89",
+    "citation": "company_profile_2025_trial#chunk-89",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-90",
+    "citation": "company_profile_2025_trial#chunk-90",
+    "text": "路工程试验检测员32人；公司现有12个工地试验室，13个试验检测专业、111个参",
+    "char_count": 40
+  },
+  {
+    "chunk_id": "chunk-91",
+    "citation": "company_profile_2025_trial#chunk-91",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-92",
+    "citation": "company_profile_2025_trial#chunk-92",
+    "text": "数1380余台（套）试验检测仪器设备。",
+    "char_count": 19
+  },
+  {
+    "chunk_id": "chunk-93",
+    "citation": "company_profile_2025_trial#chunk-93",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-94",
+    "citation": "company_profile_2025_trial#chunk-94",
+    "text": "公司完成了近2800km高速公路、450座独立特大桥、大中桥工程、42km隧道",
+    "char_count": 39
+  },
+  {
+    "chunk_id": "chunk-95",
+    "citation": "company_profile_2025_trial#chunk-95",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-96",
+    "citation": "company_profile_2025_trial#chunk-96",
+    "text": "新建工程、460km高速公路扩建工程施工监理及20余项代建（项目管理工程），年",
+    "char_count": 39
+  },
+  {
+    "chunk_id": "chunk-97",
+    "citation": "company_profile_2025_trial#chunk-97",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-98",
+    "citation": "company_profile_2025_trial#chunk-98",
+    "text": "产值达到2亿元。自成立起，始终秉持“廉洁、尽责、精细、耐劳、分忧”的服务",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-99",
+    "citation": "company_profile_2025_trial#chunk-99",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-100",
+    "citation": "company_profile_2025_trial#chunk-100",
+    "text": "理念，持续发扬“守法公正、诚信履约、科学管理、创新服务”的公司精神，以诚",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-101",
+    "citation": "company_profile_2025_trial#chunk-101",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-102",
+    "citation": "company_profile_2025_trial#chunk-102",
+    "text": "信履约为核心，全体员工牢固树立了“细节决定成败、细节决定品牌”的意识，以",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-103",
+    "citation": "company_profile_2025_trial#chunk-103",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-104",
+    "citation": "company_profile_2025_trial#chunk-104",
+    "text": "“今天的业主是我们永远的业主”为服务宗旨，践行“用诚信和实力塑造公司品牌”",
+    "char_count": 37
+  },
+  {
+    "chunk_id": "chunk-105",
+    "citation": "company_profile_2025_trial#chunk-105",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-106",
+    "citation": "company_profile_2025_trial#chunk-106",
+    "text": "的企业核心价值观，认真履行“公正、科学、诚信、自律”职业准则，形成遵纪、",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-107",
+    "citation": "company_profile_2025_trial#chunk-107",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-108",
+    "citation": "company_profile_2025_trial#chunk-108",
+    "text": "敬业、爱岗的良好氛围，在激烈的市场竞争中屡创佳绩，连续获得国家、部、省、",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-109",
+    "citation": "company_profile_2025_trial#chunk-109",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-110",
+    "citation": "company_profile_2025_trial#chunk-110",
+    "text": "市颁发的国家优质工程奖、鲁班奖、詹天佑奖、市政金杯示范奖、公路交通优质奖",
+    "char_count": 36
+  },
+  {
+    "chunk_id": "chunk-111",
+    "citation": "company_profile_2025_trial#chunk-111",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-112",
+    "citation": "company_profile_2025_trial#chunk-112",
+    "text": "（李春奖）、省级优质工程奖等表彰130余项。",
+    "char_count": 22
+  },
+  {
+    "chunk_id": "chunk-113",
+    "citation": "company_profile_2025_trial#chunk-113",
+    "text": "<!-- citation: company_profile_2025_trial#page-4 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-114",
+    "citation": "company_profile_2025_trial#chunk-114",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-115",
+    "citation": "company_profile_2025_trial#chunk-115",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-116",
+    "citation": "company_profile_2025_trial#chunk-116",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-117",
+    "citation": "company_profile_2025_trial#chunk-117",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-118",
+    "citation": "company_profile_2025_trial#chunk-118",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-119",
+    "citation": "company_profile_2025_trial#chunk-119",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-120",
+    "citation": "company_profile_2025_trial#chunk-120",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-121",
+    "citation": "company_profile_2025_trial#chunk-121",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-122",
+    "citation": "company_profile_2025_trial#chunk-122",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-123",
+    "citation": "company_profile_2025_trial#chunk-123",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-124",
+    "citation": "company_profile_2025_trial#chunk-124",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-125",
+    "citation": "company_profile_2025_trial#chunk-125",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-126",
+    "citation": "company_profile_2025_trial#chunk-126",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-127",
+    "citation": "company_profile_2025_trial#chunk-127",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-128",
+    "citation": "company_profile_2025_trial#chunk-128",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-129",
+    "citation": "company_profile_2025_trial#chunk-129",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-130",
+    "citation": "company_profile_2025_trial#chunk-130",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-131",
+    "citation": "company_profile_2025_trial#chunk-131",
+    "text": "公司设立了市场开发部、财务审计部、办公室、中心试验室的二部二室管理构",
+    "char_count": 34
+  },
+  {
+    "chunk_id": "chunk-132",
+    "citation": "company_profile_2025_trial#chunk-132",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-133",
+    "citation": "company_profile_2025_trial#chunk-133",
+    "text": "架，并先后成立了江苏安泰路桥工程检测有限公司、江苏茂森工程咨询监理有限",
+    "char_count": 35
+  },
+  {
+    "chunk_id": "chunk-134",
+    "citation": "company_profile_2025_trial#chunk-134",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-135",
+    "citation": "company_profile_2025_trial#chunk-135",
+    "text": "公司（原名：江苏茂盛工程咨询监理有限公司）两个独资子公司。",
+    "char_count": 29
+  },
+  {
+    "chunk_id": "chunk-136",
+    "citation": "company_profile_2025_trial#chunk-136",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-137",
+    "citation": "company_profile_2025_trial#chunk-137",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-138",
+    "citation": "company_profile_2025_trial#chunk-138",
+    "text": "董事长：徐金法，硕士，高级工程师，国家注册结构工程师、国家注册监理工",
+    "char_count": 34
+  },
+  {
+    "chunk_id": "chunk-139",
+    "citation": "company_profile_2025_trial#chunk-139",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-140",
+    "citation": "company_profile_2025_trial#chunk-140",
+    "text": "程师，交通运输部监理工程师，注册咨询工程师（投资）、国家注册招标师、江",
+    "char_count": 35
+  },
+  {
+    "chunk_id": "chunk-141",
+    "citation": "company_profile_2025_trial#chunk-141",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-142",
+    "citation": "company_profile_2025_trial#chunk-142",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-143",
+    "citation": "company_profile_2025_trial#chunk-143",
+    "text": "法定代表人、总经理：王国华，本科，高级工程师，国家注册监理工程师、交",
+    "char_count": 34
+  },
+  {
+    "chunk_id": "chunk-144",
+    "citation": "company_profile_2025_trial#chunk-144",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-145",
+    "citation": "company_profile_2025_trial#chunk-145",
+    "text": "通运输部注册监理工程师、国家注册咨询（投资）工程师，交通运输部交通建设",
+    "char_count": 35
+  },
+  {
+    "chunk_id": "chunk-146",
+    "citation": "company_profile_2025_trial#chunk-146",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-147",
+    "citation": "company_profile_2025_trial#chunk-147",
+    "text": "优秀监理工程师、江苏省交通行业第五届“金桥奖”、2008年度和2009年度上海",
+    "char_count": 39
+  },
+  {
+    "chunk_id": "chunk-148",
+    "citation": "company_profile_2025_trial#chunk-148",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-149",
+    "citation": "company_profile_2025_trial#chunk-149",
+    "text": "市政重大工程赛区立功竞赛先进个人；",
+    "char_count": 17
+  },
+  {
+    "chunk_id": "chunk-150",
+    "citation": "company_profile_2025_trial#chunk-150",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-151",
+    "citation": "company_profile_2025_trial#chunk-151",
+    "text": "总工程师：李兵，工程硕士，高级工程师，交通运输部注册监理工程师、交通",
+    "char_count": 34
+  },
+  {
+    "chunk_id": "chunk-152",
+    "citation": "company_profile_2025_trial#chunk-152",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-153",
+    "citation": "company_profile_2025_trial#chunk-153",
+    "text": "运输部造价工程师、国家注册造价工程师、国家注册监理工程师，国家注册咨询",
+    "char_count": 35
+  },
+  {
+    "chunk_id": "chunk-154",
+    "citation": "company_profile_2025_trial#chunk-154",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-155",
+    "citation": "company_profile_2025_trial#chunk-155",
+    "text": "工程师（投资），南京市交通局十佳监理工程师，南通绕城高速项目先进个人，",
+    "char_count": 35
+  },
+  {
+    "chunk_id": "chunk-156",
+    "citation": "company_profile_2025_trial#chunk-156",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-157",
+    "citation": "company_profile_2025_trial#chunk-157",
+    "text": "2022年度交通建设优秀监理工程师。",
+    "char_count": 18
+  },
+  {
+    "chunk_id": "chunk-158",
+    "citation": "company_profile_2025_trial#chunk-158",
+    "text": "<!-- citation: company_profile_2025_trial#page-5 -->",
+    "char_count": 52
+  }
+]

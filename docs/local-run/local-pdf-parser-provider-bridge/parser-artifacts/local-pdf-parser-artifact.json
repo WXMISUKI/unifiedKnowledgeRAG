@@ -1,0 +1,924 @@
+{
+  "artifact_id": "company_profile_2025_trial_paddleocr_pdf_pages_1_5",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "owner": "local_pdf_parser_provider_bridge",
+  "domain": "local_business_corpus",
+  "language": "zh-CN",
+  "sensitivity": "local_private_trial",
+  "original_file": {
+    "path": "D:\\xwechat_files\\wxid_pc6sc451nt9022_dea0\\msg\\file\\2026-06\\公司简介2025年10月27日(1).pdf",
+    "name": "公司简介2025年10月27日(1).pdf",
+    "sha256": "674ef20cef125ea915459306f1e911a26533f2ab7cd13676cf7a6e8e53b41fb7",
+    "page_range": "1-5"
+  },
+  "parser": {
+    "parser_id": "paddleocr-http-ocr-provider-v1",
+    "parser_version": "local-trial",
+    "parsed_at": "2026-06-07T10:42:04.912761+00:00",
+    "provider_url": "http://127.0.0.1:8080",
+    "provider_path": "/ocr"
+  },
+  "text_blocks": [
+    {
+      "block_id": "page-1-block-1",
+      "text": "江苏交通工程咨询监理有限公司",
+      "citation": "company_profile_2025_trial#page-1",
+      "provenance": {
+        "page": 1
+      }
+    },
+    {
+      "block_id": "page-1-block-2",
+      "text": "JSTECS",
+      "citation": "company_profile_2025_trial#page-1",
+      "provenance": {
+        "page": 1
+      }
+    },
+    {
+      "block_id": "page-1-block-3",
+      "text": "J.S.TRAFFIC ENGINEERING CONSULTING & SUPERVISIoNCO., LTD",
+      "citation": "company_profile_2025_trial#page-1",
+      "provenance": {
+        "page": 1
+      }
+    },
+    {
+      "block_id": "page-1-block-4",
+      "text": "公路业绩介绍材料",
+      "citation": "company_profile_2025_trial#page-1",
+      "provenance": {
+        "page": 1
+      }
+    },
+    {
+      "block_id": "page-1-block-5",
+      "text": "中国·江苏·南京",
+      "citation": "company_profile_2025_trial#page-1",
+      "provenance": {
+        "page": 1
+      }
+    },
+    {
+      "block_id": "page-2-block-1",
+      "text": "企业宗旨：",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-2",
+      "text": "公正、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-3",
+      "text": "科学、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-4",
+      "text": "诚信、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-5",
+      "text": "自律",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-6",
+      "text": "服务理念：",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-7",
+      "text": "廉洁、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-8",
+      "text": "尽责、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-9",
+      "text": "精细、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-10",
+      "text": "耐劳、分忧",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-11",
+      "text": "公司精神：",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-12",
+      "text": "守法公正、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-13",
+      "text": "诚信履约、",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-14",
+      "text": "科学管理、创新服",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-2-block-15",
+      "text": "务",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    },
+    {
+      "block_id": "page-3-block-1",
+      "text": "目录",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-2",
+      "text": "一、公司简介…",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-3",
+      "text": ".2",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-4",
+      "text": "←",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-5",
+      "text": "二、组织机构……",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-6",
+      "text": "3",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-7",
+      "text": "←",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-8",
+      "text": "三、资质证书…",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-9",
+      "text": "←",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-10",
+      "text": "四、体系认证…",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-11",
+      "text": "K",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-12",
+      "text": "五、近年来主要监理业绩……",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-13",
+      "text": "6",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-14",
+      "text": "→",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-15",
+      "text": "……",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-16",
+      "text": "2",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-17",
+      "text": "!",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-18",
+      "text": "（）",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-19",
+      "text": "→",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-20",
+      "text": "（",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-21",
+      "text": "7",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-22",
+      "text": "…（）",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-23",
+      "text": "!",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-24",
+      "text": "·26",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-25",
+      "text": "十一、主要获奖证书………",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-26",
+      "text": "←",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-27",
+      "text": "·28",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-28",
+      "text": "十二、桥梁工程预制拼装监理实践……",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-29",
+      "text": "←",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-30",
+      "text": "·37",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-3-block-31",
+      "text": "1",
+      "citation": "company_profile_2025_trial#page-3",
+      "provenance": {
+        "page": 3
+      }
+    },
+    {
+      "block_id": "page-4-block-1",
+      "text": "一、公司简介",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-2",
+      "text": "江苏交通工程咨询监理有限公司成立于1993年5月，拥有公路工程监理甲级、",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-3",
+      "text": "水运工程监理甲级、特殊独立大桥监理专项、特殊独立隧道监理专项、机电工程监",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-4",
+      "text": "理专项资质、市政公用工程监理乙级、公路工程综合乙级试验检测资质；公司通过",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-5",
+      "text": "了IS09001质量管理体系认证、IS014001环境管理体系认证、GB/T28001职业健康安",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-6",
+      "text": "全管理体系认证，是江苏省科委、江苏省工商局和江苏省科协确认的“AAA”级信誉",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-7",
+      "text": "企业、江苏省文明单位、江苏省交通建设监理协会副理事长单位、中国交通监理常",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-8",
+      "text": "务理事单位；2016年度监理信用评价交通运输部、上海市“AA”级、江苏省、福建",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-9",
+      "text": "省、河北省、云南省“A”级企业。",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-10",
+      "text": "公司主要经营高等级公路、大型桥梁和隧道工程及水运工程的施工监理、技术",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-11",
+      "text": "咨询、技术服务，工程项目管理，建设工程的项目管理、技术咨询，市政公用工程",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-12",
+      "text": "监理。公司设市场开发部、财务审计部、办公室、中心试验室，现有员工478名，",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-13",
+      "text": "高、中级技术人员285名，有国家注册工程师261名，其中：住建部注册结构师1人、",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-14",
+      "text": "住建部注册造价工程师5人、住建部注册监理工程师30人、国家注册咨询工程师15",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-15",
+      "text": "人、国家注册招标师33人、交通运输部注册监理工程师177人（含专业、交通运输",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-16",
+      "text": "部注册造价工程师8人、交通运输部公路工程试验检测工程师46人、交通运输部公",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-17",
+      "text": "路工程试验检测员32人；公司现有12个工地试验室，13个试验检测专业、111个参",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-18",
+      "text": "数1380余台（套）试验检测仪器设备。",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-19",
+      "text": "公司完成了近2800km高速公路、450座独立特大桥、大中桥工程、42km隧道",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-20",
+      "text": "新建工程、460km高速公路扩建工程施工监理及20余项代建（项目管理工程），年",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-21",
+      "text": "产值达到2亿元。自成立起，始终秉持“廉洁、尽责、精细、耐劳、分忧”的服务",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-22",
+      "text": "理念，持续发扬“守法公正、诚信履约、科学管理、创新服务”的公司精神，以诚",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-23",
+      "text": "信履约为核心，全体员工牢固树立了“细节决定成败、细节决定品牌”的意识，以",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-24",
+      "text": "“今天的业主是我们永远的业主”为服务宗旨，践行“用诚信和实力塑造公司品牌”",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-25",
+      "text": "的企业核心价值观，认真履行“公正、科学、诚信、自律”职业准则，形成遵纪、",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-26",
+      "text": "敬业、爱岗的良好氛围，在激烈的市场竞争中屡创佳绩，连续获得国家、部、省、",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-27",
+      "text": "市颁发的国家优质工程奖、鲁班奖、詹天佑奖、市政金杯示范奖、公路交通优质奖",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-28",
+      "text": "（李春奖）、省级优质工程奖等表彰130余项。",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-4-block-29",
+      "text": "2",
+      "citation": "company_profile_2025_trial#page-4",
+      "provenance": {
+        "page": 4
+      }
+    },
+    {
+      "block_id": "page-5-block-1",
+      "text": "二、组织机构",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-2",
+      "text": "董事会",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-3",
+      "text": "经营层",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-4",
+      "text": "市场",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-5",
+      "text": "财务",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-6",
+      "text": "办",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-7",
+      "text": "中心",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-8",
+      "text": "开发",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-9",
+      "text": "审计",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-10",
+      "text": "公",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-11",
+      "text": "试验",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-12",
+      "text": "室",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-13",
+      "text": "部",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-14",
+      "text": "部",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-15",
+      "text": "室",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-16",
+      "text": "各项目组",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-17",
+      "text": "公司设立了市场开发部、财务审计部、办公室、中心试验室的二部二室管理构",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-18",
+      "text": "架，并先后成立了江苏安泰路桥工程检测有限公司、江苏茂森工程咨询监理有限",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-19",
+      "text": "公司（原名：江苏茂盛工程咨询监理有限公司）两个独资子公司。",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-20",
+      "text": "公司主要管理人员：",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-21",
+      "text": "董事长：徐金法，硕士，高级工程师，国家注册结构工程师、国家注册监理工",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-22",
+      "text": "程师，交通运输部监理工程师，注册咨询工程师（投资）、国家注册招标师、江",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-23",
+      "text": "苏省注册咨询专家；",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-24",
+      "text": "法定代表人、总经理：王国华，本科，高级工程师，国家注册监理工程师、交",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-25",
+      "text": "通运输部注册监理工程师、国家注册咨询（投资）工程师，交通运输部交通建设",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-26",
+      "text": "优秀监理工程师、江苏省交通行业第五届“金桥奖”、2008年度和2009年度上海",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-27",
+      "text": "市政重大工程赛区立功竞赛先进个人；",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-28",
+      "text": "总工程师：李兵，工程硕士，高级工程师，交通运输部注册监理工程师、交通",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-29",
+      "text": "运输部造价工程师、国家注册造价工程师、国家注册监理工程师，国家注册咨询",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-30",
+      "text": "工程师（投资），南京市交通局十佳监理工程师，南通绕城高速项目先进个人，",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-31",
+      "text": "2022年度交通建设优秀监理工程师。",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    },
+    {
+      "block_id": "page-5-block-32",
+      "text": "3",
+      "citation": "company_profile_2025_trial#page-5",
+      "provenance": {
+        "page": 5
+      }
+    }
+  ],
+  "raw_provider_summary": {
+    "errorCode": 0,
+    "has_result": true
+  }
+}

@@ -99,8 +99,8 @@
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 - Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
 - Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; Stage 1 MyPrivateAgent business Q&A loop and Stage 2 provider document ingestion loop are closed for the current local company-profile trial.
-- Stage 3 parser adapter boundary and Stage 3b parser-artifact-to-ingestion loop are closed for the current local company-profile trial.
-- Parser-derived corpus retrieval quality baseline is now the active quality gate before Stage 4 candidate backend review; current default run is `review` because answerable cases hit expected citations but expected-empty negative controls still return evidence.
+- Stage 3 parser adapter boundary, Stage 3b parser-artifact-to-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial.
+- Local PDF parser provider bridge is complete for the current company-profile PDF trial; future parser work should be triggered by real document-type or answer-quality gaps rather than continuing provider evidence-chain expansion.
 
 ## Benchmark Fixture Scope
 
@@ -293,6 +293,7 @@
 - Normalized parser artifact ingestion boundary implemented (`add-normalized-parser-artifact-ingestion-boundary`), starting Stage 3 by validating external parser artifact JSON and materializing markdown/source-overlay inputs without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
 - Parser artifact local ingestion loop implemented (`add-parser-artifact-local-ingestion-loop`), closing Stage 3b by chaining normalized parser artifact validation/materialization into the existing approved-source ingestion loop without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, source binding, or GraphRAG execution.
 - Parser-derived corpus retrieval quality baseline implemented (`add-parser-derived-corpus-retrieval-quality-baseline`), establishing a local quality gate over answerable parser-derived business questions and expected-empty negative controls before Stage 4 candidate backend review.
+- Local PDF parser provider bridge implemented (`add-local-pdf-parser-provider-bridge`), closing the first real-PDF provider-side bridge by calling an operator-started PaddleOCR `/ocr` service, writing a normalized parser artifact, and reusing the existing parser-artifact local ingestion loop with `decision=go` for the company profile PDF first-five-page trial.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -310,7 +311,7 @@
 - Keep deployment readiness review notes actionable until non-mock embedding/retrieval candidates are promoted by evidence.
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
-- Keep parser expansion (PDF/Word/Excel/OCR) deferred until real corpus demand and separate evidence-backed changes.
+- Keep further parser expansion (Word/Excel/image OCR, layout/table specialization, or MyPrivateAgent upload orchestration) trigger-driven by real corpus demand; the first local PDF bridge is now available.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
 - Use Phase 25 MyPrivateAgent live trial outcome feedback as the provider-side closure point instead of reopening provider-side evidence-chain tuning loops.
@@ -436,6 +437,10 @@
   - Status: `review`
   - Change: `add-parser-derived-corpus-retrieval-quality-baseline`
   - Gate target: local quality baseline over parser-derived company-profile source before candidate backend review; not Qdrant/pgvector/BGE-M3 promotion, rerank, source binding, MyPrivateAgent orchestration, or GraphRAG execution.
+- Local PDF Parser Provider Bridge
+  - Status: `completed`
+  - Change: `add-local-pdf-parser-provider-bridge`
+  - Gate target: local real-PDF to PaddleOCR provider to normalized parser artifact to existing RAG ingestion loop; not OCR service startup, MyPrivateAgent middleman orchestration, source binding, backend promotion, or GraphRAG execution.
 
 ## Latest Refresh
 

@@ -17,9 +17,9 @@ This note keeps the next RAG work practical. The goal is to make the local provi
 
 ## Immediate Next Stage
 
-Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition and Stage 3b parser-artifact-to-local-ingestion loop are closed. The immediate next slice is the parser-derived corpus retrieval quality baseline before any Stage 4 candidate backend review.
+Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition, Stage 3b parser-artifact-to-local-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial. The current practical state is: a real local PDF can be parsed by an operator-started PaddleOCR service, normalized into a parser artifact, and ingested through the existing local RAG loop with `decision=go`.
 
-The quality baseline command should verify answerable parser-derived business questions, expected-empty negative controls, citation match rate, and invalid citation count while keeping Qdrant/pgvector/BGE-M3 promotion, parser/OCR execution, MyPrivateAgent orchestration, source binding, and GraphRAG execution out of provider defaults.
+The next slice should move only when a concrete business need appears. Likely candidates are MyPrivateAgent-side upload orchestration for user-facing document ingestion, or retrieval-quality tuning over real business questions if the PDF-derived answers show gaps. Qdrant/pgvector/BGE-M3 promotion, parser/OCR service ownership, source binding, and GraphRAG execution remain outside provider defaults.
 
 ## Stage 2 Local Ingestion Loop
 
@@ -61,6 +61,20 @@ It writes:
 - `docs/local-run/parser-artifact-local-ingestion-loop/parser-artifact-local-ingestion-loop.md`
 
 This loop orchestrates the normalized parser artifact boundary and the existing approved-source ingestion loop. It does not parse raw PDFs, start OCR services, call parser engines, create source-to-agent bindings, call MyPrivateAgent, promote retrieval defaults, or execute GraphRAG.
+
+## Local PDF Parser Provider Bridge
+
+The local operator entrypoint is:
+
+`python scripts/export_local_pdf_parser_provider_bridge.py --pdf-path "<local-pdf>" --provider-url http://127.0.0.1:8080 --provider-path /ocr --max-pages 5`
+
+It writes:
+
+- `docs/local-run/local-pdf-parser-provider-bridge/local-pdf-parser-provider-bridge.json`
+- `docs/local-run/local-pdf-parser-provider-bridge/local-pdf-parser-provider-bridge.md`
+- `docs/local-run/local-pdf-parser-provider-bridge/parser-artifacts/local-pdf-parser-artifact.json`
+
+This bridge calls an already-running PaddleOCR-compatible HTTP provider, writes a normalized parser artifact, and reuses the existing parser-artifact local ingestion loop. It does not start PaddleOCR, call MyPrivateAgent, create source-to-agent bindings, mutate `/api/chat`, promote retrieval defaults, introduce background workers, or execute GraphRAG.
 
 ## Parser-Derived Corpus Retrieval Quality Baseline
 

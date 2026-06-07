@@ -1,0 +1,46 @@
+{
+  "id": "normalized-parser-artifact-ingestion-boundary-v1",
+  "generated_at": "2026-06-07T10:42:04.924239+00:00",
+  "decision": "go",
+  "reason_code": "parser_artifact_ready_for_local_onboarding",
+  "artifact_path": "docs\\local-run\\local-pdf-parser-provider-bridge\\parser-artifacts\\local-pdf-parser-artifact.json",
+  "artifact_id": "company_profile_2025_trial_paddleocr_pdf_pages_1_5",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "parser_id": "paddleocr-http-ocr-provider-v1",
+  "original_file_path": "D:\\xwechat_files\\wxid_pc6sc451nt9022_dea0\\msg\\file\\2026-06\\公司简介2025年10月27日(1).pdf",
+  "content_sha256": "10a6d51c31a12e3cfd43ec7cb3bec17af7095c132b183f6521082a66f2a68ba0",
+  "markdown_artifact_path": "docs\\local-run\\local-pdf-parser-provider-bridge\\parser-artifact-local-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
+  "source_overlay_path": "docs\\local-run\\local-pdf-parser-provider-bridge\\parser-artifact-local-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source-overlay.json",
+  "summary": {
+    "final_decision": "go",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_binding_status": "not_created",
+    "raw_parser_execution_status": "not_executed",
+    "ocr_service_status": "not_started",
+    "ingestion_job_status": "not_created",
+    "vector_database_status": "not_called",
+    "graph_execution_status": "not_executed",
+    "text_block_count": 112,
+    "citation_anchor_count": 112,
+    "materialized_markdown_status": "written",
+    "source_overlay_status": "written"
+  },
+  "recommended_actions": [
+    "run_local_document_source_onboarding_with_materialized_markdown",
+    "run_local_approved_source_ingestion_loop_after_onboarding"
+  ],
+  "non_goals": [
+    "does_not_parse_raw_pdf",
+    "does_not_start_ocr_services",
+    "does_not_call_paddleocr_or_parser_engines",
+    "does_not_create_source_to_agent_binding",
+    "does_not_call_myprivateagent",
+    "does_not_create_ingestion_job",
+    "does_not_promote_retrieval_backend",
+    "does_not_call_vector_databases",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\local-run\\local-pdf-parser-provider-bridge\\parser-artifact-local-ingestion-loop\\normalized-parser-artifact-boundary\\normalized-parser-artifact-boundary.json",
+  "markdown_path": "docs\\local-run\\local-pdf-parser-provider-bridge\\parser-artifact-local-ingestion-loop\\normalized-parser-artifact-boundary\\normalized-parser-artifact-boundary.md"
+}
