@@ -285,6 +285,7 @@
 - Approved local corpus source registration implemented (`add-approved-local-corpus-source-registration`), allowing a ready local corpus handoff to become a provider-visible local markdown source without source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
 - Approved local corpus acceptance smoke implemented (`add-approved-local-corpus-acceptance-smoke`), validating the registered company profile source across multiple business questions, citation allowlists, and a negative-control query before MyPrivateAgent-side trial usage.
 - Approved local corpus live HTTP smoke implemented (`add-approved-local-corpus-live-http-smoke`), validating the registered company profile source through the already-running local provider at `http://127.0.0.1:8020` with `decision=go`, five ready cases, and zero invalid citations.
+- Local RAG HTTP + MyPrivateAgent call loop closure implemented (`close-local-rag-http-myprivateagent-call-loop`), confirming the provider live HTTP usability report and MyPrivateAgent caller-side corpus trial both return `go` for `company_profile_2025_trial`.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`

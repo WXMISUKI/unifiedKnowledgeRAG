@@ -1,0 +1,104 @@
+{
+  "id": "local-rag-business-corpus-usability-check-v1",
+  "generated_at": "2026-06-07T05:21:39.808882+00:00",
+  "decision": "go",
+  "reason_code": "local_rag_business_corpus_usable",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "query": "公司主营业务是什么？",
+  "base_url": "http://127.0.0.1:8020",
+  "include_live_http": true,
+  "summary": {
+    "required_check_count": 3,
+    "go_check_count": 3,
+    "review_check_count": 0,
+    "blocked_check_count": 0,
+    "skipped_check_count": 0,
+    "live_http_required": true,
+    "default_rag_api_behavior": "unchanged",
+    "myprivateagent_behavior": "unchanged",
+    "source_binding_status": "not_created",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "graph_execution_status": "not_executed"
+  },
+  "checks": [
+    {
+      "name": "local_business_corpus_trial",
+      "required": true,
+      "decision": "go",
+      "reason_code": "local_business_corpus_usable",
+      "summary": {
+        "decision": "go",
+        "source_id": "company_profile_2025_trial",
+        "markdown_char_count": 2198,
+        "chunk_count": 4,
+        "retrieved_evidence_count": 3,
+        "answer_citation_count": 3,
+        "invalid_citation_count": 0,
+        "trial_overlay_status": "written",
+        "formal_registration_status": "not_registered",
+        "default_source_catalog_status": "unchanged",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      },
+      "json_path": "",
+      "markdown_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\pdf-derived-corpus\\company_profile_2025_trial.md"
+    },
+    {
+      "name": "approved_local_corpus_acceptance",
+      "required": true,
+      "decision": "go",
+      "reason_code": "approved_local_corpus_accepted",
+      "summary": {
+        "case_count": 5,
+        "ready_case_count": 5,
+        "review_case_count": 0,
+        "blocked_case_count": 0,
+        "invalid_citation_count": 0,
+        "source_binding_status": "not_created",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      },
+      "json_path": "",
+      "markdown_path": ""
+    },
+    {
+      "name": "approved_local_corpus_live_http",
+      "required": true,
+      "decision": "go",
+      "reason_code": "approved_local_corpus_live_http_accepted",
+      "summary": {
+        "case_count": 5,
+        "ready_case_count": 5,
+        "review_case_count": 0,
+        "blocked_case_count": 0,
+        "invalid_citation_count": 0,
+        "transport_mode": "live_http",
+        "api_key_supplied": false,
+        "source_binding_status": "not_created",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      },
+      "json_path": "",
+      "markdown_path": ""
+    }
+  ],
+  "recommended_actions": [
+    "use_local_business_corpus_for_myprivateagent_trial",
+    "keep_default_rag_behavior_unchanged"
+  ],
+  "non_goals": [
+    "does_not_start_server",
+    "does_not_register_sources",
+    "does_not_create_source_to_agent_binding",
+    "does_not_create_formal_ingestion_job",
+    "does_not_start_ocr_services",
+    "does_not_promote_retrieval_backend",
+    "does_not_run_myprivateagent_orchestration",
+    "does_not_call_vector_databases",
+    "does_not_execute_graphrag",
+    "does_not_change_default_rag_api_behavior"
+  ],
+  "json_path": "docs\\local-run\\rag-business-corpus-usability\\local-rag-business-corpus-usability-check.json",
+  "markdown_path": "docs\\local-run\\rag-business-corpus-usability\\local-rag-business-corpus-usability-check.md"
+}
