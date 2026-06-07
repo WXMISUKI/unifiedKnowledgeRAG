@@ -99,7 +99,7 @@
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 - Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
 - Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; Stage 1 MyPrivateAgent business Q&A loop and Stage 2 provider document ingestion loop are closed for the current local company-profile trial.
-- Stage 3 parser adapter boundary is the active next RAG maturity slice: normalized external parser artifacts -> provider-managed markdown/source overlay -> existing local onboarding and ingestion loops.
+- Stage 3 parser adapter boundary is now being closed through Stage 3b: normalized external parser artifacts -> provider-managed markdown/source overlay -> existing local approved-source ingestion loop.
 
 ## Benchmark Fixture Scope
 
@@ -290,6 +290,7 @@
 - Local RAG HTTP + MyPrivateAgent call loop closure implemented (`close-local-rag-http-myprivateagent-call-loop`), confirming the provider live HTTP usability report and MyPrivateAgent caller-side corpus trial both return `go` for `company_profile_2025_trial`.
 - Local approved source ingestion loop implemented (`add-local-approved-source-ingestion-loop`), closing Stage 2 with source onboarding, ingestion preflight, explicit ingestion job, index status, and acceptance smoke.
 - Normalized parser artifact ingestion boundary implemented (`add-normalized-parser-artifact-ingestion-boundary`), starting Stage 3 by validating external parser artifact JSON and materializing markdown/source-overlay inputs without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
+- Parser artifact local ingestion loop implemented (`add-parser-artifact-local-ingestion-loop`), closing Stage 3b by chaining normalized parser artifact validation/materialization into the existing approved-source ingestion loop without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, source binding, or GraphRAG execution.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -425,6 +426,10 @@
   - Status: `completed`
   - Change: `add-normalized-parser-artifact-ingestion-boundary`
   - Gate target: Stage 3 external parser artifact boundary; not provider-owned parser engines, raw PDF ingestion support, OCR service startup, ingestion job creation, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
+- Parser Artifact Local Ingestion Loop
+  - Status: `completed`
+  - Change: `add-parser-artifact-local-ingestion-loop`
+  - Gate target: Stage 3b parser-artifact-to-ingestion closure through existing local approved-source ingestion loop; not raw PDF parsing, OCR startup, parser engine orchestration, source binding, MyPrivateAgent orchestration, backend promotion, or GraphRAG execution.
 
 ## Latest Refresh
 

@@ -1,0 +1,32 @@
+[
+  {
+    "chunk_id": "chunk-1",
+    "citation": "company_profile_2025_trial#chunk-1",
+    "text": "<!-- artifact_id: company_profile_pdf_pages_1_5 source_id: company_profile_2025_trial parser_id: external-pdf-markdown-v1 original_file: D:/xwechat_files/company_profile.pdf -->",
+    "char_count": 177
+  },
+  {
+    "chunk_id": "chunk-2",
+    "citation": "company_profile_2025_trial#chunk-2",
+    "text": "<!-- citation: company_profile_2025_trial#page-1 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-3",
+    "citation": "company_profile_2025_trial#chunk-3",
+    "text": "公司简介资料前五页包含公司基本情况、主营业务、服务范围和资质能力说明，可作为本地企业知识库试用语料。",
+    "char_count": 50
+  },
+  {
+    "chunk_id": "chunk-4",
+    "citation": "company_profile_2025_trial#chunk-4",
+    "text": "<!-- citation: company_profile_2025_trial#page-2 -->",
+    "char_count": 52
+  },
+  {
+    "chunk_id": "chunk-5",
+    "citation": "company_profile_2025_trial#chunk-5",
+    "text": "公司业务信息适合用于回答企业介绍、主营业务、服务对象和资质能力类问题，后续可通过正式解析器刷新更完整文本。",
+    "char_count": 53
+  }
+]
