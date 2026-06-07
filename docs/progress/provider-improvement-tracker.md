@@ -98,6 +98,7 @@
   `python scripts/export_provider_handoff_refresh.py`
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 - Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
+- Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; the immediate next stage is MyPrivateAgent business Q&A user-loop closure, followed by provider document ingestion maturity.
 
 ## Benchmark Fixture Scope
 
