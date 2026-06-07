@@ -118,3 +118,25 @@ After registration, `company_profile_2025_trial` is visible to
 `POST /api/rag/answer`. This is still local provider source registration; it
 does not create source-to-agent binding, formal ingestion jobs, OCR startup,
 backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
+
+# Run approved local corpus acceptance smoke
+
+After registration, run the business acceptance smoke:
+
+```powershell
+python scripts/export_approved_local_corpus_acceptance_smoke.py `
+  --source-id company_profile_2025_trial
+```
+
+Default outputs:
+
+```text
+docs/local-run/approved-local-corpus-acceptance/approved-local-corpus-acceptance-smoke.json
+docs/local-run/approved-local-corpus-acceptance/approved-local-corpus-acceptance-smoke.md
+```
+
+`Decision: go` means the registered local corpus can support the current company
+profile question set. `review` means query coverage, markdown cleanup, or page
+range needs review. `blocked` means catalog, manifest, retrieve, answer, or
+citation contracts failed. This smoke runs in-process and does not require a
+running external provider service.

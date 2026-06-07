@@ -282,6 +282,7 @@
 - Local business corpus trial loop implemented (`add-local-business-corpus-trial-loop`), validating a local markdown business corpus with source overlay, chunk evidence, retrieval, and cited answer checks before formal source registration.
 - Local corpus caller handoff implemented (`add-local-corpus-caller-handoff`), packaging a go local business corpus trial into caller-facing review artifacts while preserving not-registered and default-catalog-unchanged boundaries.
 - Approved local corpus source registration implemented (`add-approved-local-corpus-source-registration`), allowing a ready local corpus handoff to become a provider-visible local markdown source without source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
+- Approved local corpus acceptance smoke implemented (`add-approved-local-corpus-acceptance-smoke`), validating the registered company profile source across multiple business questions, citation allowlists, and a negative-control query before MyPrivateAgent-side trial usage.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -401,6 +402,10 @@
   - Status: `completed`
   - Change: `add-approved-local-corpus-source-registration`
   - Gate target: explicit local markdown source registration into provider catalog and retrieve/answer paths, not source-to-agent binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
+- Approved Local Corpus Acceptance Smoke
+  - Status: `completed`
+  - Change: `add-approved-local-corpus-acceptance-smoke`
+  - Gate target: registered local company-profile corpus business usability, not source registration, source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
 
 ## Latest Refresh
 

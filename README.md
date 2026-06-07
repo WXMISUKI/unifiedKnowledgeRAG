@@ -219,6 +219,24 @@ docs/local-run/approved-local-source-registration/approved-local-source-registra
 
 注册后，`company_profile_2025_trial` 会进入 `GET /api/rag/sources`、`GET /api/rag/sources/{source_id}/documents`、`POST /api/rag/retrieve` 和 `POST /api/rag/answer` 的 provider 可用路径。这个动作只注册本地 markdown source，不创建 source-to-agent binding，不创建正式 ingestion job，不启动 OCR，不切换 Qdrant/BGE/GraphRAG，也不执行 MyPrivateAgent 编排。
 
+### 已注册本地语料验收
+
+注册后，可以导出业务可用性验收 smoke，确认多条公司简介问题和一个无关负例是否符合预期：
+
+```powershell
+python scripts/export_approved_local_corpus_acceptance_smoke.py `
+  --source-id company_profile_2025_trial
+```
+
+默认输出：
+
+```text
+docs/local-run/approved-local-corpus-acceptance/approved-local-corpus-acceptance-smoke.json
+docs/local-run/approved-local-corpus-acceptance/approved-local-corpus-acceptance-smoke.md
+```
+
+`Decision: go` 表示该本地语料已能支撑当前公司简介问题集的 provider 试用；`review` 表示需要复核 markdown 页范围、清洗质量或 query 集；`blocked` 表示 source 不可见、manifest/retrieve/answer 合同失败或 citation 越界。该 smoke 在仓库内进程执行，不要求启动外部服务，也不会重新注册 source、创建绑定、创建 ingestion job、启动 OCR、切换后端或执行 GraphRAG。
+
 ## 轻量容器部署
 
 项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：

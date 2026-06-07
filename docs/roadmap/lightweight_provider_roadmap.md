@@ -775,6 +775,23 @@ The registration writes:
 
 After registration, the source is visible through `GET /api/rag/sources`, has a source document manifest, and can be used by retrieve/answer requests. This is the local provider usability closure for a markdown corpus. It does not create source-to-agent binding, create formal ingestion jobs, start OCR services, promote Qdrant/BGE/hybrid/reranker defaults, execute MyPrivateAgent orchestration, or execute GraphRAG.
 
+## Approved Local Corpus Acceptance Smoke
+
+After a local corpus is registered, the provider can export a business acceptance smoke:
+
+```powershell
+python scripts/export_approved_local_corpus_acceptance_smoke.py `
+  --source-id company_profile_2025_trial
+```
+
+The smoke writes:
+
+`docs/local-run/approved-local-corpus-acceptance/approved-local-corpus-acceptance-smoke.json`
+
+`docs/local-run/approved-local-corpus-acceptance/approved-local-corpus-acceptance-smoke.md`
+
+The smoke validates catalog visibility, source document manifest availability, multiple answerable company-profile questions, citation allowlist behavior, and an unrelated negative-control query. It returns `go`, `review`, or `blocked` so the team can decide whether the registered local corpus is ready for MyPrivateAgent-side trial usage. It runs in-process and does not start external services, register sources, create source-to-agent binding, create formal ingestion jobs, start OCR, promote retrieval backends, call vector databases, or execute GraphRAG.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:
