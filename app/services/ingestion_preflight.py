@@ -15,6 +15,7 @@ from app.services.source_catalog import get_knowledge_base
 from app.services.source_document_manifest import (
     SOURCE_DOCUMENT_MANIFESTS,
     build_chunk_manifest,
+    get_source_document_manifests_for,
 )
 from app.services.source_package import get_source_package
 
@@ -46,7 +47,7 @@ def get_ingestion_source_preflight(
     index_status = get_index_status(source_id, settings)
     documents = [
         _preflight_document(document)
-        for document in SOURCE_DOCUMENT_MANIFESTS.get(source_id, [])
+        for document in get_source_document_manifests_for(source_id)
     ]
     status = _source_status(documents)
     return IngestionSourcePreflightResponse(

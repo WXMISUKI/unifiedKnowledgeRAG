@@ -199,6 +199,26 @@ docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.md
 
 该 handoff 会把 source id、markdown artifact、overlay、chunks、trial 状态、引用策略和下一步动作汇总给调用方审查。`ready_for_caller_review` 只表示可以进入调用方 review，不代表正式注册 source、创建绑定、执行 MyPrivateAgent 编排或改变 provider 默认 catalog。
 
+### 已批准本地语料注册
+
+当调用方确认本地语料 handoff 可以进入 provider 本地试用后，可以显式注册为 approved local source：
+
+```powershell
+python scripts/register_approved_local_corpus_source.py `
+  --handoff docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.json
+```
+
+默认输出：
+
+```text
+app/data/local_sources/approved_sources.json
+app/data/sources/company_profile_2025_trial.md
+docs/local-run/approved-local-source-registration/approved-local-source-registration.json
+docs/local-run/approved-local-source-registration/approved-local-source-registration.md
+```
+
+注册后，`company_profile_2025_trial` 会进入 `GET /api/rag/sources`、`GET /api/rag/sources/{source_id}/documents`、`POST /api/rag/retrieve` 和 `POST /api/rag/answer` 的 provider 可用路径。这个动作只注册本地 markdown source，不创建 source-to-agent binding，不创建正式 ingestion job，不启动 OCR，不切换 Qdrant/BGE/GraphRAG，也不执行 MyPrivateAgent 编排。
+
 ## 轻量容器部署
 
 项目提供最小容器部署剖面，适合本机、公网测试和未来内网部署审查：

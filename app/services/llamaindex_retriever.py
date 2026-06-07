@@ -3,6 +3,9 @@ from datetime import UTC, datetime
 
 from app.config import Settings
 from app.models.contracts import EvidenceDocument, IndexStatusResponse
+from app.services.approved_local_corpus_source_registration import (
+    get_approved_local_source,
+)
 from app.services.index_lifecycle_store import IndexLifecycleStore
 from app.services.source_catalog import get_knowledge_base, knowledge_base_exists
 
@@ -154,6 +157,9 @@ class LlamaIndexLocalRetriever:
 
 
 def _document_id_for(source_id: str) -> str:
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is not None:
+        return approved_source.document_id
     return {
         "refund_policy_docs": "refund_policy_2026",
         "logistics_faq": "logistics_faq_2026",
@@ -161,6 +167,9 @@ def _document_id_for(source_id: str) -> str:
 
 
 def _title_for(source_id: str) -> str:
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is not None:
+        return approved_source.title
     return {
         "refund_policy_docs": "售后退款规则",
         "logistics_faq": "物流常见问题",
@@ -168,6 +177,9 @@ def _title_for(source_id: str) -> str:
 
 
 def _citation_for(source_id: str) -> str:
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is not None:
+        return f"{approved_source.document_id}#chunk-1"
     return {
         "refund_policy_docs": "refund_policy_2026#section-3",
         "logistics_faq": "logistics_faq_2026#delay",
@@ -175,6 +187,9 @@ def _citation_for(source_id: str) -> str:
 
 
 def _chunk_id_for(source_id: str) -> str:
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is not None:
+        return "chunk-1"
     return {
         "refund_policy_docs": "section-3",
         "logistics_faq": "delay",

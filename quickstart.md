@@ -94,3 +94,27 @@ docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.md
 
 `ready_for_caller_review` means the caller can review the local artifacts before
 formal binding or source registration. It is not production registration.
+
+# Register approved local corpus source
+
+After caller review, explicitly register the handoff as a local provider source:
+
+```powershell
+python scripts/register_approved_local_corpus_source.py `
+  --handoff docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.json
+```
+
+Default outputs:
+
+```text
+app/data/local_sources/approved_sources.json
+app/data/sources/company_profile_2025_trial.md
+docs/local-run/approved-local-source-registration/approved-local-source-registration.json
+docs/local-run/approved-local-source-registration/approved-local-source-registration.md
+```
+
+After registration, `company_profile_2025_trial` is visible to
+`GET /api/rag/sources` and can be used by `POST /api/rag/retrieve` and
+`POST /api/rag/answer`. This is still local provider source registration; it
+does not create source-to-agent binding, formal ingestion jobs, OCR startup,
+backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.

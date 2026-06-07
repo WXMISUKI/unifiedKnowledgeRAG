@@ -2,7 +2,6 @@
 
 ## Purpose
 Provide a lightweight, local-only caller review package for a successful local business corpus trial before any formal source registration or binding is approved.
-
 ## Requirements
 ### Requirement: Provider exports a local corpus caller handoff
 The system SHALL export a local-only caller handoff package from a local business corpus trial report.
@@ -37,3 +36,15 @@ The local corpus caller handoff SHALL NOT register the source or mutate provider
 #### Scenario: Caller reads handoff
 - **WHEN** a caller reads the handoff package
 - **THEN** the handoff explicitly reports `registration_status=not_registered` and `caller_next_action=review_trial_artifacts_before_formal_binding`
+
+### Requirement: Ready local corpus handoff can feed explicit source registration
+The system SHALL allow a `ready_for_caller_review` local corpus handoff to be used as input for a separate approved local source registration step.
+
+#### Scenario: Ready handoff feeds registration
+- **WHEN** a local corpus handoff has `status=ready_for_caller_review`
+- **THEN** an approved local source registration command can use its source id, title, markdown artifact, and trial artifact pointers as registration input
+
+#### Scenario: Review or blocked handoff does not feed registration
+- **WHEN** a local corpus handoff has `status=review` or `status=blocked`
+- **THEN** approved local source registration is blocked before any provider source registry is written
+

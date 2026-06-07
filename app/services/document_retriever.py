@@ -1,7 +1,12 @@
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
 from app.models.contracts import EvidenceDocument
+from app.services.approved_local_corpus_source_registration import (
+    get_approved_local_source,
+    list_approved_local_sources,
+)
 from app.services.source_catalog import knowledge_base_exists
 
 
@@ -12,6 +17,7 @@ class DocumentChunk:
     title: str
     text: str
     citation: str
+    source_path: str | None = None
 
 
 DOCUMENTS = [
@@ -151,7 +157,7 @@ def retrieve(
 
     query_tokens = _tokenize(query)
     scored_documents = []
-    for document in DOCUMENTS:
+    for document in DOCUMENTS + _approved_local_documents():
         if document.source_id not in knowledge_base_ids:
             continue
         score = _score(query_tokens, document.text)
@@ -168,7 +174,7 @@ def retrieve(
             score=round(score, 4),
             citation=document.citation,
             metadata={
-                "source_path": _source_path_for(document.source_id),
+                "source_path": document.source_path or _source_path_for(document.source_id),
                 "chunk_id": _chunk_id_for(document.citation),
                 "chunking_strategy": "fixture-evidence-v1",
                 "citation_anchor": document.citation,
@@ -214,8 +220,53 @@ def _cjk_bigrams(value: str) -> set[str]:
 
 
 def _source_path_for(source_id: str) -> str:
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is not None:
+        return approved_source.source_path
     return f"app/data/sources/{source_id}.md"
 
 
 def _chunk_id_for(citation: str) -> str:
     return citation.split("#", maxsplit=1)[-1]
+
+
+def _approved_local_documents() -> list[DocumentChunk]:
+    documents: list[DocumentChunk] = []
+    for source in list_approved_local_sources():
+        source_path = source.source_path
+        path = Path(source_path)
+        if not path.exists():
+            continue
+        for index, chunk in enumerate(
+            _markdown_chunks(path.read_text(encoding="utf-8")),
+            start=1,
+        ):
+            documents.append(
+                DocumentChunk(
+                    source_id=source.source_id,
+                    document_id=source.document_id,
+                    title=source.title,
+                    text=chunk,
+                    citation=f"{source.document_id}#chunk-{index}",
+                    source_path=source_path,
+                )
+            )
+    return documents
+
+
+def _markdown_chunks(text: str) -> list[str]:
+    chunks: list[str] = []
+    current_lines: list[str] = []
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            if current_lines:
+                chunks.append(" ".join(current_lines))
+                current_lines = []
+            continue
+        if line.startswith("#"):
+            continue
+        current_lines.append(line)
+    if current_lines:
+        chunks.append(" ".join(current_lines))
+    return chunks

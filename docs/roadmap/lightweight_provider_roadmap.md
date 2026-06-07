@@ -754,6 +754,27 @@ The handoff exports:
 
 The status `ready_for_caller_review` means the caller can inspect the source id, markdown artifact, overlay, chunks, generated citations, and trial boundaries before deciding whether to propose formal binding or source registration. It is not production registration and does not mutate source catalog, run ingestion jobs, create source bindings, execute MyPrivateAgent orchestration, promote retrieval backends, or execute GraphRAG.
 
+## Approved Local Corpus Source Registration
+
+After a local corpus handoff is `ready_for_caller_review`, the provider can explicitly register the markdown as an approved local source:
+
+```powershell
+python scripts/register_approved_local_corpus_source.py `
+  --handoff docs/local-run/corpus-caller-handoff/local-corpus-caller-handoff.json
+```
+
+The registration writes:
+
+`app/data/local_sources/approved_sources.json`
+
+`app/data/sources/company_profile_2025_trial.md`
+
+`docs/local-run/approved-local-source-registration/approved-local-source-registration.json`
+
+`docs/local-run/approved-local-source-registration/approved-local-source-registration.md`
+
+After registration, the source is visible through `GET /api/rag/sources`, has a source document manifest, and can be used by retrieve/answer requests. This is the local provider usability closure for a markdown corpus. It does not create source-to-agent binding, create formal ingestion jobs, start OCR services, promote Qdrant/BGE/hybrid/reranker defaults, execute MyPrivateAgent orchestration, or execute GraphRAG.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

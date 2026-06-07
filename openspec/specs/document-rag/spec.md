@@ -5,31 +5,32 @@ TBD - created by archiving change add-knowledge-provider-v1. Update Purpose afte
 ## Requirements
 ### Requirement: RAG sources are listed separately from graph sources
 
-The system SHALL expose document RAG source metadata through a dedicated endpoint, including each source's configured retrieval backend and backend readiness status.
+The system SHALL expose document RAG source metadata through a dedicated endpoint, including each built-in and approved local source's configured retrieval backend and backend readiness status.
 
 #### Scenario: RAG source list is available
 
 - **WHEN** a caller requests `GET /api/rag/sources`
 - **THEN** the response includes configured knowledge base ids, readiness status, version, freshness metadata, retrieval backend, and backend readiness status
 
+#### Scenario: Approved local source list is available
+
+- **WHEN** a local corpus has been registered through the approved local source registry
+- **THEN** `GET /api/rag/sources` includes the approved local source without changing graph source output
+
 ### Requirement: RAG source document manifest is available
 
-The system SHALL expose a read-only document manifest for each configured document RAG source so callers can inspect source documents, citation anchors, chunking metadata, and index readiness without running retrieval.
+The system SHALL expose a read-only document manifest for each configured document RAG source, including approved local markdown sources, so callers can inspect source documents, citation anchors, chunking metadata, and index readiness without running retrieval.
 
 #### Scenario: Source document manifest is returned
 
 - **WHEN** a caller requests `GET /api/rag/sources/{source_id}/documents` for a configured RAG source
 - **THEN** the response has `ok=true`, the requested source id, current index readiness metadata, and document manifests with document id, title, source path, format, version, chunking strategy, and citation anchors
 
-#### Scenario: Unknown source returns structured error
+#### Scenario: Approved local source manifest is returned
 
-- **WHEN** a caller requests `GET /api/rag/sources/{source_id}/documents` for an unknown source
-- **THEN** the response has `ok=false` and an `error.code` that identifies the unknown source
-
-#### Scenario: Manifest does not execute retrieval work
-
-- **WHEN** a caller requests a source document manifest
-- **THEN** the provider does not run document retrieval, answer composition, embedding, vector search, ingestion, or graph execution
+- **WHEN** a caller requests `GET /api/rag/sources/{source_id}/documents` for an approved local markdown source
+- **THEN** the response has `ok=true`
+- **AND** the manifest includes source package metadata, fingerprint diagnostics, and deterministic chunk manifest entries
 
 ### Requirement: Source document manifest diagnostics are discoverable
 
@@ -103,20 +104,10 @@ The system SHALL return compact answer context and document evidence for matchin
 - **WHEN** a caller requests `POST /api/rag/retrieve` with a valid query and ready knowledge base id whose index status is ready
 - **THEN** the response has `ok=true`, `result.answer_context`, and `result.documents` with stable `citation` values
 
-#### Scenario: LlamaIndex retrieval preserves provider citations
+#### Scenario: Approved local source retrieval returns evidence
 
-- **WHEN** the LlamaIndex backend returns matching indexed nodes
-- **THEN** each response document is assembled from provider-owned metadata and includes `source_id`, `document_id`, `title`, `snippet`, `score`, and stable `citation`
-
-#### Scenario: Indexed source is not ready
-
-- **WHEN** a caller requests `POST /api/rag/retrieve` for a known source whose index status is not ready
-- **THEN** the response has `ok=false` and an `error.code` that identifies the index readiness failure
-
-#### Scenario: Not-ready source does not execute backend retrieval
-
-- **WHEN** a caller requests `POST /api/rag/retrieve` for a known source whose index status is not ready
-- **THEN** the provider returns `INDEX_NOT_READY` before calling the selected backend retrieval implementation
+- **WHEN** a caller requests `POST /api/rag/retrieve` for a ready approved local markdown source and a matching query
+- **THEN** the response returns evidence documents with the approved source id, provider-owned source path metadata, deterministic chunk id, and stable citation
 
 ### Requirement: RAG retrieval backend is configurable
 

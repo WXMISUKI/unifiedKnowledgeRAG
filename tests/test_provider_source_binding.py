@@ -14,28 +14,32 @@ from app.services.provider_source_binding import (
 )
 
 
+EXPECTED_SOURCE_IDS = {
+    "refund_policy_docs",
+    "logistics_faq",
+    "company_profile_2025_trial",
+}
+
+
 def test_provider_source_binding_summary_marks_default_sources_bindable():
     report = build_provider_source_binding_summary()
 
     assert report.id == "provider-source-binding-summary-v1"
     assert report.status == "ready"
     assert report.provider["provider_id"] == "unifiedKnowledgeProvider"
-    assert report.total_source_count == 2
-    assert report.bindable_source_count == 2
-    assert report.status_counts == {"ready": 2}
+    assert report.total_source_count == 3
+    assert report.bindable_source_count == 3
+    assert report.status_counts == {"ready": 3}
     assert report.recommended_action_counts == {
-        "bind_source_from_control_plane": 2
+        "bind_source_from_control_plane": 3
     }
     rows = {source.source_id: source for source in report.sources}
-    assert set(rows) == {"refund_policy_docs", "logistics_faq"}
+    assert set(rows) == EXPECTED_SOURCE_IDS
     for row in rows.values():
         assert row.status == "ready"
         assert row.bindable is True
-        assert row.source_domain in {"after_sales_policy", "logistics_support"}
         assert row.language == "zh-CN"
-        assert row.sensitivity == "internal"
         assert row.supported_formats == ["markdown"]
-        assert row.citation_granularity == "section"
         assert row.retrieval_backend == "fixture"
         assert row.backend_status == "ready"
         assert row.index_status == "ready"
@@ -47,6 +51,15 @@ def test_provider_source_binding_summary_marks_default_sources_bindable():
         assert row.drift_statuses == ["in_sync"]
         assert row.ingestion_preflight_status == "ready"
         assert row.recommended_action == "bind_source_from_control_plane"
+    assert rows["refund_policy_docs"].source_domain == "after_sales_policy"
+    assert rows["logistics_faq"].source_domain == "logistics_support"
+    assert rows["company_profile_2025_trial"].source_domain == "company_profile"
+    assert rows["refund_policy_docs"].sensitivity == "internal"
+    assert rows["logistics_faq"].sensitivity == "internal"
+    assert rows["company_profile_2025_trial"].sensitivity == "local_private_trial"
+    assert rows["refund_policy_docs"].citation_granularity == "section"
+    assert rows["logistics_faq"].citation_granularity == "section"
+    assert rows["company_profile_2025_trial"].citation_granularity == "chunk"
     assert any("read-only" in note for note in report.operation_notes)
 
 
@@ -64,16 +77,13 @@ def test_provider_source_binding_endpoint_and_manifest_discovery():
     body = summary_response.json()
     assert body["id"] == "provider-source-binding-summary-v1"
     assert body["status"] == "ready"
-    assert body["total_source_count"] == 2
-    assert body["bindable_source_count"] == 2
-    assert body["status_counts"] == {"ready": 2}
+    assert body["total_source_count"] == 3
+    assert body["bindable_source_count"] == 3
+    assert body["status_counts"] == {"ready": 3}
     assert body["recommended_action_counts"] == {
-        "bind_source_from_control_plane": 2
+        "bind_source_from_control_plane": 3
     }
-    assert {source["source_id"] for source in body["sources"]} == {
-        "refund_policy_docs",
-        "logistics_faq",
-    }
+    assert {source["source_id"] for source in body["sources"]} == EXPECTED_SOURCE_IDS
     refund_source = next(
         source
         for source in body["sources"]
@@ -122,11 +132,11 @@ def test_provider_source_binding_blocks_drifted_source(monkeypatch, tmp_path):
     )
 
     assert report.status == "blocked"
-    assert report.total_source_count == 2
-    assert report.bindable_source_count == 1
-    assert report.status_counts == {"blocked": 1, "ready": 1}
+    assert report.total_source_count == 3
+    assert report.bindable_source_count == 2
+    assert report.status_counts == {"blocked": 1, "ready": 2}
     assert report.recommended_action_counts == {
-        "bind_source_from_control_plane": 1,
+        "bind_source_from_control_plane": 2,
         "run_ingestion_job_before_binding": 1,
     }
     assert row.status == "blocked"
@@ -221,11 +231,11 @@ def test_provider_source_binding_blocks_not_ready_index(tmp_path):
     report = build_provider_source_binding_summary(settings)
 
     assert report.status == "blocked"
-    assert report.total_source_count == 2
+    assert report.total_source_count == 3
     assert report.bindable_source_count == 0
-    assert report.status_counts == {"blocked": 2}
+    assert report.status_counts == {"blocked": 3}
     assert report.recommended_action_counts == {
-        "run_ingestion_job_before_binding": 2,
+        "run_ingestion_job_before_binding": 3,
     }
     rows = {source.source_id: source for source in report.sources}
     assert rows["refund_policy_docs"].index_status == "not_indexed"
@@ -263,8 +273,8 @@ def test_provider_source_binding_export_writes_json_and_markdown(tmp_path):
     payload = json_path.read_text(encoding="utf-8")
     markdown = markdown_path.read_text(encoding="utf-8")
     assert "provider-source-binding-summary-v1" in payload
-    assert '"total_source_count": 2' in payload
-    assert '"bindable_source_count": 2' in payload
+    assert '"total_source_count": 3' in payload
+    assert '"bindable_source_count": 3' in payload
     assert '"status_counts"' in payload
     assert '"recommended_action_counts"' in payload
     assert "source_domain" in payload
@@ -289,10 +299,10 @@ def test_provider_source_binding_markdown_summarizes_sources():
     markdown = render_provider_source_binding_summary_markdown(report)
 
     assert "| Source | Status | Bindable | Domain | Language | Sensitivity | Formats | Citation Granularity | Backend | Index | Documents | Citations | Chunks | Parser Ready | Unsupported | Drift | Preflight | Recommended Action |" in markdown
-    assert "- Total Sources: `2`" in markdown
-    assert "- Bindable Sources: `2`" in markdown
-    assert "- Status Counts: `ready=2`" in markdown
-    assert "- Recommended Action Counts: `bind_source_from_control_plane=2`" in markdown
+    assert "- Total Sources: `3`" in markdown
+    assert "- Bindable Sources: `3`" in markdown
+    assert "- Status Counts: `ready=3`" in markdown
+    assert "- Recommended Action Counts: `bind_source_from_control_plane=3`" in markdown
     assert "`refund_policy_docs`" in markdown
     assert "`after_sales_policy`" in markdown
     assert "`bind_source_from_control_plane`" in markdown

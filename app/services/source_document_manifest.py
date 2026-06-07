@@ -10,6 +10,9 @@ from app.models.contracts import (
     SourceDocumentManifestResult,
 )
 from app.services.index_lifecycle import get_index_status
+from app.services.approved_local_corpus_source_registration import (
+    get_approved_local_source,
+)
 from app.services.source_catalog import get_knowledge_base
 from app.services.source_package import get_source_package
 
@@ -104,10 +107,45 @@ def get_source_document_manifest(
             source_package=get_source_package(source.id),
             documents=[
                 _with_fingerprint_diagnostics(document)
-                for document in SOURCE_DOCUMENT_MANIFESTS.get(source_id, [])
+                for document in get_source_document_manifests_for(source_id)
             ],
         ),
     )
+
+
+def get_source_document_manifests_for(source_id: str) -> list[SourceDocumentManifest]:
+    configured = SOURCE_DOCUMENT_MANIFESTS.get(source_id)
+    if configured is not None:
+        return configured
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is None:
+        return []
+    source_path = Path(approved_source.source_path)
+    citation_anchors: list[str] = []
+    if source_path.exists():
+        citation_anchors = [
+            f"{approved_source.document_id}#chunk-{index}"
+            for index, _ in enumerate(
+                _markdown_chunks(source_path.read_text(encoding="utf-8")),
+                start=1,
+            )
+        ]
+    return [
+        SourceDocumentManifest(
+            document_id=approved_source.document_id,
+            title=approved_source.title,
+            source_path=approved_source.source_path,
+            format="markdown",
+            version=approved_source.version,
+            chunking_strategy=approved_source.default_chunking_strategy,
+            citation_anchors=citation_anchors,
+            expected_content_sha256=approved_source.content_sha256,
+            metadata={
+                "language": approved_source.language,
+                "document_role": "approved_local_corpus",
+            },
+        )
+    ]
 
 
 def _with_fingerprint_diagnostics(

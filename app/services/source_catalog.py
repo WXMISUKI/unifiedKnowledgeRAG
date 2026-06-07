@@ -1,5 +1,9 @@
 from app.config import get_settings
 from app.models.contracts import GraphSource, KnowledgeBaseSource
+from app.services.approved_local_corpus_source_registration import (
+    get_approved_local_source,
+    list_approved_local_sources,
+)
 
 
 KNOWLEDGE_BASES = [
@@ -58,11 +62,33 @@ def list_knowledge_bases(settings=None) -> list[KnowledgeBaseSource]:
             }
         )
         for source in KNOWLEDGE_BASES
+    ] + [
+        source.model_copy(
+            update={
+                "retrieval_backend": settings.rag_retrieval_backend,
+                "backend_status": backend_status,
+                "backend_reason": backend_reason,
+                "index_status": (index_status := get_index_status(source.id, settings)).status,
+                "index_reason": index_status.reason,
+                "indexed_at": index_status.indexed_at,
+                "latest_index_job_id": index_status.latest_job_id,
+            }
+        )
+        for source in _approved_local_knowledge_bases()
     ]
 
 
 def get_knowledge_base(source_id: str) -> KnowledgeBaseSource | None:
-    return next((source for source in KNOWLEDGE_BASES if source.id == source_id), None)
+    configured_source = next(
+        (source for source in KNOWLEDGE_BASES if source.id == source_id),
+        None,
+    )
+    if configured_source is not None:
+        return configured_source
+    approved_source = get_approved_local_source(source_id)
+    if approved_source is None:
+        return None
+    return _knowledge_base_from_approved_source(approved_source)
 
 
 def list_graphs() -> list[GraphSource]:
@@ -81,3 +107,22 @@ def _document_backend_readiness() -> tuple[str, str | None]:
 
     retriever = create_document_retriever(get_settings())
     return retriever.readiness()
+
+
+def _approved_local_knowledge_bases() -> list[KnowledgeBaseSource]:
+    return [
+        _knowledge_base_from_approved_source(source)
+        for source in list_approved_local_sources()
+    ]
+
+
+def _knowledge_base_from_approved_source(source) -> KnowledgeBaseSource:
+    return KnowledgeBaseSource(
+        id=source.source_id,
+        status="ready",
+        owner=source.owner,
+        version=source.version,
+        embedding_model="local-lexical-v1",
+        vector_store="in_memory",
+        freshness="approved_local_corpus",
+    )

@@ -1,0 +1,32 @@
+{
+  "id": "approved-local-sources-v1",
+  "updated_at": "2026-06-07T01:27:08.612717+00:00",
+  "sources": [
+    {
+      "source_id": "company_profile_2025_trial",
+      "title": "公司简介 2025 trial",
+      "owner": "local_trial",
+      "version": "2026-06-07",
+      "domain": "company_profile",
+      "language": "zh-CN",
+      "sensitivity": "local_private_trial",
+      "source_path": "app\\data\\sources\\company_profile_2025_trial.md",
+      "document_id": "company_profile_2025_trial",
+      "citation_prefix": "company_profile_2025_trial",
+      "registration_status": "registered",
+      "handoff_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\corpus-caller-handoff\\local-corpus-caller-handoff.json",
+      "content_sha256": "dadf096f29bb53c50d38df810c486a5fb61d3d88ce193d869009a301f89f5703",
+      "supported_formats": [
+        "markdown"
+      ],
+      "default_chunking_strategy": "markdown-paragraph-v1",
+      "citation_granularity": "chunk",
+      "metadata": {
+        "registered_from": "local_corpus_caller_handoff",
+        "trial_report": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\business-corpus-trial\\local-business-corpus-trial.json",
+        "caller_next_action": "review_trial_artifacts_before_formal_binding",
+        "runtime_promotion_status": "keep_runtime_defaults"
+      }
+    }
+  ]
+}
