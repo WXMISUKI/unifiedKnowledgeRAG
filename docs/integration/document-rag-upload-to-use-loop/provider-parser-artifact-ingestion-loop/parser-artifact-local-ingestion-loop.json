@@ -1,0 +1,93 @@
+{
+  "id": "parser-artifact-local-ingestion-loop-v1",
+  "generated_at": "2026-06-07T11:08:05.416579+00:00",
+  "decision": "go",
+  "reason_code": "parser_artifact_local_ingestion_ready",
+  "artifact_path": "D:\\AI\\AIcode\\MyPrivateAgent\\docs\\integration\\document-rag-upload-to-use-loop\\parser-artifacts\\document-rag-parser-artifact.json",
+  "artifact_id": "company_profile_2025_trial_ocr_document_upload",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "parser_id": "myprivateagent-ocr-artifact-handoff-v1",
+  "materialized_markdown_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
+  "source_overlay_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source-overlay.json",
+  "query": "公司主营业务和服务范围是什么？",
+  "top_k": 3,
+  "steps": [
+    {
+      "id": "parser_artifact_boundary",
+      "status": "go",
+      "reason_code": "parser_artifact_ready_for_local_onboarding",
+      "artifacts": {
+        "json": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\normalized-parser-artifact-boundary.json",
+        "markdown": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\normalized-parser-artifact-boundary.md",
+        "materialized_markdown": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
+        "source_overlay": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source-overlay.json"
+      },
+      "summary": {
+        "final_decision": "go",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "source_binding_status": "not_created",
+        "raw_parser_execution_status": "not_executed",
+        "ocr_service_status": "not_started",
+        "ingestion_job_status": "not_created",
+        "vector_database_status": "not_called",
+        "graph_execution_status": "not_executed",
+        "text_block_count": 500,
+        "citation_anchor_count": 500,
+        "materialized_markdown_status": "written",
+        "source_overlay_status": "written"
+      }
+    },
+    {
+      "id": "approved_source_ingestion_loop",
+      "status": "go",
+      "reason_code": "local_approved_source_ingestion_ready",
+      "artifacts": {
+        "json": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\approved-source-ingestion-loop\\local-approved-source-ingestion-loop.json",
+        "markdown": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\approved-source-ingestion-loop\\local-approved-source-ingestion-loop.md"
+      },
+      "summary": {
+        "step_count": 5,
+        "ready_step_count": 5,
+        "review_step_count": 0,
+        "blocked_step_count": 0,
+        "final_decision": "go",
+        "explicit_ingestion_job_created": true,
+        "source_binding_status": "not_created",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      }
+    }
+  ],
+  "summary": {
+    "step_count": 2,
+    "artifact_materialized": true,
+    "approved_source_ingestion_decision": "go",
+    "source_binding_status": "not_created",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "raw_parser_execution_status": "not_executed",
+    "ocr_service_status": "not_started",
+    "myprivateagent_call_status": "not_called",
+    "vector_database_status": "not_promoted",
+    "graph_execution_status": "not_executed",
+    "final_decision": "go"
+  },
+  "recommended_actions": [
+    "use_parser_derived_source_for_local_business_rag_trial",
+    "keep_parser_engines_outside_provider_defaults",
+    "evaluate_retrieval_quality_with_customer_like_cases_next"
+  ],
+  "non_goals": [
+    "does_not_parse_raw_pdf",
+    "does_not_start_ocr_services",
+    "does_not_call_paddleocr_or_parser_engines",
+    "does_not_call_myprivateagent",
+    "does_not_create_source_to_agent_binding",
+    "does_not_mutate_chat_runtime",
+    "does_not_promote_retrieval_backend",
+    "does_not_promote_vector_database",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\parser-artifact-local-ingestion-loop.json",
+  "markdown_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\parser-artifact-local-ingestion-loop.md"
+}
