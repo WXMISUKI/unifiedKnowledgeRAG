@@ -1,0 +1,122 @@
+{
+  "id": "local-approved-source-ingestion-loop-v1",
+  "generated_at": "2026-06-07T10:08:55.130747+00:00",
+  "decision": "go",
+  "reason_code": "local_approved_source_ingestion_ready",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "markdown_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\pdf-derived-corpus\\company_profile_2025_trial.md",
+  "query": "公司主营业务是什么？",
+  "top_k": 3,
+  "steps": [
+    {
+      "id": "document_source_onboarding",
+      "status": "go",
+      "reason_code": "local_document_source_onboarded",
+      "artifacts": {
+        "json": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\document-source-onboarding\\local-document-source-onboarding.json",
+        "markdown": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\document-source-onboarding\\local-document-source-onboarding.md"
+      },
+      "summary": {
+        "step_count": 4,
+        "ready_step_count": 4,
+        "review_step_count": 0,
+        "blocked_step_count": 0,
+        "final_decision": "go",
+        "source_binding_status": "not_created",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      }
+    },
+    {
+      "id": "ingestion_preflight",
+      "status": "ready",
+      "reason_code": "preflight_ready",
+      "artifacts": {},
+      "summary": {
+        "source_id": "company_profile_2025_trial",
+        "retrieval_backend": "fixture",
+        "index_status": "ready",
+        "latest_index_job_id": null,
+        "document_count": 1,
+        "recommended_action": "run_ingestion_job"
+      }
+    },
+    {
+      "id": "ingestion_job",
+      "status": "completed",
+      "reason_code": "ingestion_job_completed",
+      "artifacts": {},
+      "summary": {
+        "job_id": "idx_dc126317340f4bf489bddd5f77ab6b2a",
+        "source_id": "company_profile_2025_trial",
+        "status": "completed",
+        "requested_at": "2026-06-07T10:08:55.044304+00:00",
+        "completed_at": "2026-06-07T10:08:55.045304+00:00",
+        "error_code": null
+      }
+    },
+    {
+      "id": "index_status",
+      "status": "ready",
+      "reason_code": "index_ready",
+      "artifacts": {},
+      "summary": {
+        "source_id": "company_profile_2025_trial",
+        "status": "ready",
+        "backend": "fixture",
+        "indexed_at": null,
+        "latest_job_id": null,
+        "reason": "Fixture backend does not require an explicit persisted index.",
+        "error_code": null
+      }
+    },
+    {
+      "id": "acceptance_smoke",
+      "status": "go",
+      "reason_code": "approved_local_corpus_accepted",
+      "artifacts": {
+        "json": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\approved-local-corpus-acceptance\\approved-local-corpus-acceptance-smoke.json",
+        "markdown": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\approved-local-corpus-acceptance\\approved-local-corpus-acceptance-smoke.md"
+      },
+      "summary": {
+        "case_count": 5,
+        "ready_case_count": 5,
+        "review_case_count": 0,
+        "blocked_case_count": 0,
+        "invalid_citation_count": 0,
+        "source_binding_status": "not_created",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      }
+    }
+  ],
+  "summary": {
+    "step_count": 5,
+    "ready_step_count": 5,
+    "review_step_count": 0,
+    "blocked_step_count": 0,
+    "final_decision": "go",
+    "explicit_ingestion_job_created": true,
+    "source_binding_status": "not_created",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "graph_execution_status": "not_executed"
+  },
+  "recommended_actions": [
+    "use_source_for_local_rag_business_trials",
+    "keep_source_binding_decisions_in_caller_control_plane",
+    "move_next_to_parser_adapter_boundary_only_if_new_file_formats_are_needed"
+  ],
+  "non_goals": [
+    "does_not_parse_raw_pdf_as_supported_ingestion",
+    "does_not_start_ocr_services",
+    "does_not_call_myprivateagent",
+    "does_not_create_source_to_agent_binding",
+    "does_not_mutate_chat_runtime",
+    "does_not_promote_retrieval_backend",
+    "does_not_introduce_background_worker",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\local-approved-source-ingestion-loop.json",
+  "markdown_path_out": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\local-approved-source-ingestion-loop.md"
+}

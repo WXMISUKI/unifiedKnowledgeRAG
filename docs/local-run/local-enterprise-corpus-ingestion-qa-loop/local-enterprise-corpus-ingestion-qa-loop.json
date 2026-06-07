@@ -1,0 +1,64 @@
+{
+  "id": "local-enterprise-corpus-ingestion-qa-loop-v1",
+  "generated_at": "2026-06-07T10:08:55.132786+00:00",
+  "decision": "go",
+  "reason_code": "local_enterprise_corpus_qa_ready",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "query": "公司主营业务是什么？",
+  "top_k": 3,
+  "input_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\pdf-derived-corpus\\company_profile_2025_trial.md",
+  "input_format": "markdown",
+  "materialized_markdown_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\pdf-derived-corpus\\company_profile_2025_trial.md",
+  "downstream": {
+    "decision": "go",
+    "reason_code": "local_approved_source_ingestion_ready",
+    "source_id": "company_profile_2025_trial",
+    "title": "公司简介 2025 trial",
+    "query": "公司主营业务是什么？",
+    "top_k": 3,
+    "json_path": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\local-approved-source-ingestion-loop.json",
+    "markdown_path": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\approved-source-ingestion-loop\\local-approved-source-ingestion-loop.md",
+    "summary": {
+      "step_count": 5,
+      "ready_step_count": 5,
+      "review_step_count": 0,
+      "blocked_step_count": 0,
+      "final_decision": "go",
+      "explicit_ingestion_job_created": true,
+      "source_binding_status": "not_created",
+      "runtime_promotion_status": "keep_runtime_defaults",
+      "graph_execution_status": "not_executed"
+    }
+  },
+  "summary": {
+    "input_status": "ready",
+    "input_format": "markdown",
+    "materialized_markdown_status": "ready",
+    "downstream_decision": "go",
+    "downstream_reason_code": "local_approved_source_ingestion_ready",
+    "final_decision": "go",
+    "source_binding_status": "not_created",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "retrieval_backend_promotion_status": "not_changed",
+    "graph_execution_status": "not_executed"
+  },
+  "recommended_actions": [
+    "use_source_for_local_enterprise_rag_questions",
+    "call_provider_rag_answer_with_registered_source_id",
+    "keep_source_binding_decisions_in_myprivateagent_control_plane"
+  ],
+  "non_goals": [
+    "does_not_parse_raw_pdf_as_supported_direct_ingestion",
+    "does_not_start_ocr_services",
+    "does_not_start_parser_services",
+    "does_not_call_myprivateagent",
+    "does_not_create_source_to_agent_binding",
+    "does_not_mutate_chat_runtime",
+    "does_not_promote_retrieval_backend",
+    "does_not_add_background_worker",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\local-enterprise-corpus-ingestion-qa-loop.json",
+  "markdown_path": "docs\\local-run\\local-enterprise-corpus-ingestion-qa-loop\\local-enterprise-corpus-ingestion-qa-loop.md"
+}
