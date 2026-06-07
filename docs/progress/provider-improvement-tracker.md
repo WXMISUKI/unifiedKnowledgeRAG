@@ -99,6 +99,7 @@
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 - Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
 - Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; the immediate next stage is MyPrivateAgent business Q&A user-loop closure, followed by provider document ingestion maturity.
+- Stage 2 provider document ingestion maturity is now being closed through `add-local-approved-source-ingestion-loop`: local source onboarding -> ingestion preflight -> explicit ingestion job -> index status -> acceptance smoke.
 
 ## Benchmark Fixture Scope
 

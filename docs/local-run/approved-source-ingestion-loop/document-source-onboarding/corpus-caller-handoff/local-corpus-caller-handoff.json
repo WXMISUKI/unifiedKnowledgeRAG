@@ -1,0 +1,48 @@
+{
+  "id": "local-corpus-caller-handoff-v1",
+  "generated_at": "2026-06-07T08:23:24.519656+00:00",
+  "status": "ready_for_caller_review",
+  "reason_code": "trial_go_ready_for_caller_review",
+  "trial_report_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-trial.json",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "recommended_query": "公司主营业务是什么？",
+  "registration_status": "not_registered",
+  "citation_policy": "use_generated_trial_citations_only",
+  "caller_next_action": "review_trial_artifacts_before_formal_binding",
+  "artifacts": {
+    "trial_report": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-trial.json",
+    "markdown": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\pdf-derived-corpus\\company_profile_2025_trial.md",
+    "overlay": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-source.json",
+    "chunks": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-chunks.json"
+  },
+  "summary": {
+    "status": "ready_for_caller_review",
+    "trial_decision": "go",
+    "source_id": "company_profile_2025_trial",
+    "retrieved_evidence_count": 3,
+    "answer_citation_count": 3,
+    "invalid_citation_count": 0,
+    "default_source_catalog_status": "unchanged",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "graph_execution_status": "not_executed"
+  },
+  "recommended_actions": [
+    "review_trial_artifacts_before_formal_binding",
+    "decide_whether_to_formally_register_local_source",
+    "keep_provider_default_catalog_unchanged_until_approved"
+  ],
+  "non_goals": [
+    "does_not_modify_default_source_catalog",
+    "does_not_expose_provider_http_source",
+    "does_not_create_source_binding",
+    "does_not_run_formal_ingestion_job",
+    "does_not_persist_index_lifecycle_state",
+    "does_not_promote_retrieval_backend",
+    "does_not_run_myprivateagent_orchestration",
+    "does_not_execute_graphrag",
+    "does_not_start_ocr_services"
+  ],
+  "json_path": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\corpus-caller-handoff\\local-corpus-caller-handoff.json",
+  "markdown_path": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\corpus-caller-handoff\\local-corpus-caller-handoff.md"
+}

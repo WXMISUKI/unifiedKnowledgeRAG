@@ -1,0 +1,125 @@
+{
+  "id": "local-document-source-onboarding-loop-v1",
+  "generated_at": "2026-06-07T08:23:24.619183+00:00",
+  "decision": "go",
+  "reason_code": "local_document_source_onboarded",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "markdown_path": "docs\\local-run\\pdf-derived-corpus\\company_profile_2025_trial.md",
+  "query": "公司主营业务是什么？",
+  "top_k": 3,
+  "steps": [
+    {
+      "id": "business_corpus_trial",
+      "status": "go",
+      "reason_code": "local_business_corpus_usable",
+      "artifacts": {
+        "json": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-trial.json",
+        "markdown": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-trial.md",
+        "overlay": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-source.json",
+        "chunks": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-chunks.json"
+      },
+      "summary": {
+        "decision": "go",
+        "source_id": "company_profile_2025_trial",
+        "markdown_char_count": 2198,
+        "chunk_count": 4,
+        "retrieved_evidence_count": 3,
+        "answer_citation_count": 3,
+        "invalid_citation_count": 0,
+        "trial_overlay_status": "written",
+        "formal_registration_status": "not_registered",
+        "default_source_catalog_status": "unchanged",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      }
+    },
+    {
+      "id": "caller_handoff",
+      "status": "ready_for_caller_review",
+      "reason_code": "trial_go_ready_for_caller_review",
+      "artifacts": {
+        "json": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\corpus-caller-handoff\\local-corpus-caller-handoff.json",
+        "markdown": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\corpus-caller-handoff\\local-corpus-caller-handoff.md"
+      },
+      "summary": {
+        "status": "ready_for_caller_review",
+        "trial_decision": "go",
+        "source_id": "company_profile_2025_trial",
+        "retrieved_evidence_count": 3,
+        "answer_citation_count": 3,
+        "invalid_citation_count": 0,
+        "default_source_catalog_status": "unchanged",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      }
+    },
+    {
+      "id": "approved_source_registration",
+      "status": "registered",
+      "reason_code": "approved_local_source_registered",
+      "artifacts": {
+        "json": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\approved-local-source-registration\\approved-local-source-registration.json",
+        "markdown": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\approved-local-source-registration\\approved-local-source-registration.md",
+        "materialized_source": "app\\data\\sources\\company_profile_2025_trial.md"
+      },
+      "summary": {
+        "source_id": "company_profile_2025_trial",
+        "registry_status": "written",
+        "materialized_source_status": "written",
+        "content_sha256": "dadf096f29bb53c50d38df810c486a5fb61d3d88ce193d869009a301f89f5703",
+        "default_source_catalog_status": "extended_with_approved_local_source",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "source_binding_status": "not_created",
+        "graph_execution_status": "not_executed"
+      }
+    },
+    {
+      "id": "acceptance_smoke",
+      "status": "go",
+      "reason_code": "approved_local_corpus_accepted",
+      "artifacts": {
+        "json": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\approved-local-corpus-acceptance\\approved-local-corpus-acceptance-smoke.json",
+        "markdown": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\approved-local-corpus-acceptance\\approved-local-corpus-acceptance-smoke.md"
+      },
+      "summary": {
+        "case_count": 5,
+        "ready_case_count": 5,
+        "review_case_count": 0,
+        "blocked_case_count": 0,
+        "invalid_citation_count": 0,
+        "source_binding_status": "not_created",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "graph_execution_status": "not_executed"
+      }
+    }
+  ],
+  "summary": {
+    "step_count": 4,
+    "ready_step_count": 4,
+    "review_step_count": 0,
+    "blocked_step_count": 0,
+    "final_decision": "go",
+    "source_binding_status": "not_created",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "graph_execution_status": "not_executed"
+  },
+  "recommended_actions": [
+    "use_registered_source_for_myprivateagent_explicit_trial",
+    "declare_source_id_in_domain_agent_manifest_when_needed",
+    "keep_source_to_agent_binding_in_caller_control_plane"
+  ],
+  "non_goals": [
+    "does_not_parse_raw_pdf_as_supported_ingestion",
+    "does_not_start_ocr_services",
+    "does_not_create_source_to_agent_binding",
+    "does_not_call_myprivateagent",
+    "does_not_create_formal_ingestion_job",
+    "does_not_promote_retrieval_backend",
+    "does_not_call_vector_databases",
+    "does_not_mutate_chat_runtime",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\local-document-source-onboarding.json",
+  "markdown_path_out": "docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\local-document-source-onboarding.md"
+}

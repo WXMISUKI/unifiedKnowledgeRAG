@@ -17,7 +17,19 @@ This note keeps the next RAG work practical. The goal is to make the local provi
 
 ## Immediate Next Stage
 
-Start with Stage 1 in `MyPrivateAgent`: close the local business Q&A user loop over the current `company_profile_2025_trial` corpus.
+Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. The immediate next stage is Stage 2 in `unifiedKnowledgeRAG`: close the provider local approved-source ingestion loop.
 
-This keeps the current provider work from drifting into more evidence documents. If Stage 1 is `go`, the next provider-side stage should be document ingestion rather than GraphRAG.
+The Stage 2 command should verify source onboarding, ingestion preflight, explicit ingestion job, index status, and retrieval acceptance for the selected local markdown business source. If Stage 2 is `go`, the next useful direction is parser adapter boundary for PDF/Word/Excel/OCR-derived artifacts, not GraphRAG.
 
+## Stage 2 Local Ingestion Loop
+
+The local operator entrypoint is:
+
+`python scripts/export_local_approved_source_ingestion_loop.py`
+
+It writes:
+
+- `docs/local-run/approved-source-ingestion-loop/local-approved-source-ingestion-loop.json`
+- `docs/local-run/approved-source-ingestion-loop/local-approved-source-ingestion-loop.md`
+
+This loop creates only an explicit local ingestion job for the selected source. It does not parse raw PDFs, start OCR services, call MyPrivateAgent, create source-to-agent bindings, mutate `/api/chat`, promote retrieval defaults, introduce background workers, or execute GraphRAG.
