@@ -140,3 +140,26 @@ profile question set. `review` means query coverage, markdown cleanup, or page
 range needs review. `blocked` means catalog, manifest, retrieve, answer, or
 citation contracts failed. This smoke runs in-process and does not require a
 running external provider service.
+
+# Run approved local corpus live HTTP smoke
+
+After the provider is already running on port `8020`, validate the same approved
+local corpus through real HTTP:
+
+```powershell
+python scripts/export_approved_local_corpus_live_http_smoke.py `
+  --base-url http://127.0.0.1:8020 `
+  --source-id company_profile_2025_trial
+```
+
+Default outputs:
+
+```text
+docs/local-run/approved-local-corpus-live-http/approved-local-corpus-live-http-smoke.json
+docs/local-run/approved-local-corpus-live-http/approved-local-corpus-live-http-smoke.md
+```
+
+`Decision: go` means the registered local corpus is usable through the live
+provider HTTP contract and can move to MyPrivateAgent-side local trial usage.
+This smoke does not start the server, register sources, create bindings, run
+OCR, promote retrieval backends, or execute GraphRAG.

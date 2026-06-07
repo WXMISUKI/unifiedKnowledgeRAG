@@ -792,6 +792,24 @@ The smoke writes:
 
 The smoke validates catalog visibility, source document manifest availability, multiple answerable company-profile questions, citation allowlist behavior, and an unrelated negative-control query. It returns `go`, `review`, or `blocked` so the team can decide whether the registered local corpus is ready for MyPrivateAgent-side trial usage. It runs in-process and does not start external services, register sources, create source-to-agent binding, create formal ingestion jobs, start OCR, promote retrieval backends, call vector databases, or execute GraphRAG.
 
+## Approved Local Corpus Live HTTP Smoke
+
+After the provider is already running, the registered company-profile corpus can be verified through the same HTTP path a caller will use:
+
+```powershell
+python scripts/export_approved_local_corpus_live_http_smoke.py `
+  --base-url http://127.0.0.1:8020 `
+  --source-id company_profile_2025_trial
+```
+
+The smoke writes:
+
+`docs/local-run/approved-local-corpus-live-http/approved-local-corpus-live-http-smoke.json`
+
+`docs/local-run/approved-local-corpus-live-http/approved-local-corpus-live-http-smoke.md`
+
+The smoke validates catalog visibility, source document manifest availability, multiple answerable company-profile questions, citation allowlists, and an unrelated negative-control query over live HTTP. `Decision: go` means the provider-side local corpus path is ready for MyPrivateAgent-side local trial usage. It does not start the server, register sources, create source-to-agent binding, create formal ingestion jobs, start OCR, promote retrieval backends, call vector databases, run MyPrivateAgent orchestration, or execute GraphRAG.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:

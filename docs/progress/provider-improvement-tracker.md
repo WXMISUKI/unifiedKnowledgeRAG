@@ -97,6 +97,7 @@
 - Evidence refresh stage is now operationalized and should be maintained through:
   `python scripts/export_provider_handoff_refresh.py`
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
+- Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
 
 ## Benchmark Fixture Scope
 
@@ -283,6 +284,7 @@
 - Local corpus caller handoff implemented (`add-local-corpus-caller-handoff`), packaging a go local business corpus trial into caller-facing review artifacts while preserving not-registered and default-catalog-unchanged boundaries.
 - Approved local corpus source registration implemented (`add-approved-local-corpus-source-registration`), allowing a ready local corpus handoff to become a provider-visible local markdown source without source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
 - Approved local corpus acceptance smoke implemented (`add-approved-local-corpus-acceptance-smoke`), validating the registered company profile source across multiple business questions, citation allowlists, and a negative-control query before MyPrivateAgent-side trial usage.
+- Approved local corpus live HTTP smoke implemented (`add-approved-local-corpus-live-http-smoke`), validating the registered company profile source through the already-running local provider at `http://127.0.0.1:8020` with `decision=go`, five ready cases, and zero invalid citations.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -406,6 +408,10 @@
   - Status: `completed`
   - Change: `add-approved-local-corpus-acceptance-smoke`
   - Gate target: registered local company-profile corpus business usability, not source registration, source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
+- Approved Local Corpus Live HTTP Smoke
+  - Status: `completed`
+  - Change: `add-approved-local-corpus-live-http-smoke`
+  - Gate target: registered local company-profile corpus live HTTP usability, not service startup, source registration, source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
 
 ## Latest Refresh
 
