@@ -1,0 +1,47 @@
+[
+  {
+    "id": "business_scope",
+    "query": "公司主营业务是什么？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation": "company_profile_2025_trial#chunk-3",
+    "category": "business_scope",
+    "description": "Main business scope should be answerable from parser-derived company profile."
+  },
+  {
+    "id": "service_scope",
+    "query": "公司服务对象覆盖哪些行业？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation": "company_profile_2025_trial#chunk-5",
+    "category": "service_scope",
+    "description": "Service scope should be answerable from parser-derived company profile."
+  },
+  {
+    "id": "profile_summary",
+    "query": "这份公司简介资料适合回答哪些类型的问题？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation": "company_profile_2025_trial#chunk-3",
+    "category": "profile_summary",
+    "description": "Profile summary should remain answerable."
+  },
+  {
+    "id": "negative_contract_amount",
+    "query": "公司有哪些合同金额？",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation": null,
+    "category": "negative_control",
+    "description": "Contract amount is not supported by the parser-derived profile."
+  },
+  {
+    "id": "negative_staff_roster",
+    "query": "公司员工名单有哪些？",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation": null,
+    "category": "negative_control",
+    "description": "Staff roster is not supported by the parser-derived profile."
+  }
+]

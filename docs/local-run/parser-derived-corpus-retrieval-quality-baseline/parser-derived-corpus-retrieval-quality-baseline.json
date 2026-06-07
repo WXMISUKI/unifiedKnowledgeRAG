@@ -1,0 +1,180 @@
+{
+  "id": "parser-derived-corpus-retrieval-quality-baseline-v1",
+  "generated_at": "2026-06-07T09:36:39.636528+00:00",
+  "source_id": "company_profile_2025_trial",
+  "decision": "review",
+  "reason_code": "parser_derived_corpus_quality_needs_review",
+  "top_k": 3,
+  "case_file": "docs\\local-run\\parser-derived-corpus-retrieval-quality-baseline\\company-profile-quality-cases.json",
+  "summary": {
+    "case_count": 5,
+    "answerable_case_count": 3,
+    "expected_empty_case_count": 2,
+    "hit_rate": 1.0,
+    "citation_match_rate": 1.0,
+    "empty_handling_rate": 0.0,
+    "invalid_citation_count": 0,
+    "review_case_ids": [
+      "negative_contract_amount",
+      "negative_staff_roster"
+    ],
+    "blocked_case_ids": [],
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_binding_status": "not_created",
+    "graph_execution_status": "not_executed",
+    "final_decision": "review"
+  },
+  "cases": [
+    {
+      "id": "business_scope",
+      "query": "公司主营业务是什么？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation": "company_profile_2025_trial#chunk-3",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "invalid_citations": [],
+      "category": "business_scope"
+    },
+    {
+      "id": "service_scope",
+      "query": "公司服务对象覆盖哪些行业？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation": "company_profile_2025_trial#chunk-5",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-5",
+        "company_profile_2025_trial#chunk-3"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-5",
+        "company_profile_2025_trial#chunk-3"
+      ],
+      "invalid_citations": [],
+      "category": "service_scope"
+    },
+    {
+      "id": "profile_summary",
+      "query": "这份公司简介资料适合回答哪些类型的问题？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation": "company_profile_2025_trial#chunk-3",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "invalid_citations": [],
+      "category": "profile_summary"
+    },
+    {
+      "id": "negative_contract_amount",
+      "query": "公司有哪些合同金额？",
+      "expected_mode": "insufficient_evidence",
+      "status": "review",
+      "reason_code": "negative_control_returned_evidence",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": null,
+      "expected_citation": null,
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "invalid_citations": [],
+      "category": "negative_control"
+    },
+    {
+      "id": "negative_staff_roster",
+      "query": "公司员工名单有哪些？",
+      "expected_mode": "insufficient_evidence",
+      "status": "review",
+      "reason_code": "negative_control_returned_evidence",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": null,
+      "expected_citation": null,
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-5"
+      ],
+      "invalid_citations": [],
+      "category": "negative_control"
+    }
+  ],
+  "recommended_actions": [
+    "review_parser_derived_markdown_chunks_citations_or_queries",
+    "rerun_quality_baseline_before_backend_candidate_review"
+  ],
+  "non_goals": [
+    "does_not_parse_raw_pdf",
+    "does_not_start_ocr_services",
+    "does_not_create_ingestion_jobs",
+    "does_not_call_myprivateagent",
+    "does_not_create_source_to_agent_binding",
+    "does_not_mutate_chat_runtime",
+    "does_not_promote_qdrant_pgvector_bge_m3_hybrid_or_rerankers",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\local-run\\parser-derived-corpus-retrieval-quality-baseline\\parser-derived-corpus-retrieval-quality-baseline.json",
+  "markdown_path": "docs\\local-run\\parser-derived-corpus-retrieval-quality-baseline\\parser-derived-corpus-retrieval-quality-baseline.md"
+}

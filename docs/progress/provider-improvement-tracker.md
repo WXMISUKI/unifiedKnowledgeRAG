@@ -99,7 +99,8 @@
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 - Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
 - Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; Stage 1 MyPrivateAgent business Q&A loop and Stage 2 provider document ingestion loop are closed for the current local company-profile trial.
-- Stage 3 parser adapter boundary is now being closed through Stage 3b: normalized external parser artifacts -> provider-managed markdown/source overlay -> existing local approved-source ingestion loop.
+- Stage 3 parser adapter boundary and Stage 3b parser-artifact-to-ingestion loop are closed for the current local company-profile trial.
+- Parser-derived corpus retrieval quality baseline is now the active quality gate before Stage 4 candidate backend review; current default run is `review` because answerable cases hit expected citations but expected-empty negative controls still return evidence.
 
 ## Benchmark Fixture Scope
 
@@ -291,6 +292,7 @@
 - Local approved source ingestion loop implemented (`add-local-approved-source-ingestion-loop`), closing Stage 2 with source onboarding, ingestion preflight, explicit ingestion job, index status, and acceptance smoke.
 - Normalized parser artifact ingestion boundary implemented (`add-normalized-parser-artifact-ingestion-boundary`), starting Stage 3 by validating external parser artifact JSON and materializing markdown/source-overlay inputs without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
 - Parser artifact local ingestion loop implemented (`add-parser-artifact-local-ingestion-loop`), closing Stage 3b by chaining normalized parser artifact validation/materialization into the existing approved-source ingestion loop without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, source binding, or GraphRAG execution.
+- Parser-derived corpus retrieval quality baseline implemented (`add-parser-derived-corpus-retrieval-quality-baseline`), establishing a local quality gate over answerable parser-derived business questions and expected-empty negative controls before Stage 4 candidate backend review.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -430,6 +432,10 @@
   - Status: `completed`
   - Change: `add-parser-artifact-local-ingestion-loop`
   - Gate target: Stage 3b parser-artifact-to-ingestion closure through existing local approved-source ingestion loop; not raw PDF parsing, OCR startup, parser engine orchestration, source binding, MyPrivateAgent orchestration, backend promotion, or GraphRAG execution.
+- Parser-Derived Corpus Retrieval Quality Baseline
+  - Status: `review`
+  - Change: `add-parser-derived-corpus-retrieval-quality-baseline`
+  - Gate target: local quality baseline over parser-derived company-profile source before candidate backend review; not Qdrant/pgvector/BGE-M3 promotion, rerank, source binding, MyPrivateAgent orchestration, or GraphRAG execution.
 
 ## Latest Refresh
 

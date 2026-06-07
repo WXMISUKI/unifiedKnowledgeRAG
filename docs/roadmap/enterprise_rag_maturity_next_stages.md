@@ -17,9 +17,9 @@ This note keeps the next RAG work practical. The goal is to make the local provi
 
 ## Immediate Next Stage
 
-Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is also closed for the local approved-source ingestion loop. Stage 3 boundary definition is complete. The immediate next Stage 3b slice is to close the parser-artifact-to-local-ingestion loop for externally parsed PDF/Word/Excel/OCR-derived artifacts.
+Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition and Stage 3b parser-artifact-to-local-ingestion loop are closed. The immediate next slice is the parser-derived corpus retrieval quality baseline before any Stage 4 candidate backend review.
 
-The Stage 3b command should validate a normalized external parser artifact, materialize provider-managed markdown/source-overlay artifacts, run the existing local approved-source ingestion loop, and keep raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, source binding, and GraphRAG execution out of provider defaults.
+The quality baseline command should verify answerable parser-derived business questions, expected-empty negative controls, citation match rate, and invalid citation count while keeping Qdrant/pgvector/BGE-M3 promotion, parser/OCR execution, MyPrivateAgent orchestration, source binding, and GraphRAG execution out of provider defaults.
 
 ## Stage 2 Local Ingestion Loop
 
@@ -61,3 +61,16 @@ It writes:
 - `docs/local-run/parser-artifact-local-ingestion-loop/parser-artifact-local-ingestion-loop.md`
 
 This loop orchestrates the normalized parser artifact boundary and the existing approved-source ingestion loop. It does not parse raw PDFs, start OCR services, call parser engines, create source-to-agent bindings, call MyPrivateAgent, promote retrieval defaults, or execute GraphRAG.
+
+## Parser-Derived Corpus Retrieval Quality Baseline
+
+The local operator entrypoint is:
+
+`python scripts/export_parser_derived_corpus_retrieval_quality_baseline.py`
+
+It writes:
+
+- `docs/local-run/parser-derived-corpus-retrieval-quality-baseline/parser-derived-corpus-retrieval-quality-baseline.json`
+- `docs/local-run/parser-derived-corpus-retrieval-quality-baseline/parser-derived-corpus-retrieval-quality-baseline.md`
+
+This baseline evaluates a small parser-derived company-profile query set with answerable and expected-empty cases. It does not promote Qdrant, pgvector, BGE-M3, hybrid search, rerankers, chunking defaults, MyPrivateAgent orchestration, or GraphRAG execution.
