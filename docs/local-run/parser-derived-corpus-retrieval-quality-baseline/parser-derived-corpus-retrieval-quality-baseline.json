@@ -1,9 +1,9 @@
 {
   "id": "parser-derived-corpus-retrieval-quality-baseline-v1",
-  "generated_at": "2026-06-07T09:36:39.636528+00:00",
+  "generated_at": "2026-06-07T13:45:23.003039+00:00",
   "source_id": "company_profile_2025_trial",
-  "decision": "review",
-  "reason_code": "parser_derived_corpus_quality_needs_review",
+  "decision": "go",
+  "reason_code": "parser_derived_corpus_quality_baseline_go",
   "top_k": 3,
   "case_file": "docs\\local-run\\parser-derived-corpus-retrieval-quality-baseline\\company-profile-quality-cases.json",
   "summary": {
@@ -12,17 +12,14 @@
     "expected_empty_case_count": 2,
     "hit_rate": 1.0,
     "citation_match_rate": 1.0,
-    "empty_handling_rate": 0.0,
+    "empty_handling_rate": 1.0,
     "invalid_citation_count": 0,
-    "review_case_ids": [
-      "negative_contract_amount",
-      "negative_staff_roster"
-    ],
+    "review_case_ids": [],
     "blocked_case_ids": [],
     "runtime_promotion_status": "keep_runtime_defaults",
     "source_binding_status": "not_created",
     "graph_execution_status": "not_executed",
-    "final_decision": "review"
+    "final_decision": "go"
   },
   "cases": [
     {
@@ -32,22 +29,25 @@
       "status": "ready",
       "reason_code": "answerable_case_passed",
       "retrieve_ok": true,
-      "retrieve_count": 2,
+      "retrieve_count": 3,
       "answer_ok": true,
       "answer_status": "answered",
       "expected_source_id": "company_profile_2025_trial",
-      "expected_citation": "company_profile_2025_trial#chunk-3",
+      "expected_citation": "company_profile_2025_trial#chunk-123",
       "returned_source_ids": [
+        "company_profile_2025_trial",
         "company_profile_2025_trial",
         "company_profile_2025_trial"
       ],
       "returned_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
+        "company_profile_2025_trial#chunk-123",
+        "company_profile_2025_trial#chunk-201",
+        "company_profile_2025_trial#chunk-1"
       ],
       "answer_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
+        "company_profile_2025_trial#chunk-123",
+        "company_profile_2025_trial#chunk-201",
+        "company_profile_2025_trial#chunk-1"
       ],
       "invalid_citations": [],
       "category": "business_scope"
@@ -59,22 +59,25 @@
       "status": "ready",
       "reason_code": "answerable_case_passed",
       "retrieve_ok": true,
-      "retrieve_count": 2,
+      "retrieve_count": 3,
       "answer_ok": true,
       "answer_status": "answered",
       "expected_source_id": "company_profile_2025_trial",
-      "expected_citation": "company_profile_2025_trial#chunk-5",
+      "expected_citation": "company_profile_2025_trial#chunk-147",
       "returned_source_ids": [
+        "company_profile_2025_trial",
         "company_profile_2025_trial",
         "company_profile_2025_trial"
       ],
       "returned_citations": [
-        "company_profile_2025_trial#chunk-5",
-        "company_profile_2025_trial#chunk-3"
+        "company_profile_2025_trial#chunk-147",
+        "company_profile_2025_trial#chunk-151",
+        "company_profile_2025_trial#chunk-1"
       ],
       "answer_citations": [
-        "company_profile_2025_trial#chunk-5",
-        "company_profile_2025_trial#chunk-3"
+        "company_profile_2025_trial#chunk-147",
+        "company_profile_2025_trial#chunk-151",
+        "company_profile_2025_trial#chunk-1"
       ],
       "invalid_citations": [],
       "category": "service_scope"
@@ -86,22 +89,25 @@
       "status": "ready",
       "reason_code": "answerable_case_passed",
       "retrieve_ok": true,
-      "retrieve_count": 2,
+      "retrieve_count": 3,
       "answer_ok": true,
       "answer_status": "answered",
       "expected_source_id": "company_profile_2025_trial",
-      "expected_citation": "company_profile_2025_trial#chunk-3",
+      "expected_citation": "company_profile_2025_trial#chunk-1",
       "returned_source_ids": [
+        "company_profile_2025_trial",
         "company_profile_2025_trial",
         "company_profile_2025_trial"
       ],
       "returned_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
+        "company_profile_2025_trial#chunk-1",
+        "company_profile_2025_trial#chunk-45",
+        "company_profile_2025_trial#chunk-105"
       ],
       "answer_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
+        "company_profile_2025_trial#chunk-1",
+        "company_profile_2025_trial#chunk-45",
+        "company_profile_2025_trial#chunk-105"
       ],
       "invalid_citations": [],
       "category": "profile_summary"
@@ -110,26 +116,17 @@
       "id": "negative_contract_amount",
       "query": "公司有哪些合同金额？",
       "expected_mode": "insufficient_evidence",
-      "status": "review",
-      "reason_code": "negative_control_returned_evidence",
+      "status": "ready",
+      "reason_code": "negative_control_passed",
       "retrieve_ok": true,
-      "retrieve_count": 2,
+      "retrieve_count": 0,
       "answer_ok": true,
-      "answer_status": "answered",
+      "answer_status": "insufficient_evidence",
       "expected_source_id": null,
       "expected_citation": null,
-      "returned_source_ids": [
-        "company_profile_2025_trial",
-        "company_profile_2025_trial"
-      ],
-      "returned_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
-      ],
-      "answer_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
-      ],
+      "returned_source_ids": [],
+      "returned_citations": [],
+      "answer_citations": [],
       "invalid_citations": [],
       "category": "negative_control"
     },
@@ -137,33 +134,24 @@
       "id": "negative_staff_roster",
       "query": "公司员工名单有哪些？",
       "expected_mode": "insufficient_evidence",
-      "status": "review",
-      "reason_code": "negative_control_returned_evidence",
+      "status": "ready",
+      "reason_code": "negative_control_passed",
       "retrieve_ok": true,
-      "retrieve_count": 2,
+      "retrieve_count": 0,
       "answer_ok": true,
-      "answer_status": "answered",
+      "answer_status": "insufficient_evidence",
       "expected_source_id": null,
       "expected_citation": null,
-      "returned_source_ids": [
-        "company_profile_2025_trial",
-        "company_profile_2025_trial"
-      ],
-      "returned_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
-      ],
-      "answer_citations": [
-        "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-5"
-      ],
+      "returned_source_ids": [],
+      "returned_citations": [],
+      "answer_citations": [],
       "invalid_citations": [],
       "category": "negative_control"
     }
   ],
   "recommended_actions": [
-    "review_parser_derived_markdown_chunks_citations_or_queries",
-    "rerun_quality_baseline_before_backend_candidate_review"
+    "use_quality_baseline_as_stage4_candidate_backend_input",
+    "keep_runtime_defaults_until_candidate_backend_review_passes"
   ],
   "non_goals": [
     "does_not_parse_raw_pdf",

@@ -293,6 +293,7 @@
 - Normalized parser artifact ingestion boundary implemented (`add-normalized-parser-artifact-ingestion-boundary`), starting Stage 3 by validating external parser artifact JSON and materializing markdown/source-overlay inputs without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
 - Parser artifact local ingestion loop implemented (`add-parser-artifact-local-ingestion-loop`), closing Stage 3b by chaining normalized parser artifact validation/materialization into the existing approved-source ingestion loop without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, source binding, or GraphRAG execution.
 - Parser-derived corpus retrieval quality baseline implemented (`add-parser-derived-corpus-retrieval-quality-baseline`), establishing a local quality gate over answerable parser-derived business questions and expected-empty negative controls before Stage 4 candidate backend review.
+- Parser-derived corpus insufficient-evidence guard implemented (`add-parser-derived-corpus-insufficient-evidence-guard`), moving the company-profile parser-derived quality baseline to `decision=go` with `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0` while preserving runtime defaults and GraphRAG deferral.
 - Local PDF parser provider bridge implemented (`add-local-pdf-parser-provider-bridge`), closing the first real-PDF provider-side bridge by calling an operator-started PaddleOCR `/ocr` service, writing a normalized parser artifact, and reusing the existing parser-artifact local ingestion loop with `decision=go` for the company profile PDF first-five-page trial.
 - Refreshed baseline summary:
   - `total_cases=32`
@@ -434,8 +435,8 @@
   - Change: `add-parser-artifact-local-ingestion-loop`
   - Gate target: Stage 3b parser-artifact-to-ingestion closure through existing local approved-source ingestion loop; not raw PDF parsing, OCR startup, parser engine orchestration, source binding, MyPrivateAgent orchestration, backend promotion, or GraphRAG execution.
 - Parser-Derived Corpus Retrieval Quality Baseline
-  - Status: `review`
-  - Change: `add-parser-derived-corpus-retrieval-quality-baseline`
+  - Status: `completed`
+  - Change: `add-parser-derived-corpus-insufficient-evidence-guard`
   - Gate target: local quality baseline over parser-derived company-profile source before candidate backend review; not Qdrant/pgvector/BGE-M3 promotion, rerank, source binding, MyPrivateAgent orchestration, or GraphRAG execution.
 - Local PDF Parser Provider Bridge
   - Status: `completed`

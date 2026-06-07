@@ -87,4 +87,4 @@ It writes:
 - `docs/local-run/parser-derived-corpus-retrieval-quality-baseline/parser-derived-corpus-retrieval-quality-baseline.json`
 - `docs/local-run/parser-derived-corpus-retrieval-quality-baseline/parser-derived-corpus-retrieval-quality-baseline.md`
 
-This baseline evaluates a small parser-derived company-profile query set with answerable and expected-empty cases. It does not promote Qdrant, pgvector, BGE-M3, hybrid search, rerankers, chunking defaults, MyPrivateAgent orchestration, or GraphRAG execution.
+This baseline evaluates a small parser-derived company-profile query set with answerable and expected-empty cases. The current company-profile baseline is `go`: answerable cases keep source/citation coverage, and expected-empty contract-amount/staff-roster questions now return `insufficient_evidence` without endorsed citations. It does not promote Qdrant, pgvector, BGE-M3, hybrid search, rerankers, chunking defaults, MyPrivateAgent orchestration, or GraphRAG execution.

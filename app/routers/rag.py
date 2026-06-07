@@ -12,6 +12,7 @@ from app.models.contracts import (
 )
 from app.config import get_settings
 from app.services.evidence_pack import build_evidence_pack
+from app.services.insufficient_evidence_guard import apply_insufficient_evidence_guard
 from app.services.retrieval_backends import create_document_retriever
 from app.services.rag_answer_orchestrator import create_answer_composer
 from app.services.request_filter_context import normalize_request_filter_context
@@ -82,10 +83,18 @@ def retrieve_documents(request: RagRetrieveRequest) -> RagRetrieveResponse:
             ),
         )
 
+    guard_result = apply_insufficient_evidence_guard(
+        query=request.query,
+        requested_source_ids=request.knowledge_base_ids,
+        documents=documents,
+    )
+    documents = guard_result.documents
     filter_metadata = filter_context.metadata(
         backend=retriever.backend_name,
         enforced=retriever.filters_enforced(),
     )
+    if guard_result.metadata is not None:
+        filter_metadata["insufficient_evidence_guard"] = guard_result.metadata
     retrieval_trace = build_retrieval_trace(
         backend=retriever.backend_name,
         requested_source_ids=request.knowledge_base_ids,
@@ -169,10 +178,18 @@ def answer_documents(request: RagAnswerRequest) -> RagAnswerResponse:
             ),
         )
 
+    guard_result = apply_insufficient_evidence_guard(
+        query=request.query,
+        requested_source_ids=request.knowledge_base_ids,
+        documents=documents,
+    )
+    documents = guard_result.documents
     filter_metadata = filter_context.metadata(
         backend=retriever.backend_name,
         enforced=retriever.filters_enforced(),
     )
+    if guard_result.metadata is not None:
+        filter_metadata["insufficient_evidence_guard"] = guard_result.metadata
     retrieval_trace = build_retrieval_trace(
         backend=retriever.backend_name,
         requested_source_ids=request.knowledge_base_ids,

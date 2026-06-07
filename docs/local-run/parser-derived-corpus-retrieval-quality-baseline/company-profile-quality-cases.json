@@ -4,7 +4,7 @@
     "query": "公司主营业务是什么？",
     "expected_mode": "answerable",
     "expected_source_id": "company_profile_2025_trial",
-    "expected_citation": "company_profile_2025_trial#chunk-3",
+    "expected_citation": "company_profile_2025_trial#chunk-123",
     "category": "business_scope",
     "description": "Main business scope should be answerable from parser-derived company profile."
   },
@@ -13,7 +13,7 @@
     "query": "公司服务对象覆盖哪些行业？",
     "expected_mode": "answerable",
     "expected_source_id": "company_profile_2025_trial",
-    "expected_citation": "company_profile_2025_trial#chunk-5",
+    "expected_citation": "company_profile_2025_trial#chunk-147",
     "category": "service_scope",
     "description": "Service scope should be answerable from parser-derived company profile."
   },
@@ -22,7 +22,7 @@
     "query": "这份公司简介资料适合回答哪些类型的问题？",
     "expected_mode": "answerable",
     "expected_source_id": "company_profile_2025_trial",
-    "expected_citation": "company_profile_2025_trial#chunk-3",
+    "expected_citation": "company_profile_2025_trial#chunk-1",
     "category": "profile_summary",
     "description": "Profile summary should remain answerable."
   },

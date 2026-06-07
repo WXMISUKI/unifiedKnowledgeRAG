@@ -255,10 +255,12 @@ def test_rag_sources_are_available_separately():
 
     assert response.status_code == 200
     body = response.json()
-    assert [source["id"] for source in body["knowledge_bases"]] == [
+    source_ids = [source["id"] for source in body["knowledge_bases"]]
+    assert source_ids[:2] == [
         "refund_policy_docs",
         "logistics_faq",
     ]
+    assert "company_profile_2025_trial" in source_ids
 
 
 def test_rag_source_document_manifest_exposes_source_documents():
