@@ -810,6 +810,25 @@ The smoke writes:
 
 The smoke validates catalog visibility, source document manifest availability, multiple answerable company-profile questions, citation allowlists, and an unrelated negative-control query over live HTTP. `Decision: go` means the provider-side local corpus path is ready for MyPrivateAgent-side local trial usage. It does not start the server, register sources, create source-to-agent binding, create formal ingestion jobs, start OCR, promote retrieval backends, call vector databases, run MyPrivateAgent orchestration, or execute GraphRAG.
 
+## Local Document Source Onboarding Loop
+
+After a PDF-derived or hand-authored markdown corpus exists, the recommended local operator path is a single onboarding command:
+
+```powershell
+python scripts/onboard_local_document_source.py `
+  --markdown-path docs/local-run/pdf-derived-corpus/company_profile_2025_trial.md `
+  --source-id company_profile_2025_trial `
+  --query "公司主营业务是什么？"
+```
+
+The loop writes:
+
+`docs/local-run/document-source-onboarding/local-document-source-onboarding.json`
+
+`docs/local-run/document-source-onboarding/local-document-source-onboarding.md`
+
+It chains the existing local business corpus trial, caller handoff, approved local source registration, and approved local corpus acceptance smoke into one `go`, `review`, or `blocked` decision. It is the preferred lightweight way to add a local markdown business source for MyPrivateAgent trials. It still does not parse raw PDFs as a supported ingestion format, start OCR services, create source-to-agent bindings, call MyPrivateAgent, create formal ingestion jobs, promote retrieval backends, call vector databases, mutate `/api/chat`, or execute GraphRAG.
+
 ## Provider API Access Guard
 
 Phase 6 deployment work now includes a default-off provider API key guard. When `PROVIDER_API_KEY` is configured, `/api/*` requests require either:
