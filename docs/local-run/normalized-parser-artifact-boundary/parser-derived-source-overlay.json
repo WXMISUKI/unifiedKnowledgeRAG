@@ -1,0 +1,22 @@
+{
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "owner": "local_trial",
+  "domain": "company_profile",
+  "language": "zh-CN",
+  "sensitivity": "local_private_trial",
+  "markdown_path": "docs\\local-run\\normalized-parser-artifact-boundary\\parser-derived-source.md",
+  "content_sha256": "0bf65ce81403c2320e5a433ea7335d75742e98a77defd260d723487bd25305bc",
+  "parser_artifact": {
+    "artifact_id": "company_profile_pdf_pages_1_5",
+    "parser_id": "external-pdf-markdown-v1",
+    "parser_version": "trial",
+    "parsed_at": "2026-06-07T00:00:00+00:00",
+    "original_file_path": "D:/xwechat_files/company_profile.pdf",
+    "original_file_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "page_range": "1-5"
+  },
+  "runtime_promotion_status": "keep_runtime_defaults",
+  "source_binding_status": "not_created",
+  "graph_execution_status": "not_executed"
+}

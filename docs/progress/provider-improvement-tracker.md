@@ -98,8 +98,8 @@
   `python scripts/export_provider_handoff_refresh.py`
 - Phase 12 hardening evidence chain is now in review-only mode until required hardening blockers from phase10/11 are cleared.
 - Approved local corpus live HTTP smoke is completed as the final provider-side local HTTP check before moving the next real trial work into MyPrivateAgent.
-- Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; the immediate next stage is MyPrivateAgent business Q&A user-loop closure, followed by provider document ingestion maturity.
-- Stage 2 provider document ingestion maturity is now being closed through `add-local-approved-source-ingestion-loop`: local source onboarding -> ingestion preflight -> explicit ingestion job -> index status -> acceptance smoke.
+- Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; Stage 1 MyPrivateAgent business Q&A loop and Stage 2 provider document ingestion loop are closed for the current local company-profile trial.
+- Stage 3 parser adapter boundary is the active next RAG maturity slice: normalized external parser artifacts -> provider-managed markdown/source overlay -> existing local onboarding and ingestion loops.
 
 ## Benchmark Fixture Scope
 
@@ -288,6 +288,8 @@
 - Approved local corpus acceptance smoke implemented (`add-approved-local-corpus-acceptance-smoke`), validating the registered company profile source across multiple business questions, citation allowlists, and a negative-control query before MyPrivateAgent-side trial usage.
 - Approved local corpus live HTTP smoke implemented (`add-approved-local-corpus-live-http-smoke`), validating the registered company profile source through the already-running local provider at `http://127.0.0.1:8020` with `decision=go`, five ready cases, and zero invalid citations.
 - Local RAG HTTP + MyPrivateAgent call loop closure implemented (`close-local-rag-http-myprivateagent-call-loop`), confirming the provider live HTTP usability report and MyPrivateAgent caller-side corpus trial both return `go` for `company_profile_2025_trial`.
+- Local approved source ingestion loop implemented (`add-local-approved-source-ingestion-loop`), closing Stage 2 with source onboarding, ingestion preflight, explicit ingestion job, index status, and acceptance smoke.
+- Normalized parser artifact ingestion boundary implemented (`add-normalized-parser-artifact-ingestion-boundary`), starting Stage 3 by validating external parser artifact JSON and materializing markdown/source-overlay inputs without raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
 - Refreshed baseline summary:
   - `total_cases=32`
   - `hit_rate=0.9062`
@@ -415,6 +417,14 @@
   - Status: `completed`
   - Change: `add-approved-local-corpus-live-http-smoke`
   - Gate target: registered local company-profile corpus live HTTP usability, not service startup, source registration, source binding, formal ingestion, backend promotion, OCR startup, MyPrivateAgent orchestration, or GraphRAG execution.
+- Local Approved Source Ingestion Loop
+  - Status: `completed`
+  - Change: `add-local-approved-source-ingestion-loop`
+  - Gate target: Stage 2 provider document ingestion closure through explicit local onboarding, preflight, ingestion job, index status, and acceptance smoke; not raw PDF parsing, OCR startup, source binding, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
+- Normalized Parser Artifact Ingestion Boundary
+  - Status: `completed`
+  - Change: `add-normalized-parser-artifact-ingestion-boundary`
+  - Gate target: Stage 3 external parser artifact boundary; not provider-owned parser engines, raw PDF ingestion support, OCR service startup, ingestion job creation, backend promotion, MyPrivateAgent orchestration, or GraphRAG execution.
 
 ## Latest Refresh
 

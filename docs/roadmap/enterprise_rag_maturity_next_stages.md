@@ -17,9 +17,9 @@ This note keeps the next RAG work practical. The goal is to make the local provi
 
 ## Immediate Next Stage
 
-Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. The immediate next stage is Stage 2 in `unifiedKnowledgeRAG`: close the provider local approved-source ingestion loop.
+Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is also closed for the local approved-source ingestion loop. The immediate next stage is Stage 3: define the parser adapter boundary for externally parsed PDF/Word/Excel/OCR-derived artifacts.
 
-The Stage 2 command should verify source onboarding, ingestion preflight, explicit ingestion job, index status, and retrieval acceptance for the selected local markdown business source. If Stage 2 is `go`, the next useful direction is parser adapter boundary for PDF/Word/Excel/OCR-derived artifacts, not GraphRAG.
+The Stage 3 command should validate a normalized external parser artifact, materialize provider-managed markdown/source-overlay artifacts, and keep raw PDF parsing, OCR startup, backend promotion, MyPrivateAgent orchestration, source binding, and GraphRAG execution out of provider defaults.
 
 ## Stage 2 Local Ingestion Loop
 
@@ -33,3 +33,18 @@ It writes:
 - `docs/local-run/approved-source-ingestion-loop/local-approved-source-ingestion-loop.md`
 
 This loop creates only an explicit local ingestion job for the selected source. It does not parse raw PDFs, start OCR services, call MyPrivateAgent, create source-to-agent bindings, mutate `/api/chat`, promote retrieval defaults, introduce background workers, or execute GraphRAG.
+
+## Stage 3 Parser Artifact Boundary
+
+The local operator entrypoint is:
+
+`python scripts/export_normalized_parser_artifact_ingestion_boundary.py`
+
+It writes:
+
+- `docs/local-run/normalized-parser-artifact-boundary/normalized-parser-artifact-boundary.json`
+- `docs/local-run/normalized-parser-artifact-boundary/normalized-parser-artifact-boundary.md`
+- `docs/local-run/normalized-parser-artifact-boundary/parser-derived-source.md`
+- `docs/local-run/normalized-parser-artifact-boundary/parser-derived-source-overlay.json`
+
+This loop accepts only a normalized external parser artifact JSON file. It does not parse raw PDFs, start OCR services, call parser engines, create ingestion jobs, promote retrieval defaults, create source-to-agent bindings, call MyPrivateAgent, or execute GraphRAG.

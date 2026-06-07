@@ -3,7 +3,7 @@
 - Report: `local-business-corpus-trial-loop-v1`
 - Decision: `go`
 - Reason: `local_business_corpus_usable`
-- Generated At: `2026-06-07T08:23:24.517341+00:00`
+- Generated At: `2026-06-07T08:38:39.863639+00:00`
 - Source ID: `company_profile_2025_trial`
 - Title: `公司简介 2025 trial`
 - Markdown Path: `D:\AI\AIcode\unifiedKnowledgeRAG\docs\local-run\pdf-derived-corpus\company_profile_2025_trial.md`

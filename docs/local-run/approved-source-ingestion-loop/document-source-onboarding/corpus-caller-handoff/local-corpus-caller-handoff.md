@@ -3,7 +3,7 @@
 - Report: `local-corpus-caller-handoff-v1`
 - Status: `ready_for_caller_review`
 - Reason: `trial_go_ready_for_caller_review`
-- Generated At: `2026-06-07T08:23:24.519656+00:00`
+- Generated At: `2026-06-07T08:38:39.866662+00:00`
 - Source ID: `company_profile_2025_trial`
 - Title: `公司简介 2025 trial`
 - Recommended Query: `公司主营业务是什么？`

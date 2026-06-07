@@ -1,0 +1,38 @@
+{
+  "artifact_id": "company_profile_pdf_pages_1_5",
+  "source_id": "company_profile_2025_trial",
+  "title": "公司简介 2025 trial",
+  "owner": "local_trial",
+  "domain": "company_profile",
+  "language": "zh-CN",
+  "sensitivity": "local_private_trial",
+  "original_file": {
+    "path": "D:/xwechat_files/company_profile.pdf",
+    "name": "公司简介2025年10月27日(1).pdf",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "page_range": "1-5"
+  },
+  "parser": {
+    "parser_id": "external-pdf-markdown-v1",
+    "parser_version": "trial",
+    "parsed_at": "2026-06-07T00:00:00+00:00"
+  },
+  "text_blocks": [
+    {
+      "block_id": "page-1-company-overview",
+      "text": "公司简介资料前五页包含公司基本情况、主营业务、服务范围和资质能力说明，可作为本地企业知识库试用语料。",
+      "citation": "company_profile_2025_trial#page-1",
+      "provenance": {
+        "page": 1
+      }
+    },
+    {
+      "block_id": "page-2-business-scope",
+      "text": "公司业务信息适合用于回答企业介绍、主营业务、服务对象和资质能力类问题，后续可通过正式解析器刷新更完整文本。",
+      "citation": "company_profile_2025_trial#page-2",
+      "provenance": {
+        "page": 2
+      }
+    }
+  ]
+}

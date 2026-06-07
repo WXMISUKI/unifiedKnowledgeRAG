@@ -3,7 +3,7 @@
 - Report: `local-document-source-onboarding-loop-v1`
 - Decision: `go`
 - Reason: `local_document_source_onboarded`
-- Generated At: `2026-06-07T08:23:24.619183+00:00`
+- Generated At: `2026-06-07T08:38:39.986628+00:00`
 - Source ID: `company_profile_2025_trial`
 - Title: `公司简介 2025 trial`
 - Markdown Path: `docs\local-run\pdf-derived-corpus\company_profile_2025_trial.md`

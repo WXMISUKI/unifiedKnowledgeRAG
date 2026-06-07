@@ -3,7 +3,7 @@
 - Report: `local-approved-source-ingestion-loop-v1`
 - Decision: `go`
 - Reason: `local_approved_source_ingestion_ready`
-- Generated At: `2026-06-07T08:23:24.713604+00:00`
+- Generated At: `2026-06-07T08:38:40.087676+00:00`
 - Source ID: `company_profile_2025_trial`
 - Title: `公司简介 2025 trial`
 - Markdown Path: `docs\local-run\pdf-derived-corpus\company_profile_2025_trial.md`

@@ -1,6 +1,6 @@
 {
   "id": "local-corpus-caller-handoff-v1",
-  "generated_at": "2026-06-07T08:23:24.519656+00:00",
+  "generated_at": "2026-06-07T08:38:39.866662+00:00",
   "status": "ready_for_caller_review",
   "reason_code": "trial_go_ready_for_caller_review",
   "trial_report_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\local-run\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-trial.json",

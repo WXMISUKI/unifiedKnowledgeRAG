@@ -1,6 +1,6 @@
 {
   "id": "local-approved-source-ingestion-loop-v1",
-  "generated_at": "2026-06-07T08:23:24.713604+00:00",
+  "generated_at": "2026-06-07T08:38:40.087676+00:00",
   "decision": "go",
   "reason_code": "local_approved_source_ingestion_ready",
   "source_id": "company_profile_2025_trial",
@@ -48,11 +48,11 @@
       "reason_code": "ingestion_job_completed",
       "artifacts": {},
       "summary": {
-        "job_id": "idx_5e1afcd11ffd4ce5aa6b8ad4c05e9ff3",
+        "job_id": "idx_2aecf19d93984e30a8f1e1fb6c760896",
         "source_id": "company_profile_2025_trial",
         "status": "completed",
-        "requested_at": "2026-06-07T08:23:24.624044+00:00",
-        "completed_at": "2026-06-07T08:23:24.625066+00:00",
+        "requested_at": "2026-06-07T08:38:39.991460+00:00",
+        "completed_at": "2026-06-07T08:38:39.992435+00:00",
         "error_code": null
       }
     },

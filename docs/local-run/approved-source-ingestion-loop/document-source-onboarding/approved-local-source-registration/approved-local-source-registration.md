@@ -3,7 +3,7 @@
 - Report: `approved-local-corpus-source-registration-v1`
 - Status: `registered`
 - Reason: `approved_local_source_registered`
-- Generated At: `2026-06-07T08:23:24.523717+00:00`
+- Generated At: `2026-06-07T08:38:39.873202+00:00`
 - Source ID: `company_profile_2025_trial`
 - Title: `公司简介 2025 trial`
 - Registration Status: `registered`
