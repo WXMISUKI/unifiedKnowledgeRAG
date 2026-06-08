@@ -21,7 +21,7 @@ Stage 1 in `MyPrivateAgent` is closed for the current local company profile tria
 
 The current MyPrivateAgent real business trial also returns `go` for the company-profile PDF: answerable business questions produce cited answers, and the negative-control refund-policy question returns `insufficient_evidence` without citations. This closes the current local usability loop.
 
-The next provider-side maturity slice should not add more access/readiness evidence. It should convert the current real trial into reusable quality measurement:
+The next provider-side maturity slice has converted the current real trial into reusable quality measurement:
 
 `Local Business RAG Golden Cases And Chunk Quality Baseline`
 
@@ -29,7 +29,7 @@ Reference decision note:
 
 `docs/roadmap/rag_techniques_experience_application.md`
 
-This stage applies lessons from `RAG_Techniques`: mature RAG changes should be selected by failure mode, not by popularity. The immediate provider work should capture golden cases and chunk quality diagnostics before considering query rewrite, rerank, hybrid retrieval, RAPTOR, or GraphRAG.
+This stage applies lessons from `RAG_Techniques`: mature RAG changes should be selected by failure mode, not by popularity. The provider now has a local business RAG golden-case report for `company_profile_2025_trial` with `decision=go`, `hit_rate=1.0`, `citation_match_rate=1.0`, `empty_handling_rate=1.0`, and chunk-quality diagnostics over 1005 chunks. The tiny chunk ratio is `0.41`, so the current trial is usable, but future answer-quality regressions should review chunk merging or contextual headers before adopting heavier retrieval techniques.
 
 Qdrant/pgvector/BGE-M3 promotion, parser/OCR service ownership, source binding, and GraphRAG execution remain outside provider defaults.
 
@@ -121,3 +121,17 @@ It writes:
 - `docs/local-run/parser-derived-corpus-retrieval-quality-baseline/parser-derived-corpus-retrieval-quality-baseline.md`
 
 This baseline evaluates a small parser-derived company-profile query set with answerable and expected-empty cases. The current company-profile baseline is `go`: answerable cases keep source/citation coverage, and expected-empty contract-amount/staff-roster questions now return `insufficient_evidence` without endorsed citations. It does not promote Qdrant, pgvector, BGE-M3, hybrid search, rerankers, chunking defaults, MyPrivateAgent orchestration, or GraphRAG execution.
+
+## Local Business RAG Golden Cases And Chunk Quality Baseline
+
+The local operator entrypoint is:
+
+`python scripts/export_local_business_rag_golden_cases.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/company-profile-golden-cases.json`
+- `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.json`
+- `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.md`
+
+The current report is `go`: 4 answerable business cases and 2 expected-empty negative controls pass with citation allowlists intact. Chunk-quality diagnostics show `total_chunk_count=1005`, `tiny_chunk_ratio=0.41`, `citation_coverage_ratio=1.0`, and `page_coverage_count=10`. This is evidence for repeatable quality review, not a chunking-default promotion. Future real-document failures should be classified against this baseline before considering query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, or GraphRAG.

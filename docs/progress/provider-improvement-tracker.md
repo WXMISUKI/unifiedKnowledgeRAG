@@ -90,6 +90,7 @@
 - Phase 12 local RAG integration hardening profile export implemented and refreshed (`export-phase12-local-rag-integration-hardening-profile`).
 - Phase 12 local RAG integration hardening smoke implemented and refreshed (`add-phase12-local-rag-integration-hardening-smoke`).
 - Phase 12 local RAG integration hardening decision record documented (`document-phase12-local-rag-integration-hardening-decision-record`)，冻结当前本地 hardening 阶段的 `keep_runtime_defaults` review posture。
+- Local business RAG golden cases and chunk-quality baseline implemented (`add-local-business-rag-golden-cases-and-chunk-quality-baseline`), exporting reusable company-profile golden cases and chunk diagnostics with `decision=go`, `hit_rate=1.0`, `citation_match_rate=1.0`, `empty_handling_rate=1.0`, `total_chunk_count=1005`, and `tiny_chunk_ratio=0.41` while preserving runtime defaults.
 
 ## In Progress
 
@@ -102,6 +103,7 @@
 - Stage 3 parser adapter boundary, Stage 3b parser-artifact-to-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial.
 - Local PDF parser provider bridge is complete for the current company-profile PDF trial; future parser work should be triggered by real document-type or answer-quality gaps rather than continuing provider evidence-chain expansion.
 - RAG_Techniques experience application has been documented in `docs/roadmap/rag_techniques_experience_application.md`. Future mature-RAG work should be failure-mode driven: golden cases and chunk-quality baselines first; query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG only after real accepted failures justify them.
+- Local business RAG golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.json`; continue using it before any future RAG strategy candidate changes.
 
 ## Benchmark Fixture Scope
 
@@ -315,7 +317,7 @@
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep further parser expansion (Word/Excel/image OCR, layout/table specialization, or MyPrivateAgent upload orchestration) trigger-driven by real corpus demand; the first local PDF bridge is now available.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
-- Convert the accepted company-profile real business trial into reusable provider-side golden cases and chunk-quality diagnostics before adopting advanced RAG techniques.
+- Use the accepted company-profile golden-case and chunk-quality baseline as the first reusable quality gate before adopting advanced RAG techniques.
 - Keep `RAG_Techniques` patterns as strategy candidates, not defaults. Query rewrite, HyDE/HyPE, rerank, hybrid/fusion retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG require a concrete failure-mode trigger and evaluation evidence.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
 - Use Phase 25 MyPrivateAgent live trial outcome feedback as the provider-side closure point instead of reopening provider-side evidence-chain tuning loops.
@@ -342,7 +344,7 @@
 5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
 6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
-8. Next recommended provider slice: create `add-local-business-rag-golden-cases-and-chunk-quality-baseline`, using the real company-profile trial to establish reusable golden cases and chunk-quality diagnostics without changing runtime defaults.
+8. Next recommended provider slice: add more real business documents or real failed questions to the golden-case baseline before changing query rewrite, chunking, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, or GraphRAG behavior.
 
 ## Open Slice
 

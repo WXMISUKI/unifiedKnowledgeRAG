@@ -79,7 +79,7 @@ Current project coverage:
 
 ## Recommended Next Stage
 
-Next stage should be:
+Next stage is now implemented:
 
 ```text
 Local Business RAG Golden Cases And Chunk Quality Baseline
@@ -97,10 +97,11 @@ Why:
 
 Completion signal:
 
-- A reusable golden-case fixture/report exists for the current company-profile trial.
-- The report includes answerable and negative-control cases.
-- The same report includes chunk-quality diagnostics: chunk count, tiny chunk ratio, noisy chunk examples, citation coverage, page coverage, and retrieval case outcomes.
-- The report returns `go / review / blocked`.
+- A reusable golden-case fixture/report exists for the current company-profile trial:
+  `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.json`
+- The report includes 4 answerable cases and 2 negative-control cases.
+- The same report includes chunk-quality diagnostics: `total_chunk_count=1005`, `tiny_chunk_count=412`, `tiny_chunk_ratio=0.41`, `citation_coverage_ratio=1.0`, and `page_coverage_count=10`.
+- The report returns `decision=go`, with `hit_rate=1.0`, `citation_match_rate=1.0`, `empty_handling_rate=1.0`, and `invalid_citation_count=0`.
 - Runtime defaults remain unchanged.
 
 Non-goals:
@@ -167,4 +168,3 @@ After the golden/chunk baseline:
 | Many tiny/noisy chunks | Evaluate chunk merging, contextual headers, or proposition chunking |
 | Top-k has relevant source but poor ordering | Consider rerank candidate review |
 | Relationship-heavy questions fail | Open GraphRAG use-case gate |
-

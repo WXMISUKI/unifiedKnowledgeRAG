@@ -1,0 +1,56 @@
+[
+  {
+    "id": "business_scope",
+    "query": "公司主营业务是什么？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "business_scope",
+    "description": "Main business scope should be answerable from the approved company profile corpus."
+  },
+  {
+    "id": "qualifications",
+    "query": "公司有哪些资质？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "qualification_lookup",
+    "description": "Qualification questions should return cited evidence from the same approved source."
+  },
+  {
+    "id": "organization",
+    "query": "公司组织机构包括哪些部门？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "organization_lookup",
+    "description": "Organization questions should return cited evidence from the approved source."
+  },
+  {
+    "id": "project_scale",
+    "query": "公司完成过哪些工程规模？",
+    "expected_mode": "answerable",
+    "expected_source_id": "company_profile_2025_trial",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "project_scale",
+    "description": "Project scale questions should remain answerable with provider-owned citations."
+  },
+  {
+    "id": "negative_refund_policy",
+    "query": "售后退款凭证规则",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Unrelated refund-policy questions must fail closed without citations."
+  },
+  {
+    "id": "negative_staff_roster",
+    "query": "公司员工名单有哪些？",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Staff roster details are not supported by the approved company profile corpus."
+  }
+]

@@ -1,0 +1,281 @@
+{
+  "id": "local-business-rag-golden-cases-v1",
+  "generated_at": "2026-06-08T07:40:23.362975+00:00",
+  "source_id": "company_profile_2025_trial",
+  "decision": "go",
+  "reason_code": "local_business_rag_baseline_go",
+  "top_k": 3,
+  "case_file": "docs\\local-run\\business-rag-golden-cases\\company-profile-golden-cases.json",
+  "summary": {
+    "case_count": 6,
+    "answerable_case_count": 4,
+    "expected_empty_case_count": 2,
+    "hit_rate": 1.0,
+    "citation_match_rate": 1.0,
+    "empty_handling_rate": 1.0,
+    "invalid_citation_count": 0,
+    "review_case_ids": [],
+    "blocked_case_ids": [],
+    "chunk_quality_status": "ready",
+    "chunk_quality_reason": "chunk_quality_ready",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_binding_status": "not_created",
+    "graph_execution_status": "not_executed",
+    "final_decision": "go"
+  },
+  "chunk_quality": {
+    "status": "ready",
+    "reason_code": "chunk_quality_ready",
+    "total_chunk_count": 1005,
+    "tiny_chunk_count": 412,
+    "tiny_chunk_ratio": 0.41,
+    "citation_anchor_count": 1005,
+    "citation_coverage_ratio": 1.0,
+    "page_coverage_count": 10,
+    "page_ids": [
+      "page-1",
+      "page-10",
+      "page-2",
+      "page-3",
+      "page-4",
+      "page-5",
+      "page-6",
+      "page-7",
+      "page-8",
+      "page-9"
+    ],
+    "noisy_chunk_samples": [
+      {
+        "chunk_id": "chunk-2",
+        "citation": "company_profile_2025_trial#chunk-2",
+        "char_count": 52,
+        "text_preview": "<!-- citation: company_profile_2025_trial#page-1 -->"
+      },
+      {
+        "chunk_id": "chunk-3",
+        "citation": "company_profile_2025_trial#chunk-3",
+        "char_count": 14,
+        "text_preview": "江苏交通工程咨询监理有限公司"
+      },
+      {
+        "chunk_id": "chunk-4",
+        "citation": "company_profile_2025_trial#chunk-4",
+        "char_count": 52,
+        "text_preview": "<!-- citation: company_profile_2025_trial#page-1 -->"
+      },
+      {
+        "chunk_id": "chunk-5",
+        "citation": "company_profile_2025_trial#chunk-5",
+        "char_count": 6,
+        "text_preview": "JSTECS"
+      },
+      {
+        "chunk_id": "chunk-6",
+        "citation": "company_profile_2025_trial#chunk-6",
+        "char_count": 52,
+        "text_preview": "<!-- citation: company_profile_2025_trial#page-1 -->"
+      },
+      {
+        "chunk_id": "chunk-8",
+        "citation": "company_profile_2025_trial#chunk-8",
+        "char_count": 52,
+        "text_preview": "<!-- citation: company_profile_2025_trial#page-1 -->"
+      },
+      {
+        "chunk_id": "chunk-9",
+        "citation": "company_profile_2025_trial#chunk-9",
+        "char_count": 8,
+        "text_preview": "公路业绩介绍材料"
+      },
+      {
+        "chunk_id": "chunk-10",
+        "citation": "company_profile_2025_trial#chunk-10",
+        "char_count": 52,
+        "text_preview": "<!-- citation: company_profile_2025_trial#page-1 -->"
+      }
+    ],
+    "thresholds": {
+      "min_chunk_count": 1,
+      "max_tiny_chunk_ratio": 0.45,
+      "min_citation_coverage_ratio": 0.8,
+      "min_page_coverage_count": 1,
+      "tiny_chunk_char_threshold": 20,
+      "noisy_chunk_char_threshold": 6
+    }
+  },
+  "cases": [
+    {
+      "id": "business_scope",
+      "query": "公司主营业务是什么？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 3,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+      "business_question_type": "business_scope",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-127",
+        "company_profile_2025_trial#chunk-203",
+        "company_profile_2025_trial#chunk-1"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-127",
+        "company_profile_2025_trial#chunk-203",
+        "company_profile_2025_trial#chunk-1"
+      ],
+      "invalid_citations": []
+    },
+    {
+      "id": "qualifications",
+      "query": "公司有哪些资质？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 3,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+      "business_question_type": "qualification_lookup",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-115",
+        "company_profile_2025_trial#chunk-1",
+        "company_profile_2025_trial#chunk-3"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-115",
+        "company_profile_2025_trial#chunk-1",
+        "company_profile_2025_trial#chunk-3"
+      ],
+      "invalid_citations": []
+    },
+    {
+      "id": "organization",
+      "query": "公司组织机构包括哪些部门？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 3,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+      "business_question_type": "organization_lookup",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-51",
+        "company_profile_2025_trial#chunk-167",
+        "company_profile_2025_trial#chunk-663"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-51",
+        "company_profile_2025_trial#chunk-167",
+        "company_profile_2025_trial#chunk-663"
+      ],
+      "invalid_citations": []
+    },
+    {
+      "id": "project_scale",
+      "query": "公司完成过哪些工程规模？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 3,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "company_profile_2025_trial",
+      "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+      "business_question_type": "project_scale",
+      "returned_source_ids": [
+        "company_profile_2025_trial",
+        "company_profile_2025_trial",
+        "company_profile_2025_trial"
+      ],
+      "returned_citations": [
+        "company_profile_2025_trial#chunk-145",
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-111"
+      ],
+      "answer_citations": [
+        "company_profile_2025_trial#chunk-145",
+        "company_profile_2025_trial#chunk-3",
+        "company_profile_2025_trial#chunk-111"
+      ],
+      "invalid_citations": []
+    },
+    {
+      "id": "negative_refund_policy",
+      "query": "售后退款凭证规则",
+      "expected_mode": "insufficient_evidence",
+      "status": "ready",
+      "reason_code": "negative_control_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 0,
+      "answer_ok": true,
+      "answer_status": "insufficient_evidence",
+      "expected_source_id": null,
+      "expected_citation_prefix": null,
+      "business_question_type": "negative_control",
+      "returned_source_ids": [],
+      "returned_citations": [],
+      "answer_citations": [],
+      "invalid_citations": []
+    },
+    {
+      "id": "negative_staff_roster",
+      "query": "公司员工名单有哪些？",
+      "expected_mode": "insufficient_evidence",
+      "status": "ready",
+      "reason_code": "negative_control_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 0,
+      "answer_ok": true,
+      "answer_status": "insufficient_evidence",
+      "expected_source_id": null,
+      "expected_citation_prefix": null,
+      "business_question_type": "negative_control",
+      "returned_source_ids": [],
+      "returned_citations": [],
+      "answer_citations": [],
+      "invalid_citations": []
+    }
+  ],
+  "recommended_actions": [
+    "reuse_golden_cases_before_future_rag_strategy_changes",
+    "continue_testing_more_real_business_documents",
+    "keep_runtime_defaults_until_candidate_evidence_passes"
+  ],
+  "non_goals": [
+    "does_not_change_public_http_apis",
+    "does_not_create_source_to_agent_binding",
+    "does_not_call_myprivateagent",
+    "does_not_start_or_adopt_parser_engines",
+    "does_not_promote_qdrant_pgvector_bge_m3_hybrid_or_rerankers",
+    "does_not_enable_query_rewrite_hyde_hype_raptor_or_self_rag",
+    "does_not_execute_graphrag",
+    "does_not_change_runtime_retrieval_defaults"
+  ],
+  "json_path": "docs\\local-run\\business-rag-golden-cases\\local-business-rag-golden-cases.json",
+  "markdown_path": "docs\\local-run\\business-rag-golden-cases\\local-business-rag-golden-cases.md"
+}
