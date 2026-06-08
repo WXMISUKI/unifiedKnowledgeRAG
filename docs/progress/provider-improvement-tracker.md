@@ -101,6 +101,7 @@
 - Future RAG maturity stages are now summarized in `docs/roadmap/enterprise_rag_maturity_next_stages.md`; Stage 1 MyPrivateAgent business Q&A loop and Stage 2 provider document ingestion loop are closed for the current local company-profile trial.
 - Stage 3 parser adapter boundary, Stage 3b parser-artifact-to-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial.
 - Local PDF parser provider bridge is complete for the current company-profile PDF trial; future parser work should be triggered by real document-type or answer-quality gaps rather than continuing provider evidence-chain expansion.
+- RAG_Techniques experience application has been documented in `docs/roadmap/rag_techniques_experience_application.md`. Future mature-RAG work should be failure-mode driven: golden cases and chunk-quality baselines first; query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG only after real accepted failures justify them.
 
 ## Benchmark Fixture Scope
 
@@ -314,6 +315,8 @@
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
 - Keep further parser expansion (Word/Excel/image OCR, layout/table specialization, or MyPrivateAgent upload orchestration) trigger-driven by real corpus demand; the first local PDF bridge is now available.
 - Keep open-source RAG engine adoption behind the Phase 13 roadmap checkpoint verdict; do not replace the provider with a platform or promote a backend by popularity alone.
+- Convert the accepted company-profile real business trial into reusable provider-side golden cases and chunk-quality diagnostics before adopting advanced RAG techniques.
+- Keep `RAG_Techniques` patterns as strategy candidates, not defaults. Query rewrite, HyDE/HyPE, rerank, hybrid/fusion retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG require a concrete failure-mode trigger and evaluation evidence.
 - Continue optional backend spikes only after the Phase 13 checkpoint is accepted and the provider integration hardening refresh stays current.
 - Use Phase 25 MyPrivateAgent live trial outcome feedback as the provider-side closure point instead of reopening provider-side evidence-chain tuning loops.
 - Do not continue to Phase 26 access-readiness work unless a future real caller trial exposes a concrete provider-owned issue.
@@ -339,6 +342,7 @@
 5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
 6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
+8. Next recommended provider slice: create `add-local-business-rag-golden-cases-and-chunk-quality-baseline`, using the real company-profile trial to establish reusable golden cases and chunk-quality diagnostics without changing runtime defaults.
 
 ## Open Slice
 

@@ -19,7 +19,40 @@ This note keeps the next RAG work practical. The goal is to make the local provi
 
 Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition, Stage 3b parser-artifact-to-local-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial. The current practical state is: a real local PDF can be parsed by an operator-started PaddleOCR service, normalized into a parser artifact, and ingested through the existing local RAG loop with `decision=go`.
 
-The next slice should move only when a concrete business need appears. Likely candidates are MyPrivateAgent-side upload orchestration for user-facing document ingestion, or retrieval-quality tuning over real business questions if the PDF-derived answers show gaps. Qdrant/pgvector/BGE-M3 promotion, parser/OCR service ownership, source binding, and GraphRAG execution remain outside provider defaults.
+The current MyPrivateAgent real business trial also returns `go` for the company-profile PDF: answerable business questions produce cited answers, and the negative-control refund-policy question returns `insufficient_evidence` without citations. This closes the current local usability loop.
+
+The next provider-side maturity slice should not add more access/readiness evidence. It should convert the current real trial into reusable quality measurement:
+
+`Local Business RAG Golden Cases And Chunk Quality Baseline`
+
+Reference decision note:
+
+`docs/roadmap/rag_techniques_experience_application.md`
+
+This stage applies lessons from `RAG_Techniques`: mature RAG changes should be selected by failure mode, not by popularity. The immediate provider work should capture golden cases and chunk quality diagnostics before considering query rewrite, rerank, hybrid retrieval, RAPTOR, or GraphRAG.
+
+Qdrant/pgvector/BGE-M3 promotion, parser/OCR service ownership, source binding, and GraphRAG execution remain outside provider defaults.
+
+## RAG_Techniques Experience Adoption
+
+The project should adopt these lessons now:
+
+- Treat RAG as an evaluable pipeline, not a single retriever.
+- Maintain golden questions with answerable and insufficient-evidence cases.
+- Measure chunk quality before changing chunking defaults.
+- Classify failures into parser/OCR, chunking, query mismatch, retrieval quality, citation/evidence, provider availability, or caller/operator flow.
+- Preserve citation allowlists and insufficient-evidence fail-closed behavior as hard gates.
+
+The project should adopt these only when triggered by real failures:
+
+- Query rewrite, step-back, sub-query, HyDE, or HyPE when user wording repeatedly misses document evidence.
+- Rerank when recall is sufficient but top-k precision is noisy.
+- Hybrid/fusion retrieval when keyword and semantic retrieval each solve different accepted cases.
+- RAPTOR when long-document hierarchy failures are observed.
+- Self-RAG/CRAG when retrieval sufficiency correction is needed with strict loop limits.
+- GraphRAG only for relationship-heavy, entity/path/multi-hop questions.
+
+The project should not adopt notebook code, GraphRAG, rerank, hybrid retrieval, or vector backend promotion by popularity alone.
 
 ## Stage 2 Local Ingestion Loop
 
