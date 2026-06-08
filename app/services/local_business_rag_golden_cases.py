@@ -106,6 +106,7 @@ class LocalBusinessRagGoldenCasesReport:
     summary: dict[str, Any]
     chunk_quality: ChunkQualityDiagnostics
     cases: list[LocalBusinessGoldenCaseResult]
+    review_observations: list[str]
     recommended_actions: list[str]
     non_goals: list[str]
     json_path: Path | None = None
@@ -124,6 +125,7 @@ class RealBusinessCorpusGoldenCasesReport:
     source_reports: list[LocalBusinessRagGoldenCasesReport]
     failure_mode_summary: dict[str, int]
     risk_level_summary: dict[str, int]
+    review_observation_summary: dict[str, int]
     recommended_actions: list[str]
     non_goals: list[str]
     json_path: Path | None = None
@@ -160,6 +162,7 @@ def export_local_business_rag_golden_cases(
         summary=report.summary,
         chunk_quality=report.chunk_quality,
         cases=report.cases,
+        review_observations=report.review_observations,
         recommended_actions=report.recommended_actions,
         non_goals=report.non_goals,
         json_path=json_path,
@@ -209,6 +212,7 @@ def export_real_business_corpus_golden_cases(
         source_reports=report.source_reports,
         failure_mode_summary=report.failure_mode_summary,
         risk_level_summary=report.risk_level_summary,
+        review_observation_summary=report.review_observation_summary,
         recommended_actions=report.recommended_actions,
         non_goals=report.non_goals,
         json_path=json_path,
@@ -388,6 +392,11 @@ def render_local_business_rag_golden_cases_markdown(
             f"`{case.expected_mode}` | `{case.status}` | `{case.reason_code}` | "
             f"`{', '.join(case.returned_citations)}` |"
         )
+    lines.extend(["", "## Review Observations", ""])
+    if report.review_observations:
+        lines.extend(f"- {observation}" for observation in report.review_observations)
+    else:
+        lines.append("- none")
     lines.extend(["", "## Recommended Actions", ""])
     lines.extend(f"- {action}" for action in report.recommended_actions)
     lines.extend(["", "## Non-Goals", ""])
@@ -424,6 +433,17 @@ def render_real_business_corpus_golden_cases_markdown(
         ]
     )
     for key, value in sorted(report.failure_mode_summary.items()):
+        lines.append(f"| `{key}` | `{value}` |")
+    lines.extend(
+        [
+            "",
+            "## Review Observations",
+            "",
+            "| Observation | Count |",
+            "|---|---|",
+        ]
+    )
+    for key, value in sorted(report.review_observation_summary.items()):
         lines.append(f"| `{key}` | `{value}` |")
     lines.extend(
         [
@@ -706,6 +726,7 @@ def _report(
     invalid_citation_count = sum(len(case.invalid_citations) for case in cases)
     review_case_ids = [case.id for case in cases if case.status == "review"]
     blocked_case_ids = [case.id for case in cases if case.status == "blocked"]
+    review_observations = _classify_review_observations(cases, chunk_quality)
     return LocalBusinessRagGoldenCasesReport(
         id=LOCAL_BUSINESS_RAG_GOLDEN_CASES_ID,
         generated_at=datetime.now(UTC).isoformat(),
@@ -733,7 +754,12 @@ def _report(
         },
         chunk_quality=chunk_quality,
         cases=cases,
-        recommended_actions=_recommended_actions(decision, chunk_quality),
+        review_observations=review_observations,
+        recommended_actions=_recommended_actions(
+            decision,
+            chunk_quality,
+            review_observations,
+        ),
         non_goals=_non_goals(),
     )
 
@@ -832,6 +858,7 @@ def _aggregate_report(
     review_sources = [
         report.source_id for report in source_reports if report.decision == "review"
     ]
+    review_observation_summary = _count_review_observations(source_reports)
     return RealBusinessCorpusGoldenCasesReport(
         id=REAL_BUSINESS_CORPUS_GOLDEN_CASES_ID,
         generated_at=datetime.now(UTC).isoformat(),
@@ -866,9 +893,11 @@ def _aggregate_report(
         source_reports=source_reports,
         failure_mode_summary=_count_by(cases, "failure_mode"),
         risk_level_summary=_count_by(cases, "risk_level"),
+        review_observation_summary=review_observation_summary,
         recommended_actions=_aggregate_recommended_actions(
             decision,
             failure_mode_summary=_count_by(cases, "failure_mode"),
+            review_observation_summary=review_observation_summary,
         ),
         non_goals=_non_goals(),
     )
@@ -902,6 +931,7 @@ def _aggregate_recommended_actions(
     decision: str,
     *,
     failure_mode_summary: dict[str, int],
+    review_observation_summary: dict[str, int],
 ) -> list[str]:
     if decision == "go":
         return [
@@ -909,6 +939,10 @@ def _aggregate_recommended_actions(
             "keep_advanced_rag_strategies_unpromoted_until_failures_appear",
         ]
     actions = ["review_failed_sources_and_cases_before_strategy_changes"]
+    if review_observation_summary.get("negative_control_leakage"):
+        actions.append("review_negative_control_hardening_before_strategy_changes")
+    if review_observation_summary.get("markdown_provenance_mismatch"):
+        actions.append("review_markdown_provenance_expectations_before_chunk_default_changes")
     if failure_mode_summary.get("chunking"):
         actions.append("consider_chunk_merging_or_contextual_headers_candidate")
     if failure_mode_summary.get("query_mismatch"):
@@ -920,6 +954,16 @@ def _aggregate_recommended_actions(
     if len(actions) == 1:
         actions.append("classify_real_failure_modes_before_choosing_next_gate")
     return actions
+
+
+def _count_review_observations(
+    source_reports: list[LocalBusinessRagGoldenCasesReport],
+) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for report in source_reports:
+        for observation in report.review_observations:
+            counts[observation] = counts.get(observation, 0) + 1
+    return counts
 
 
 def _noisy_samples(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -972,6 +1016,7 @@ def _has_prefix(values: list[str], prefix: str | None) -> bool:
 def _recommended_actions(
     decision: str,
     chunk_quality: ChunkQualityDiagnostics,
+    review_observations: list[str],
 ) -> list[str]:
     if decision == "go":
         return [
@@ -984,7 +1029,14 @@ def _recommended_actions(
             "review_failed_golden_cases_or_negative_controls",
             "rerun_baseline_before_advanced_rag_candidate_review",
         ]
-        if chunk_quality.status == "review":
+        if "negative_control_leakage" in review_observations:
+            actions.insert(0, "review_negative_control_hardening_before_strategy_changes")
+        if "markdown_provenance_mismatch" in review_observations:
+            actions.insert(
+                0,
+                "review_markdown_provenance_expectations_before_chunk_default_changes",
+            )
+        elif chunk_quality.status == "review":
             actions.insert(0, "review_tiny_or_noisy_chunks_before_changing_chunk_defaults")
         return actions
     return [
@@ -1004,6 +1056,30 @@ def _non_goals() -> list[str]:
         "does_not_execute_graphrag",
         "does_not_change_runtime_retrieval_defaults",
     ]
+
+
+def _classify_review_observations(
+    cases: list[LocalBusinessGoldenCaseResult],
+    chunk_quality: ChunkQualityDiagnostics,
+) -> list[str]:
+    observations: list[str] = []
+    if any(case.reason_code == "negative_control_returned_evidence" for case in cases):
+        observations.append("negative_control_leakage")
+    if _is_markdown_provenance_mismatch(chunk_quality):
+        observations.append("markdown_provenance_mismatch")
+    return observations
+
+
+def _is_markdown_provenance_mismatch(chunk_quality: ChunkQualityDiagnostics) -> bool:
+    if "page_coverage_missing" not in chunk_quality.reason_code:
+        return False
+    if chunk_quality.page_coverage_count != 0:
+        return False
+    if chunk_quality.tiny_chunk_count != 0:
+        return False
+    if chunk_quality.total_chunk_count <= 0:
+        return False
+    return True
 
 
 def _thresholds() -> dict[str, Any]:

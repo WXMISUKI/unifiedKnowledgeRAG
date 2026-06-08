@@ -1,6 +1,6 @@
 {
   "id": "real-business-corpus-golden-cases-v1",
-  "generated_at": "2026-06-08T09:16:12.037273+00:00",
+  "generated_at": "2026-06-08T09:31:52.412320+00:00",
   "decision": "review",
   "reason_code": "real_business_corpus_baseline_needs_review",
   "top_k": 3,
@@ -26,7 +26,7 @@
   "source_reports": [
     {
       "id": "local-business-rag-golden-cases-v1",
-      "generated_at": "2026-06-08T09:16:11.979921+00:00",
+      "generated_at": "2026-06-08T09:31:52.352722+00:00",
       "source_id": "company_profile_2025_trial",
       "decision": "go",
       "reason_code": "local_business_rag_baseline_go",
@@ -287,6 +287,7 @@
           "invalid_citations": []
         }
       ],
+      "review_observations": [],
       "recommended_actions": [
         "reuse_golden_cases_before_future_rag_strategy_changes",
         "continue_testing_more_real_business_documents",
@@ -307,7 +308,7 @@
     },
     {
       "id": "local-business-rag-golden-cases-v1",
-      "generated_at": "2026-06-08T09:16:12.037232+00:00",
+      "generated_at": "2026-06-08T09:31:52.412275+00:00",
       "source_id": "refund_policy_docs",
       "decision": "review",
       "reason_code": "local_business_rag_baseline_needs_review",
@@ -444,8 +445,13 @@
           "invalid_citations": []
         }
       ],
+      "review_observations": [
+        "negative_control_leakage",
+        "markdown_provenance_mismatch"
+      ],
       "recommended_actions": [
-        "review_tiny_or_noisy_chunks_before_changing_chunk_defaults",
+        "review_markdown_provenance_expectations_before_chunk_default_changes",
+        "review_negative_control_hardening_before_strategy_changes",
         "review_failed_golden_cases_or_negative_controls",
         "rerun_baseline_before_advanced_rag_candidate_review"
       ],
@@ -471,9 +477,14 @@
     "medium": 6,
     "high": 3
   },
+  "review_observation_summary": {
+    "negative_control_leakage": 1,
+    "markdown_provenance_mismatch": 1
+  },
   "recommended_actions": [
     "review_failed_sources_and_cases_before_strategy_changes",
-    "classify_real_failure_modes_before_choosing_next_gate"
+    "review_negative_control_hardening_before_strategy_changes",
+    "review_markdown_provenance_expectations_before_chunk_default_changes"
   ],
   "non_goals": [
     "does_not_change_public_http_apis",

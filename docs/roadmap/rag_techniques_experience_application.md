@@ -106,7 +106,7 @@ Completion signal:
 - An aggregate real-business corpus fixture/report now also exists:
   `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
 - The aggregate report now has `source_count=2` and `case_count=9`, and it returns `review` rather than `go`.
-- The second real source `refund_policy_docs` passes exact-term positive controls but exposes real review evidence: `empty_handling_rate=0.0` on its negative control and `chunk_quality_reason=page_coverage_missing`.
+- The second real source `refund_policy_docs` passes exact-term positive controls and now exposes two explicitly classified review observations: `negative_control_leakage` and `markdown_provenance_mismatch`.
 - This means the aggregate baseline has moved from format-only expansion to real failure-mode evidence, but it still does not justify advanced RAG strategy promotion by itself.
 
 Non-goals:
