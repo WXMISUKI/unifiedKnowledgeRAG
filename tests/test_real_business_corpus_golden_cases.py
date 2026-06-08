@@ -1,4 +1,5 @@
 from app.services.local_business_rag_golden_cases import (
+    DEFAULT_AGGREGATE_CASE_FILE,
     RealBusinessGoldenCase,
     export_real_business_corpus_golden_cases,
     run_real_business_corpus_golden_cases,
@@ -21,6 +22,8 @@ def test_real_business_corpus_golden_cases_go_writes_aggregate_report(tmp_path):
     assert report.summary["empty_handling_rate"] == 1.0
     assert report.failure_mode_summary["citation_or_evidence"] == 2
     assert report.risk_level_summary["high"] == 2
+    assert report.case_file == DEFAULT_AGGREGATE_CASE_FILE
+    assert report.json_path != report.case_file
     assert report.json_path.exists()
     assert report.markdown_path.exists()
     assert "- Decision: `go`" in report.markdown_path.read_text(encoding="utf-8")

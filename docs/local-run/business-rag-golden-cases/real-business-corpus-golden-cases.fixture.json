@@ -1,0 +1,101 @@
+[
+  {
+    "source_id": "company_profile_2025_trial",
+    "case_id": "company-profile-business-scope",
+    "query": "公司主营业务是什么？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "business_scope",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Main business scope should remain answerable from the approved company profile source."
+  },
+  {
+    "source_id": "company_profile_2025_trial",
+    "case_id": "company-profile-qualifications",
+    "query": "公司有哪些资质？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "qualification_lookup",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Qualification lookup should remain answerable from the approved company profile source."
+  },
+  {
+    "source_id": "company_profile_2025_trial",
+    "case_id": "company-profile-organization",
+    "query": "公司组织机构包括哪些部门？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "organization_lookup",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Organization lookup should remain answerable from the approved company profile source."
+  },
+  {
+    "source_id": "company_profile_2025_trial",
+    "case_id": "company-profile-project-scale",
+    "query": "公司完成过哪些工程规模？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "company_profile_2025_trial#chunk-",
+    "business_question_type": "project_scale",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Project-scale evidence should remain answerable from the approved company profile source."
+  },
+  {
+    "source_id": "company_profile_2025_trial",
+    "case_id": "company-profile-negative-refund-policy",
+    "query": "售后退款凭证规则",
+    "expected_mode": "insufficient_evidence",
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "failure_mode": "citation_or_evidence",
+    "risk_level": "high",
+    "description": "Refund-policy queries should fail closed against the company profile source."
+  },
+  {
+    "source_id": "company_profile_2025_trial",
+    "case_id": "company-profile-negative-staff-roster",
+    "query": "公司员工名单有哪些？",
+    "expected_mode": "insufficient_evidence",
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "failure_mode": "citation_or_evidence",
+    "risk_level": "high",
+    "description": "Unsupported staff-roster queries should fail closed against the company profile source."
+  },
+  {
+    "source_id": "refund_policy_docs",
+    "case_id": "refund-policy-code",
+    "query": "RFD-2026-003 对应哪类退款复核？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "refund_policy_2026#",
+    "business_question_type": "policy_code_lookup",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Exact refund policy code lookup should be answerable from the refund policy source."
+  },
+  {
+    "source_id": "refund_policy_docs",
+    "case_id": "refund-form-name",
+    "query": "AF-REFUND-02 表单需要关联哪些付款凭证？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "refund_policy_2026#",
+    "business_question_type": "form_lookup",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Exact refund form lookup should be answerable from the refund policy source."
+  },
+  {
+    "source_id": "refund_policy_docs",
+    "case_id": "refund-negative-staff",
+    "query": "退款政策里的员工名单有哪些？",
+    "expected_mode": "insufficient_evidence",
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "failure_mode": "citation_or_evidence",
+    "risk_level": "high",
+    "description": "Unsupported staff-roster queries should fail closed against the refund policy source."
+  }
+]

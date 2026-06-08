@@ -1,30 +1,32 @@
 {
   "id": "real-business-corpus-golden-cases-v1",
-  "generated_at": "2026-06-08T08:50:49.118461+00:00",
-  "decision": "go",
-  "reason_code": "real_business_corpus_baseline_go",
+  "generated_at": "2026-06-08T09:16:12.037273+00:00",
+  "decision": "review",
+  "reason_code": "real_business_corpus_baseline_needs_review",
   "top_k": 3,
-  "case_file": "docs\\local-run\\business-rag-golden-cases\\real-business-corpus-golden-cases.json",
+  "case_file": "docs\\local-run\\business-rag-golden-cases\\real-business-corpus-golden-cases.fixture.json",
   "summary": {
-    "source_count": 1,
-    "case_count": 6,
-    "answerable_case_count": 4,
-    "expected_empty_case_count": 2,
+    "source_count": 2,
+    "case_count": 9,
+    "answerable_case_count": 6,
+    "expected_empty_case_count": 3,
     "hit_rate": 1.0,
     "citation_match_rate": 1.0,
-    "empty_handling_rate": 1.0,
+    "empty_handling_rate": 0.6667,
     "invalid_citation_count": 0,
-    "review_sources": [],
+    "review_sources": [
+      "refund_policy_docs"
+    ],
     "blocked_sources": [],
     "runtime_promotion_status": "keep_runtime_defaults",
     "source_binding_status": "not_created",
     "graph_execution_status": "not_executed",
-    "final_decision": "go"
+    "final_decision": "review"
   },
   "source_reports": [
     {
       "id": "local-business-rag-golden-cases-v1",
-      "generated_at": "2026-06-08T08:50:49.118262+00:00",
+      "generated_at": "2026-06-08T09:16:11.979921+00:00",
       "source_id": "company_profile_2025_trial",
       "decision": "go",
       "reason_code": "local_business_rag_baseline_go",
@@ -302,19 +304,176 @@
       ],
       "json_path": null,
       "markdown_path": null
+    },
+    {
+      "id": "local-business-rag-golden-cases-v1",
+      "generated_at": "2026-06-08T09:16:12.037232+00:00",
+      "source_id": "refund_policy_docs",
+      "decision": "review",
+      "reason_code": "local_business_rag_baseline_needs_review",
+      "top_k": 3,
+      "case_file": null,
+      "summary": {
+        "case_count": 3,
+        "answerable_case_count": 2,
+        "expected_empty_case_count": 1,
+        "hit_rate": 1.0,
+        "citation_match_rate": 1.0,
+        "empty_handling_rate": 0.0,
+        "invalid_citation_count": 0,
+        "review_case_ids": [
+          "refund-negative-staff"
+        ],
+        "blocked_case_ids": [],
+        "chunk_quality_status": "review",
+        "chunk_quality_reason": "page_coverage_missing",
+        "runtime_promotion_status": "keep_runtime_defaults",
+        "source_binding_status": "not_created",
+        "graph_execution_status": "not_executed",
+        "final_decision": "review"
+      },
+      "chunk_quality": {
+        "status": "review",
+        "reason_code": "page_coverage_missing",
+        "total_chunk_count": 7,
+        "tiny_chunk_count": 0,
+        "tiny_chunk_ratio": 0.0,
+        "citation_anchor_count": 7,
+        "citation_coverage_ratio": 1.0,
+        "page_coverage_count": 0,
+        "page_ids": [],
+        "noisy_chunk_samples": [],
+        "thresholds": {
+          "min_chunk_count": 1,
+          "max_tiny_chunk_ratio": 0.45,
+          "min_citation_coverage_ratio": 0.8,
+          "min_page_coverage_count": 1,
+          "tiny_chunk_char_threshold": 20,
+          "noisy_chunk_char_threshold": 6
+        }
+      },
+      "cases": [
+        {
+          "id": "refund-policy-code",
+          "query": "RFD-2026-003 对应哪类退款复核？",
+          "expected_mode": "answerable",
+          "status": "ready",
+          "reason_code": "answerable_case_passed",
+          "retrieve_ok": true,
+          "retrieve_count": 3,
+          "answer_ok": true,
+          "answer_status": "answered",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation_prefix": "refund_policy_2026#",
+          "business_question_type": "policy_code_lookup",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#exact-refund-code",
+            "refund_policy_2026#high-value-review",
+            "refund_policy_2026#appeal-review"
+          ],
+          "answer_citations": [
+            "refund_policy_2026#exact-refund-code",
+            "refund_policy_2026#high-value-review",
+            "refund_policy_2026#appeal-review"
+          ],
+          "invalid_citations": []
+        },
+        {
+          "id": "refund-form-name",
+          "query": "AF-REFUND-02 表单需要关联哪些付款凭证？",
+          "expected_mode": "answerable",
+          "status": "ready",
+          "reason_code": "answerable_case_passed",
+          "retrieve_ok": true,
+          "retrieve_count": 3,
+          "answer_ok": true,
+          "answer_status": "answered",
+          "expected_source_id": "refund_policy_docs",
+          "expected_citation_prefix": "refund_policy_2026#",
+          "business_question_type": "form_lookup",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#exact-refund-code",
+            "refund_policy_2026#appeal-review",
+            "refund_policy_2026#section-5"
+          ],
+          "answer_citations": [
+            "refund_policy_2026#exact-refund-code",
+            "refund_policy_2026#appeal-review",
+            "refund_policy_2026#section-5"
+          ],
+          "invalid_citations": []
+        },
+        {
+          "id": "refund-negative-staff",
+          "query": "退款政策里的员工名单有哪些？",
+          "expected_mode": "insufficient_evidence",
+          "status": "review",
+          "reason_code": "negative_control_returned_evidence",
+          "retrieve_ok": true,
+          "retrieve_count": 3,
+          "answer_ok": true,
+          "answer_status": "answered",
+          "expected_source_id": null,
+          "expected_citation_prefix": null,
+          "business_question_type": "negative_control",
+          "returned_source_ids": [
+            "refund_policy_docs",
+            "refund_policy_docs",
+            "refund_policy_docs"
+          ],
+          "returned_citations": [
+            "refund_policy_2026#exact-refund-code",
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#section-5"
+          ],
+          "answer_citations": [
+            "refund_policy_2026#exact-refund-code",
+            "refund_policy_2026#section-3",
+            "refund_policy_2026#section-5"
+          ],
+          "invalid_citations": []
+        }
+      ],
+      "recommended_actions": [
+        "review_tiny_or_noisy_chunks_before_changing_chunk_defaults",
+        "review_failed_golden_cases_or_negative_controls",
+        "rerun_baseline_before_advanced_rag_candidate_review"
+      ],
+      "non_goals": [
+        "does_not_change_public_http_apis",
+        "does_not_create_source_to_agent_binding",
+        "does_not_call_myprivateagent",
+        "does_not_start_or_adopt_parser_engines",
+        "does_not_promote_qdrant_pgvector_bge_m3_hybrid_or_rerankers",
+        "does_not_enable_query_rewrite_hyde_hype_raptor_or_self_rag",
+        "does_not_execute_graphrag",
+        "does_not_change_runtime_retrieval_defaults"
+      ],
+      "json_path": null,
+      "markdown_path": null
     }
   ],
   "failure_mode_summary": {
-    "unclassified": 4,
-    "citation_or_evidence": 2
+    "unclassified": 6,
+    "citation_or_evidence": 3
   },
   "risk_level_summary": {
-    "medium": 4,
-    "high": 2
+    "medium": 6,
+    "high": 3
   },
   "recommended_actions": [
-    "add_more_real_business_documents_or_real_failed_questions",
-    "keep_advanced_rag_strategies_unpromoted_until_failures_appear"
+    "review_failed_sources_and_cases_before_strategy_changes",
+    "classify_real_failure_modes_before_choosing_next_gate"
   ],
   "non_goals": [
     "does_not_change_public_http_apis",

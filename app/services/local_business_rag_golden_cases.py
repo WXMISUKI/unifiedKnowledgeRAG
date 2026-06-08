@@ -18,7 +18,7 @@ DEFAULT_CASE_FILE = Path(
     "docs/local-run/business-rag-golden-cases/company-profile-golden-cases.json"
 )
 DEFAULT_AGGREGATE_CASE_FILE = Path(
-    "docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json"
+    "docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.fixture.json"
 )
 DEFAULT_OUTPUT_DIR = Path("docs/local-run/business-rag-golden-cases")
 OUTPUT_JSON_FILENAME = "local-business-rag-golden-cases.json"
