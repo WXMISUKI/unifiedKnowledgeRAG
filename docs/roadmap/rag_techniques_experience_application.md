@@ -103,6 +103,9 @@ Completion signal:
 - The same report includes chunk-quality diagnostics: `total_chunk_count=1005`, `tiny_chunk_count=412`, `tiny_chunk_ratio=0.41`, `citation_coverage_ratio=1.0`, and `page_coverage_count=10`.
 - The report returns `decision=go`, with `hit_rate=1.0`, `citation_match_rate=1.0`, `empty_handling_rate=1.0`, and `invalid_citation_count=0`.
 - Runtime defaults remain unchanged.
+- An aggregate real-business corpus fixture/report now also exists:
+  `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
+- The aggregate report currently has `source_count=1` and `case_count=6`, so it is a format expansion and guardrail, not evidence to promote advanced RAG strategies.
 
 Non-goals:
 

@@ -11,14 +11,20 @@ from app.main import create_app
 
 
 LOCAL_BUSINESS_RAG_GOLDEN_CASES_ID = "local-business-rag-golden-cases-v1"
+REAL_BUSINESS_CORPUS_GOLDEN_CASES_ID = "real-business-corpus-golden-cases-v1"
 DEFAULT_SOURCE_ID = "company_profile_2025_trial"
 DEFAULT_TOP_K = 3
 DEFAULT_CASE_FILE = Path(
     "docs/local-run/business-rag-golden-cases/company-profile-golden-cases.json"
 )
+DEFAULT_AGGREGATE_CASE_FILE = Path(
+    "docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json"
+)
 DEFAULT_OUTPUT_DIR = Path("docs/local-run/business-rag-golden-cases")
 OUTPUT_JSON_FILENAME = "local-business-rag-golden-cases.json"
 OUTPUT_MARKDOWN_FILENAME = "local-business-rag-golden-cases.md"
+AGGREGATE_OUTPUT_JSON_FILENAME = "real-business-corpus-golden-cases.json"
+AGGREGATE_OUTPUT_MARKDOWN_FILENAME = "real-business-corpus-golden-cases.md"
 
 MIN_CHUNK_COUNT = 1
 MAX_TINY_CHUNK_RATIO = 0.45
@@ -37,6 +43,19 @@ class LocalBusinessGoldenCase:
     expected_source_id: str | None
     expected_citation_prefix: str | None
     business_question_type: str
+    description: str
+
+
+@dataclass(frozen=True)
+class RealBusinessGoldenCase:
+    id: str
+    source_id: str
+    query: str
+    expected_mode: str
+    expected_citation_prefix: str | None
+    business_question_type: str
+    failure_mode: str
+    risk_level: str
     description: str
 
 
@@ -87,6 +106,24 @@ class LocalBusinessRagGoldenCasesReport:
     summary: dict[str, Any]
     chunk_quality: ChunkQualityDiagnostics
     cases: list[LocalBusinessGoldenCaseResult]
+    recommended_actions: list[str]
+    non_goals: list[str]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class RealBusinessCorpusGoldenCasesReport:
+    id: str
+    generated_at: str
+    decision: str
+    reason_code: str
+    top_k: int
+    case_file: Path | None
+    summary: dict[str, Any]
+    source_reports: list[LocalBusinessRagGoldenCasesReport]
+    failure_mode_summary: dict[str, int]
+    risk_level_summary: dict[str, int]
     recommended_actions: list[str]
     non_goals: list[str]
     json_path: Path | None = None
@@ -144,6 +181,99 @@ def export_local_business_rag_golden_cases(
     return exported
 
 
+def export_real_business_corpus_golden_cases(
+    *,
+    case_file: Path = DEFAULT_AGGREGATE_CASE_FILE,
+    cases: list[RealBusinessGoldenCase] | None = None,
+    top_k: int = DEFAULT_TOP_K,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+    client: TestClient | None = None,
+) -> RealBusinessCorpusGoldenCasesReport:
+    report = run_real_business_corpus_golden_cases(
+        case_file=case_file,
+        cases=cases,
+        top_k=top_k,
+        client=client,
+    )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / AGGREGATE_OUTPUT_JSON_FILENAME
+    markdown_path = output_dir / AGGREGATE_OUTPUT_MARKDOWN_FILENAME
+    exported = RealBusinessCorpusGoldenCasesReport(
+        id=report.id,
+        generated_at=report.generated_at,
+        decision=report.decision,
+        reason_code=report.reason_code,
+        top_k=report.top_k,
+        case_file=report.case_file,
+        summary=report.summary,
+        source_reports=report.source_reports,
+        failure_mode_summary=report.failure_mode_summary,
+        risk_level_summary=report.risk_level_summary,
+        recommended_actions=report.recommended_actions,
+        non_goals=report.non_goals,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+    json_path.write_text(
+        json.dumps(
+            real_business_corpus_golden_cases_report_to_dict(exported),
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    markdown_path.write_text(
+        render_real_business_corpus_golden_cases_markdown(exported),
+        encoding="utf-8",
+    )
+    return exported
+
+
+def run_real_business_corpus_golden_cases(
+    *,
+    case_file: Path | None = DEFAULT_AGGREGATE_CASE_FILE,
+    cases: list[RealBusinessGoldenCase] | None = None,
+    top_k: int = DEFAULT_TOP_K,
+    client: TestClient | None = None,
+) -> RealBusinessCorpusGoldenCasesReport:
+    active_client = client or TestClient(create_app())
+    active_cases = cases if cases is not None else _load_aggregate_cases(case_file)
+    grouped_cases = _group_real_business_cases_by_source(active_cases)
+    source_reports = [
+        run_local_business_rag_golden_cases(
+            source_id=source_id,
+            case_file=None,
+            cases=[
+                LocalBusinessGoldenCase(
+                    id=case.id,
+                    query=case.query,
+                    expected_mode=case.expected_mode,
+                    expected_source_id=case.source_id
+                    if case.expected_mode == "answerable"
+                    else None,
+                    expected_citation_prefix=case.expected_citation_prefix,
+                    business_question_type=case.business_question_type,
+                    description=case.description,
+                )
+                for case in source_cases
+            ],
+            top_k=top_k,
+            client=active_client,
+        )
+        for source_id, source_cases in sorted(grouped_cases.items())
+    ]
+    decision, reason_code = _aggregate_decision(source_reports)
+    return _aggregate_report(
+        case_file=case_file,
+        cases=active_cases,
+        source_reports=source_reports,
+        top_k=top_k,
+        decision=decision,
+        reason_code=reason_code,
+    )
+
+
 def run_local_business_rag_golden_cases(
     *,
     source_id: str = DEFAULT_SOURCE_ID,
@@ -187,6 +317,19 @@ def run_local_business_rag_golden_cases(
 
 def local_business_rag_golden_cases_report_to_dict(
     report: LocalBusinessRagGoldenCasesReport,
+) -> dict[str, Any]:
+    payload = asdict(report)
+    if report.case_file is not None:
+        payload["case_file"] = str(report.case_file)
+    if report.json_path is not None:
+        payload["json_path"] = str(report.json_path)
+    if report.markdown_path is not None:
+        payload["markdown_path"] = str(report.markdown_path)
+    return payload
+
+
+def real_business_corpus_golden_cases_report_to_dict(
+    report: RealBusinessCorpusGoldenCasesReport,
 ) -> dict[str, Any]:
     payload = asdict(report)
     if report.case_file is not None:
@@ -244,6 +387,61 @@ def render_local_business_rag_golden_cases_markdown(
             f"| `{case.id}` | `{case.business_question_type}` | "
             f"`{case.expected_mode}` | `{case.status}` | `{case.reason_code}` | "
             f"`{', '.join(case.returned_citations)}` |"
+        )
+    lines.extend(["", "## Recommended Actions", ""])
+    lines.extend(f"- {action}" for action in report.recommended_actions)
+    lines.extend(["", "## Non-Goals", ""])
+    lines.extend(f"- {item}" for item in report.non_goals)
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_real_business_corpus_golden_cases_markdown(
+    report: RealBusinessCorpusGoldenCasesReport,
+) -> str:
+    lines = [
+        "# Real Business Corpus Golden Cases",
+        "",
+        f"- Report: `{report.id}`",
+        f"- Decision: `{report.decision}`",
+        f"- Reason: `{report.reason_code}`",
+        f"- Generated At: `{report.generated_at}`",
+        f"- Case File: `{report.case_file}`",
+        "",
+        "## Summary",
+        "",
+        "| Metric | Value |",
+        "|---|---|",
+    ]
+    for key, value in report.summary.items():
+        lines.append(f"| `{key}` | `{_format_value(value)}` |")
+    lines.extend(
+        [
+            "",
+            "## Failure Modes",
+            "",
+            "| Failure Mode | Count |",
+            "|---|---|",
+        ]
+    )
+    for key, value in sorted(report.failure_mode_summary.items()):
+        lines.append(f"| `{key}` | `{value}` |")
+    lines.extend(
+        [
+            "",
+            "## Source Reports",
+            "",
+            "| Source | Decision | Cases | Hit Rate | Citation Match | Empty Handling | Chunk Quality |",
+            "|---|---|---:|---:|---:|---:|---|",
+        ]
+    )
+    for source_report in report.source_reports:
+        lines.append(
+            f"| `{source_report.source_id}` | `{source_report.decision}` | "
+            f"`{source_report.summary['case_count']}` | "
+            f"`{source_report.summary['hit_rate']}` | "
+            f"`{source_report.summary['citation_match_rate']}` | "
+            f"`{source_report.summary['empty_handling_rate']}` | "
+            f"`{source_report.chunk_quality.status}` |"
         )
     lines.extend(["", "## Recommended Actions", ""])
     lines.extend(f"- {action}" for action in report.recommended_actions)
@@ -564,6 +762,164 @@ def _load_cases(case_file: Path | None) -> list[LocalBusinessGoldenCase]:
         )
         for item in payload
     ]
+
+
+def _load_aggregate_cases(case_file: Path | None) -> list[RealBusinessGoldenCase]:
+    if case_file is None:
+        return []
+    payload = json.loads(case_file.read_text(encoding="utf-8"))
+    return [
+        RealBusinessGoldenCase(
+            id=str(item["case_id"]),
+            source_id=str(item["source_id"]),
+            query=str(item["query"]),
+            expected_mode=str(item["expected_mode"]),
+            expected_citation_prefix=(
+                str(item["expected_citation_prefix"])
+                if item.get("expected_citation_prefix") is not None
+                else None
+            ),
+            business_question_type=str(item.get("business_question_type") or ""),
+            failure_mode=str(item.get("failure_mode") or "unclassified"),
+            risk_level=str(item.get("risk_level") or "medium"),
+            description=str(item.get("description") or ""),
+        )
+        for item in payload
+    ]
+
+
+def _group_real_business_cases_by_source(
+    cases: list[RealBusinessGoldenCase],
+) -> dict[str, list[RealBusinessGoldenCase]]:
+    grouped: dict[str, list[RealBusinessGoldenCase]] = {}
+    for case in cases:
+        grouped.setdefault(case.source_id, []).append(case)
+    return grouped
+
+
+def _aggregate_decision(
+    source_reports: list[LocalBusinessRagGoldenCasesReport],
+) -> tuple[str, str]:
+    if any(report.decision == "blocked" for report in source_reports):
+        return "blocked", "real_business_corpus_baseline_blocked"
+    if any(report.decision == "review" for report in source_reports):
+        return "review", "real_business_corpus_baseline_needs_review"
+    return "go", "real_business_corpus_baseline_go"
+
+
+def _aggregate_report(
+    *,
+    case_file: Path | None,
+    cases: list[RealBusinessGoldenCase],
+    source_reports: list[LocalBusinessRagGoldenCasesReport],
+    top_k: int,
+    decision: str,
+    reason_code: str,
+) -> RealBusinessCorpusGoldenCasesReport:
+    answerable_count = sum(
+        report.summary["answerable_case_count"] for report in source_reports
+    )
+    expected_empty_count = sum(
+        report.summary["expected_empty_case_count"] for report in source_reports
+    )
+    case_count = sum(report.summary["case_count"] for report in source_reports)
+    invalid_citation_count = sum(
+        report.summary["invalid_citation_count"] for report in source_reports
+    )
+    blocked_sources = [
+        report.source_id for report in source_reports if report.decision == "blocked"
+    ]
+    review_sources = [
+        report.source_id for report in source_reports if report.decision == "review"
+    ]
+    return RealBusinessCorpusGoldenCasesReport(
+        id=REAL_BUSINESS_CORPUS_GOLDEN_CASES_ID,
+        generated_at=datetime.now(UTC).isoformat(),
+        decision=decision,
+        reason_code=reason_code,
+        top_k=top_k,
+        case_file=case_file,
+        summary={
+            "source_count": len(source_reports),
+            "case_count": case_count,
+            "answerable_case_count": answerable_count,
+            "expected_empty_case_count": expected_empty_count,
+            "hit_rate": _weighted_rate(source_reports, "hit_rate", "answerable_case_count"),
+            "citation_match_rate": _weighted_rate(
+                source_reports,
+                "citation_match_rate",
+                "answerable_case_count",
+            ),
+            "empty_handling_rate": _weighted_rate(
+                source_reports,
+                "empty_handling_rate",
+                "expected_empty_case_count",
+            ),
+            "invalid_citation_count": invalid_citation_count,
+            "review_sources": review_sources,
+            "blocked_sources": blocked_sources,
+            "runtime_promotion_status": "keep_runtime_defaults",
+            "source_binding_status": "not_created",
+            "graph_execution_status": "not_executed",
+            "final_decision": decision,
+        },
+        source_reports=source_reports,
+        failure_mode_summary=_count_by(cases, "failure_mode"),
+        risk_level_summary=_count_by(cases, "risk_level"),
+        recommended_actions=_aggregate_recommended_actions(
+            decision,
+            failure_mode_summary=_count_by(cases, "failure_mode"),
+        ),
+        non_goals=_non_goals(),
+    )
+
+
+def _weighted_rate(
+    source_reports: list[LocalBusinessRagGoldenCasesReport],
+    rate_key: str,
+    weight_key: str,
+) -> float:
+    numerator = 0.0
+    denominator = 0
+    for report in source_reports:
+        weight = int(report.summary.get(weight_key) or 0)
+        numerator += float(report.summary.get(rate_key) or 0.0) * weight
+        denominator += weight
+    if denominator == 0:
+        return 1.0
+    return round(numerator / denominator, 4)
+
+
+def _count_by(cases: list[RealBusinessGoldenCase], field_name: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for case in cases:
+        value = getattr(case, field_name) or "unclassified"
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+def _aggregate_recommended_actions(
+    decision: str,
+    *,
+    failure_mode_summary: dict[str, int],
+) -> list[str]:
+    if decision == "go":
+        return [
+            "add_more_real_business_documents_or_real_failed_questions",
+            "keep_advanced_rag_strategies_unpromoted_until_failures_appear",
+        ]
+    actions = ["review_failed_sources_and_cases_before_strategy_changes"]
+    if failure_mode_summary.get("chunking"):
+        actions.append("consider_chunk_merging_or_contextual_headers_candidate")
+    if failure_mode_summary.get("query_mismatch"):
+        actions.append("consider_query_rewrite_candidate")
+    if failure_mode_summary.get("retrieval_quality"):
+        actions.append("consider_rerank_or_hybrid_candidate")
+    if failure_mode_summary.get("graph_use_case"):
+        actions.append("open_graphrag_use_case_gate")
+    if len(actions) == 1:
+        actions.append("classify_real_failure_modes_before_choosing_next_gate")
+    return actions
 
 
 def _noisy_samples(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:

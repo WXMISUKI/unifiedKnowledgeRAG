@@ -135,3 +135,18 @@ It writes:
 - `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.md`
 
 The current report is `go`: 4 answerable business cases and 2 expected-empty negative controls pass with citation allowlists intact. Chunk-quality diagnostics show `total_chunk_count=1005`, `tiny_chunk_ratio=0.41`, `citation_coverage_ratio=1.0`, and `page_coverage_count=10`. This is evidence for repeatable quality review, not a chunking-default promotion. Future real-document failures should be classified against this baseline before considering query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, or GraphRAG.
+
+## Real Business Corpus Golden Case Expansion
+
+The aggregate local operator entrypoint is:
+
+`python scripts/export_real_business_corpus_golden_cases.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
+- `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.md`
+
+The current aggregate report is `go` with `source_count=1`, `case_count=6`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This stage intentionally keeps the aggregate fixture compatible with the existing company-profile baseline while adding `source_id`, `failure_mode`, and `risk_level` fields so future real documents or real failed questions can be appended without changing code.
+
+Because the aggregate evidence still has no accepted failure, the next provider action is to add more real business documents or real failed questions. Advanced RAG strategy changes remain untriggered until the aggregate report shows a concrete failure mode such as chunking, query mismatch, retrieval quality, citation/evidence, parser/OCR, caller/operator flow, or graph use-case demand.

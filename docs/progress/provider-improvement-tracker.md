@@ -91,6 +91,7 @@
 - Phase 12 local RAG integration hardening smoke implemented and refreshed (`add-phase12-local-rag-integration-hardening-smoke`).
 - Phase 12 local RAG integration hardening decision record documented (`document-phase12-local-rag-integration-hardening-decision-record`)，冻结当前本地 hardening 阶段的 `keep_runtime_defaults` review posture。
 - Local business RAG golden cases and chunk-quality baseline implemented (`add-local-business-rag-golden-cases-and-chunk-quality-baseline`), exporting reusable company-profile golden cases and chunk diagnostics with `decision=go`, `hit_rate=1.0`, `citation_match_rate=1.0`, `empty_handling_rate=1.0`, `total_chunk_count=1005`, and `tiny_chunk_ratio=0.41` while preserving runtime defaults.
+- Real business corpus golden-case expansion implemented (`add-real-business-corpus-golden-case-expansion`), adding aggregate source/case/failure-mode/risk-level reporting with `decision=go`, `source_count=1`, `case_count=6`, and no runtime strategy promotion.
 
 ## In Progress
 
@@ -104,6 +105,7 @@
 - Local PDF parser provider bridge is complete for the current company-profile PDF trial; future parser work should be triggered by real document-type or answer-quality gaps rather than continuing provider evidence-chain expansion.
 - RAG_Techniques experience application has been documented in `docs/roadmap/rag_techniques_experience_application.md`. Future mature-RAG work should be failure-mode driven: golden cases and chunk-quality baselines first; query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG only after real accepted failures justify them.
 - Local business RAG golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.json`; continue using it before any future RAG strategy candidate changes.
+- Aggregate real-business corpus golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`; it currently has no accepted failure mode and should be expanded with real documents or failed questions before advanced RAG strategy work.
 
 ## Benchmark Fixture Scope
 
@@ -344,7 +346,7 @@
 5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
 6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
-8. Next recommended provider slice: add more real business documents or real failed questions to the golden-case baseline before changing query rewrite, chunking, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, or GraphRAG behavior.
+8. Next recommended provider slice: append a second real business document or a real failed question set to `real-business-corpus-golden-cases.json` and classify failure modes before changing query rewrite, chunking, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, or GraphRAG behavior.
 
 ## Open Slice
 
