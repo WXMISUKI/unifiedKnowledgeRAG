@@ -1,6 +1,6 @@
 {
   "id": "approved-local-corpus-acceptance-smoke-v1",
-  "generated_at": "2026-06-07T11:08:05.412488+00:00",
+  "generated_at": "2026-06-08T01:32:38.675721+00:00",
   "source_id": "company_profile_2025_trial",
   "decision": "go",
   "reason_code": "approved_local_corpus_accepted",
@@ -26,13 +26,13 @@
       "answer_ok": true,
       "answer_status": "answered",
       "citations": [
-        "company_profile_2025_trial#chunk-123",
-        "company_profile_2025_trial#chunk-201",
+        "company_profile_2025_trial#chunk-127",
+        "company_profile_2025_trial#chunk-203",
         "company_profile_2025_trial#chunk-1"
       ],
       "allowed_citations": [
-        "company_profile_2025_trial#chunk-123",
-        "company_profile_2025_trial#chunk-201",
+        "company_profile_2025_trial#chunk-127",
+        "company_profile_2025_trial#chunk-203",
         "company_profile_2025_trial#chunk-1"
       ],
       "invalid_citations": [],
@@ -49,12 +49,12 @@
       "answer_ok": true,
       "answer_status": "answered",
       "citations": [
-        "company_profile_2025_trial#chunk-111",
+        "company_profile_2025_trial#chunk-115",
         "company_profile_2025_trial#chunk-1",
         "company_profile_2025_trial#chunk-3"
       ],
       "allowed_citations": [
-        "company_profile_2025_trial#chunk-111",
+        "company_profile_2025_trial#chunk-115",
         "company_profile_2025_trial#chunk-1",
         "company_profile_2025_trial#chunk-3"
       ],
@@ -73,13 +73,13 @@
       "answer_status": "answered",
       "citations": [
         "company_profile_2025_trial#chunk-51",
-        "company_profile_2025_trial#chunk-163",
-        "company_profile_2025_trial#chunk-655"
+        "company_profile_2025_trial#chunk-167",
+        "company_profile_2025_trial#chunk-663"
       ],
       "allowed_citations": [
         "company_profile_2025_trial#chunk-51",
-        "company_profile_2025_trial#chunk-163",
-        "company_profile_2025_trial#chunk-655"
+        "company_profile_2025_trial#chunk-167",
+        "company_profile_2025_trial#chunk-663"
       ],
       "invalid_citations": [],
       "notes": []
@@ -95,14 +95,14 @@
       "answer_ok": true,
       "answer_status": "answered",
       "citations": [
-        "company_profile_2025_trial#chunk-141",
+        "company_profile_2025_trial#chunk-145",
         "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-107"
+        "company_profile_2025_trial#chunk-111"
       ],
       "allowed_citations": [
-        "company_profile_2025_trial#chunk-141",
+        "company_profile_2025_trial#chunk-145",
         "company_profile_2025_trial#chunk-3",
-        "company_profile_2025_trial#chunk-107"
+        "company_profile_2025_trial#chunk-111"
       ],
       "invalid_citations": [],
       "notes": []

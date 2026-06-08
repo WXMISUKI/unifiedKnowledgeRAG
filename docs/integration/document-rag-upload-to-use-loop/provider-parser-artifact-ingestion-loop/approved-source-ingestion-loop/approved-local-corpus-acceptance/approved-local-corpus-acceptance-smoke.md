@@ -3,7 +3,7 @@
 - Report: `approved-local-corpus-acceptance-smoke-v1`
 - Decision: `go`
 - Reason: `approved_local_corpus_accepted`
-- Generated At: `2026-06-07T11:08:05.412488+00:00`
+- Generated At: `2026-06-08T01:32:38.675721+00:00`
 - Source ID: `company_profile_2025_trial`
 
 ## Summary

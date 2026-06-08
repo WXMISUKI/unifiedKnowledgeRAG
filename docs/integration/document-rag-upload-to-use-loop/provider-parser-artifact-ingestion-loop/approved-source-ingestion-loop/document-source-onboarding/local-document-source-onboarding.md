@@ -3,11 +3,11 @@
 - Report: `local-document-source-onboarding-loop-v1`
 - Decision: `go`
 - Reason: `local_document_source_onboarded`
-- Generated At: `2026-06-07T11:08:05.230841+00:00`
+- Generated At: `2026-06-08T01:32:38.480673+00:00`
 - Source ID: `company_profile_2025_trial`
-- Title: `公司简介 2025 trial`
+- Title: `公司简介 2025-10-27`
 - Markdown Path: `docs\integration\document-rag-upload-to-use-loop\provider-parser-artifact-ingestion-loop\normalized-parser-artifact-boundary\parser-derived-source.md`
-- Query: `公司主营业务和服务范围是什么？`
+- Query: `公司主营业务是什么？`
 
 ## Steps
 

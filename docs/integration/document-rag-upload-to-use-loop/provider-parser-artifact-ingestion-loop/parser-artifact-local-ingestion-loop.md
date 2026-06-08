@@ -3,7 +3,7 @@
 - Report: `parser-artifact-local-ingestion-loop-v1`
 - Decision: `go`
 - Reason: `parser_artifact_local_ingestion_ready`
-- Generated At: `2026-06-07T11:08:05.416579+00:00`
+- Generated At: `2026-06-08T01:32:38.680595+00:00`
 - Artifact Path: `D:\AI\AIcode\MyPrivateAgent\docs\integration\document-rag-upload-to-use-loop\parser-artifacts\document-rag-parser-artifact.json`
 - Artifact ID: `company_profile_2025_trial_ocr_document_upload`
 - Source ID: `company_profile_2025_trial`

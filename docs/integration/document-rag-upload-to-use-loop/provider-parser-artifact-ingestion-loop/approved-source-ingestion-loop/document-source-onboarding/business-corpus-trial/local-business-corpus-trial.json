@@ -1,12 +1,12 @@
 {
   "id": "local-business-corpus-trial-loop-v1",
-  "generated_at": "2026-06-07T11:08:05.024865+00:00",
+  "generated_at": "2026-06-08T01:32:38.283234+00:00",
   "decision": "go",
   "reason_code": "local_business_corpus_usable",
   "source_id": "company_profile_2025_trial",
-  "title": "公司简介 2025 trial",
+  "title": "公司简介 2025-10-27",
   "markdown_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
-  "query": "公司主营业务和服务范围是什么？",
+  "query": "公司主营业务是什么？",
   "top_k": 3,
   "overlay_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-source.json",
   "chunks_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\approved-source-ingestion-loop\\document-source-onboarding\\business-corpus-trial\\local-business-corpus-chunks.json",
@@ -15,8 +15,8 @@
   "summary": {
     "decision": "go",
     "source_id": "company_profile_2025_trial",
-    "markdown_char_count": 43907,
-    "chunk_count": 667,
+    "markdown_char_count": 44205,
+    "chunk_count": 678,
     "retrieved_evidence_count": 3,
     "answer_citation_count": 3,
     "invalid_citation_count": 0,
@@ -28,7 +28,7 @@
   },
   "overlay": {
     "source_id": "company_profile_2025_trial",
-    "title": "公司简介 2025 trial",
+    "title": "公司简介 2025-10-27",
     "source_path": "D:\\AI\\AIcode\\unifiedKnowledgeRAG\\docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
     "format": "markdown",
     "owner": "local_trial",
@@ -40,29 +40,29 @@
   },
   "evidence": [
     {
-      "chunk_id": "chunk-104",
-      "citation": "company_profile_2025_trial#chunk-104",
+      "chunk_id": "chunk-111",
+      "citation": "company_profile_2025_trial#chunk-111",
       "text": "“今天的业主是我们永远的业主”为服务宗旨，践行“用诚信和实力塑造公司品牌”",
-      "score": 0.6428571428571429
+      "score": 0.6666666666666666
     },
     {
-      "chunk_id": "chunk-76",
-      "citation": "company_profile_2025_trial#chunk-76",
+      "chunk_id": "chunk-83",
+      "citation": "company_profile_2025_trial#chunk-83",
       "text": "公司主要经营高等级公路、大型桥梁和隧道工程及水运工程的施工监理、技术",
-      "score": 0.35714285714285715
+      "score": 0.4444444444444444
     },
     {
-      "chunk_id": "chunk-100",
-      "citation": "company_profile_2025_trial#chunk-100",
-      "text": "理念，持续发扬“守法公正、诚信履约、科学管理、创新服务”的公司精神，以诚",
-      "score": 0.35714285714285715
+      "chunk_id": "chunk-87",
+      "citation": "company_profile_2025_trial#chunk-87",
+      "text": "监理。公司设市场开发部、财务审计部、办公室、中心试验室，现有员工478名，",
+      "score": 0.3333333333333333
     }
   ],
-  "answer": "“今天的业主是我们永远的业主”为服务宗旨，践行“用诚信和实力塑造公司品牌”；公司主要经营高等级公路、大型桥梁和隧道工程及水运工程的施工监理、技术；理念，持续发扬“守法公正、诚信履约、科学管理、创新服务”的公司精神，以诚。引用：[company_profile_2025_trial#chunk-104] [company_profile_2025_trial#chunk-76] [company_profile_2025_trial#chunk-100]",
+  "answer": "“今天的业主是我们永远的业主”为服务宗旨，践行“用诚信和实力塑造公司品牌”；公司主要经营高等级公路、大型桥梁和隧道工程及水运工程的施工监理、技术；监理。引用：[company_profile_2025_trial#chunk-111] [company_profile_2025_trial#chunk-83] [company_profile_2025_trial#chunk-87]",
   "citations": [
-    "company_profile_2025_trial#chunk-104",
-    "company_profile_2025_trial#chunk-76",
-    "company_profile_2025_trial#chunk-100"
+    "company_profile_2025_trial#chunk-111",
+    "company_profile_2025_trial#chunk-83",
+    "company_profile_2025_trial#chunk-87"
   ],
   "recommended_actions": [
     "review_local_business_corpus_quality_before_formal_registration",

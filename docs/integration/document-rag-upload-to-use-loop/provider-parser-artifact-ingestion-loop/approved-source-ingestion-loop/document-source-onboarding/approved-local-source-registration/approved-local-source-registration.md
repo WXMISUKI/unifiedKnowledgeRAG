@@ -3,9 +3,9 @@
 - Report: `approved-local-corpus-source-registration-v1`
 - Status: `registered`
 - Reason: `approved_local_source_registered`
-- Generated At: `2026-06-07T11:08:05.034333+00:00`
+- Generated At: `2026-06-08T01:32:38.291277+00:00`
 - Source ID: `company_profile_2025_trial`
-- Title: `公司简介 2025 trial`
+- Title: `公司简介 2025-10-27`
 - Registration Status: `registered`
 - Handoff Path: `D:\AI\AIcode\unifiedKnowledgeRAG\docs\integration\document-rag-upload-to-use-loop\provider-parser-artifact-ingestion-loop\approved-source-ingestion-loop\document-source-onboarding\corpus-caller-handoff\local-corpus-caller-handoff.json`
 - Registry Path: `app\data\local_sources\approved_sources.json`
@@ -18,7 +18,7 @@
 | `source_id` | `company_profile_2025_trial` |
 | `registry_status` | `written` |
 | `materialized_source_status` | `written` |
-| `content_sha256` | `389d2c1469dd53239cbe07e3bb81045081498b091a36dc9fd8eacd325630b1d8` |
+| `content_sha256` | `2c08d5f9164bf0b0ccc15873567f6fb34592b06ba811123f4a4f32695e01a347` |
 | `default_source_catalog_status` | `extended_with_approved_local_source` |
 | `runtime_promotion_status` | `keep_runtime_defaults` |
 | `source_binding_status` | `not_created` |

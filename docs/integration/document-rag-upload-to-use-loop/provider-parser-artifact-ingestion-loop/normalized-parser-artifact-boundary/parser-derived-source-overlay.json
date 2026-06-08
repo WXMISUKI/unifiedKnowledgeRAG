@@ -1,17 +1,17 @@
 {
   "source_id": "company_profile_2025_trial",
-  "title": "公司简介 2025 trial",
+  "title": "公司简介 2025-10-27",
   "owner": "myprivateagent_document_rag_upload_to_use_loop",
   "domain": "local_business_corpus",
   "language": "zh-CN",
   "sensitivity": "local_private_trial",
   "markdown_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
-  "content_sha256": "741f7d4ae31cd391582d7e184dfa402f11854e77807e0c68c34b7ae3701dde8b",
+  "content_sha256": "19eac690a6a1dd14bc324eb3e6e9f09fd233ce99efaa9b67a52ba93f845185d6",
   "parser_artifact": {
     "artifact_id": "company_profile_2025_trial_ocr_document_upload",
     "parser_id": "myprivateagent-ocr-artifact-handoff-v1",
     "parser_version": "local-trial",
-    "parsed_at": "2026-06-07T11:08:02.802940+00:00",
+    "parsed_at": "2026-06-08T01:32:35.960337+00:00",
     "original_file_path": "D:\\xwechat_files\\wxid_pc6sc451nt9022_dea0\\msg\\file\\2026-06\\公司简介2025年10月27日(1).pdf",
     "original_file_sha256": "674ef20cef125ea915459306f1e911a26533f2ab7cd13676cf7a6e8e53b41fb7",
     "page_range": "unknown"

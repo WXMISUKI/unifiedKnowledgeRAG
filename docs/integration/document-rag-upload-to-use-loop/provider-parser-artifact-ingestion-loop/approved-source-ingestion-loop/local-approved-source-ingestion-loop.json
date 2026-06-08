@@ -1,12 +1,12 @@
 {
   "id": "local-approved-source-ingestion-loop-v1",
-  "generated_at": "2026-06-07T11:08:05.414494+00:00",
+  "generated_at": "2026-06-08T01:32:38.677788+00:00",
   "decision": "go",
   "reason_code": "local_approved_source_ingestion_ready",
   "source_id": "company_profile_2025_trial",
-  "title": "公司简介 2025 trial",
+  "title": "公司简介 2025-10-27",
   "markdown_path": "docs\\integration\\document-rag-upload-to-use-loop\\provider-parser-artifact-ingestion-loop\\normalized-parser-artifact-boundary\\parser-derived-source.md",
-  "query": "公司主营业务和服务范围是什么？",
+  "query": "公司主营业务是什么？",
   "top_k": 3,
   "steps": [
     {
@@ -48,11 +48,11 @@
       "reason_code": "ingestion_job_completed",
       "artifacts": {},
       "summary": {
-        "job_id": "idx_53d2989a20684179ab18f819fa750b1d",
+        "job_id": "idx_4105aea66595466eb6dfe1575231a1ac",
         "source_id": "company_profile_2025_trial",
         "status": "completed",
-        "requested_at": "2026-06-07T11:08:05.239447+00:00",
-        "completed_at": "2026-06-07T11:08:05.240448+00:00",
+        "requested_at": "2026-06-08T01:32:38.490359+00:00",
+        "completed_at": "2026-06-08T01:32:38.491400+00:00",
         "error_code": null
       }
     },

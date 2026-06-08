@@ -3,7 +3,7 @@
 - Report: `normalized-parser-artifact-ingestion-boundary-v1`
 - Decision: `go`
 - Reason: `parser_artifact_ready_for_local_onboarding`
-- Generated At: `2026-06-07T11:08:05.003253+00:00`
+- Generated At: `2026-06-08T01:32:38.260829+00:00`
 - Artifact Path: `D:\AI\AIcode\MyPrivateAgent\docs\integration\document-rag-upload-to-use-loop\parser-artifacts\document-rag-parser-artifact.json`
 - Artifact ID: `company_profile_2025_trial_ocr_document_upload`
 - Source ID: `company_profile_2025_trial`
@@ -23,8 +23,8 @@
 | `ingestion_job_status` | `not_created` |
 | `vector_database_status` | `not_called` |
 | `graph_execution_status` | `not_executed` |
-| `text_block_count` | `500` |
-| `citation_anchor_count` | `500` |
+| `text_block_count` | `502` |
+| `citation_anchor_count` | `502` |
 | `materialized_markdown_status` | `written` |
 | `source_overlay_status` | `written` |
 
