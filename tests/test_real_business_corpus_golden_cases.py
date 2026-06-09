@@ -15,13 +15,13 @@ def test_real_business_corpus_golden_cases_go_writes_aggregate_report(tmp_path):
 
     assert report.decision == "go"
     assert report.reason_code == "real_business_corpus_baseline_go"
-    assert report.summary["source_count"] == 2
-    assert report.summary["case_count"] == 4
+    assert report.summary["source_count"] == 3
+    assert report.summary["case_count"] == 7
     assert report.summary["hit_rate"] == 1.0
     assert report.summary["citation_match_rate"] == 1.0
     assert report.summary["empty_handling_rate"] == 1.0
-    assert report.failure_mode_summary["citation_or_evidence"] == 2
-    assert report.risk_level_summary["high"] == 2
+    assert report.failure_mode_summary["citation_or_evidence"] == 3
+    assert report.risk_level_summary["high"] == 3
     assert report.case_file == DEFAULT_AGGREGATE_CASE_FILE
     assert report.json_path != report.case_file
     assert report.json_path.exists()
@@ -36,6 +36,9 @@ def test_real_business_corpus_golden_cases_reviews_on_source_case_failure():
             "公司有哪些合同金额？": ["company_profile_2025_trial#chunk-2"],
             "退款规则是什么？": ["refund_policy_docs#chunk-1"],
             "退款文档中的员工名单有哪些？": [],
+            "LST-BATCH-OPS 是什么？": ["logistics_faq#chunk-1"],
+            "同一承运商一小时内出现五单以上轨迹停滞要先做什么？": ["logistics_faq#chunk-2"],
+            "物流FAQ里的员工名单有哪些？": [],
         }
     )
 
@@ -53,12 +56,12 @@ def test_real_business_corpus_golden_cases_reviews_on_source_case_failure():
 def test_real_business_corpus_golden_cases_blocks_on_missing_source():
     report = run_real_business_corpus_golden_cases(
         cases=_aggregate_cases(),
-        client=_client(registered_sources={"company_profile_2025_trial"}),
+        client=_client(registered_sources={"company_profile_2025_trial", "refund_policy_docs"}),
     )
 
     assert report.decision == "blocked"
     assert report.reason_code == "real_business_corpus_baseline_blocked"
-    assert "refund_policy_docs" in report.summary["blocked_sources"]
+    assert "logistics_faq" in report.summary["blocked_sources"]
 
 
 def _aggregate_cases():
@@ -107,6 +110,39 @@ def _aggregate_cases():
             risk_level="high",
             description="Refund policy negative control.",
         ),
+        RealBusinessGoldenCase(
+            id="logistics-batch-exception",
+            source_id="logistics_faq",
+            query="同一承运商一小时内出现五单以上轨迹停滞要先做什么？",
+            expected_mode="answerable",
+            expected_citation_prefix="logistics_faq#chunk-",
+            business_question_type="workflow_lookup",
+            failure_mode="unclassified",
+            risk_level="medium",
+            description="Logistics workflow answerable case.",
+        ),
+        RealBusinessGoldenCase(
+            id="logistics-identifier",
+            source_id="logistics_faq",
+            query="LST-BATCH-OPS 是什么？",
+            expected_mode="answerable",
+            expected_citation_prefix="logistics_faq#chunk-",
+            business_question_type="identifier_lookup",
+            failure_mode="unclassified",
+            risk_level="medium",
+            description="Logistics exact identifier answerable case.",
+        ),
+        RealBusinessGoldenCase(
+            id="logistics-negative-staff",
+            source_id="logistics_faq",
+            query="物流FAQ里的员工名单有哪些？",
+            expected_mode="insufficient_evidence",
+            expected_citation_prefix=None,
+            business_question_type="negative_control",
+            failure_mode="citation_or_evidence",
+            risk_level="high",
+            description="Logistics negative control.",
+        ),
     ]
 
 
@@ -114,12 +150,16 @@ def _client(*, registered_sources=None, citation_by_query=None):
     registered_sources = registered_sources or {
         "company_profile_2025_trial",
         "refund_policy_docs",
+        "logistics_faq",
     }
     citation_by_query = citation_by_query or {
         "公司主营业务是什么？": ["company_profile_2025_trial#chunk-1"],
         "公司有哪些合同金额？": [],
         "退款规则是什么？": ["refund_policy_docs#chunk-1"],
         "退款文档中的员工名单有哪些？": [],
+        "同一承运商一小时内出现五单以上轨迹停滞要先做什么？": ["logistics_faq#chunk-1"],
+        "LST-BATCH-OPS 是什么？": ["logistics_faq#chunk-2"],
+        "物流FAQ里的员工名单有哪些？": [],
     }
 
     class FakeResponse:

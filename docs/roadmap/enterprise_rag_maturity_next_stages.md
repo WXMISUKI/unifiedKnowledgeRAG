@@ -147,6 +147,6 @@ It writes:
 - `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
 - `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.md`
 
-The current aggregate report is `review` with `source_count=2`, `case_count=9`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=0.6667`. The newly added second real source is `refund_policy_docs`. Its exact-term positive controls pass, and after markdown provenance diagnostics alignment the remaining review evidence is now isolated to one observation: `negative_control_leakage`.
+The current aggregate report is `go` with `source_count=3`, `case_count=12`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. It now covers `company_profile_2025_trial`, `refund_policy_docs`, and `logistics_faq`. The third source adds workflow/process questions, exact-term identifier questions, and a new expected-empty negative control without changing runtime defaults.
 
-Because markdown provenance diagnostics are now aligned, the next provider action is no longer to review chunk/provenance expectations. The next narrow gate is `negative-control-hardening`. Advanced RAG strategy changes remain unpromoted until that concrete gate is resolved.
+Because the aggregate baseline is now back to `go` across three real business sources, the next provider action is not to introduce advanced retrieval strategy changes. The next narrow gate is to keep expanding real business documents or accepted failed-question packs until a new accepted failure class appears. Advanced RAG strategy changes remain unpromoted until that concrete failure evidence exists.

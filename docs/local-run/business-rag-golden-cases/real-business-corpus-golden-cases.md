@@ -3,17 +3,17 @@
 - Report: `real-business-corpus-golden-cases-v1`
 - Decision: `go`
 - Reason: `real_business_corpus_baseline_go`
-- Generated At: `2026-06-09T02:26:47.643709+00:00`
+- Generated At: `2026-06-09T02:37:02.171168+00:00`
 - Case File: `docs\local-run\business-rag-golden-cases\real-business-corpus-golden-cases.fixture.json`
 
 ## Summary
 
 | Metric | Value |
 |---|---|
-| `source_count` | `2` |
-| `case_count` | `9` |
-| `answerable_case_count` | `6` |
-| `expected_empty_case_count` | `3` |
+| `source_count` | `3` |
+| `case_count` | `12` |
+| `answerable_case_count` | `8` |
+| `expected_empty_case_count` | `4` |
 | `hit_rate` | `1.0` |
 | `citation_match_rate` | `1.0` |
 | `empty_handling_rate` | `1.0` |
@@ -29,8 +29,8 @@
 
 | Failure Mode | Count |
 |---|---|
-| `citation_or_evidence` | `3` |
-| `unclassified` | `6` |
+| `citation_or_evidence` | `4` |
+| `unclassified` | `8` |
 
 ## Review Observations
 
@@ -42,6 +42,7 @@
 | Source | Decision | Cases | Hit Rate | Citation Match | Empty Handling | Chunk Quality |
 |---|---|---:|---:|---:|---:|---|
 | `company_profile_2025_trial` | `go` | `6` | `1.0` | `1.0` | `1.0` | `ready` |
+| `logistics_faq` | `go` | `3` | `1.0` | `1.0` | `1.0` | `ready` |
 | `refund_policy_docs` | `go` | `3` | `1.0` | `1.0` | `1.0` | `ready` |
 
 ## Recommended Actions

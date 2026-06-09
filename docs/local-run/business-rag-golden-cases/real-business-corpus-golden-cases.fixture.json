@@ -97,5 +97,38 @@
     "failure_mode": "citation_or_evidence",
     "risk_level": "high",
     "description": "Unsupported staff-roster queries should fail closed against the refund policy source."
+  },
+  {
+    "source_id": "logistics_faq",
+    "case_id": "logistics-batch-exception-workflow",
+    "query": "同一承运商一小时内出现五单以上轨迹停滞要先做什么？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "logistics_faq_2026#",
+    "business_question_type": "workflow_lookup",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Batch logistics exception workflow should be answerable from the logistics FAQ source."
+  },
+  {
+    "source_id": "logistics_faq",
+    "case_id": "logistics-exact-identifier",
+    "query": "LST-BATCH-OPS 是什么？",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "logistics_faq_2026#",
+    "business_question_type": "identifier_lookup",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "description": "Exact logistics identifier lookup should be answerable from the logistics FAQ source."
+  },
+  {
+    "source_id": "logistics_faq",
+    "case_id": "logistics-negative-staff",
+    "query": "物流FAQ里的员工名单有哪些？",
+    "expected_mode": "insufficient_evidence",
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "failure_mode": "citation_or_evidence",
+    "risk_level": "high",
+    "description": "Unsupported staff-roster queries should fail closed against the logistics FAQ source."
   }
 ]

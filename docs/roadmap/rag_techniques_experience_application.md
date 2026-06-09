@@ -105,9 +105,9 @@ Completion signal:
 - Runtime defaults remain unchanged.
 - An aggregate real-business corpus fixture/report now also exists:
   `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
-- The aggregate report now has `source_count=2` and `case_count=9`, and it returns `review` rather than `go`.
-- The second real source `refund_policy_docs` passes exact-term positive controls, and after diagnostics alignment its remaining classified review observation is `negative_control_leakage`.
-- This means the aggregate baseline has moved from format-only expansion to real failure-mode evidence, but it still does not justify advanced RAG strategy promotion by itself.
+- The aggregate report now has `source_count=3` and `case_count=12`, and it remains `go`.
+- The third real source `logistics_faq` adds workflow/process, exact-identifier, and negative-control coverage while keeping `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`.
+- This means the aggregate baseline has progressed from two-source validation into broader real-business evidence coverage, but it still does not justify advanced RAG strategy promotion by itself; the next step remains expanding breadth until a new accepted failure class appears.
 
 Non-goals:
 
