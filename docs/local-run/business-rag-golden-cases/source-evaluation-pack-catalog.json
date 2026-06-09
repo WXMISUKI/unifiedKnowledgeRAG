@@ -1,6 +1,6 @@
 {
   "id": "source-evaluation-pack-catalog-v1",
-  "generated_at": "2026-06-09T06:50:18.498361+00:00",
+  "generated_at": "2026-06-09T07:20:33.781066+00:00",
   "decision": "review",
   "reason_code": "source_evaluation_pack_catalog_needs_review",
   "summary": {
@@ -17,11 +17,12 @@
     "missing_pack_ids": [],
     "onboarding_catalog_present": true,
     "onboarding_source_count": 3,
-    "onboarding_ready_source_count": 2,
-    "onboarding_template_only_source_count": 1,
+    "onboarding_ready_source_count": 3,
+    "onboarding_template_only_source_count": 0,
     "onboarding_review_source_count": 0,
     "onboarding_ready_source_ids": [
       "invoice_policy_faq",
+      "source_template_example",
       "split_refund_policy_docs"
     ]
   },
@@ -81,8 +82,7 @@
   ],
   "recommended_actions": [
     "confirm_failure_class_before_strategy_changes",
-    "review_confirmed_failure_class_scope_before_strategy_changes",
-    "fill_real_baseline_fixtures_for_template_only_onboarding_sources"
+    "review_confirmed_failure_class_scope_before_strategy_changes"
   ],
   "non_goals": [
     "does_not_rerun_underlying_retrieval_evaluations",

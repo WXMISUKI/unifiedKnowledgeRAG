@@ -1,0 +1,139 @@
+{
+  "id": "local-business-rag-golden-cases-v1",
+  "generated_at": "2026-06-09T07:19:08.234994+00:00",
+  "source_id": "source_template_example",
+  "decision": "go",
+  "reason_code": "local_business_rag_baseline_go",
+  "top_k": 3,
+  "case_file": "docs\\local-run\\business-rag-golden-cases\\onboarding\\source_template_example\\baseline-pack.fixture.json",
+  "summary": {
+    "case_count": 3,
+    "answerable_case_count": 2,
+    "expected_empty_case_count": 1,
+    "hit_rate": 1.0,
+    "citation_match_rate": 1.0,
+    "empty_handling_rate": 1.0,
+    "invalid_citation_count": 0,
+    "review_case_ids": [],
+    "blocked_case_ids": [],
+    "chunk_quality_status": "ready",
+    "chunk_quality_reason": "chunk_quality_ready",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_binding_status": "not_created",
+    "graph_execution_status": "not_executed",
+    "final_decision": "go"
+  },
+  "chunk_quality": {
+    "status": "ready",
+    "reason_code": "chunk_quality_ready",
+    "provenance_mode": "non_page",
+    "total_chunk_count": 3,
+    "tiny_chunk_count": 0,
+    "tiny_chunk_ratio": 0.0,
+    "citation_anchor_count": 3,
+    "citation_coverage_ratio": 1.0,
+    "page_coverage_count": 0,
+    "page_ids": [],
+    "noisy_chunk_samples": [],
+    "thresholds": {
+      "min_chunk_count": 1,
+      "max_tiny_chunk_ratio": 0.45,
+      "min_citation_coverage_ratio": 0.8,
+      "min_page_coverage_count": 1,
+      "tiny_chunk_char_threshold": 20,
+      "noisy_chunk_char_threshold": 6
+    }
+  },
+  "cases": [
+    {
+      "id": "template-example-review-time",
+      "query": "示例工单提交后多久完成初审？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "source_template_example",
+      "expected_citation_prefix": "source_template_example_2026#",
+      "business_question_type": "review_time_lookup",
+      "returned_source_ids": [
+        "source_template_example",
+        "source_template_example"
+      ],
+      "returned_citations": [
+        "source_template_example_2026#initial-review",
+        "source_template_example_2026#required-fields"
+      ],
+      "answer_citations": [
+        "source_template_example_2026#initial-review",
+        "source_template_example_2026#required-fields"
+      ],
+      "invalid_citations": []
+    },
+    {
+      "id": "template-example-required-fields",
+      "query": "提交示例工单需要提供哪些信息？",
+      "expected_mode": "answerable",
+      "status": "ready",
+      "reason_code": "answerable_case_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 2,
+      "answer_ok": true,
+      "answer_status": "answered",
+      "expected_source_id": "source_template_example",
+      "expected_citation_prefix": "source_template_example_2026#",
+      "business_question_type": "required_fields_lookup",
+      "returned_source_ids": [
+        "source_template_example",
+        "source_template_example"
+      ],
+      "returned_citations": [
+        "source_template_example_2026#required-fields",
+        "source_template_example_2026#initial-review"
+      ],
+      "answer_citations": [
+        "source_template_example_2026#required-fields",
+        "source_template_example_2026#initial-review"
+      ],
+      "invalid_citations": []
+    },
+    {
+      "id": "template-example-negative-procurement-flow",
+      "query": "门店陈列颜色标准是什么？",
+      "expected_mode": "insufficient_evidence",
+      "status": "ready",
+      "reason_code": "negative_control_passed",
+      "retrieve_ok": true,
+      "retrieve_count": 0,
+      "answer_ok": true,
+      "answer_status": "insufficient_evidence",
+      "expected_source_id": null,
+      "expected_citation_prefix": null,
+      "business_question_type": "negative_control",
+      "returned_source_ids": [],
+      "returned_citations": [],
+      "answer_citations": [],
+      "invalid_citations": []
+    }
+  ],
+  "review_observations": [],
+  "recommended_actions": [
+    "reuse_golden_cases_before_future_rag_strategy_changes",
+    "continue_testing_more_real_business_documents",
+    "keep_runtime_defaults_until_candidate_evidence_passes"
+  ],
+  "non_goals": [
+    "does_not_change_public_http_apis",
+    "does_not_create_source_to_agent_binding",
+    "does_not_call_myprivateagent",
+    "does_not_start_or_adopt_parser_engines",
+    "does_not_promote_qdrant_pgvector_bge_m3_hybrid_or_rerankers",
+    "does_not_enable_query_rewrite_hyde_hype_raptor_or_self_rag",
+    "does_not_execute_graphrag",
+    "does_not_change_runtime_retrieval_defaults"
+  ],
+  "json_path": "docs\\local-run\\business-rag-golden-cases\\onboarding\\source_template_example\\local-business-rag-golden-cases.json",
+  "markdown_path": "docs\\local-run\\business-rag-golden-cases\\onboarding\\source_template_example\\local-business-rag-golden-cases.md"
+}

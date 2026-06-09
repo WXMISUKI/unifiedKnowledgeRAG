@@ -43,6 +43,15 @@ KNOWLEDGE_BASES = [
         vector_store="in_memory",
         freshness="static_fixture",
     ),
+    KnowledgeBaseSource(
+        id="source_template_example",
+        status="ready",
+        owner="provider_ops",
+        version="2026-06-09",
+        embedding_model="local-lexical-v1",
+        vector_store="in_memory",
+        freshness="static_fixture",
+    ),
 ]
 
 EVALUATION_ONLY_KNOWLEDGE_BASE_IDS = {

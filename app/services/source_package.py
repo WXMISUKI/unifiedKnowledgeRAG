@@ -45,6 +45,19 @@ SOURCE_PACKAGES = {
             "package_role": "local_enterprise_onboarding_fixture",
         },
     },
+    "source_template_example": {
+        "domain": "onboarding_example",
+        "language": "zh-CN",
+        "sensitivity": "internal",
+        "supported_formats": ["markdown"],
+        "default_chunking_strategy": "markdown-paragraph-v1",
+        "citation_granularity": "section",
+        "allowed_parser_statuses": ["ready"],
+        "metadata": {
+            "business_use": "source_onboarding_example",
+            "package_role": "local_enterprise_onboarding_fixture",
+        },
+    },
 }
 
 

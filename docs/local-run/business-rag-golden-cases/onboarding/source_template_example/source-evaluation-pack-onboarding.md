@@ -1,7 +1,7 @@
 # Source Evaluation Pack Onboarding
 
 - Report: `source-evaluation-pack-onboarding-v1`
-- Generated At: `2026-06-09T03:54:47.971961+00:00`
+- Generated At: `2026-06-09T07:19:08.152745+00:00`
 - Source ID: `source_template_example`
 - Output Dir: `docs\local-run\business-rag-golden-cases\onboarding\source_template_example`
 

@@ -112,6 +112,28 @@ SOURCE_DOCUMENT_MANIFESTS = {
             },
         )
     ],
+    "source_template_example": [
+        SourceDocumentManifest(
+            document_id="source_template_example_2026",
+            title="示例规则说明",
+            source_path="app/data/sources/source_template_example.md",
+            format="markdown",
+            version="2026-06-09",
+            chunking_strategy="markdown-paragraph-v1",
+            citation_anchors=[
+                "source_template_example_2026#initial-review",
+                "source_template_example_2026#required-fields",
+                "source_template_example_2026#non-goals",
+            ],
+            expected_content_sha256=(
+                "f54e75e9879f775c5275fd517cbcdcbadfa3b112b8a14aaa1852c8b5002b00a2"
+            ),
+            metadata={
+                "language": "zh-CN",
+                "document_role": "local_contract_fixture",
+            },
+        )
+    ],
 }
 
 

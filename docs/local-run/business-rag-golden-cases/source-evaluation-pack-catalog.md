@@ -3,7 +3,7 @@
 - Report: `source-evaluation-pack-catalog-v1`
 - Decision: `review`
 - Reason: `source_evaluation_pack_catalog_needs_review`
-- Generated At: `2026-06-09T06:50:18.498361+00:00`
+- Generated At: `2026-06-09T07:20:33.781066+00:00`
 
 ## Summary
 
@@ -19,10 +19,10 @@
 | `missing_pack_ids` | `[]` |
 | `onboarding_catalog_present` | `True` |
 | `onboarding_source_count` | `3` |
-| `onboarding_ready_source_count` | `2` |
-| `onboarding_template_only_source_count` | `1` |
+| `onboarding_ready_source_count` | `3` |
+| `onboarding_template_only_source_count` | `0` |
 | `onboarding_review_source_count` | `0` |
-| `onboarding_ready_source_ids` | `["invoice_policy_faq", "split_refund_policy_docs"]` |
+| `onboarding_ready_source_ids` | `["invoice_policy_faq", "source_template_example", "split_refund_policy_docs"]` |
 
 ## Onboarding Summary
 
@@ -30,10 +30,10 @@
 |---|---|
 | `onboarding_catalog_present` | `True` |
 | `onboarding_source_count` | `3` |
-| `onboarding_ready_source_count` | `2` |
-| `onboarding_template_only_source_count` | `1` |
+| `onboarding_ready_source_count` | `3` |
+| `onboarding_template_only_source_count` | `0` |
 | `onboarding_review_source_count` | `0` |
-| `onboarding_ready_source_ids` | `["invoice_policy_faq", "split_refund_policy_docs"]` |
+| `onboarding_ready_source_ids` | `["invoice_policy_faq", "source_template_example", "split_refund_policy_docs"]` |
 
 ## Packs
 
@@ -48,7 +48,6 @@
 
 - confirm_failure_class_before_strategy_changes
 - review_confirmed_failure_class_scope_before_strategy_changes
-- fill_real_baseline_fixtures_for_template_only_onboarding_sources
 
 ## Non-Goals
 

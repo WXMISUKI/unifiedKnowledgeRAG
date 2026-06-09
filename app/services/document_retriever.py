@@ -161,6 +161,27 @@ DOCUMENTS = [
         text="发票一经开具，金额和抬头原则上不支持直接修改；如发现信息填写错误，需要先作废原发票，再由财务在核对订单信息后重新开具。",
         citation="invoice_policy_faq_2026#correction-flow",
     ),
+    DocumentChunk(
+        source_id="source_template_example",
+        document_id="source_template_example_2026",
+        title="示例工单初审规则",
+        text="示例工单在提交后一个工作日内完成初审；如果缺少必填信息，系统会退回并提示补充联系人姓名与联系电话。",
+        citation="source_template_example_2026#initial-review",
+    ),
+    DocumentChunk(
+        source_id="source_template_example",
+        document_id="source_template_example_2026",
+        title="示例工单必填信息",
+        text="提交示例工单时需要提供工单主题、联系人姓名、联系电话和问题描述；如需邮件回执，还需要补充接收邮箱地址。",
+        citation="source_template_example_2026#required-fields",
+    ),
+    DocumentChunk(
+        source_id="source_template_example",
+        document_id="source_template_example_2026",
+        title="示例规则范围边界",
+        text="本示例仅用于演示 source onboarding 最小 baseline，不包含跨系统审批流、外部采购流程或供应商结算规则。",
+        citation="source_template_example_2026#non-goals",
+    ),
 ]
 
 

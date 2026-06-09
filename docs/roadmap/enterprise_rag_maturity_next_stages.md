@@ -276,3 +276,19 @@ It now also reads:
 The refreshed pack catalog still returns `review` because the failed-question and confirmation packs remain `review`, but it now also exposes onboarding maturity summary with `onboarding_source_count=3`, `onboarding_ready_source_count=2`, and `onboarding_template_only_source_count=1`. This keeps pack-level discovery and source-onboarding discovery connected without changing pack decision semantics, runtime defaults, source registration, or aggregate-baseline expansion.
 
 Because this bridge slice is now complete, the next provider action should remain lightweight and evidence-first: either turn the remaining template-only onboarding example into a real minimal baseline fixture, or wait for a repeated cross-source failed-question class before opening any hardening slice. Retrieval strategy promotion remains outside scope.
+
+## Real Template Onboarding Example
+
+The local operator entrypoint is:
+
+`python scripts/export_source_template_onboarding_validation.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/baseline-pack.fixture.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-template-local-business-rag-golden-cases.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-template-local-business-rag-golden-cases.md`
+
+The promoted `source_template_example` validation report is now `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This closes the last template-only onboarding example by turning it into a real minimal baseline example without expanding the main aggregate baseline or changing runtime defaults.
+
+Because this example-promotion slice is now complete, the next provider action should slow down rather than continue polishing onboarding mechanics: either wait for repeated cross-source failed-question evidence before opening a narrowly scoped hardening slice, or pause provider-side expansion until a real caller exposes a new provider-owned gap. Retrieval strategy promotion remains outside scope.

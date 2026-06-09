@@ -3,7 +3,7 @@
 - Report: `source-onboarding-catalog-v1`
 - Decision: `go`
 - Reason: `source_onboarding_catalog_ready`
-- Generated At: `2026-06-09T06:50:18.457558+00:00`
+- Generated At: `2026-06-09T07:19:52.182262+00:00`
 - Onboarding Root: `docs\local-run\business-rag-golden-cases\onboarding`
 
 ## Summary
@@ -11,13 +11,13 @@
 | Metric | Value |
 |---|---|
 | `source_count` | `3` |
-| `ready_source_count` | `2` |
-| `template_only_source_count` | `1` |
+| `ready_source_count` | `3` |
+| `template_only_source_count` | `0` |
 | `baseline_ready_source_count` | `0` |
 | `review_source_count` | `0` |
 | `missing_source_count` | `0` |
-| `ready_source_ids` | `["invoice_policy_faq", "split_refund_policy_docs"]` |
-| `template_only_source_ids` | `["source_template_example"]` |
+| `ready_source_ids` | `["invoice_policy_faq", "source_template_example", "split_refund_policy_docs"]` |
+| `template_only_source_ids` | `[]` |
 | `onboarding_root` | `docs\local-run\business-rag-golden-cases\onboarding` |
 | `output_dir` | `docs\local-run\business-rag-golden-cases` |
 | `runtime_promotion_status` | `keep_runtime_defaults` |
@@ -29,12 +29,11 @@
 | Source ID | Status | Templates | Baseline Fixture | Validation | Validation Decision | Next Step |
 |---|---|---:|---|---|---|---|
 | `invoice_policy_faq` | `ready` | `3` | `True` | `True` | `go` | `consider_catalog_bridge_or_add_next_distinct_source` |
-| `source_template_example` | `template_only` | `3` | `False` | `False` | `n/a` | `fill_real_baseline_fixture` |
+| `source_template_example` | `ready` | `3` | `True` | `True` | `go` | `consider_catalog_bridge_or_add_next_distinct_source` |
 | `split_refund_policy_docs` | `ready` | `3` | `True` | `True` | `go` | `consider_catalog_bridge_or_add_next_distinct_source` |
 
 ## Recommended Actions
 
-- fill_real_baseline_fixtures_for_template_only_sources
 - consider_evidence_only_bridge_into_source_evaluation_pack_catalog
 
 ## Non-Goals
