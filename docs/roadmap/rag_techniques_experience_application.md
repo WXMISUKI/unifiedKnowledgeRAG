@@ -79,7 +79,7 @@ Current project coverage:
 
 ## Recommended Next Stage
 
-Next stage is now implemented:
+The formerly recommended next stage is now implemented:
 
 ```text
 Local Business RAG Golden Cases And Chunk Quality Baseline
@@ -128,6 +128,12 @@ Current reopening triggers for provider-side work:
 
 Without one of the above triggers, the correct next action is to hold the current provider baseline rather than continue provider-side feature expansion.
 
+The current decision entrypoint for that hold-state is:
+
+`docs/progress/provider-phase-closure-summary.md`
+
+This is important because `RAG_Techniques` is valuable precisely as a candidate strategy library. Once the provider already has a usable generalized baseline, the right next move is not to keep converting notebook patterns into backlog items. The right next move is to wait until a real trigger selects which strategy, if any, deserves evaluation.
+
 Non-goals:
 
 - No GraphRAG.
@@ -137,6 +143,8 @@ Non-goals:
 - No parser engine adoption inside the provider.
 
 ## Suggested Task Breakdown
+
+The task breakdown below is now historical reference for the stage that has already been completed. It should not be interpreted as the next default implementation target.
 
 ### Specification
 

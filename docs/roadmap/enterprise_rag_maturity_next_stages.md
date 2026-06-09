@@ -17,11 +17,17 @@ This note keeps the next RAG work practical. The goal is to make the local provi
 
 ## Immediate Next Stage
 
+The current immediate stage is no longer a new provider feature slice. It is a phase-closure and hold-state stage:
+
+`docs/progress/provider-phase-closure-summary.md`
+
+This means the project should treat the current provider baseline as closed enough for its present lightweight purpose, and avoid continuing provider-side feature expansion just because more RAG techniques exist.
+
 Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition, Stage 3b parser-artifact-to-local-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial. The current practical state is: a real local PDF can be parsed by an operator-started PaddleOCR service, normalized into a parser artifact, and ingested through the existing local RAG loop with `decision=go`.
 
 The current MyPrivateAgent real business trial also returns `go` for the company-profile PDF: answerable business questions produce cited answers, and the negative-control refund-policy question returns `insufficient_evidence` without citations. This closes the current local usability loop.
 
-The next provider-side maturity slice has converted the current real trial into reusable quality measurement:
+The next provider-side maturity slice has already converted the current real trial into reusable quality measurement:
 
 `Local Business RAG Golden Cases And Chunk Quality Baseline`
 
@@ -291,7 +297,7 @@ It writes:
 
 The promoted `source_template_example` validation report is now `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This closes the last template-only onboarding example by turning it into a real minimal baseline example without expanding the main aggregate baseline or changing runtime defaults.
 
-Because this example-promotion slice is now complete, the next provider action should slow down rather than continue polishing onboarding mechanics: either wait for repeated cross-source failed-question evidence before opening a narrowly scoped hardening slice, or pause provider-side expansion until a real caller exposes a new provider-owned gap. Retrieval strategy promotion remains outside scope.
+Because this example-promotion slice is now complete, the provider should now enter an explicit hold-state rather than continue polishing onboarding mechanics. Future reopen decisions should reference `docs/progress/provider-phase-closure-summary.md` first.
 
 ## Provider Next-Step Trigger Contract
 
@@ -322,3 +328,17 @@ The following do **not** reopen provider-side work by default:
 - caller orchestration or control-plane concerns
 
 These remain outside this repository's lightweight provider scope.
+
+## Current Closure Decision
+
+The current phase-closure decision is:
+
+`hold current provider baseline and wait for stronger reopen triggers`
+
+This decision is based on three facts:
+
+- provider usability closure is already in place
+- onboarding and evidence discovery closure is already in place
+- advanced RAG strategies still have no repeated real failure evidence that justifies promotion or even candidate implementation inside the provider by default
+
+So the correct next action for this repository is not to continue feature expansion. It is to keep the current baseline understandable, maintainable, and ready for the next real trigger.

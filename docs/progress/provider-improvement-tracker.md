@@ -9,6 +9,8 @@
 
 ## Completed
 
+- Provider phase closure summary documented (`document-provider-phase-closure-summary`), freezing the current provider state as a deliberate hold-state with a single summary entrypoint for completed closures, frozen boundaries, reopen triggers, and next-direction guidance.
+
 - Phase 0 baseline contracts: health, manifest, capabilities, preflight, integration probe, contract smoke.
 - Phase 2 diagnostics baseline: source manifest, fingerprint drift, ingestion preflight, chunk manifest, source package metadata.
 - Phase 4 evidence packaging baseline: `evidence_pack-v1` and insufficient-evidence fail-closed behavior.
@@ -333,6 +335,7 @@
 
 ## Pending
 
+- Keep the current provider baseline in hold-state unless a stronger explicit reopen trigger appears.
 - Keep deployment readiness review notes actionable until non-mock embedding/retrieval candidates are promoted by evidence.
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.
@@ -346,7 +349,8 @@
 
 ## Next Step Plan
 
-1. Keep local evidence artifacts synchronized after each phase 12b/10/11/3/6 bridge refresh:
+1. Treat `docs/progress/provider-phase-closure-summary.md` as the default decision entrypoint before opening any new provider-side feature change.
+2. Keep local evidence artifacts synchronized after each phase 12b/10/11/3/6 bridge refresh:
    - `python scripts/export_phase12_local_rag_integration_hardening_profile.py`
    - `python scripts/export_phase12b_candidate_backend_evaluation_readiness.py`
    - `python scripts/export_phase12c_pgvector_candidate_backend_readiness.py`
@@ -359,13 +363,13 @@
    - `python scripts/export_phase16_myprivateagent_minimal_access_loop.py`
    - `python scripts/export_provider_handoff_bundle.py`
    - `python scripts/export_provider_handoff_refresh.py`
-2. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
-3. Use the Phase 24 document RAG trial readiness closure to start the MyPrivateAgent repo-side document RAG trial path instead of adding more provider-side evidence-chain phases.
-4. Use Phase 25 feedback output to decide whether a focused provider fix is needed after real MyPrivateAgent trials.
-5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
-6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
-7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
-8. Current provider posture: pause provider-side feature expansion by default. Reopen only when a real caller exposes a concrete provider-owned gap, a repeated cross-source failed-question class appears, or repeated real failure evidence justifies runtime-strategy evaluation; keep query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG outside scope until those triggers clearly appear.
+3. Keep MyPrivateAgent local provider integration evidence current and use the local recommended provider URL for short-term validation.
+4. Use the Phase 24 document RAG trial readiness closure to start the MyPrivateAgent repo-side document RAG trial path instead of adding more provider-side evidence-chain phases.
+5. Use Phase 25 feedback output to decide whether a focused provider fix is needed after real MyPrivateAgent trials.
+6. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
+7. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
+8. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
+9. Current provider posture: pause provider-side feature expansion by default. Reopen only when a real caller exposes a concrete provider-owned gap, a repeated cross-source failed-question class appears, or repeated real failure evidence justifies runtime-strategy evaluation; keep query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG outside scope until those triggers clearly appear.
 
 ## Open Slice
 
