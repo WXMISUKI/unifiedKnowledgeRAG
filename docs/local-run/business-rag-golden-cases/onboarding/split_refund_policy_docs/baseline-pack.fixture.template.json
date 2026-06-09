@@ -1,0 +1,20 @@
+[
+  {
+    "id": "split_refund_policy_docs-answerable-example",
+    "query": "REPLACE_WITH_REAL_ANSWERABLE_QUERY",
+    "expected_mode": "answerable",
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation_prefix": "split_refund_policy_docs#",
+    "business_question_type": "replace_me",
+    "description": "Template placeholder for a real answerable baseline case."
+  },
+  {
+    "id": "split_refund_policy_docs-negative-control-example",
+    "query": "REPLACE_WITH_REAL_INSUFFICIENT_EVIDENCE_QUERY",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Template placeholder for a real fail-closed baseline case."
+  }
+]

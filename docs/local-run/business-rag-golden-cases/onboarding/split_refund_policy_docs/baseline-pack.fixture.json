@@ -1,0 +1,29 @@
+[
+  {
+    "id": "split-policy-code",
+    "query": "RFD-2026-003 对应什么退款复核？",
+    "expected_mode": "answerable",
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation_prefix": "split_refund_policy_2026#",
+    "business_question_type": "policy_code_lookup",
+    "description": "Split refund policy code lookup should be answerable from the new real source."
+  },
+  {
+    "id": "split-form-material",
+    "query": "AF-REFUND-02 需要关联哪些材料？",
+    "expected_mode": "answerable",
+    "expected_source_id": "split_refund_policy_docs",
+    "expected_citation_prefix": "split_refund_policy_2026#",
+    "business_question_type": "form_lookup",
+    "description": "Split refund form-material lookup should be answerable from the new real source."
+  },
+  {
+    "id": "split-negative-offline-subsidy",
+    "query": "这份拆分退款文档里有线下补贴退款流程吗？",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Unsupported offline-subsidy flow wording should fail closed against the split refund source."
+  }
+]

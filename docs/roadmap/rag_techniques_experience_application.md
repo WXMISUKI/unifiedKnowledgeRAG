@@ -112,7 +112,8 @@ Completion signal:
 - That confirmation report currently returns `review` with `likely_failure_class=confirmed_negative_control_variant`, `expected_empty_review_count=2`, and `answerable_pass_count=3`.
 - A unified source evaluation pack catalog now also exists at `docs/local-run/business-rag-golden-cases/source-evaluation-pack-catalog.json`.
 - A source evaluation pack onboarding scaffold now also exists at `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-evaluation-pack-onboarding.json`.
-- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, and a standardized onboarding scaffold for future sources. The next step is to validate this template path on additional real sources, not advanced RAG strategy promotion.
+- A real-source onboarding validation now also exists for `split_refund_policy_docs` at `docs/local-run/business-rag-golden-cases/onboarding/split_refund_policy_docs/split-refund-local-business-rag-golden-cases.json`, and it returns `go`.
+- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, a standardized onboarding scaffold, and one real-source proof that the template path works. The next step is to extend that proof to more sources or reduce onboarding friction further, not advanced RAG strategy promotion.
 
 Non-goals:
 

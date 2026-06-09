@@ -69,6 +69,27 @@ SOURCE_DOCUMENT_MANIFESTS = {
             },
         )
     ],
+    "split_refund_policy_docs": [
+        SourceDocumentManifest(
+            document_id="split_refund_policy_2026",
+            title="拆分退款编号规则",
+            source_path="app/data/sources/split_refund_policy_docs.md",
+            format="markdown",
+            version="2026-06-09",
+            chunking_strategy="markdown-paragraph-v1",
+            citation_anchors=[
+                "split_refund_policy_2026#policy-code",
+                "split_refund_policy_2026#form-code",
+            ],
+            expected_content_sha256=(
+                "669328e05b50adfe1e90c8ed1ed14cea9acf87889a28f617a7f3d14c35e3c45e"
+            ),
+            metadata={
+                "language": "zh-CN",
+                "document_role": "local_contract_fixture",
+            },
+        )
+    ],
 }
 
 

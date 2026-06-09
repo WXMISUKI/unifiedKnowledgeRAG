@@ -213,3 +213,20 @@ It writes:
 The current onboarding report is a template-only scaffold with `template_count=3` and pack coverage for `baseline_pack`, `failed_question_pack`, and `confirmation_pack`. It does not run evaluation or infer business questions automatically. Its purpose is to make future source onboarding cheaper and more consistent before any source-specific retrieval changes are considered.
 
 Because this onboarding slice is now complete, the next provider action should be to validate the template-driven path on one additional real source or to add a light registration/discovery bridge from onboarding outputs into the catalog. Advanced retrieval strategies still remain outside scope.
+
+## Split Refund Onboarding Validation
+
+The local operator entrypoint is:
+
+`python scripts/export_split_refund_onboarding_validation.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/onboarding/split_refund_policy_docs/source-evaluation-pack-onboarding.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/split_refund_policy_docs/baseline-pack.fixture.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/split_refund_policy_docs/split-refund-local-business-rag-golden-cases.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/split_refund_policy_docs/split-refund-local-business-rag-golden-cases.md`
+
+The current validation report for `split_refund_policy_docs` is `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This confirms that the template-driven onboarding path is not just a scaffold: a new real source can enter the provider's local baseline evaluation path with only minimal provider visibility additions.
+
+Because this validation slice is now complete, the next provider action should be either to repeat the same template path on a second new real source or to add a light onboarding-to-catalog bridge. Retrieval strategy promotion still remains outside scope.

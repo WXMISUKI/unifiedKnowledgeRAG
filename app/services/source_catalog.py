@@ -25,10 +25,18 @@ KNOWLEDGE_BASES = [
         vector_store="in_memory",
         freshness="static_fixture",
     ),
+    KnowledgeBaseSource(
+        id="split_refund_policy_docs",
+        status="ready",
+        owner="customer_service",
+        version="2026-06-09",
+        embedding_model="local-lexical-v1",
+        vector_store="in_memory",
+        freshness="static_fixture",
+    ),
 ]
 
 EVALUATION_ONLY_KNOWLEDGE_BASE_IDS = {
-    "split_refund_policy_docs",
 }
 
 GRAPHS = [

@@ -126,6 +126,20 @@ DOCUMENTS = [
         ),
         citation="logistics_faq_2026#exact-logistics-id",
     ),
+    DocumentChunk(
+        source_id="split_refund_policy_docs",
+        document_id="split_refund_policy_2026",
+        title="拆分退款编号规则",
+        text="政策编号 RFD-2026-003 适用于三天未发货退款复核，售后专员需要先确认订单状态和发货记录。",
+        citation="split_refund_policy_2026#policy-code",
+    ),
+    DocumentChunk(
+        source_id="split_refund_policy_docs",
+        document_id="split_refund_policy_2026",
+        title="拆分退款复核材料",
+        text="复核材料需要填写表单 AF-REFUND-02，并关联原订单编号、付款凭证和客服沟通记录。",
+        citation="split_refund_policy_2026#form-code",
+    ),
 ]
 
 
