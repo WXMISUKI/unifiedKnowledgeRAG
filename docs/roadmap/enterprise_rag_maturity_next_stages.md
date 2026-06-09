@@ -37,6 +37,14 @@ Post-closure work should now be read as an ordered sequence:
 4. provider-side Phase 25 feedback consumption
 5. trigger-based reopen or continued hold-state
 
+The stage-2 execution aid for that sequence is now:
+
+`docs/integration/myprivateagent-live-trial-outcome-feedback/caller-trial-execution-task-pack.md`
+
+The stage-3 decision entrypoint for that sequence is now:
+
+`docs/integration/myprivateagent-live-trial-outcome-feedback/phase25-followup-decision-matrix.md`
+
 Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition, Stage 3b parser-artifact-to-local-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial. The current practical state is: a real local PDF can be parsed by an operator-started PaddleOCR service, normalized into a parser artifact, and ingested through the existing local RAG loop with `decision=go`.
 
 The current MyPrivateAgent real business trial also returns `go` for the company-profile PDF: answerable business questions produce cited answers, and the negative-control refund-policy question returns `insufficient_evidence` without citations. This closes the current local usability loop.
