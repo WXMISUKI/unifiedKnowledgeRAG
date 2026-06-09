@@ -1,0 +1,90 @@
+{
+  "id": "source-onboarding-catalog-v1",
+  "generated_at": "2026-06-09T05:13:28.186737+00:00",
+  "decision": "go",
+  "reason_code": "source_onboarding_catalog_ready",
+  "onboarding_root": "docs\\local-run\\business-rag-golden-cases\\onboarding",
+  "summary": {
+    "source_count": 3,
+    "ready_source_count": 2,
+    "template_only_source_count": 1,
+    "baseline_ready_source_count": 0,
+    "review_source_count": 0,
+    "missing_source_count": 0,
+    "ready_source_ids": [
+      "invoice_policy_faq",
+      "split_refund_policy_docs"
+    ],
+    "template_only_source_ids": [
+      "source_template_example"
+    ],
+    "onboarding_root": "docs\\local-run\\business-rag-golden-cases\\onboarding",
+    "output_dir": "docs\\local-run\\business-rag-golden-cases",
+    "runtime_promotion_status": "keep_runtime_defaults",
+    "source_registration_status": "not_created",
+    "aggregate_baseline_expansion_status": "not_expanded"
+  },
+  "entries": [
+    {
+      "source_id": "invoice_policy_faq",
+      "onboarding_dir": "docs\\local-run\\business-rag-golden-cases\\onboarding\\invoice_policy_faq",
+      "template_count": 3,
+      "has_baseline_template": true,
+      "has_failed_question_template": true,
+      "has_confirmation_template": true,
+      "has_real_baseline_fixture": true,
+      "has_validation_report": true,
+      "validation_report_path": "docs\\local-run\\business-rag-golden-cases\\onboarding\\invoice_policy_faq\\invoice-policy-local-business-rag-golden-cases.json",
+      "validation_decision": "go",
+      "validation_reason_code": "local_business_rag_baseline_go",
+      "onboarding_status": "ready",
+      "recommended_next_step": "consider_catalog_bridge_or_add_next_distinct_source",
+      "notes": "Onboarding templates and real validation evidence are both present."
+    },
+    {
+      "source_id": "source_template_example",
+      "onboarding_dir": "docs\\local-run\\business-rag-golden-cases\\onboarding\\source_template_example",
+      "template_count": 3,
+      "has_baseline_template": true,
+      "has_failed_question_template": true,
+      "has_confirmation_template": true,
+      "has_real_baseline_fixture": false,
+      "has_validation_report": false,
+      "validation_report_path": null,
+      "validation_decision": null,
+      "validation_reason_code": null,
+      "onboarding_status": "template_only",
+      "recommended_next_step": "fill_real_baseline_fixture",
+      "notes": "Only template scaffolding exists; no real baseline validation yet."
+    },
+    {
+      "source_id": "split_refund_policy_docs",
+      "onboarding_dir": "docs\\local-run\\business-rag-golden-cases\\onboarding\\split_refund_policy_docs",
+      "template_count": 3,
+      "has_baseline_template": true,
+      "has_failed_question_template": true,
+      "has_confirmation_template": true,
+      "has_real_baseline_fixture": true,
+      "has_validation_report": true,
+      "validation_report_path": "docs\\local-run\\business-rag-golden-cases\\onboarding\\split_refund_policy_docs\\split-refund-local-business-rag-golden-cases.json",
+      "validation_decision": "go",
+      "validation_reason_code": "local_business_rag_baseline_go",
+      "onboarding_status": "ready",
+      "recommended_next_step": "consider_catalog_bridge_or_add_next_distinct_source",
+      "notes": "Onboarding templates and real validation evidence are both present."
+    }
+  ],
+  "recommended_actions": [
+    "fill_real_baseline_fixtures_for_template_only_sources",
+    "consider_evidence_only_bridge_into_source_evaluation_pack_catalog"
+  ],
+  "non_goals": [
+    "does_not_register_sources_into_provider_runtime",
+    "does_not_expand_main_aggregate_baseline_automatically",
+    "does_not_rerun_retrieval_or_answer_evaluations",
+    "does_not_change_runtime_retrieval_defaults",
+    "does_not_enable_query_rewrite_rerank_hybrid_or_graphrag"
+  ],
+  "json_path": "docs\\local-run\\business-rag-golden-cases\\source-onboarding-catalog.json",
+  "markdown_path": "docs\\local-run\\business-rag-golden-cases\\source-onboarding-catalog.md"
+}

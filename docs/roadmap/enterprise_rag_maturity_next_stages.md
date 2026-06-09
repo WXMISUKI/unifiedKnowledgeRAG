@@ -247,3 +247,18 @@ It writes:
 The current validation report for `invoice_policy_faq` is `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This extends the onboarding proof from workflow/policy snippets to a third, more rule-oriented markdown source type without changing runtime defaults or adding source-specific retrieval logic.
 
 Because this third-source validation slice is now complete, the next provider action should still stay on generalized provider usability: either add one more clearly distinct real source type, or add a light evidence-only bridge that helps onboarding outputs surface in catalog/discovery views. Retrieval strategy promotion remains outside scope until repeated accepted failure classes appear.
+
+## Source Onboarding Catalog Discovery Bridge
+
+The local operator entrypoint is:
+
+`python scripts/export_source_onboarding_catalog.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.json`
+- `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.md`
+
+The current onboarding catalog report is `go` with `source_count=3`, `ready_source_count=2`, and `template_only_source_count=1`. It gives the provider a single evidence-only discovery view over existing onboarding sources without registering them into runtime, without expanding the main aggregate baseline, and without changing retrieval defaults.
+
+Because this discovery bridge slice is now complete, the next provider action should stay in the same lightweight direction: either fill the remaining template-only onboarding example with a real baseline fixture, or add a very small evidence-only bridge from this onboarding catalog into existing pack-level discovery. Retrieval strategy promotion remains outside scope.
