@@ -100,6 +100,7 @@
 - Real failed-question pack baseline implemented (`add-real-failed-question-pack-baseline`), adding a dedicated difficult-question fixture/report with `question_origin` metadata and a reusable `review` signal; the first pack returns `decision=review` with `source_count=3`, `case_count=6`, `hit_rate=1.0`, `citation_match_rate=1.0`, `empty_handling_rate=0.6667`, and exposes a real `query_mismatch` candidate on `refund_policy_docs` without changing runtime defaults.
 - Refund organization negative-control confirmation baseline implemented (`confirm-refund-organization-negative-control-variant`), adding a refund-specific confirmation fixture/report on top of the aggregate evaluation engine; the current report returns `decision=review` with `variant_count=8`, `expected_empty_review_count=2`, `answerable_pass_count=3`, and `likely_failure_class=confirmed_negative_control_variant`, confirming that the next narrow gate is refund negative-control hardening scope review rather than query rewrite, rerank, hybrid retrieval, or GraphRAG promotion.
 - Source evaluation pack catalog implemented (`standardize-source-evaluation-pack-catalog`), adding a provider-level catalog over current baseline, failed-question, and confirmation artifacts; the current report returns `decision=review` with `pack_count=4`, `available_pack_count=4`, `baseline_pack_count=2`, `failed_question_pack_count=1`, and `confirmation_pack_count=1`, giving future sources and callers a single evaluation gate index without changing runtime defaults.
+- Source evaluation pack onboarding implemented (`template-source-evaluation-pack-onboarding`), adding a template-driven scaffold for future sources; the current onboarding report emits three fixture templates plus an onboarding manifest for `source_template_example`, lowering the cost of adding baseline, failed-question, and confirmation packs without changing runtime defaults or auto-generating business questions.
 
 ## In Progress
 
@@ -116,6 +117,7 @@
 - Aggregate real-business corpus golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`; it now covers 3 sources and remains `decision=go`.
 - Real failed-question-pack baseline is now available at `docs/local-run/business-rag-golden-cases/real-failed-question-pack.json`; it should be used to classify new accepted failure signals before opening advanced RAG strategy changes.
 - Source evaluation pack catalog is now available at `docs/local-run/business-rag-golden-cases/source-evaluation-pack-catalog.json`; use it as the provider-level entry point before opening new source-specific evaluation work or advanced strategy candidates.
+- Source evaluation pack onboarding scaffold is now available at `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-evaluation-pack-onboarding.json`; use it as the standard starting point for future source-level baseline / failed-question / confirmation pack creation.
 
 ## Benchmark Fixture Scope
 
@@ -356,7 +358,7 @@
 5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
 6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
-8. Next recommended provider slice: generalize evaluation-pack onboarding for future sources so baseline, failed-question, and confirmation packs can be added through a common template-driven path; keep query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG outside scope until repeated accepted failure classes justify them.
+8. Next recommended provider slice: validate the template-driven onboarding path on one additional real source or add a light registration/discovery bridge from onboarding outputs into the source evaluation pack catalog; keep query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG outside scope until repeated accepted failure classes justify them.
 
 ## Open Slice
 

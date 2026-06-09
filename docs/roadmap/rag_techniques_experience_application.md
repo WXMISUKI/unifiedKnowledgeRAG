@@ -111,7 +111,8 @@ Completion signal:
 - A refund-specific confirmation report now also exists at `docs/local-run/business-rag-golden-cases/refund-organization-negative-control-confirmation.json`.
 - That confirmation report currently returns `review` with `likely_failure_class=confirmed_negative_control_variant`, `expected_empty_review_count=2`, and `answerable_pass_count=3`.
 - A unified source evaluation pack catalog now also exists at `docs/local-run/business-rag-golden-cases/source-evaluation-pack-catalog.json`.
-- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, and a provider-level catalog view over all of them. The next step is to generalize evaluation-pack onboarding for future sources, not advanced RAG strategy promotion.
+- A source evaluation pack onboarding scaffold now also exists at `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-evaluation-pack-onboarding.json`.
+- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, and a standardized onboarding scaffold for future sources. The next step is to validate this template path on additional real sources, not advanced RAG strategy promotion.
 
 Non-goals:
 

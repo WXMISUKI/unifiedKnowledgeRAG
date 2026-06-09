@@ -1,0 +1,20 @@
+[
+  {
+    "id": "source_template_example-answerable-example",
+    "query": "REPLACE_WITH_REAL_ANSWERABLE_QUERY",
+    "expected_mode": "answerable",
+    "expected_source_id": "source_template_example",
+    "expected_citation_prefix": "source_template_example#",
+    "business_question_type": "replace_me",
+    "description": "Template placeholder for a real answerable baseline case."
+  },
+  {
+    "id": "source_template_example-negative-control-example",
+    "query": "REPLACE_WITH_REAL_INSUFFICIENT_EVIDENCE_QUERY",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Template placeholder for a real fail-closed baseline case."
+  }
+]

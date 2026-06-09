@@ -195,3 +195,21 @@ It writes:
 The current catalog report is `review` with `pack_count=4`, `available_pack_count=4`, `baseline_pack_count=2`, `failed_question_pack_count=1`, and `confirmation_pack_count=1`. It gives the provider a single evidence-only overview over current baseline, failed-question, and confirmation gates without changing the underlying evaluation logic.
 
 Because this catalog slice is now complete, the next provider action should shift from a specific refund case toward generalized evaluation-pack templating for future sources. The provider now has a common gate index, so the next narrow improvement should be lowering the cost of bringing new sources into the same baseline / failed-pack / confirmation rhythm, not promoting advanced retrieval strategies.
+
+## Source Evaluation Pack Onboarding
+
+The local operator entrypoint is:
+
+`python scripts/export_source_evaluation_pack_onboarding.py --source-id source_template_example`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/baseline-pack.fixture.template.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/failed-question-pack.fixture.template.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/confirmation-pack.fixture.template.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-evaluation-pack-onboarding.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-evaluation-pack-onboarding.md`
+
+The current onboarding report is a template-only scaffold with `template_count=3` and pack coverage for `baseline_pack`, `failed_question_pack`, and `confirmation_pack`. It does not run evaluation or infer business questions automatically. Its purpose is to make future source onboarding cheaper and more consistent before any source-specific retrieval changes are considered.
+
+Because this onboarding slice is now complete, the next provider action should be to validate the template-driven path on one additional real source or to add a light registration/discovery bridge from onboarding outputs into the catalog. Advanced retrieval strategies still remain outside scope.

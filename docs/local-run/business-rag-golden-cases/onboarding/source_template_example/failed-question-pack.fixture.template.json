@@ -1,0 +1,16 @@
+[
+  {
+    "source_id": "source_template_example",
+    "case_id": "source_template_example-failed-question-example",
+    "query": "REPLACE_WITH_REAL_FAILED_OR_BOUNDARY_QUERY",
+    "expected_mode": "insufficient_evidence",
+    "expected_citation_prefix": null,
+    "business_question_type": "replace_me",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "question_origin": "accepted_real_failure_candidate",
+    "observed_failure": "replace_with_observed_failure",
+    "notes": "Template placeholder for a difficult or failed real question.",
+    "description": "Template placeholder for failed-question-pack onboarding."
+  }
+]

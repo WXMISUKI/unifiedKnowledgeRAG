@@ -1,0 +1,30 @@
+[
+  {
+    "source_id": "source_template_example",
+    "case_id": "source_template_example-confirmation-negative-example",
+    "query": "REPLACE_WITH_REAL_NEGATIVE_VARIANT_QUERY",
+    "expected_mode": "insufficient_evidence",
+    "expected_citation_prefix": null,
+    "business_question_type": "replace_me",
+    "failure_mode": "unclassified",
+    "risk_level": "high",
+    "question_origin": "accepted_real_failure_candidate",
+    "observed_failure": "replace_with_repeated_failure_signal",
+    "notes": "Template placeholder for a negative or boundary confirmation case.",
+    "description": "Template placeholder for confirmation-pack negative variant."
+  },
+  {
+    "source_id": "source_template_example",
+    "case_id": "source_template_example-confirmation-positive-example",
+    "query": "REPLACE_WITH_REAL_POSITIVE_VARIANT_QUERY",
+    "expected_mode": "answerable",
+    "expected_citation_prefix": "source_template_example#",
+    "business_question_type": "replace_me",
+    "failure_mode": "unclassified",
+    "risk_level": "medium",
+    "question_origin": "real_boundary_question",
+    "observed_failure": "replace_with_neighbor_positive_expectation",
+    "notes": "Template placeholder for a positive confirmation control.",
+    "description": "Template placeholder for confirmation-pack positive variant."
+  }
+]
