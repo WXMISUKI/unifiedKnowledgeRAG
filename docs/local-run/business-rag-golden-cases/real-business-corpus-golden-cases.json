@@ -1,8 +1,8 @@
 {
   "id": "real-business-corpus-golden-cases-v1",
-  "generated_at": "2026-06-09T02:02:55.524664+00:00",
-  "decision": "review",
-  "reason_code": "real_business_corpus_baseline_needs_review",
+  "generated_at": "2026-06-09T02:26:47.643709+00:00",
+  "decision": "go",
+  "reason_code": "real_business_corpus_baseline_go",
   "top_k": 3,
   "case_file": "docs\\local-run\\business-rag-golden-cases\\real-business-corpus-golden-cases.fixture.json",
   "summary": {
@@ -12,21 +12,19 @@
     "expected_empty_case_count": 3,
     "hit_rate": 1.0,
     "citation_match_rate": 1.0,
-    "empty_handling_rate": 0.6667,
+    "empty_handling_rate": 1.0,
     "invalid_citation_count": 0,
-    "review_sources": [
-      "refund_policy_docs"
-    ],
+    "review_sources": [],
     "blocked_sources": [],
     "runtime_promotion_status": "keep_runtime_defaults",
     "source_binding_status": "not_created",
     "graph_execution_status": "not_executed",
-    "final_decision": "review"
+    "final_decision": "go"
   },
   "source_reports": [
     {
       "id": "local-business-rag-golden-cases-v1",
-      "generated_at": "2026-06-09T02:02:55.405429+00:00",
+      "generated_at": "2026-06-09T02:26:47.594828+00:00",
       "source_id": "company_profile_2025_trial",
       "decision": "go",
       "reason_code": "local_business_rag_baseline_go",
@@ -138,7 +136,7 @@
           "status": "ready",
           "reason_code": "answerable_case_passed",
           "retrieve_ok": true,
-          "retrieve_count": 3,
+          "retrieve_count": 2,
           "answer_ok": true,
           "answer_status": "answered",
           "expected_source_id": "company_profile_2025_trial",
@@ -146,18 +144,15 @@
           "business_question_type": "business_scope",
           "returned_source_ids": [
             "company_profile_2025_trial",
-            "company_profile_2025_trial",
             "company_profile_2025_trial"
           ],
           "returned_citations": [
             "company_profile_2025_trial#chunk-127",
-            "company_profile_2025_trial#chunk-203",
-            "company_profile_2025_trial#chunk-1"
+            "company_profile_2025_trial#chunk-203"
           ],
           "answer_citations": [
             "company_profile_2025_trial#chunk-127",
-            "company_profile_2025_trial#chunk-203",
-            "company_profile_2025_trial#chunk-1"
+            "company_profile_2025_trial#chunk-203"
           ],
           "invalid_citations": []
         },
@@ -309,10 +304,10 @@
     },
     {
       "id": "local-business-rag-golden-cases-v1",
-      "generated_at": "2026-06-09T02:02:55.524576+00:00",
+      "generated_at": "2026-06-09T02:26:47.643639+00:00",
       "source_id": "refund_policy_docs",
-      "decision": "review",
-      "reason_code": "local_business_rag_baseline_needs_review",
+      "decision": "go",
+      "reason_code": "local_business_rag_baseline_go",
       "top_k": 3,
       "case_file": null,
       "summary": {
@@ -321,18 +316,16 @@
         "expected_empty_case_count": 1,
         "hit_rate": 1.0,
         "citation_match_rate": 1.0,
-        "empty_handling_rate": 0.0,
+        "empty_handling_rate": 1.0,
         "invalid_citation_count": 0,
-        "review_case_ids": [
-          "refund-negative-staff"
-        ],
+        "review_case_ids": [],
         "blocked_case_ids": [],
         "chunk_quality_status": "ready",
         "chunk_quality_reason": "chunk_quality_ready",
         "runtime_promotion_status": "keep_runtime_defaults",
         "source_binding_status": "not_created",
         "graph_execution_status": "not_executed",
-        "final_decision": "review"
+        "final_decision": "go"
       },
       "chunk_quality": {
         "status": "ready",
@@ -393,7 +386,7 @@
           "status": "ready",
           "reason_code": "answerable_case_passed",
           "retrieve_ok": true,
-          "retrieve_count": 3,
+          "retrieve_count": 2,
           "answer_ok": true,
           "answer_status": "answered",
           "expected_source_id": "refund_policy_docs",
@@ -401,18 +394,15 @@
           "business_question_type": "form_lookup",
           "returned_source_ids": [
             "refund_policy_docs",
-            "refund_policy_docs",
             "refund_policy_docs"
           ],
           "returned_citations": [
             "refund_policy_2026#exact-refund-code",
-            "refund_policy_2026#appeal-review",
-            "refund_policy_2026#section-5"
+            "refund_policy_2026#appeal-review"
           ],
           "answer_citations": [
             "refund_policy_2026#exact-refund-code",
-            "refund_policy_2026#appeal-review",
-            "refund_policy_2026#section-5"
+            "refund_policy_2026#appeal-review"
           ],
           "invalid_citations": []
         },
@@ -420,40 +410,26 @@
           "id": "refund-negative-staff",
           "query": "退款政策里的员工名单有哪些？",
           "expected_mode": "insufficient_evidence",
-          "status": "review",
-          "reason_code": "negative_control_returned_evidence",
+          "status": "ready",
+          "reason_code": "negative_control_passed",
           "retrieve_ok": true,
-          "retrieve_count": 3,
+          "retrieve_count": 0,
           "answer_ok": true,
-          "answer_status": "answered",
+          "answer_status": "insufficient_evidence",
           "expected_source_id": null,
           "expected_citation_prefix": null,
           "business_question_type": "negative_control",
-          "returned_source_ids": [
-            "refund_policy_docs",
-            "refund_policy_docs",
-            "refund_policy_docs"
-          ],
-          "returned_citations": [
-            "refund_policy_2026#exact-refund-code",
-            "refund_policy_2026#section-3",
-            "refund_policy_2026#section-5"
-          ],
-          "answer_citations": [
-            "refund_policy_2026#exact-refund-code",
-            "refund_policy_2026#section-3",
-            "refund_policy_2026#section-5"
-          ],
+          "returned_source_ids": [],
+          "returned_citations": [],
+          "answer_citations": [],
           "invalid_citations": []
         }
       ],
-      "review_observations": [
-        "negative_control_leakage"
-      ],
+      "review_observations": [],
       "recommended_actions": [
-        "review_negative_control_hardening_before_strategy_changes",
-        "review_failed_golden_cases_or_negative_controls",
-        "rerun_baseline_before_advanced_rag_candidate_review"
+        "reuse_golden_cases_before_future_rag_strategy_changes",
+        "continue_testing_more_real_business_documents",
+        "keep_runtime_defaults_until_candidate_evidence_passes"
       ],
       "non_goals": [
         "does_not_change_public_http_apis",
@@ -477,12 +453,10 @@
     "medium": 6,
     "high": 3
   },
-  "review_observation_summary": {
-    "negative_control_leakage": 1
-  },
+  "review_observation_summary": {},
   "recommended_actions": [
-    "review_failed_sources_and_cases_before_strategy_changes",
-    "review_negative_control_hardening_before_strategy_changes"
+    "add_more_real_business_documents_or_real_failed_questions",
+    "keep_advanced_rag_strategies_unpromoted_until_failures_appear"
   ],
   "non_goals": [
     "does_not_change_public_http_apis",

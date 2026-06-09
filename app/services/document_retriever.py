@@ -143,6 +143,8 @@ STOP_TOKENS = {
     "失败",
 }
 
+MIN_LEXICAL_MATCH_SCORE = 0.2
+
 
 def retrieve(
     query: str,
@@ -160,8 +162,10 @@ def retrieve(
     for document in DOCUMENTS + _approved_local_documents():
         if document.source_id not in knowledge_base_ids:
             continue
-        score = _score(query_tokens, document.text)
-        if score > 0:
+        text_tokens = _tokenize(document.text)
+        overlap = query_tokens & text_tokens
+        score = _score_from_overlap(query_tokens, overlap)
+        if _is_retrievable_match(score=score, overlap=overlap):
             scored_documents.append((score, document))
 
     scored_documents.sort(key=lambda item: item[0], reverse=True)
@@ -196,12 +200,28 @@ def build_answer_context(documents: list[EvidenceDocument]) -> str:
 
 def _score(query_tokens: set[str], text: str) -> float:
     text_tokens = _tokenize(text)
-    if not query_tokens or not text_tokens:
-        return 0.0
     overlap = query_tokens & text_tokens
+    return _score_from_overlap(query_tokens, overlap)
+
+
+def _score_from_overlap(query_tokens: set[str], overlap: set[str]) -> float:
+    if not query_tokens:
+        return 0.0
     if not overlap:
         return 0.0
     return len(overlap) / len(query_tokens)
+
+
+def _is_retrievable_match(*, score: float, overlap: set[str]) -> bool:
+    if score <= 0:
+        return False
+    if score >= MIN_LEXICAL_MATCH_SCORE:
+        return True
+    return _has_exact_alphanumeric_overlap(overlap)
+
+
+def _has_exact_alphanumeric_overlap(overlap: set[str]) -> bool:
+    return any(re.fullmatch(r"[a-z0-9]+", token) for token in overlap)
 
 
 def _tokenize(value: str) -> set[str]:

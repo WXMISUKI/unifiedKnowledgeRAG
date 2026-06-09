@@ -95,6 +95,7 @@
 - Second real business source baseline implemented (`add-second-real-business-source-baseline`), separating aggregate fixture from report output and expanding the aggregate baseline to `source_count=2` / `case_count=9`; the refreshed real result is `decision=review` because `refund_policy_docs` shows negative-control leakage and `page_coverage_missing` chunk-quality review evidence while positive exact-term cases still pass.
 - Refund-policy baseline failure-mode classification implemented (`classify-refund-policy-baseline-failure-mode`), refining the second-source `review` result into two explicit observations: `negative_control_leakage` and `markdown_provenance_mismatch`, without changing runtime retrieval defaults.
 - Markdown provenance diagnostics alignment implemented (`markdown-provenance-diagnostics-alignment`), making page coverage page-source-only and aligning markdown provenance expectations so `refund_policy_docs` now reports `chunk_quality=ready` with `provenance_mode=non_page`; the remaining second-source review is isolated to `negative_control_leakage`.
+- Negative-control hardening implemented (`negative-control-hardening`), adding weak-overlap suppression to the fixture retriever with exact-term override so `refund_policy_docs` staff-roster negative control now fails closed; the refreshed aggregate baseline returns `decision=go`, `empty_handling_rate=1.0`, and clears `review_observation_summary` without changing retrieval backend, query rewrite, rerank, hybrid retrieval, or GraphRAG behavior.
 
 ## In Progress
 
@@ -108,7 +109,7 @@
 - Local PDF parser provider bridge is complete for the current company-profile PDF trial; future parser work should be triggered by real document-type or answer-quality gaps rather than continuing provider evidence-chain expansion.
 - RAG_Techniques experience application has been documented in `docs/roadmap/rag_techniques_experience_application.md`. Future mature-RAG work should be failure-mode driven: golden cases and chunk-quality baselines first; query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG only after real accepted failures justify them.
 - Local business RAG golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/local-business-rag-golden-cases.json`; continue using it before any future RAG strategy candidate changes.
-- Aggregate real-business corpus golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`; markdown provenance diagnostics are aligned, so the next slice should focus on `negative_control_hardening` before any advanced RAG strategy work.
+- Aggregate real-business corpus golden-case baseline is now available at `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`; it is back to `decision=go`, so the next slice should expand more real business documents or accepted failed questions before any advanced RAG strategy work.
 
 ## Benchmark Fixture Scope
 
@@ -349,7 +350,7 @@
 5. Use the post-access workstream rebaseline to classify future work as real trial bugfix, corpus/parser demand, backend promotion, deployment-owner request, graph-heavy use case, or explicit maintenance.
 6. Keep Phase 3/6 retrieval candidates evaluation-only and preserve runtime defaults.
 7. Promote nothing by default unless customer-like quality, citation, FP/FN, latency/resource, deployment, operations, and repo-side acceptance gates clearly pass.
-8. Next recommended provider slice: open `negative-control-hardening` from the remaining classified `refund_policy_docs` review evidence in `real-business-corpus-golden-cases.json`; avoid changing query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, or GraphRAG behavior until that gate is explicitly completed.
+8. Next recommended provider slice: expand `real-business-corpus-golden-cases` breadth with more real business documents or accepted failed questions now that the current two-source aggregate baseline is back to `go`; keep query rewrite, rerank, hybrid retrieval, RAPTOR, Self/Corrective RAG, and GraphRAG outside scope until a new accepted failure class appears.
 
 ## Open Slice
 
