@@ -56,6 +56,7 @@ def test_local_business_rag_golden_cases_reviews_on_chunk_quality():
             chunk_quality=ChunkQualityDiagnostics(
                 status="review",
                 reason_code="tiny_chunk_ratio_high",
+                provenance_mode="page",
                 total_chunk_count=10,
                 tiny_chunk_count=8,
                 tiny_chunk_ratio=0.8,
@@ -72,6 +73,34 @@ def test_local_business_rag_golden_cases_reviews_on_chunk_quality():
     assert report.decision == "review"
     assert report.summary["chunk_quality_status"] == "review"
     assert "review_tiny_or_noisy_chunks_before_changing_chunk_defaults" in report.recommended_actions
+
+
+def test_local_business_rag_golden_cases_non_page_markdown_does_not_review_on_page_coverage():
+    report = run_local_business_rag_golden_cases(
+        source_id="refund_policy_docs",
+        cases=[
+            LocalBusinessGoldenCase(
+                id="refund-rule",
+                query="退款规则是什么？",
+                expected_mode="answerable",
+                expected_source_id="refund_policy_docs",
+                expected_citation_prefix="refund_policy_docs#section-",
+                business_question_type="policy_lookup",
+                description="Refund policy rule should be answerable.",
+            )
+        ],
+        client=_client(
+            source_id="refund_policy_docs",
+            citation_by_query={"退款规则是什么？": ["refund_policy_docs#section-1"]},
+            page_provenance=False,
+        ),
+    )
+
+    assert report.decision == "go"
+    assert report.chunk_quality.status == "ready"
+    assert report.chunk_quality.provenance_mode == "non_page"
+    assert report.chunk_quality.reason_code == "chunk_quality_ready"
+    assert report.review_observations == []
 
 
 def test_local_business_rag_golden_cases_blocks_when_source_missing():
@@ -119,9 +148,16 @@ def _cases():
     ]
 
 
-def _client(*, registered=True, citation_by_query=None, chunk_quality=None):
+def _client(
+    *,
+    registered=True,
+    source_id="company_profile_2025_trial",
+    citation_by_query=None,
+    chunk_quality=None,
+    page_provenance=True,
+):
     citation_by_query = citation_by_query or {
-        "公司主营业务是什么？": ["company_profile_2025_trial#chunk-1"],
+        "公司主营业务是什么？": [f"{source_id}#chunk-1"],
         "公司有哪些合同金额？": [],
         "公司员工名单有哪些？": [],
     }
@@ -137,7 +173,7 @@ def _client(*, registered=True, citation_by_query=None, chunk_quality=None):
     class FakeClient:
         def get(self, path):
             if path == "/api/rag/sources":
-                sources = [{"id": "company_profile_2025_trial"}] if registered else []
+                sources = [{"id": source_id}] if registered else []
                 return FakeResponse({"knowledge_bases": sources})
             if path.endswith("/documents"):
                 if not registered:
@@ -146,31 +182,49 @@ def _client(*, registered=True, citation_by_query=None, chunk_quality=None):
                     chunks = [
                         {
                             "chunk_id": f"chunk-{index}",
-                            "citation": f"company_profile_2025_trial#chunk-{index}",
+                            "citation": f"{source_id}#chunk-{index}",
                             "char_count": 5 if index <= chunk_quality.tiny_chunk_count else 80,
-                            "text_preview": "<!-- citation: company_profile_2025_trial#page-1 --> 样本文本",
+                            "text_preview": f"<!-- citation: {source_id}#page-1 --> 样本文本",
                         }
                         for index in range(1, chunk_quality.total_chunk_count + 1)
                     ]
                 else:
+                    previews = (
+                        [
+                            f"<!-- citation: {source_id}#page-1 --> 主营业务样本",
+                            f"<!-- citation: {source_id}#page-2 --> 资质样本",
+                            f"<!-- citation: {source_id}#page-3 --> 组织样本",
+                        ]
+                        if page_provenance
+                        else [
+                            "退款规则样本",
+                            "退款凭证样本",
+                            "退款复核样本",
+                        ]
+                    )
+                    citations = (
+                        [f"{source_id}#chunk-1", f"{source_id}#chunk-2", f"{source_id}#chunk-3"]
+                        if page_provenance
+                        else [f"{source_id}#section-1", f"{source_id}#section-2", f"{source_id}#exact-1"]
+                    )
                     chunks = [
                         {
                             "chunk_id": "chunk-1",
-                            "citation": "company_profile_2025_trial#chunk-1",
+                            "citation": citations[0],
                             "char_count": 80,
-                            "text_preview": "<!-- citation: company_profile_2025_trial#page-1 --> 主营业务样本",
+                            "text_preview": previews[0],
                         },
                         {
                             "chunk_id": "chunk-2",
-                            "citation": "company_profile_2025_trial#chunk-2",
+                            "citation": citations[1],
                             "char_count": 80,
-                            "text_preview": "<!-- citation: company_profile_2025_trial#page-2 --> 资质样本",
+                            "text_preview": previews[1],
                         },
                         {
                             "chunk_id": "chunk-3",
-                            "citation": "company_profile_2025_trial#chunk-3",
+                            "citation": citations[2],
                             "char_count": 80,
-                            "text_preview": "<!-- citation: company_profile_2025_trial#page-3 --> 组织样本",
+                            "text_preview": previews[2],
                         },
                     ]
                 return FakeResponse(
@@ -179,11 +233,7 @@ def _client(*, registered=True, citation_by_query=None, chunk_quality=None):
                         "result": {
                             "documents": [
                                 {
-                                    "citation_anchors": [
-                                        "company_profile_2025_trial#chunk-1",
-                                        "company_profile_2025_trial#chunk-2",
-                                        "company_profile_2025_trial#chunk-3",
-                                    ],
+                                    "citation_anchors": [chunk["citation"] for chunk in chunks],
                                     "chunk_manifest": chunks,
                                 }
                             ]
@@ -197,7 +247,7 @@ def _client(*, registered=True, citation_by_query=None, chunk_quality=None):
             citations = citation_by_query.get(query, [])
             documents = [
                 {
-                    "source_id": "company_profile_2025_trial",
+                    "source_id": source_id,
                     "citation": citation,
                     "score": 1.0,
                 }

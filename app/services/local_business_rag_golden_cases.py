@@ -83,6 +83,7 @@ class LocalBusinessGoldenCaseResult:
 class ChunkQualityDiagnostics:
     status: str
     reason_code: str
+    provenance_mode: str
     total_chunk_count: int
     tiny_chunk_count: int
     tiny_chunk_ratio: float
@@ -505,6 +506,7 @@ def _build_chunk_quality(manifest: dict[str, Any]) -> ChunkQualityDiagnostics:
             preview = str(chunk.get("text_preview") or "")
             page_ids.update(_extract_page_ids(preview))
 
+    provenance_mode = _detect_provenance_mode(chunks, citation_anchors)
     total = len(chunks)
     tiny_chunks = [chunk for chunk in chunks if _chunk_char_count(chunk) < TINY_CHUNK_CHAR_THRESHOLD]
     noisy_samples = _noisy_samples(chunks)
@@ -521,13 +523,14 @@ def _build_chunk_quality(manifest: dict[str, Any]) -> ChunkQualityDiagnostics:
     if citation_coverage < MIN_CITATION_COVERAGE_RATIO:
         status = "review" if status != "blocked" else status
         reasons.append("citation_coverage_low")
-    if len(page_ids) < MIN_PAGE_COVERAGE_COUNT:
+    if provenance_mode == "page" and len(page_ids) < MIN_PAGE_COVERAGE_COUNT:
         status = "review" if status != "blocked" else status
         reasons.append("page_coverage_missing")
 
     return ChunkQualityDiagnostics(
         status=status,
         reason_code=";".join(reasons) if reasons else "chunk_quality_ready",
+        provenance_mode=provenance_mode,
         total_chunk_count=total,
         tiny_chunk_count=len(tiny_chunks),
         tiny_chunk_ratio=tiny_ratio,
@@ -671,6 +674,7 @@ def _blocked_chunk_quality(reason_code: str) -> ChunkQualityDiagnostics:
     return ChunkQualityDiagnostics(
         status="blocked",
         reason_code=reason_code,
+        provenance_mode="unknown",
         total_chunk_count=0,
         tiny_chunk_count=0,
         tiny_chunk_ratio=0.0,
@@ -997,6 +1001,20 @@ def _chunk_char_count(chunk: dict[str, Any]) -> int:
 
 def _extract_page_ids(value: str) -> set[str]:
     return set(re.findall(r"#(page-\d+)", value))
+
+
+def _detect_provenance_mode(
+    chunks: list[dict[str, Any]],
+    citation_anchors: set[str],
+) -> str:
+    values = list(citation_anchors)
+    values.extend(str(chunk.get("citation") or "") for chunk in chunks)
+    values.extend(str(chunk.get("text_preview") or "") for chunk in chunks)
+    if any("#page-" in value for value in values):
+        return "page"
+    if values:
+        return "non_page"
+    return "unknown"
 
 
 def _strip_citation_comment(value: str) -> str:

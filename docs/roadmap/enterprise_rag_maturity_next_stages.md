@@ -147,6 +147,6 @@ It writes:
 - `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
 - `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.md`
 
-The current aggregate report is `review` with `source_count=2`, `case_count=9`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=0.6667`. The newly added second real source is `refund_policy_docs`. Its exact-term positive controls pass, and the current review evidence is now explicitly classified into two observations: `negative_control_leakage` and `markdown_provenance_mismatch`.
+The current aggregate report is `review` with `source_count=2`, `case_count=9`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=0.6667`. The newly added second real source is `refund_policy_docs`. Its exact-term positive controls pass, and after markdown provenance diagnostics alignment the remaining review evidence is now isolated to one observation: `negative_control_leakage`.
 
-Because the aggregate evidence now has classified second-source review observations, the next provider action is no longer generic exploration. It should split into one of two narrow gates: negative-control hardening or markdown diagnostics/provenance alignment. Advanced RAG strategy changes remain unpromoted until one of those concrete gates is selected and resolved.
+Because markdown provenance diagnostics are now aligned, the next provider action is no longer to review chunk/provenance expectations. The next narrow gate is `negative-control-hardening`. Advanced RAG strategy changes remain unpromoted until that concrete gate is resolved.

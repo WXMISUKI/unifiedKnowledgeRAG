@@ -3,7 +3,7 @@
 - Report: `real-business-corpus-golden-cases-v1`
 - Decision: `review`
 - Reason: `real_business_corpus_baseline_needs_review`
-- Generated At: `2026-06-08T09:31:52.412320+00:00`
+- Generated At: `2026-06-09T02:02:55.524664+00:00`
 - Case File: `docs\local-run\business-rag-golden-cases\real-business-corpus-golden-cases.fixture.json`
 
 ## Summary
@@ -36,7 +36,6 @@
 
 | Observation | Count |
 |---|---|
-| `markdown_provenance_mismatch` | `1` |
 | `negative_control_leakage` | `1` |
 
 ## Source Reports
@@ -44,13 +43,12 @@
 | Source | Decision | Cases | Hit Rate | Citation Match | Empty Handling | Chunk Quality |
 |---|---|---:|---:|---:|---:|---|
 | `company_profile_2025_trial` | `go` | `6` | `1.0` | `1.0` | `1.0` | `ready` |
-| `refund_policy_docs` | `review` | `3` | `1.0` | `1.0` | `0.0` | `review` |
+| `refund_policy_docs` | `review` | `3` | `1.0` | `1.0` | `0.0` | `ready` |
 
 ## Recommended Actions
 
 - review_failed_sources_and_cases_before_strategy_changes
 - review_negative_control_hardening_before_strategy_changes
-- review_markdown_provenance_expectations_before_chunk_default_changes
 
 ## Non-Goals
 
