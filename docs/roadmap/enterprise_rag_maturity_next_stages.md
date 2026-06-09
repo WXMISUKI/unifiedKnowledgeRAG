@@ -292,3 +292,33 @@ It writes:
 The promoted `source_template_example` validation report is now `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This closes the last template-only onboarding example by turning it into a real minimal baseline example without expanding the main aggregate baseline or changing runtime defaults.
 
 Because this example-promotion slice is now complete, the next provider action should slow down rather than continue polishing onboarding mechanics: either wait for repeated cross-source failed-question evidence before opening a narrowly scoped hardening slice, or pause provider-side expansion until a real caller exposes a new provider-owned gap. Retrieval strategy promotion remains outside scope.
+
+## Provider Next-Step Trigger Contract
+
+The current provider state should now be treated as:
+
+`paused_for_provider_feature_expansion_until_stronger_trigger_appears`
+
+This means the default next action is no longer "find one more provider slice." Instead, future provider-side work should reopen only when one of these trigger classes appears:
+
+- `real_caller_feedback_trigger`
+- `provider_owned_gap_trigger`
+- `repeated_cross_source_failure_class_trigger`
+- `runtime_strategy_evaluation_trigger`
+
+Trigger interpretation:
+
+- `real_caller_feedback_trigger`: a real caller trial exposes a concrete provider-owned gap
+- `provider_owned_gap_trigger`: the problem clearly belongs to provider evidence/retrieval/citation behavior rather than caller orchestration
+- `repeated_cross_source_failure_class_trigger`: failed-question evidence shows a repeated accepted failure class across more than one source
+- `runtime_strategy_evaluation_trigger`: repeated real failure evidence explicitly justifies evaluating query rewrite, rerank, hybrid retrieval, GraphRAG, or another advanced strategy
+
+The following do **not** reopen provider-side work by default:
+
+- final answer policy
+- source-to-agent binding policy
+- permissions / approvals
+- audit governance
+- caller orchestration or control-plane concerns
+
+These remain outside this repository's lightweight provider scope.

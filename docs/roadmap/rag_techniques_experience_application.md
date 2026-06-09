@@ -117,7 +117,16 @@ Completion signal:
 - A source onboarding catalog now also exists at `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.json`, and it returns `go`.
 - The source evaluation pack catalog now also absorbs onboarding maturity summary from `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.json` while keeping its own pack decision semantics unchanged.
 - The former `source_template_example` template-only sample now also has a real minimal baseline validation at `docs/local-run/business-rag-golden-cases/onboarding/source_template_example/source-template-local-business-rag-golden-cases.json`, and it returns `go`.
-- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, a standardized onboarding scaffold, multiple real-source proofs that the template path works across different source shapes, a unified onboarding discovery view, a light bridge between source-level onboarding evidence and pack-level discovery, and no remaining template-only onboarding examples. The next step is not more onboarding mechanics or advanced RAG strategy promotion, but waiting for stronger repeated failure evidence or real caller feedback.
+- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, a standardized onboarding scaffold, multiple real-source proofs that the template path works across different source shapes, a unified onboarding discovery view, a light bridge between source-level onboarding evidence and pack-level discovery, and no remaining template-only onboarding examples. The next step is not more onboarding mechanics or advanced RAG strategy promotion, but waiting for a stronger reopening trigger.
+
+Current reopening triggers for provider-side work:
+
+- `real_caller_feedback_trigger`: a real caller exposes a concrete provider-owned gap
+- `provider_owned_gap_trigger`: the issue clearly belongs to provider evidence/retrieval/citation behavior
+- `repeated_cross_source_failure_class_trigger`: the same accepted failure class appears across more than one source
+- `runtime_strategy_evaluation_trigger`: repeated real failures justify evaluating query rewrite, rerank, hybrid retrieval, GraphRAG, or another advanced strategy
+
+Without one of the above triggers, the correct next action is to hold the current provider baseline rather than continue provider-side feature expansion.
 
 Non-goals:
 
