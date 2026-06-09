@@ -13,6 +13,9 @@ from app.main import create_app
 LOCAL_BUSINESS_RAG_GOLDEN_CASES_ID = "local-business-rag-golden-cases-v1"
 REAL_BUSINESS_CORPUS_GOLDEN_CASES_ID = "real-business-corpus-golden-cases-v1"
 REAL_FAILED_QUESTION_PACK_ID = "real-failed-question-pack-baseline-v1"
+REFUND_ORGANIZATION_NEGATIVE_CONTROL_CONFIRMATION_ID = (
+    "refund-organization-negative-control-confirmation-v1"
+)
 DEFAULT_SOURCE_ID = "company_profile_2025_trial"
 DEFAULT_TOP_K = 3
 DEFAULT_CASE_FILE = Path(
@@ -24,6 +27,10 @@ DEFAULT_AGGREGATE_CASE_FILE = Path(
 DEFAULT_FAILED_QUESTION_PACK_CASE_FILE = Path(
     "docs/local-run/business-rag-golden-cases/real-failed-question-pack.fixture.json"
 )
+DEFAULT_REFUND_ORGANIZATION_CONFIRMATION_CASE_FILE = Path(
+    "docs/local-run/business-rag-golden-cases/"
+    "refund-organization-negative-control-confirmation.fixture.json"
+)
 DEFAULT_OUTPUT_DIR = Path("docs/local-run/business-rag-golden-cases")
 OUTPUT_JSON_FILENAME = "local-business-rag-golden-cases.json"
 OUTPUT_MARKDOWN_FILENAME = "local-business-rag-golden-cases.md"
@@ -31,6 +38,12 @@ AGGREGATE_OUTPUT_JSON_FILENAME = "real-business-corpus-golden-cases.json"
 AGGREGATE_OUTPUT_MARKDOWN_FILENAME = "real-business-corpus-golden-cases.md"
 FAILED_QUESTION_PACK_OUTPUT_JSON_FILENAME = "real-failed-question-pack.json"
 FAILED_QUESTION_PACK_OUTPUT_MARKDOWN_FILENAME = "real-failed-question-pack.md"
+REFUND_ORGANIZATION_CONFIRMATION_OUTPUT_JSON_FILENAME = (
+    "refund-organization-negative-control-confirmation.json"
+)
+REFUND_ORGANIZATION_CONFIRMATION_OUTPUT_MARKDOWN_FILENAME = (
+    "refund-organization-negative-control-confirmation.md"
+)
 
 MIN_CHUNK_COUNT = 1
 MAX_TINY_CHUNK_RATIO = 0.45
@@ -137,6 +150,23 @@ class RealBusinessCorpusGoldenCasesReport:
     risk_level_summary: dict[str, int]
     question_origin_summary: dict[str, int]
     review_observation_summary: dict[str, int]
+    recommended_actions: list[str]
+    non_goals: list[str]
+    json_path: Path | None = None
+    markdown_path: Path | None = None
+
+
+@dataclass(frozen=True)
+class RefundOrganizationNegativeControlConfirmationReport:
+    id: str
+    generated_at: str
+    decision: str
+    reason_code: str
+    top_k: int
+    case_file: Path | None
+    summary: dict[str, Any]
+    source_report: LocalBusinessRagGoldenCasesReport
+    review_pattern_summary: dict[str, int]
     recommended_actions: list[str]
     non_goals: list[str]
     json_path: Path | None = None
@@ -304,6 +334,56 @@ def export_real_failed_question_pack_golden_cases(
     return exported
 
 
+def export_refund_organization_negative_control_confirmation(
+    *,
+    case_file: Path = DEFAULT_REFUND_ORGANIZATION_CONFIRMATION_CASE_FILE,
+    cases: list[RealBusinessGoldenCase] | None = None,
+    top_k: int = DEFAULT_TOP_K,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+    client: TestClient | None = None,
+) -> RefundOrganizationNegativeControlConfirmationReport:
+    report = run_refund_organization_negative_control_confirmation(
+        case_file=case_file,
+        cases=cases,
+        top_k=top_k,
+        client=client,
+    )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / REFUND_ORGANIZATION_CONFIRMATION_OUTPUT_JSON_FILENAME
+    markdown_path = (
+        output_dir / REFUND_ORGANIZATION_CONFIRMATION_OUTPUT_MARKDOWN_FILENAME
+    )
+    exported = RefundOrganizationNegativeControlConfirmationReport(
+        id=report.id,
+        generated_at=report.generated_at,
+        decision=report.decision,
+        reason_code=report.reason_code,
+        top_k=report.top_k,
+        case_file=report.case_file,
+        summary=report.summary,
+        source_report=report.source_report,
+        review_pattern_summary=report.review_pattern_summary,
+        recommended_actions=report.recommended_actions,
+        non_goals=report.non_goals,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+    json_path.write_text(
+        json.dumps(
+            refund_organization_negative_control_confirmation_report_to_dict(exported),
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    markdown_path.write_text(
+        render_refund_organization_negative_control_confirmation_markdown(exported),
+        encoding="utf-8",
+    )
+    return exported
+
+
 def run_real_business_corpus_golden_cases(
     *,
     case_file: Path | None = DEFAULT_AGGREGATE_CASE_FILE,
@@ -345,6 +425,37 @@ def run_real_business_corpus_golden_cases(
         top_k=top_k,
         decision=decision,
         reason_code=reason_code,
+    )
+
+
+def run_refund_organization_negative_control_confirmation(
+    *,
+    case_file: Path | None = DEFAULT_REFUND_ORGANIZATION_CONFIRMATION_CASE_FILE,
+    cases: list[RealBusinessGoldenCase] | None = None,
+    top_k: int = DEFAULT_TOP_K,
+    client: TestClient | None = None,
+) -> RefundOrganizationNegativeControlConfirmationReport:
+    aggregate_report = run_real_business_corpus_golden_cases(
+        case_file=case_file,
+        cases=cases,
+        top_k=top_k,
+        client=client,
+    )
+    source_report = aggregate_report.source_reports[0] if aggregate_report.source_reports else _empty_confirmation_source_report(top_k)
+    summary = _refund_organization_confirmation_summary(source_report)
+    likely_failure_class = str(summary["likely_failure_class"])
+    return RefundOrganizationNegativeControlConfirmationReport(
+        id=REFUND_ORGANIZATION_NEGATIVE_CONTROL_CONFIRMATION_ID,
+        generated_at=datetime.now(UTC).isoformat(),
+        decision=aggregate_report.decision,
+        reason_code=aggregate_report.reason_code,
+        top_k=top_k,
+        case_file=case_file,
+        summary=summary,
+        source_report=source_report,
+        review_pattern_summary=_confirmation_review_pattern_summary(source_report),
+        recommended_actions=_confirmation_recommended_actions(likely_failure_class),
+        non_goals=_non_goals(),
     )
 
 
@@ -404,6 +515,19 @@ def local_business_rag_golden_cases_report_to_dict(
 
 def real_business_corpus_golden_cases_report_to_dict(
     report: RealBusinessCorpusGoldenCasesReport,
+) -> dict[str, Any]:
+    payload = asdict(report)
+    if report.case_file is not None:
+        payload["case_file"] = str(report.case_file)
+    if report.json_path is not None:
+        payload["json_path"] = str(report.json_path)
+    if report.markdown_path is not None:
+        payload["markdown_path"] = str(report.markdown_path)
+    return payload
+
+
+def refund_organization_negative_control_confirmation_report_to_dict(
+    report: RefundOrganizationNegativeControlConfirmationReport,
 ) -> dict[str, Any]:
     payload = asdict(report)
     if report.case_file is not None:
@@ -545,6 +669,59 @@ def render_real_business_corpus_golden_cases_markdown(
             f"`{source_report.summary['citation_match_rate']}` | "
             f"`{source_report.summary['empty_handling_rate']}` | "
             f"`{source_report.chunk_quality.status}` |"
+        )
+    lines.extend(["", "## Recommended Actions", ""])
+    lines.extend(f"- {action}" for action in report.recommended_actions)
+    lines.extend(["", "## Non-Goals", ""])
+    lines.extend(f"- {item}" for item in report.non_goals)
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_refund_organization_negative_control_confirmation_markdown(
+    report: RefundOrganizationNegativeControlConfirmationReport,
+) -> str:
+    lines = [
+        "# Refund Organization Negative Control Confirmation",
+        "",
+        f"- Report: `{report.id}`",
+        f"- Decision: `{report.decision}`",
+        f"- Reason: `{report.reason_code}`",
+        f"- Generated At: `{report.generated_at}`",
+        f"- Case File: `{report.case_file}`",
+        f"- Source ID: `{report.source_report.source_id}`",
+        "",
+        "## Summary",
+        "",
+        "| Metric | Value |",
+        "|---|---|",
+    ]
+    for key, value in report.summary.items():
+        lines.append(f"| `{key}` | `{_format_value(value)}` |")
+    lines.extend(
+        [
+            "",
+            "## Review Patterns",
+            "",
+            "| Pattern | Count |",
+            "|---|---|",
+        ]
+    )
+    for key, value in sorted(report.review_pattern_summary.items()):
+        lines.append(f"| `{key}` | `{value}` |")
+    lines.extend(
+        [
+            "",
+            "## Case Outcomes",
+            "",
+            "| Case | Type | Expected | Status | Reason | Returned Citations |",
+            "|---|---|---|---|---|---|",
+        ]
+    )
+    for case in report.source_report.cases:
+        lines.append(
+            f"| `{case.id}` | `{case.business_question_type}` | "
+            f"`{case.expected_mode}` | `{case.status}` | `{case.reason_code}` | "
+            f"`{', '.join(case.returned_citations)}` |"
         )
     lines.extend(["", "## Recommended Actions", ""])
     lines.extend(f"- {action}" for action in report.recommended_actions)
@@ -1084,6 +1261,153 @@ def _failed_question_pack_recommended_actions(
     if failure_mode_summary.get("graph_use_case"):
         actions.append("confirm_graph_use_case_before_graphrag_gate")
     return actions
+
+
+def _refund_organization_confirmation_summary(
+    source_report: LocalBusinessRagGoldenCasesReport,
+) -> dict[str, Any]:
+    cases = source_report.cases
+    expected_empty_cases = [
+        case for case in cases if case.expected_mode == "insufficient_evidence"
+    ]
+    answerable_cases = [case for case in cases if case.expected_mode == "answerable"]
+    expected_empty_review_count = sum(
+        1 for case in expected_empty_cases if case.status == "review"
+    )
+    answerable_pass_count = sum(
+        1
+        for case in answerable_cases
+        if case.status == "ready" and case.reason_code == "answerable_case_passed"
+    )
+    answerable_review_count = sum(
+        1 for case in answerable_cases if case.status == "review"
+    )
+    likely_failure_class = _likely_failure_class(
+        expected_empty_review_count=expected_empty_review_count,
+        expected_empty_variant_count=len(expected_empty_cases),
+        answerable_pass_count=answerable_pass_count,
+        answerable_variant_count=len(answerable_cases),
+        answerable_review_count=answerable_review_count,
+    )
+    recommended_next_gate = _recommended_next_gate(likely_failure_class)
+    return {
+        "variant_count": len(cases),
+        "expected_empty_variant_count": len(expected_empty_cases),
+        "answerable_variant_count": len(answerable_cases),
+        "expected_empty_review_count": expected_empty_review_count,
+        "answerable_pass_count": answerable_pass_count,
+        "answerable_review_count": answerable_review_count,
+        "likely_failure_class": likely_failure_class,
+        "recommended_next_gate": recommended_next_gate,
+        "source_decision": source_report.decision,
+        "source_review_case_ids": source_report.summary.get("review_case_ids") or [],
+    }
+
+
+def _confirmation_review_pattern_summary(
+    source_report: LocalBusinessRagGoldenCasesReport,
+) -> dict[str, int]:
+    cases = source_report.cases
+    patterns = {
+        "negative_control_passed": 0,
+        "negative_control_returned_evidence": 0,
+        "answerable_case_passed": 0,
+        "expected_answerable_evidence_missing": 0,
+    }
+    for case in cases:
+        if case.reason_code in patterns:
+            patterns[case.reason_code] += 1
+    for observation in source_report.review_observations:
+        key = f"review_observation:{observation}"
+        patterns[key] = patterns.get(key, 0) + 1
+    return patterns
+
+
+def _likely_failure_class(
+    *,
+    expected_empty_review_count: int,
+    expected_empty_variant_count: int,
+    answerable_pass_count: int,
+    answerable_variant_count: int,
+    answerable_review_count: int,
+) -> str:
+    if expected_empty_variant_count == 0 or answerable_variant_count == 0:
+        return "not_enough_evidence"
+    if expected_empty_review_count > 0 and answerable_pass_count == answerable_variant_count:
+        return "confirmed_negative_control_variant"
+    if expected_empty_review_count == 0 and answerable_review_count > 0:
+        return "confirmed_query_mismatch_variant"
+    if expected_empty_review_count > 0 and answerable_review_count > 0:
+        return "mixed_signal_needs_more_cases"
+    return "not_enough_evidence"
+
+
+def _recommended_next_gate(likely_failure_class: str) -> str:
+    if likely_failure_class == "confirmed_negative_control_variant":
+        return "open_refund_negative_control_hardening_scope_review"
+    if likely_failure_class == "confirmed_query_mismatch_variant":
+        return "open_refund_query_mismatch_followup_before_query_rewrite_candidate"
+    if likely_failure_class == "mixed_signal_needs_more_cases":
+        return "add_more_refund_boundary_variants_before_strategy_changes"
+    return "keep_collecting_refund_failure_evidence_without_strategy_promotion"
+
+
+def _confirmation_recommended_actions(likely_failure_class: str) -> list[str]:
+    if likely_failure_class == "confirmed_negative_control_variant":
+        return [
+            "confirm_negative_control_scope_before_additional_retrieval_changes",
+            "keep_query_rewrite_rerank_hybrid_and_graphrag_unpromoted",
+        ]
+    if likely_failure_class == "confirmed_query_mismatch_variant":
+        return [
+            "confirm_refund_wording_gap_followup_before_query_rewrite_candidate",
+            "keep_rerank_hybrid_and_graphrag_unpromoted",
+        ]
+    if likely_failure_class == "mixed_signal_needs_more_cases":
+        return [
+            "collect_more_refund_boundary_variants_before_strategy_changes",
+            "keep_runtime_defaults_unchanged",
+        ]
+    return [
+        "keep_collecting_refund_failure_evidence_before_strategy_changes",
+        "keep_runtime_defaults_unchanged",
+    ]
+
+
+def _empty_confirmation_source_report(
+    top_k: int,
+) -> LocalBusinessRagGoldenCasesReport:
+    return LocalBusinessRagGoldenCasesReport(
+        id=LOCAL_BUSINESS_RAG_GOLDEN_CASES_ID,
+        generated_at=datetime.now(UTC).isoformat(),
+        source_id="refund_policy_docs",
+        decision="blocked",
+        reason_code="local_business_rag_baseline_blocked",
+        top_k=top_k,
+        case_file=None,
+        summary={
+            "case_count": 0,
+            "answerable_case_count": 0,
+            "expected_empty_case_count": 0,
+            "hit_rate": 1.0,
+            "citation_match_rate": 1.0,
+            "empty_handling_rate": 1.0,
+            "invalid_citation_count": 0,
+            "review_case_ids": [],
+            "blocked_case_ids": [],
+            "chunk_quality_status": "blocked",
+            "chunk_quality_reason": "source_manifest_not_ready",
+            "runtime_promotion_status": "keep_runtime_defaults",
+            "source_binding_status": "not_created",
+            "graph_execution_status": "not_executed",
+            "final_decision": "blocked",
+        },
+        chunk_quality=_blocked_chunk_quality("source_manifest_not_ready"),
+        cases=[],
+        review_observations=[],
+        recommended_actions=[],
+        non_goals=_non_goals(),
+    )
 
 
 def _noisy_samples(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:

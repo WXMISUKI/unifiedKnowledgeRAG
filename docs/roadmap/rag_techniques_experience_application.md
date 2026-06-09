@@ -108,7 +108,10 @@ Completion signal:
 - The aggregate report now has `source_count=3` and `case_count=12`, and it remains `go`.
 - The third real source `logistics_faq` adds workflow/process, exact-identifier, and negative-control coverage while keeping `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`.
 - A separate failed-question pack report now also exists at `docs/local-run/business-rag-golden-cases/real-failed-question-pack.json`, and it returns `review` on a real organization-question trap against `refund_policy_docs`.
-- This means the project now has both a passing breadth baseline and a failure-focused review baseline. The next step is to confirm and classify the failed-question-pack signal before considering any advanced RAG strategy promotion.
+- A refund-specific confirmation report now also exists at `docs/local-run/business-rag-golden-cases/refund-organization-negative-control-confirmation.json`.
+- That confirmation report currently returns `review` with `likely_failure_class=confirmed_negative_control_variant`, `expected_empty_review_count=2`, and `answerable_pass_count=3`.
+- A unified source evaluation pack catalog now also exists at `docs/local-run/business-rag-golden-cases/source-evaluation-pack-catalog.json`.
+- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, and a provider-level catalog view over all of them. The next step is to generalize evaluation-pack onboarding for future sources, not advanced RAG strategy promotion.
 
 Non-goals:
 

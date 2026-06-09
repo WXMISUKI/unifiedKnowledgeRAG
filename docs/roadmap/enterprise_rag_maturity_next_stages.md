@@ -165,3 +165,33 @@ It writes:
 The current failed-question pack report is `review` with `source_count=3`, `case_count=6`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=0.6667`. It intentionally collects difficult, failed, or boundary real-business questions separately from the passing aggregate breadth baseline. The first pack exposes one concrete `query_mismatch`-like review candidate on `refund_policy_docs`: `退款政策中有哪些公司部门？` currently returns irrelevant exact-term evidence instead of failing closed.
 
 Because this failure pack now exists, the next provider action is no longer “keep adding breadth only.” The next narrow gate is to confirm whether this review candidate is accepted as a real failure class and, if so, to open a focused hardening slice for that class rather than promoting advanced retrieval strategies broadly.
+
+## Refund Organization Confirmation Baseline
+
+The local operator entrypoint is:
+
+`python scripts/export_refund_organization_negative_control_confirmation.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/refund-organization-negative-control-confirmation.json`
+- `docs/local-run/business-rag-golden-cases/refund-organization-negative-control-confirmation.md`
+
+The current confirmation report is `review` with `variant_count=8`, `expected_empty_variant_count=5`, `answerable_variant_count=3`, `expected_empty_review_count=2`, and `answerable_pass_count=3`. The confirmed verdict is `confirmed_negative_control_variant`, not a broad query-mismatch promotion signal. Two refund organization-style negative controls still leak `refund_policy_2026#exact-refund-code`, while the three role/responsibility positives remain answerable.
+
+Because this confirmation slice is now complete, the next provider action is to open a narrow refund negative-control hardening scope review, not to introduce query rewrite, rerank, hybrid retrieval, or GraphRAG. The confirmation baseline raises the decision quality of the next slice while keeping runtime defaults unchanged.
+
+## Source Evaluation Pack Catalog
+
+The local operator entrypoint is:
+
+`python scripts/export_source_evaluation_pack_catalog.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/source-evaluation-pack-catalog.json`
+- `docs/local-run/business-rag-golden-cases/source-evaluation-pack-catalog.md`
+
+The current catalog report is `review` with `pack_count=4`, `available_pack_count=4`, `baseline_pack_count=2`, `failed_question_pack_count=1`, and `confirmation_pack_count=1`. It gives the provider a single evidence-only overview over current baseline, failed-question, and confirmation gates without changing the underlying evaluation logic.
+
+Because this catalog slice is now complete, the next provider action should shift from a specific refund case toward generalized evaluation-pack templating for future sources. The provider now has a common gate index, so the next narrow improvement should be lowering the cost of bringing new sources into the same baseline / failed-pack / confirmation rhythm, not promoting advanced retrieval strategies.

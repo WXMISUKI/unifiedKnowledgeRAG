@@ -1,0 +1,86 @@
+{
+  "id": "source-evaluation-pack-catalog-v1",
+  "generated_at": "2026-06-09T03:43:31.187695+00:00",
+  "decision": "review",
+  "reason_code": "source_evaluation_pack_catalog_needs_review",
+  "summary": {
+    "pack_count": 4,
+    "available_pack_count": 4,
+    "missing_pack_count": 0,
+    "baseline_pack_count": 2,
+    "failed_question_pack_count": 1,
+    "confirmation_pack_count": 1,
+    "review_pack_ids": [
+      "real-failed-question-pack-baseline-v1",
+      "refund-organization-negative-control-confirmation-v1"
+    ],
+    "missing_pack_ids": []
+  },
+  "packs": [
+    {
+      "pack_id": "local-business-rag-golden-cases-v1",
+      "pack_type": "baseline_pack",
+      "source_scope": "single_source",
+      "artifact_json_path": "docs\\local-run\\business-rag-golden-cases\\local-business-rag-golden-cases.json",
+      "artifact_markdown_path": "docs\\local-run\\business-rag-golden-cases\\local-business-rag-golden-cases.md",
+      "decision": "go",
+      "reason_code": "local_business_rag_baseline_go",
+      "case_count": 6,
+      "recommended_next_gate": "expand_real_sources_or_failed_packs",
+      "available": true,
+      "notes": "Single-source baseline gate for an approved local business corpus."
+    },
+    {
+      "pack_id": "real-business-corpus-golden-cases-v1",
+      "pack_type": "baseline_pack",
+      "source_scope": "multi_source",
+      "artifact_json_path": "docs\\local-run\\business-rag-golden-cases\\real-business-corpus-golden-cases.json",
+      "artifact_markdown_path": "docs\\local-run\\business-rag-golden-cases\\real-business-corpus-golden-cases.md",
+      "decision": "go",
+      "reason_code": "real_business_corpus_baseline_go",
+      "case_count": 12,
+      "recommended_next_gate": "expand_real_sources_or_failed_packs",
+      "available": true,
+      "notes": "Aggregate breadth gate across approved real business sources."
+    },
+    {
+      "pack_id": "real-failed-question-pack-baseline-v1",
+      "pack_type": "failed_question_pack",
+      "source_scope": "multi_source",
+      "artifact_json_path": "docs\\local-run\\business-rag-golden-cases\\real-failed-question-pack.json",
+      "artifact_markdown_path": "docs\\local-run\\business-rag-golden-cases\\real-failed-question-pack.md",
+      "decision": "review",
+      "reason_code": "real_business_corpus_baseline_needs_review",
+      "case_count": 6,
+      "recommended_next_gate": "confirm_failure_class_before_strategy_changes",
+      "available": true,
+      "notes": "Difficulty and boundary-question pack for accepted failure signals."
+    },
+    {
+      "pack_id": "refund-organization-negative-control-confirmation-v1",
+      "pack_type": "confirmation_pack",
+      "source_scope": "single_source_confirmation",
+      "artifact_json_path": "docs\\local-run\\business-rag-golden-cases\\refund-organization-negative-control-confirmation.json",
+      "artifact_markdown_path": "docs\\local-run\\business-rag-golden-cases\\refund-organization-negative-control-confirmation.md",
+      "decision": "review",
+      "reason_code": "real_business_corpus_baseline_needs_review",
+      "case_count": 8,
+      "recommended_next_gate": "open_refund_negative_control_hardening_scope_review",
+      "available": true,
+      "notes": "Confirmation pack that turns a review candidate into a narrower verdict."
+    }
+  ],
+  "recommended_actions": [
+    "confirm_failure_class_before_strategy_changes",
+    "review_confirmed_failure_class_scope_before_strategy_changes"
+  ],
+  "non_goals": [
+    "does_not_rerun_underlying_retrieval_evaluations",
+    "does_not_change_runtime_retrieval_defaults",
+    "does_not_enable_query_rewrite_rerank_or_hybrid",
+    "does_not_create_source_to_agent_binding",
+    "does_not_execute_graphrag"
+  ],
+  "json_path": "docs\\local-run\\business-rag-golden-cases\\source-evaluation-pack-catalog.json",
+  "markdown_path": "docs\\local-run\\business-rag-golden-cases\\source-evaluation-pack-catalog.md"
+}
