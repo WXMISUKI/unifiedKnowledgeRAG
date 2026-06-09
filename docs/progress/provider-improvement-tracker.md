@@ -11,6 +11,7 @@
 
 - Provider phase closure summary documented (`document-provider-phase-closure-summary`), freezing the current provider state as a deliberate hold-state with a single summary entrypoint for completed closures, frozen boundaries, reopen triggers, and next-direction guidance.
 - Caller trial outcome input contract documented (`document-caller-trial-outcome-input-contract`), defining the minimal live trial result schema, reusable example payload, and conservative Phase 25 parsing expectations so real caller feedback can re-enter the provider workstream without reopening provider feature expansion by default.
+- Caller trial feedback runbook documented (`document-caller-trial-feedback-runbook`), turning the post-closure sequence into a practical execution path from Phase 15/16 access review to caller-side outcome export and Phase 25 provider feedback consumption.
 
 - Phase 0 baseline contracts: health, manifest, capabilities, preflight, integration probe, contract smoke.
 - Phase 2 diagnostics baseline: source manifest, fingerprint drift, ingestion preflight, chunk manifest, source package metadata.
@@ -338,6 +339,7 @@
 
 - Keep the current provider baseline in hold-state unless a stronger explicit reopen trigger appears.
 - Use the caller trial outcome input contract as the default handoff shape when future real caller trials need to feed provider-side follow-up classification.
+- Use the caller trial feedback runbook as the first execution entrypoint after provider closure instead of opening another provider-side feature slice.
 - Keep deployment readiness review notes actionable until non-mock embedding/retrieval candidates are promoted by evidence.
 - Continue Phase 3 retrieval-quality promotion only with customer-like benchmark evidence; do not promote defaults by single-metric wins.
 - Keep GraphRAG execution deferred until relationship-heavy use cases and operations ownership are explicitly approved.

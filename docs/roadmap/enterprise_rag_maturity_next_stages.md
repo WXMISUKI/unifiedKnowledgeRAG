@@ -25,6 +25,18 @@ This means the project should treat the current provider baseline as closed enou
 
 After that closure, the most practical next slice inside this repository is not another provider capability. It is stabilizing the caller-side live trial outcome input contract so real feedback can flow back into provider-side trigger decisions with less ambiguity.
 
+The current execution entrypoint after that contract is now:
+
+`docs/integration/myprivateagent-live-trial-outcome-feedback/caller-trial-feedback-runbook.md`
+
+Post-closure work should now be read as an ordered sequence:
+
+1. caller-side trial access review
+2. caller-side trial execution
+3. caller-side trial outcome export
+4. provider-side Phase 25 feedback consumption
+5. trigger-based reopen or continued hold-state
+
 Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition, Stage 3b parser-artifact-to-local-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial. The current practical state is: a real local PDF can be parsed by an operator-started PaddleOCR service, normalized into a parser artifact, and ingested through the existing local RAG loop with `decision=go`.
 
 The current MyPrivateAgent real business trial also returns `go` for the company-profile PDF: answerable business questions produce cited answers, and the negative-control refund-policy question returns `insufficient_evidence` without citations. This closes the current local usability loop.
