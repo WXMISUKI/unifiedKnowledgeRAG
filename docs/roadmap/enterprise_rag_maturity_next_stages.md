@@ -262,3 +262,17 @@ It writes:
 The current onboarding catalog report is `go` with `source_count=3`, `ready_source_count=2`, and `template_only_source_count=1`. It gives the provider a single evidence-only discovery view over existing onboarding sources without registering them into runtime, without expanding the main aggregate baseline, and without changing retrieval defaults.
 
 Because this discovery bridge slice is now complete, the next provider action should stay in the same lightweight direction: either fill the remaining template-only onboarding example with a real baseline fixture, or add a very small evidence-only bridge from this onboarding catalog into existing pack-level discovery. Retrieval strategy promotion remains outside scope.
+
+## Pack Catalog Onboarding Summary Bridge
+
+The local operator entrypoint remains:
+
+`python scripts/export_source_evaluation_pack_catalog.py`
+
+It now also reads:
+
+- `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.json`
+
+The refreshed pack catalog still returns `review` because the failed-question and confirmation packs remain `review`, but it now also exposes onboarding maturity summary with `onboarding_source_count=3`, `onboarding_ready_source_count=2`, and `onboarding_template_only_source_count=1`. This keeps pack-level discovery and source-onboarding discovery connected without changing pack decision semantics, runtime defaults, source registration, or aggregate-baseline expansion.
+
+Because this bridge slice is now complete, the next provider action should remain lightweight and evidence-first: either turn the remaining template-only onboarding example into a real minimal baseline fixture, or wait for a repeated cross-source failed-question class before opening any hardening slice. Retrieval strategy promotion remains outside scope.

@@ -115,7 +115,8 @@ Completion signal:
 - A real-source onboarding validation now also exists for `split_refund_policy_docs` at `docs/local-run/business-rag-golden-cases/onboarding/split_refund_policy_docs/split-refund-local-business-rag-golden-cases.json`, and it returns `go`.
 - A second real-source onboarding validation now also exists for `invoice_policy_faq` at `docs/local-run/business-rag-golden-cases/onboarding/invoice_policy_faq/invoice-policy-local-business-rag-golden-cases.json`, and it returns `go`.
 - A source onboarding catalog now also exists at `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.json`, and it returns `go`.
-- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, a standardized onboarding scaffold, multiple real-source proofs that the template path works across different source shapes, and a unified onboarding discovery view. The next step is still provider-general onboarding/discovery usability, not advanced RAG strategy promotion.
+- The source evaluation pack catalog now also absorbs onboarding maturity summary from `docs/local-run/business-rag-golden-cases/source-onboarding-catalog.json` while keeping its own pack decision semantics unchanged.
+- This means the project now has a passing breadth baseline, a failure-focused review baseline, a smaller confirmation baseline, a provider-level catalog view, a standardized onboarding scaffold, multiple real-source proofs that the template path works across different source shapes, a unified onboarding discovery view, and a light bridge between source-level onboarding evidence and pack-level discovery. The next step is still provider-general onboarding/discovery usability, not advanced RAG strategy promotion.
 
 Non-goals:
 

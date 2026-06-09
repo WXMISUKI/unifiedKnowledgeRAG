@@ -1,6 +1,6 @@
 {
   "id": "source-onboarding-catalog-v1",
-  "generated_at": "2026-06-09T05:13:28.186737+00:00",
+  "generated_at": "2026-06-09T06:50:18.457558+00:00",
   "decision": "go",
   "reason_code": "source_onboarding_catalog_ready",
   "onboarding_root": "docs\\local-run\\business-rag-golden-cases\\onboarding",

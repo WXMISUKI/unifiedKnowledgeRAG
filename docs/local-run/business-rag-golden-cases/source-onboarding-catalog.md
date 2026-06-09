@@ -3,7 +3,7 @@
 - Report: `source-onboarding-catalog-v1`
 - Decision: `go`
 - Reason: `source_onboarding_catalog_ready`
-- Generated At: `2026-06-09T05:13:28.186737+00:00`
+- Generated At: `2026-06-09T06:50:18.457558+00:00`
 - Onboarding Root: `docs\local-run\business-rag-golden-cases\onboarding`
 
 ## Summary

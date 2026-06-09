@@ -10,6 +10,7 @@ from app.services.local_business_rag_golden_cases import DEFAULT_OUTPUT_DIR
 SOURCE_EVALUATION_PACK_CATALOG_ID = "source-evaluation-pack-catalog-v1"
 CATALOG_OUTPUT_JSON_FILENAME = "source-evaluation-pack-catalog.json"
 CATALOG_OUTPUT_MARKDOWN_FILENAME = "source-evaluation-pack-catalog.md"
+SOURCE_ONBOARDING_CATALOG_JSON_FILENAME = "source-onboarding-catalog.json"
 
 
 @dataclass(frozen=True)
@@ -120,14 +121,15 @@ def build_source_evaluation_pack_catalog(
 
     packs = [_load_pack_entry(spec) for spec in pack_specs]
     decision = _catalog_decision(packs)
+    onboarding_summary = _load_onboarding_summary(output_dir)
     return SourceEvaluationPackCatalogReport(
         id=SOURCE_EVALUATION_PACK_CATALOG_ID,
         generated_at=datetime.now(UTC).isoformat(),
         decision=decision,
         reason_code=_catalog_reason(decision),
-        summary=_catalog_summary(packs),
+        summary=_catalog_summary(packs, onboarding_summary),
         packs=packs,
-        recommended_actions=_catalog_recommended_actions(decision, packs),
+        recommended_actions=_catalog_recommended_actions(decision, packs, onboarding_summary),
         non_goals=_non_goals(),
     )
 
@@ -166,6 +168,26 @@ def render_source_evaluation_pack_catalog_markdown(
     ]
     for key, value in report.summary.items():
         lines.append(f"| `{key}` | `{_format_value(value)}` |")
+    lines.extend(
+        [
+            "",
+            "## Onboarding Summary",
+            "",
+            "| Metric | Value |",
+            "|---|---|",
+        ]
+    )
+    onboarding_keys = [
+        "onboarding_catalog_present",
+        "onboarding_source_count",
+        "onboarding_ready_source_count",
+        "onboarding_template_only_source_count",
+        "onboarding_review_source_count",
+        "onboarding_ready_source_ids",
+    ]
+    for key in onboarding_keys:
+        if key in report.summary:
+            lines.append(f"| `{key}` | `{_format_value(report.summary[key])}` |")
     lines.extend(
         [
             "",
@@ -269,7 +291,10 @@ def _catalog_reason(decision: str) -> str:
     return "source_evaluation_pack_catalog_needs_review"
 
 
-def _catalog_summary(packs: list[SourceEvaluationPackEntry]) -> dict[str, Any]:
+def _catalog_summary(
+    packs: list[SourceEvaluationPackEntry],
+    onboarding_summary: dict[str, Any],
+) -> dict[str, Any]:
     return {
         "pack_count": len(packs),
         "available_pack_count": sum(1 for pack in packs if pack.available),
@@ -283,12 +308,14 @@ def _catalog_summary(packs: list[SourceEvaluationPackEntry]) -> dict[str, Any]:
         ),
         "review_pack_ids": [pack.pack_id for pack in packs if pack.decision == "review"],
         "missing_pack_ids": [pack.pack_id for pack in packs if not pack.available],
+        **onboarding_summary,
     }
 
 
 def _catalog_recommended_actions(
     decision: str,
     packs: list[SourceEvaluationPackEntry],
+    onboarding_summary: dict[str, Any],
 ) -> list[str]:
     actions: list[str] = []
     if any(not pack.available for pack in packs):
@@ -298,11 +325,40 @@ def _catalog_recommended_actions(
         actions.append("confirm_failure_class_before_strategy_changes")
     if any(pack.pack_type == "confirmation_pack" for pack in review_packs):
         actions.append("review_confirmed_failure_class_scope_before_strategy_changes")
+    if onboarding_summary.get("onboarding_catalog_present") and onboarding_summary.get(
+        "onboarding_template_only_source_count", 0
+    ):
+        actions.append("fill_real_baseline_fixtures_for_template_only_onboarding_sources")
     if decision == "go":
         actions.append("expand_real_sources_or_failed_packs")
     if not actions:
         actions.append("keep_runtime_defaults_and_reuse_existing_evaluation_packs")
     return actions
+
+
+def _load_onboarding_summary(output_dir: Path) -> dict[str, Any]:
+    onboarding_catalog_path = output_dir / SOURCE_ONBOARDING_CATALOG_JSON_FILENAME
+    if not onboarding_catalog_path.exists():
+        return {
+            "onboarding_catalog_present": False,
+            "onboarding_source_count": 0,
+            "onboarding_ready_source_count": 0,
+            "onboarding_template_only_source_count": 0,
+            "onboarding_review_source_count": 0,
+            "onboarding_ready_source_ids": [],
+        }
+    payload = json.loads(onboarding_catalog_path.read_text(encoding="utf-8"))
+    summary = payload.get("summary", {})
+    return {
+        "onboarding_catalog_present": True,
+        "onboarding_source_count": int(summary.get("source_count") or 0),
+        "onboarding_ready_source_count": int(summary.get("ready_source_count") or 0),
+        "onboarding_template_only_source_count": int(
+            summary.get("template_only_source_count") or 0
+        ),
+        "onboarding_review_source_count": int(summary.get("review_source_count") or 0),
+        "onboarding_ready_source_ids": list(summary.get("ready_source_ids") or []),
+    }
 
 
 def _non_goals() -> list[str]:
