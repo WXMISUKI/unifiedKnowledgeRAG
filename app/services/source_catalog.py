@@ -34,6 +34,15 @@ KNOWLEDGE_BASES = [
         vector_store="in_memory",
         freshness="static_fixture",
     ),
+    KnowledgeBaseSource(
+        id="invoice_policy_faq",
+        status="ready",
+        owner="finance_ops",
+        version="2026-06-09",
+        embedding_model="local-lexical-v1",
+        vector_store="in_memory",
+        freshness="static_fixture",
+    ),
 ]
 
 EVALUATION_ONLY_KNOWLEDGE_BASE_IDS = {

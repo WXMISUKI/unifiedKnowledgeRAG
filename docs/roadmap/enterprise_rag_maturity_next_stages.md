@@ -230,3 +230,20 @@ It writes:
 The current validation report for `split_refund_policy_docs` is `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This confirms that the template-driven onboarding path is not just a scaffold: a new real source can enter the provider's local baseline evaluation path with only minimal provider visibility additions.
 
 Because this validation slice is now complete, the next provider action should be either to repeat the same template path on a second new real source or to add a light onboarding-to-catalog bridge. Retrieval strategy promotion still remains outside scope.
+
+## Third Distinct Real Source Onboarding Validation
+
+The local operator entrypoint is:
+
+`python scripts/export_invoice_policy_onboarding_validation.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/onboarding/invoice_policy_faq/source-evaluation-pack-onboarding.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/invoice_policy_faq/baseline-pack.fixture.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/invoice_policy_faq/invoice-policy-local-business-rag-golden-cases.json`
+- `docs/local-run/business-rag-golden-cases/onboarding/invoice_policy_faq/invoice-policy-local-business-rag-golden-cases.md`
+
+The current validation report for `invoice_policy_faq` is `go` with `case_count=3`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. This extends the onboarding proof from workflow/policy snippets to a third, more rule-oriented markdown source type without changing runtime defaults or adding source-specific retrieval logic.
+
+Because this third-source validation slice is now complete, the next provider action should still stay on generalized provider usability: either add one more clearly distinct real source type, or add a light evidence-only bridge that helps onboarding outputs surface in catalog/discovery views. Retrieval strategy promotion remains outside scope until repeated accepted failure classes appear.

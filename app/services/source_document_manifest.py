@@ -90,6 +90,28 @@ SOURCE_DOCUMENT_MANIFESTS = {
             },
         )
     ],
+    "invoice_policy_faq": [
+        SourceDocumentManifest(
+            document_id="invoice_policy_faq_2026",
+            title="发票开具常见问题",
+            source_path="app/data/sources/invoice_policy_faq.md",
+            format="markdown",
+            version="2026-06-09",
+            chunking_strategy="markdown-paragraph-v1",
+            citation_anchors=[
+                "invoice_policy_faq_2026#issuance-time",
+                "invoice_policy_faq_2026#required-fields",
+                "invoice_policy_faq_2026#correction-flow",
+            ],
+            expected_content_sha256=(
+                "0200a05e28a019e8401ee33256b61762273bae5d554f18c5032f91149fa68c9e"
+            ),
+            metadata={
+                "language": "zh-CN",
+                "document_role": "local_contract_fixture",
+            },
+        )
+    ],
 }
 
 

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "invoice-issuance-time",
+    "query": "电子普通发票一般多久开具并发送？",
+    "expected_mode": "answerable",
+    "expected_source_id": "invoice_policy_faq",
+    "expected_citation_prefix": "invoice_policy_faq_2026#",
+    "business_question_type": "issuance_time_lookup",
+    "description": "Invoice issuance timing should be answerable from the new real source."
+  },
+  {
+    "id": "invoice-required-fields",
+    "query": "企业抬头发票需要提供哪些信息？",
+    "expected_mode": "answerable",
+    "expected_source_id": "invoice_policy_faq",
+    "expected_citation_prefix": "invoice_policy_faq_2026#",
+    "business_question_type": "required_fields_lookup",
+    "description": "Invoice title and required fields should be answerable from the new real source."
+  },
+  {
+    "id": "invoice-negative-cross-border-tax",
+    "query": "这份发票文档里有跨境税务资质认证流程吗？",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Unsupported cross-border tax qualification flow should fail closed against the invoice source."
+  }
+]

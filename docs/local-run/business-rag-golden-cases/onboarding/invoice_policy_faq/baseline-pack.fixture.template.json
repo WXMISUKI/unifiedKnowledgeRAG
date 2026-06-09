@@ -1,0 +1,20 @@
+[
+  {
+    "id": "invoice_policy_faq-answerable-example",
+    "query": "REPLACE_WITH_REAL_ANSWERABLE_QUERY",
+    "expected_mode": "answerable",
+    "expected_source_id": "invoice_policy_faq",
+    "expected_citation_prefix": "invoice_policy_faq#",
+    "business_question_type": "replace_me",
+    "description": "Template placeholder for a real answerable baseline case."
+  },
+  {
+    "id": "invoice_policy_faq-negative-control-example",
+    "query": "REPLACE_WITH_REAL_INSUFFICIENT_EVIDENCE_QUERY",
+    "expected_mode": "insufficient_evidence",
+    "expected_source_id": null,
+    "expected_citation_prefix": null,
+    "business_question_type": "negative_control",
+    "description": "Template placeholder for a real fail-closed baseline case."
+  }
+]

@@ -140,6 +140,27 @@ DOCUMENTS = [
         text="复核材料需要填写表单 AF-REFUND-02，并关联原订单编号、付款凭证和客服沟通记录。",
         citation="split_refund_policy_2026#form-code",
     ),
+    DocumentChunk(
+        source_id="invoice_policy_faq",
+        document_id="invoice_policy_faq_2026",
+        title="发票开具时效",
+        text="订单完成且确认收款后，用户提交电子普通发票申请，一般会在两个工作日内开具并发送到预留邮箱；如遇节假日，开票时效顺延至下一个工作日。",
+        citation="invoice_policy_faq_2026#issuance-time",
+    ),
+    DocumentChunk(
+        source_id="invoice_policy_faq",
+        document_id="invoice_policy_faq_2026",
+        title="企业抬头发票所需信息",
+        text="企业抬头发票需要提供企业名称、纳税人识别号和接收发票的邮箱地址；如需纸质邮寄，还需要补充收件人姓名、联系电话和邮寄地址。",
+        citation="invoice_policy_faq_2026#required-fields",
+    ),
+    DocumentChunk(
+        source_id="invoice_policy_faq",
+        document_id="invoice_policy_faq_2026",
+        title="发票更正流程",
+        text="发票一经开具，金额和抬头原则上不支持直接修改；如发现信息填写错误，需要先作废原发票，再由财务在核对订单信息后重新开具。",
+        citation="invoice_policy_faq_2026#correction-flow",
+    ),
 ]
 
 

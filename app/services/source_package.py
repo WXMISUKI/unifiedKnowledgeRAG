@@ -32,6 +32,19 @@ SOURCE_PACKAGES = {
             "package_role": "local_enterprise_onboarding_fixture",
         },
     },
+    "invoice_policy_faq": {
+        "domain": "invoice_policy_support",
+        "language": "zh-CN",
+        "sensitivity": "internal",
+        "supported_formats": ["markdown"],
+        "default_chunking_strategy": "markdown-paragraph-v1",
+        "citation_granularity": "section",
+        "allowed_parser_statuses": ["ready"],
+        "metadata": {
+            "business_use": "invoice_policy_support",
+            "package_role": "local_enterprise_onboarding_fixture",
+        },
+    },
 }
 
 
