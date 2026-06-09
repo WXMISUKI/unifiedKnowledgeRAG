@@ -107,7 +107,8 @@ Completion signal:
   `docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.json`
 - The aggregate report now has `source_count=3` and `case_count=12`, and it remains `go`.
 - The third real source `logistics_faq` adds workflow/process, exact-identifier, and negative-control coverage while keeping `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`.
-- This means the aggregate baseline has progressed from two-source validation into broader real-business evidence coverage, but it still does not justify advanced RAG strategy promotion by itself; the next step remains expanding breadth until a new accepted failure class appears.
+- A separate failed-question pack report now also exists at `docs/local-run/business-rag-golden-cases/real-failed-question-pack.json`, and it returns `review` on a real organization-question trap against `refund_policy_docs`.
+- This means the project now has both a passing breadth baseline and a failure-focused review baseline. The next step is to confirm and classify the failed-question-pack signal before considering any advanced RAG strategy promotion.
 
 Non-goals:
 

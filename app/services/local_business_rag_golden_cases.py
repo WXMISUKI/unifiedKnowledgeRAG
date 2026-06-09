@@ -12,6 +12,7 @@ from app.main import create_app
 
 LOCAL_BUSINESS_RAG_GOLDEN_CASES_ID = "local-business-rag-golden-cases-v1"
 REAL_BUSINESS_CORPUS_GOLDEN_CASES_ID = "real-business-corpus-golden-cases-v1"
+REAL_FAILED_QUESTION_PACK_ID = "real-failed-question-pack-baseline-v1"
 DEFAULT_SOURCE_ID = "company_profile_2025_trial"
 DEFAULT_TOP_K = 3
 DEFAULT_CASE_FILE = Path(
@@ -20,11 +21,16 @@ DEFAULT_CASE_FILE = Path(
 DEFAULT_AGGREGATE_CASE_FILE = Path(
     "docs/local-run/business-rag-golden-cases/real-business-corpus-golden-cases.fixture.json"
 )
+DEFAULT_FAILED_QUESTION_PACK_CASE_FILE = Path(
+    "docs/local-run/business-rag-golden-cases/real-failed-question-pack.fixture.json"
+)
 DEFAULT_OUTPUT_DIR = Path("docs/local-run/business-rag-golden-cases")
 OUTPUT_JSON_FILENAME = "local-business-rag-golden-cases.json"
 OUTPUT_MARKDOWN_FILENAME = "local-business-rag-golden-cases.md"
 AGGREGATE_OUTPUT_JSON_FILENAME = "real-business-corpus-golden-cases.json"
 AGGREGATE_OUTPUT_MARKDOWN_FILENAME = "real-business-corpus-golden-cases.md"
+FAILED_QUESTION_PACK_OUTPUT_JSON_FILENAME = "real-failed-question-pack.json"
+FAILED_QUESTION_PACK_OUTPUT_MARKDOWN_FILENAME = "real-failed-question-pack.md"
 
 MIN_CHUNK_COUNT = 1
 MAX_TINY_CHUNK_RATIO = 0.45
@@ -57,6 +63,9 @@ class RealBusinessGoldenCase:
     failure_mode: str
     risk_level: str
     description: str
+    question_origin: str = "accepted_real_failure_candidate"
+    observed_failure: str = ""
+    notes: str = ""
 
 
 @dataclass(frozen=True)
@@ -126,6 +135,7 @@ class RealBusinessCorpusGoldenCasesReport:
     source_reports: list[LocalBusinessRagGoldenCasesReport]
     failure_mode_summary: dict[str, int]
     risk_level_summary: dict[str, int]
+    question_origin_summary: dict[str, int]
     review_observation_summary: dict[str, int]
     recommended_actions: list[str]
     non_goals: list[str]
@@ -213,6 +223,7 @@ def export_real_business_corpus_golden_cases(
         source_reports=report.source_reports,
         failure_mode_summary=report.failure_mode_summary,
         risk_level_summary=report.risk_level_summary,
+        question_origin_summary=report.question_origin_summary,
         review_observation_summary=report.review_observation_summary,
         recommended_actions=report.recommended_actions,
         non_goals=report.non_goals,
@@ -230,6 +241,64 @@ def export_real_business_corpus_golden_cases(
     )
     markdown_path.write_text(
         render_real_business_corpus_golden_cases_markdown(exported),
+        encoding="utf-8",
+    )
+    return exported
+
+
+def export_real_failed_question_pack_golden_cases(
+    *,
+    case_file: Path = DEFAULT_FAILED_QUESTION_PACK_CASE_FILE,
+    cases: list[RealBusinessGoldenCase] | None = None,
+    top_k: int = DEFAULT_TOP_K,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
+    client: TestClient | None = None,
+) -> RealBusinessCorpusGoldenCasesReport:
+    report = run_real_business_corpus_golden_cases(
+        case_file=case_file,
+        cases=cases,
+        top_k=top_k,
+        client=client,
+    )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / FAILED_QUESTION_PACK_OUTPUT_JSON_FILENAME
+    markdown_path = output_dir / FAILED_QUESTION_PACK_OUTPUT_MARKDOWN_FILENAME
+    exported = RealBusinessCorpusGoldenCasesReport(
+        id=REAL_FAILED_QUESTION_PACK_ID,
+        generated_at=report.generated_at,
+        decision=report.decision,
+        reason_code=report.reason_code,
+        top_k=report.top_k,
+        case_file=report.case_file,
+        summary=report.summary,
+        source_reports=report.source_reports,
+        failure_mode_summary=report.failure_mode_summary,
+        risk_level_summary=report.risk_level_summary,
+        question_origin_summary=report.question_origin_summary,
+        review_observation_summary=report.review_observation_summary,
+        recommended_actions=_failed_question_pack_recommended_actions(
+            decision=report.decision,
+            failure_mode_summary=report.failure_mode_summary,
+            review_observation_summary=report.review_observation_summary,
+        ),
+        non_goals=report.non_goals,
+        json_path=json_path,
+        markdown_path=markdown_path,
+    )
+    json_path.write_text(
+        json.dumps(
+            real_business_corpus_golden_cases_report_to_dict(exported),
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    markdown_path.write_text(
+        render_real_business_corpus_golden_cases_markdown(
+            exported,
+            title="Real Failed Question Pack Baseline",
+        ),
         encoding="utf-8",
     )
     return exported
@@ -407,9 +476,11 @@ def render_local_business_rag_golden_cases_markdown(
 
 def render_real_business_corpus_golden_cases_markdown(
     report: RealBusinessCorpusGoldenCasesReport,
+    *,
+    title: str = "Real Business Corpus Golden Cases",
 ) -> str:
     lines = [
-        "# Real Business Corpus Golden Cases",
+        f"# {title}",
         "",
         f"- Report: `{report.id}`",
         f"- Decision: `{report.decision}`",
@@ -434,6 +505,17 @@ def render_real_business_corpus_golden_cases_markdown(
         ]
     )
     for key, value in sorted(report.failure_mode_summary.items()):
+        lines.append(f"| `{key}` | `{value}` |")
+    lines.extend(
+        [
+            "",
+            "## Question Origins",
+            "",
+            "| Origin | Count |",
+            "|---|---|",
+        ]
+    )
+    for key, value in sorted(report.question_origin_summary.items()):
         lines.append(f"| `{key}` | `{value}` |")
     lines.extend(
         [
@@ -813,6 +895,11 @@ def _load_aggregate_cases(case_file: Path | None) -> list[RealBusinessGoldenCase
             failure_mode=str(item.get("failure_mode") or "unclassified"),
             risk_level=str(item.get("risk_level") or "medium"),
             description=str(item.get("description") or ""),
+            question_origin=str(
+                item.get("question_origin") or "accepted_real_failure_candidate"
+            ),
+            observed_failure=str(item.get("observed_failure") or ""),
+            notes=str(item.get("notes") or ""),
         )
         for item in payload
     ]
@@ -897,6 +984,7 @@ def _aggregate_report(
         source_reports=source_reports,
         failure_mode_summary=_count_by(cases, "failure_mode"),
         risk_level_summary=_count_by(cases, "risk_level"),
+        question_origin_summary=_count_by(cases, "question_origin"),
         review_observation_summary=review_observation_summary,
         recommended_actions=_aggregate_recommended_actions(
             decision,
@@ -968,6 +1056,34 @@ def _count_review_observations(
         for observation in report.review_observations:
             counts[observation] = counts.get(observation, 0) + 1
     return counts
+
+
+def _failed_question_pack_recommended_actions(
+    *,
+    decision: str,
+    failure_mode_summary: dict[str, int],
+    review_observation_summary: dict[str, int],
+) -> list[str]:
+    if decision == "go":
+        return [
+            "add_more_real_failed_or_boundary_questions_before_strategy_changes",
+            "keep_advanced_rag_strategies_unpromoted_until_failures_repeat",
+        ]
+    actions = [
+        "confirm_failed_question_pack_review_cases_before_strategy_changes",
+        "classify_accepted_failure_candidates_and_cross_domain_traps",
+    ]
+    if review_observation_summary.get("negative_control_leakage"):
+        actions.append("review_negative_control_hardening_scope_before_strategy_changes")
+    if failure_mode_summary.get("query_mismatch"):
+        actions.append("confirm_query_mismatch_failure_before_query_rewrite_candidate")
+    if failure_mode_summary.get("retrieval_quality"):
+        actions.append("confirm_retrieval_quality_failure_before_rerank_or_hybrid_candidate")
+    if failure_mode_summary.get("chunking"):
+        actions.append("confirm_chunking_failure_before_chunk_default_candidate")
+    if failure_mode_summary.get("graph_use_case"):
+        actions.append("confirm_graph_use_case_before_graphrag_gate")
+    return actions
 
 
 def _noisy_samples(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:

@@ -150,3 +150,18 @@ It writes:
 The current aggregate report is `go` with `source_count=3`, `case_count=12`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=1.0`. It now covers `company_profile_2025_trial`, `refund_policy_docs`, and `logistics_faq`. The third source adds workflow/process questions, exact-term identifier questions, and a new expected-empty negative control without changing runtime defaults.
 
 Because the aggregate baseline is now back to `go` across three real business sources, the next provider action is not to introduce advanced retrieval strategy changes. The next narrow gate is to keep expanding real business documents or accepted failed-question packs until a new accepted failure class appears. Advanced RAG strategy changes remain unpromoted until that concrete failure evidence exists.
+
+## Real Failed Question Pack Baseline
+
+The local operator entrypoint is:
+
+`python scripts/export_real_failed_question_pack_golden_cases.py`
+
+It writes:
+
+- `docs/local-run/business-rag-golden-cases/real-failed-question-pack.json`
+- `docs/local-run/business-rag-golden-cases/real-failed-question-pack.md`
+
+The current failed-question pack report is `review` with `source_count=3`, `case_count=6`, `hit_rate=1.0`, `citation_match_rate=1.0`, and `empty_handling_rate=0.6667`. It intentionally collects difficult, failed, or boundary real-business questions separately from the passing aggregate breadth baseline. The first pack exposes one concrete `query_mismatch`-like review candidate on `refund_policy_docs`: `退款政策中有哪些公司部门？` currently returns irrelevant exact-term evidence instead of failing closed.
+
+Because this failure pack now exists, the next provider action is no longer “keep adding breadth only.” The next narrow gate is to confirm whether this review candidate is accepted as a real failure class and, if so, to open a focused hardening slice for that class rather than promoting advanced retrieval strategies broadly.
