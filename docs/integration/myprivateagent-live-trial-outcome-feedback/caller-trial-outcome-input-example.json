@@ -1,0 +1,33 @@
+{
+  "live_trial_status": "go",
+  "reason_code": "live_grounded_answer_trial_ready",
+  "provider_base_url": "http://127.0.0.1:8020",
+  "agent_id": "ecommerce_support",
+  "domain": "refund.policy",
+  "query": "退款政策是什么？",
+  "provider_retrieve": {
+    "status": "ready",
+    "reason_code": "provider_retrieve_ready",
+    "document_count": 3,
+    "evidence_pack_status": "answerable",
+    "citation_policy": "use_only_returned_citations",
+    "allowed_citations": [
+      "refund_policy_2026#section-3",
+      "refund_policy_2026#section-5",
+      "refund_policy_2026#section-7"
+    ],
+    "blockers": [],
+    "warnings": [],
+    "evidence_pack": {
+      "status": "answerable",
+      "citation_policy": "use_only_returned_citations",
+      "allowed_citations": [
+        "refund_policy_2026#section-3",
+        "refund_policy_2026#section-5",
+        "refund_policy_2026#section-7"
+      ]
+    }
+  },
+  "blockers": [],
+  "warnings": []
+}

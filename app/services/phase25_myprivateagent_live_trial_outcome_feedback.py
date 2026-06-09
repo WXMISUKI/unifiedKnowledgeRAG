@@ -28,6 +28,7 @@ class Phase25TrialOutcomeEvidence:
     evidence_pack_status: str
     citation_policy: str
     allowed_citation_count: int
+    missing_critical_fields: list[str] = field(default_factory=list)
     blockers: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
@@ -142,6 +143,7 @@ def render_phase25_live_trial_outcome_feedback_markdown(
             f"| `evidence_pack_status` | `{evidence.evidence_pack_status}` |",
             f"| `citation_policy` | `{evidence.citation_policy}` |",
             f"| `allowed_citation_count` | `{evidence.allowed_citation_count}` |",
+            f"| `missing_critical_fields` | `{_format_value(evidence.missing_critical_fields)}` |",
             f"| `blockers` | `{_format_value(evidence.blockers)}` |",
             f"| `warnings` | `{_format_value(evidence.warnings)}` |",
         ]
@@ -227,8 +229,14 @@ def _build_outcome_evidence(
     warnings = _string_list(payload.get("warnings")) + _string_list(
         provider_retrieve.get("warnings")
     )
+    missing_critical_fields = _detect_missing_critical_fields(
+        payload=payload,
+        provider_retrieve=provider_retrieve,
+    )
     if input_error:
         blockers = [input_error, *blockers]
+    if missing_critical_fields:
+        warnings = [*warnings, *[f"missing:{field}" for field in missing_critical_fields]]
 
     return Phase25TrialOutcomeEvidence(
         trial_outcome_path=str(trial_outcome_path),
@@ -251,6 +259,7 @@ def _build_outcome_evidence(
             or evidence_pack.get("citation_policy")
         ),
         allowed_citation_count=len(allowed_citations),
+        missing_critical_fields=missing_critical_fields,
         blockers=blockers,
         warnings=warnings,
     )
@@ -261,6 +270,8 @@ def _classify_feedback(
 ) -> tuple[str, str, str]:
     if evidence.input_status != "ready":
         return "blocked", "provider_blocked", "invalid_trial_outcome_input"
+    if evidence.missing_critical_fields:
+        return "review", "provider_review_required", "incomplete_trial_outcome_input"
 
     retrieve_status = evidence.provider_retrieve_status
     live_status = evidence.live_trial_status
@@ -275,6 +286,50 @@ def _classify_feedback(
     if evidence.evidence_pack_status in {"insufficient_evidence", "no_documents"}:
         return "review", "provider_review_required", "insufficient_evidence_review"
     return "review", "provider_review_required", "trial_outcome_unclassified"
+
+
+def _detect_missing_critical_fields(
+    *,
+    payload: dict[str, Any],
+    provider_retrieve: dict[str, Any],
+) -> list[str]:
+    missing: list[str] = []
+    required_top_level = [
+        "live_trial_status",
+        "reason_code",
+        "provider_base_url",
+        "agent_id",
+        "query",
+        "provider_retrieve",
+    ]
+    for field_name in required_top_level:
+        value = payload.get(field_name)
+        if field_name == "provider_retrieve":
+            if not isinstance(value, dict):
+                missing.append(field_name)
+        elif not isinstance(value, str) or not value.strip():
+            missing.append(field_name)
+
+    required_retrieve_fields = [
+        "status",
+        "reason_code",
+        "document_count",
+        "evidence_pack_status",
+        "citation_policy",
+        "allowed_citations",
+    ]
+    for field_name in required_retrieve_fields:
+        value = provider_retrieve.get(field_name)
+        if field_name == "document_count":
+            if not isinstance(value, int):
+                missing.append(f"provider_retrieve.{field_name}")
+        elif field_name == "allowed_citations":
+            if not isinstance(value, list):
+                missing.append(f"provider_retrieve.{field_name}")
+        elif not isinstance(value, str) or not value.strip():
+            missing.append(f"provider_retrieve.{field_name}")
+
+    return missing
 
 
 def _recommended_next_actions(provider_action: str) -> list[str]:

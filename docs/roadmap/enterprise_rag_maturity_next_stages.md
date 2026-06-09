@@ -23,6 +23,8 @@ The current immediate stage is no longer a new provider feature slice. It is a p
 
 This means the project should treat the current provider baseline as closed enough for its present lightweight purpose, and avoid continuing provider-side feature expansion just because more RAG techniques exist.
 
+After that closure, the most practical next slice inside this repository is not another provider capability. It is stabilizing the caller-side live trial outcome input contract so real feedback can flow back into provider-side trigger decisions with less ambiguity.
+
 Stage 1 in `MyPrivateAgent` is closed for the current local company profile trial. Stage 2 in `unifiedKnowledgeRAG` is closed for the local approved-source ingestion loop. Stage 3 boundary definition, Stage 3b parser-artifact-to-local-ingestion loop, and the local PDF parser provider bridge are closed for the current local company-profile trial. The current practical state is: a real local PDF can be parsed by an operator-started PaddleOCR service, normalized into a parser artifact, and ingested through the existing local RAG loop with `decision=go`.
 
 The current MyPrivateAgent real business trial also returns `go` for the company-profile PDF: answerable business questions produce cited answers, and the negative-control refund-policy question returns `insufficient_evidence` without citations. This closes the current local usability loop.

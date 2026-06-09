@@ -79,6 +79,27 @@ def test_phase25_feedback_blocks_invalid_input(tmp_path):
     assert "trial_outcome_file_missing" in report.trial_outcome_evidence.blockers
 
 
+def test_phase25_feedback_reviews_incomplete_input_when_critical_fields_missing(tmp_path):
+    outcome_path = tmp_path / "outcome.json"
+    payload = _trial_outcome(live_status="go", retrieve_status="ready")
+    payload.pop("live_trial_status")
+    payload["provider_retrieve"].pop("status")
+    _write_json(outcome_path, payload)
+
+    report = build_phase25_live_trial_outcome_feedback_report(
+        trial_outcome_path=outcome_path
+    )
+
+    assert report.status == "review"
+    assert report.provider_action == "provider_review_required"
+    assert report.reason_code == "incomplete_trial_outcome_input"
+    assert "live_trial_status" in report.trial_outcome_evidence.missing_critical_fields
+    assert (
+        "provider_retrieve.status"
+        in report.trial_outcome_evidence.missing_critical_fields
+    )
+
+
 def test_phase25_feedback_exports_json_and_markdown(tmp_path):
     outcome_path = tmp_path / "outcome.json"
     _write_json(outcome_path, _trial_outcome(live_status="go", retrieve_status="ready"))
@@ -97,6 +118,7 @@ def test_phase25_feedback_exports_json_and_markdown(tmp_path):
     assert payload["provider_action"] == "no_provider_action_required"
     assert "# Phase 25 MyPrivateAgent Live Trial Outcome Feedback" in markdown
     assert "`provider_retrieve_status`" in markdown
+    assert "`missing_critical_fields`" in markdown
 
 
 def _trial_outcome(
