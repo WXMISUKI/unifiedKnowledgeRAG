@@ -4,7 +4,7 @@
 - Status: `ready`
 - Provider Action: `no_provider_action_required`
 - Reason: `caller_live_trial_passed`
-- Generated At: `2026-06-06T06:38:10.240406+00:00`
+- Generated At: `2026-06-12T07:35:35.512327+00:00`
 
 ## Summary
 
@@ -12,13 +12,13 @@
 |---|---|
 | `roadmap_phase` | `Phase 25` |
 | `roadmap_focus` | `myprivateagent_live_trial_outcome_feedback_closure` |
-| `trial_outcome_path` | `D:\AI\AIcode\MyPrivateAgent\docs\integration\domain-agent-live-grounded-answer-trial\domain-agent-live-grounded-answer-trial.json` |
+| `trial_outcome_path` | `D:\AI\AIcode\MyPrivateAgent\docs\integration\unified-knowledge-provider-trial\unified-knowledge-provider-trial-outcome.json` |
 | `input_status` | `ready` |
 | `live_trial_status` | `go` |
 | `provider_retrieve_status` | `ready` |
-| `document_count` | `3` |
+| `document_count` | `2` |
 | `evidence_pack_status` | `answerable` |
-| `allowed_citation_count` | `3` |
+| `allowed_citation_count` | `2` |
 | `runtime_promotion_status` | `keep_runtime_defaults` |
 | `retrieval_backend_promotion_status` | `not_promoted_by_this_report` |
 | `graph_execution_status` | `planned_boundary_only` |
@@ -29,19 +29,20 @@
 
 | Field | Value |
 |---|---|
-| `trial_outcome_path` | `D:\AI\AIcode\MyPrivateAgent\docs\integration\domain-agent-live-grounded-answer-trial\domain-agent-live-grounded-answer-trial.json` |
+| `trial_outcome_path` | `D:\AI\AIcode\MyPrivateAgent\docs\integration\unified-knowledge-provider-trial\unified-knowledge-provider-trial-outcome.json` |
 | `input_status` | `ready` |
 | `live_trial_status` | `go` |
-| `reason_code` | `live_grounded_answer_trial_ready` |
+| `reason_code` | `repo_side_trial_passed` |
 | `provider_base_url` | `http://127.0.0.1:8020` |
-| `agent_id` | `ecommerce_support` |
-| `domain` | `refund.policy` |
+| `agent_id` | `company_profile` |
+| `domain` | `` |
 | `provider_retrieve_status` | `ready` |
 | `provider_retrieve_reason_code` | `provider_retrieve_ready` |
-| `document_count` | `3` |
+| `document_count` | `2` |
 | `evidence_pack_status` | `answerable` |
 | `citation_policy` | `use_only_returned_citations` |
-| `allowed_citation_count` | `3` |
+| `allowed_citation_count` | `2` |
+| `missing_critical_fields` | `[]` |
 | `blockers` | `[]` |
 | `warnings` | `[]` |
 

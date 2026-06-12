@@ -26,6 +26,15 @@ This contract is not for:
 - source-to-agent binding execution
 - backend promotion
 
+## Supported Input Shapes
+
+Phase 25 accepts two equivalent input shapes:
+
+- a flat JSON object that directly contains the required fields below
+- a MyPrivateAgent repo-side trial outcome JSON object that contains those same fields under `provider_feedback_input`
+
+When `provider_feedback_input` is present and is a JSON object, Phase 25 treats it as the caller feedback payload. This lets callers pass the full MyPrivateAgent trial outcome artifact without manually reconstructing a separate JSON file.
+
 ## Required Top-Level Fields
 
 | Field | Type | Meaning |

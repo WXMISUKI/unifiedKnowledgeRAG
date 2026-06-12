@@ -21,6 +21,31 @@ def test_phase25_feedback_ready_when_live_trial_goes(tmp_path):
     assert report.trial_outcome_evidence.allowed_citation_count == 2
 
 
+def test_phase25_feedback_reads_nested_provider_feedback_input(tmp_path):
+    outcome_path = tmp_path / "myprivateagent-trial-outcome.json"
+    _write_json(
+        outcome_path,
+        {
+            "id": "unified-knowledge-provider-repo-side-trial-v1",
+            "status": "trial_passed",
+            "provider_feedback_input": _trial_outcome(
+                live_status="go",
+                retrieve_status="ready",
+            ),
+        },
+    )
+
+    report = build_phase25_live_trial_outcome_feedback_report(
+        trial_outcome_path=outcome_path
+    )
+
+    assert report.status == "ready"
+    assert report.provider_action == "no_provider_action_required"
+    assert report.reason_code == "caller_live_trial_passed"
+    assert report.trial_outcome_evidence.live_trial_status == "go"
+    assert report.trial_outcome_evidence.allowed_citation_count == 2
+
+
 def test_phase25_feedback_review_when_evidence_is_insufficient(tmp_path):
     outcome_path = tmp_path / "outcome.json"
     _write_json(

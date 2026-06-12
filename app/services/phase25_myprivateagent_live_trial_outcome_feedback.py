@@ -216,6 +216,7 @@ def _build_outcome_evidence(
     input_status: str,
     input_error: str,
 ) -> Phase25TrialOutcomeEvidence:
+    payload = _feedback_payload(payload)
     provider_retrieve = _dict_value(payload.get("provider_retrieve"))
     evidence_pack = _dict_value(provider_retrieve.get("evidence_pack"))
     allowed_citations = provider_retrieve.get("allowed_citations")
@@ -354,6 +355,11 @@ def _recommended_next_actions(provider_action: str) -> list[str]:
 
 def _dict_value(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
+
+
+def _feedback_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    nested_payload = payload.get("provider_feedback_input")
+    return nested_payload if isinstance(nested_payload, dict) else payload
 
 
 def _string_value(value: Any) -> str:
