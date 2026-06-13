@@ -1,6 +1,6 @@
 {
   "id": "reindex-readiness-v1",
-  "generated_at": "2026-06-05T02:20:53.454950+00:00",
+  "generated_at": "2026-06-13T13:10:48.397862+00:00",
   "status": "ready",
   "retrieval_backend": "fixture",
   "source_dir": "app\\data\\sources",
@@ -49,11 +49,79 @@
       "indexed_at": null,
       "latest_job": null,
       "recommended_action": "reindex_optional"
+    },
+    {
+      "source_id": "split_refund_policy_docs",
+      "source_file": "app\\data\\sources\\split_refund_policy_docs.md",
+      "source_file_status": "present",
+      "source_fingerprint_status": "in_sync",
+      "document_fingerprints": [
+        {
+          "document_id": "split_refund_policy_2026",
+          "source_path": "app/data/sources/split_refund_policy_docs.md",
+          "source_file_status": "present",
+          "drift_status": "in_sync",
+          "content_sha256": "669328e05b50adfe1e90c8ed1ed14cea9acf87889a28f617a7f3d14c35e3c45e",
+          "expected_content_sha256": "669328e05b50adfe1e90c8ed1ed14cea9acf87889a28f617a7f3d14c35e3c45e",
+          "content_byte_size": 262
+        }
+      ],
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "indexed_at": null,
+      "latest_job": null,
+      "recommended_action": "reindex_optional"
+    },
+    {
+      "source_id": "invoice_policy_faq",
+      "source_file": "app\\data\\sources\\invoice_policy_faq.md",
+      "source_file_status": "present",
+      "source_fingerprint_status": "in_sync",
+      "document_fingerprints": [
+        {
+          "document_id": "invoice_policy_faq_2026",
+          "source_path": "app/data/sources/invoice_policy_faq.md",
+          "source_file_status": "present",
+          "drift_status": "in_sync",
+          "content_sha256": "0200a05e28a019e8401ee33256b61762273bae5d554f18c5032f91149fa68c9e",
+          "expected_content_sha256": "0200a05e28a019e8401ee33256b61762273bae5d554f18c5032f91149fa68c9e",
+          "content_byte_size": 585
+        }
+      ],
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "indexed_at": null,
+      "latest_job": null,
+      "recommended_action": "reindex_optional"
+    },
+    {
+      "source_id": "source_template_example",
+      "source_file": "app\\data\\sources\\source_template_example.md",
+      "source_file_status": "present",
+      "source_fingerprint_status": "in_sync",
+      "document_fingerprints": [
+        {
+          "document_id": "source_template_example_2026",
+          "source_path": "app/data/sources/source_template_example.md",
+          "source_file_status": "present",
+          "drift_status": "in_sync",
+          "content_sha256": "f54e75e9879f775c5275fd517cbcdcbadfa3b112b8a14aaa1852c8b5002b00a2",
+          "expected_content_sha256": "f54e75e9879f775c5275fd517cbcdcbadfa3b112b8a14aaa1852c8b5002b00a2",
+          "content_byte_size": 463
+        }
+      ],
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "indexed_at": null,
+      "latest_job": null,
+      "recommended_action": "reindex_optional"
     }
   ],
   "job_summary": {
-    "total_latest_jobs": 0,
-    "status_counts": {}
+    "total_latest_jobs": 7,
+    "status_counts": {
+      "completed": 7
+    }
   },
   "operation_notes": [
     "This plan is read-only and does not trigger ingestion or index rebuilds.",

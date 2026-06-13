@@ -3,7 +3,7 @@
 - Report: `phase9-myprivateagent-local-consumption-smoke-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-05T02:20:53.542207+00:00`
+- Generated At: `2026-06-13T13:10:48.487184+00:00`
 
 ## Summary
 
@@ -25,7 +25,7 @@
 | `phase9_contract_content` | `True` | `ready` | contract_required_tokens_present=true | `no_action_required` |
 | `control_plane_compatibility` | `True` | `ready` | myprivateagent_compatible=True | `no_action_required` |
 | `graph_planned_boundary` | `True` | `ready` | graph_boundary_check_passed=True | `no_action_required` |
-| `source_binding_readiness` | `False` | `ready` | status=ready; bindable_sources=2/2 | `no_action_required` |
+| `source_binding_readiness` | `False` | `ready` | status=ready; bindable_sources=6/6 | `no_action_required` |
 | `phase4_caller_consumption_smoke` | `False` | `ready` | status=ready | `no_action_required` |
 | `runtime_promotion_boundary` | `True` | `ready` | runtime_promotion_ready=False; decision=keep_local_consumption_review | `no_action_required` |
 

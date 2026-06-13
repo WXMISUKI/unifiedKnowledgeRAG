@@ -1,6 +1,6 @@
 {
   "id": "phase2-unsupported-format-negative-control-smoke-v1",
-  "generated_at": "2026-06-05T02:20:53.481653+00:00",
+  "generated_at": "2026-06-13T13:10:48.436951+00:00",
   "status": "ready",
   "decision": "keep_markdown_baseline",
   "readiness_report_path": "docs\\operations\\source-format-demand\\phase2-source-format-demand-readiness.json",
@@ -9,7 +9,7 @@
     "total_checks": 5,
     "passed_checks": 5,
     "failed_checks": 0,
-    "parser_ready_documents": 2,
+    "parser_ready_documents": 6,
     "unsupported_documents": 0,
     "non_markdown_sources": 0,
     "format_expansion_demand_signal": false
@@ -26,7 +26,7 @@
       "name": "markdown_positive_control",
       "passed": true,
       "details": {
-        "parser_ready_documents": 2
+        "parser_ready_documents": 6
       }
     },
     {

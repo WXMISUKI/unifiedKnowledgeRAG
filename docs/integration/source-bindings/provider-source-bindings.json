@@ -1,6 +1,6 @@
 {
   "id": "provider-source-binding-summary-v1",
-  "generated_at": "2026-06-05T02:20:53.478578+00:00",
+  "generated_at": "2026-06-13T13:10:48.433068+00:00",
   "status": "ready",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -10,13 +10,13 @@
     "manifest_version": "provider-integration-manifest-v1",
     "component_role": "knowledge_data_plane"
   },
-  "total_source_count": 2,
-  "bindable_source_count": 2,
+  "total_source_count": 6,
+  "bindable_source_count": 6,
   "status_counts": {
-    "ready": 2
+    "ready": 6
   },
   "recommended_action_counts": {
-    "bind_source_from_control_plane": 2
+    "bind_source_from_control_plane": 6
   },
   "sources": [
     {
@@ -75,6 +75,142 @@
       "document_count": 1,
       "citation_anchor_count": 6,
       "chunk_manifest_count": 6,
+      "parser_ready_document_count": 1,
+      "unsupported_document_count": 0,
+      "drift_statuses": [
+        "in_sync"
+      ],
+      "parser_statuses": [
+        "ready"
+      ],
+      "ingestion_preflight_status": "ready",
+      "recommended_action": "bind_source_from_control_plane",
+      "reasons": []
+    },
+    {
+      "source_id": "split_refund_policy_docs",
+      "owner": "customer_service",
+      "source_status": "ready",
+      "status": "ready",
+      "bindable": true,
+      "source_domain": "general",
+      "language": "unknown",
+      "sensitivity": "internal",
+      "supported_formats": [
+        "markdown"
+      ],
+      "citation_granularity": "section",
+      "retrieval_backend": "fixture",
+      "backend_status": "ready",
+      "backend_reason": null,
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "latest_index_job_id": null,
+      "document_count": 1,
+      "citation_anchor_count": 2,
+      "chunk_manifest_count": 2,
+      "parser_ready_document_count": 1,
+      "unsupported_document_count": 0,
+      "drift_statuses": [
+        "in_sync"
+      ],
+      "parser_statuses": [
+        "ready"
+      ],
+      "ingestion_preflight_status": "ready",
+      "recommended_action": "bind_source_from_control_plane",
+      "reasons": []
+    },
+    {
+      "source_id": "invoice_policy_faq",
+      "owner": "finance_ops",
+      "source_status": "ready",
+      "status": "ready",
+      "bindable": true,
+      "source_domain": "invoice_policy_support",
+      "language": "zh-CN",
+      "sensitivity": "internal",
+      "supported_formats": [
+        "markdown"
+      ],
+      "citation_granularity": "section",
+      "retrieval_backend": "fixture",
+      "backend_status": "ready",
+      "backend_reason": null,
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "latest_index_job_id": null,
+      "document_count": 1,
+      "citation_anchor_count": 3,
+      "chunk_manifest_count": 3,
+      "parser_ready_document_count": 1,
+      "unsupported_document_count": 0,
+      "drift_statuses": [
+        "in_sync"
+      ],
+      "parser_statuses": [
+        "ready"
+      ],
+      "ingestion_preflight_status": "ready",
+      "recommended_action": "bind_source_from_control_plane",
+      "reasons": []
+    },
+    {
+      "source_id": "source_template_example",
+      "owner": "provider_ops",
+      "source_status": "ready",
+      "status": "ready",
+      "bindable": true,
+      "source_domain": "onboarding_example",
+      "language": "zh-CN",
+      "sensitivity": "internal",
+      "supported_formats": [
+        "markdown"
+      ],
+      "citation_granularity": "section",
+      "retrieval_backend": "fixture",
+      "backend_status": "ready",
+      "backend_reason": null,
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "latest_index_job_id": null,
+      "document_count": 1,
+      "citation_anchor_count": 3,
+      "chunk_manifest_count": 3,
+      "parser_ready_document_count": 1,
+      "unsupported_document_count": 0,
+      "drift_statuses": [
+        "in_sync"
+      ],
+      "parser_statuses": [
+        "ready"
+      ],
+      "ingestion_preflight_status": "ready",
+      "recommended_action": "bind_source_from_control_plane",
+      "reasons": []
+    },
+    {
+      "source_id": "company_profile_2025_trial",
+      "owner": "local_trial",
+      "source_status": "ready",
+      "status": "ready",
+      "bindable": true,
+      "source_domain": "company_profile",
+      "language": "zh-CN",
+      "sensitivity": "local_private_trial",
+      "supported_formats": [
+        "markdown"
+      ],
+      "citation_granularity": "chunk",
+      "retrieval_backend": "fixture",
+      "backend_status": "ready",
+      "backend_reason": null,
+      "index_status": "ready",
+      "index_reason": "Fixture backend does not require an explicit persisted index.",
+      "latest_index_job_id": null,
+      "document_count": 1,
+      "citation_anchor_count": 1005,
+      "chunk_manifest_count": 1005,
       "parser_ready_document_count": 1,
       "unsupported_document_count": 0,
       "drift_statuses": [

@@ -4,7 +4,7 @@
 - Status: `review`
 - Local Consumption State: `review`
 - Decision: `keep_local_consumption_review`
-- Generated At: `2026-06-05T02:20:53.538460+00:00`
+- Generated At: `2026-06-13T13:10:48.484446+00:00`
 
 ## Summary
 
@@ -30,7 +30,7 @@
 | `phase8_live_url_validation_readiness` | `True` | `review` | artifact_present=true; status=review; live_validation_state=review; deployed_smoke_status=review; live_url_present=True | `review_evidence_notes` |
 | `provider_integration_probe` | `True` | `ready` | artifact_present=true; bindable=True; compatible_control_planes=MyPrivateAgent | `no_action_required` |
 | `deployed_provider_smoke` | `False` | `review` | artifact_present=true; status=review; base_url=http://127.0.0.1:8020; handoff_status=review | `review_evidence_notes` |
-| `source_binding_summary` | `False` | `ready` | artifact_present=true; status=ready; bindable_sources=2/2 | `no_action_required` |
+| `source_binding_summary` | `False` | `ready` | artifact_present=true; status=ready; bindable_sources=6/6 | `no_action_required` |
 | `phase4_evidence_pack_readiness` | `False` | `ready` | artifact_present=true; status=ready; decision=keep_caller_ownership | `no_action_required` |
 | `phase4_caller_consumption_smoke` | `False` | `ready` | artifact_present=true; status=ready; passed_checks=3/3 | `no_action_required` |
 

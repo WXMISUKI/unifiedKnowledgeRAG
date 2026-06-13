@@ -1,6 +1,6 @@
 {
   "id": "deployed-provider-smoke-v1",
-  "generated_at": "2026-06-01T12:42:37.731225+00:00",
+  "generated_at": "2026-06-13T13:10:47.772274+00:00",
   "base_url": "http://127.0.0.1:8020",
   "status": "review",
   "provider": {
@@ -14,7 +14,7 @@
   "handoff": {
     "id": "provider-handoff-bundle-v1",
     "status": "review",
-    "artifact_count": 35
+    "artifact_count": 53
   },
   "checks": [
     {
@@ -70,13 +70,13 @@
       "details": {
         "id": "provider-source-binding-summary-v1",
         "status": "ready",
-        "source_count": 2,
-        "bindable_source_count": 2,
+        "source_count": 6,
+        "bindable_source_count": 6,
         "source_status_counts": {
-          "ready": 2
+          "ready": 6
         },
         "recommended_action_counts": {
-          "bind_source_from_control_plane": 2
+          "bind_source_from_control_plane": 6
         }
       },
       "error": null
@@ -90,7 +90,7 @@
       "details": {
         "id": "provider-handoff-bundle-v1",
         "status": "review",
-        "artifact_count": 35
+        "artifact_count": 53
       },
       "error": null
     }

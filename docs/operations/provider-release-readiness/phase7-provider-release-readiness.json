@@ -1,6 +1,6 @@
 {
   "id": "phase7-provider-release-readiness-v1",
-  "generated_at": "2026-06-05T02:20:53.529797+00:00",
+  "generated_at": "2026-06-13T13:10:48.476044+00:00",
   "status": "review",
   "release_state": "ready_for_local_handoff",
   "decision": "keep_runtime_defaults",
@@ -48,7 +48,7 @@
       "id": "source_binding_summary",
       "required": true,
       "status": "ready",
-      "summary": "artifact_present=true; status=ready; bindable_sources=2/2",
+      "summary": "artifact_present=true; status=ready; bindable_sources=6/6",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
     },

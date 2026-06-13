@@ -1,6 +1,6 @@
 {
   "id": "phase9-myprivateagent-local-consumption-smoke-v1",
-  "generated_at": "2026-06-05T02:20:53.542207+00:00",
+  "generated_at": "2026-06-13T13:10:48.487184+00:00",
   "status": "ready",
   "decision": "keep_runtime_defaults",
   "summary": {
@@ -49,7 +49,7 @@
       "id": "source_binding_readiness",
       "required": false,
       "status": "ready",
-      "summary": "status=ready; bindable_sources=2/2",
+      "summary": "status=ready; bindable_sources=6/6",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
     },

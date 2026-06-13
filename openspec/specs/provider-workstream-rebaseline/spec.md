@@ -4,7 +4,7 @@
 TBD - created by archiving change rebaseline-provider-workstreams-after-access-closure. Update Purpose after archive.
 ## Requirements
 ### Requirement: Provider publishes post-access workstream rebaseline
-The system SHALL publish a read-only workstream rebaseline after MyPrivateAgent access readiness and live trial feedback are closed.
+The system SHALL publish a read-only workstream rebaseline after MyPrivateAgent access readiness and live trial feedback are closed, while allowing focused evidence refreshes that help a real caller consume the already-available provider without reopening provider feature expansion.
 
 #### Scenario: Access readiness chain is closed
 - **WHEN** Phase 24 trial readiness is `go` and Phase 25 live trial feedback reports `no_provider_action_required`
@@ -30,6 +30,11 @@ The system SHALL publish a read-only workstream rebaseline after MyPrivateAgent 
 - **WHEN** the user goal is local service usability rather than deployment
 - **THEN** the workstream baseline allows a local run-loop smoke that validates an already-running service
 - **AND** it does not reopen access-readiness phases or promote backend candidates
+
+#### Scenario: MyPrivateAgent use-loop closure is an allowed evidence refresh
+- **WHEN** the user goal is to confirm an already-running provider can be used by MyPrivateAgent
+- **THEN** the workstream baseline allows refreshing local run-loop, deployed smoke, handoff, and caller enablement documentation
+- **AND** it does not reopen access-readiness phases, promote runtime retrieval backends, execute GraphRAG, create source bindings, or move caller control-plane ownership into the provider
 
 ### Requirement: Workstream rebaseline remains read-only
 The workstream rebaseline SHALL NOT mutate provider runtime behavior or caller-owned control-plane decisions.

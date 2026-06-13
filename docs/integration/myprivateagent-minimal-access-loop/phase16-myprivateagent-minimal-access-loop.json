@@ -1,6 +1,6 @@
 {
   "id": "phase16-myprivateagent-minimal-access-loop-v1",
-  "generated_at": "2026-06-05T02:20:54.068785+00:00",
+  "generated_at": "2026-06-13T13:10:48.549418+00:00",
   "status": "ready",
   "access_loop_state": "ready_for_minimal_access_loop",
   "decision": "begin_myprivateagent_repo_side_trial",

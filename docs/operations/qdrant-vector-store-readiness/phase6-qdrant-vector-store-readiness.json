@@ -1,6 +1,6 @@
 {
   "id": "phase6-qdrant-vector-store-readiness-v1",
-  "generated_at": "2026-06-05T02:20:53.465238+00:00",
+  "generated_at": "2026-06-13T13:10:48.406471+00:00",
   "status": "review",
   "decision": "keep_runtime_defaults",
   "deployment_readiness": {
@@ -13,7 +13,7 @@
   "reindex_readiness": {
     "status": "ready",
     "retrieval_backend": "fixture",
-    "source_count": 2
+    "source_count": 5
   },
   "backup_recovery_contract": {
     "path": "docs\\operations\\qdrant-vector-store-readiness\\phase6-qdrant-deployment-backup-recovery-contract.md",

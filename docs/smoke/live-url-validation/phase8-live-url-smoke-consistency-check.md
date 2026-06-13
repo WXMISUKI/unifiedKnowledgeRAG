@@ -3,7 +3,7 @@
 - Report: `phase8-live-url-smoke-consistency-check-v1`
 - Status: `ready`
 - Decision: `keep_runtime_defaults_until_live_url_validation`
-- Generated At: `2026-06-05T02:20:53.640740+00:00`
+- Generated At: `2026-06-13T13:10:48.568697+00:00`
 
 ## Summary
 

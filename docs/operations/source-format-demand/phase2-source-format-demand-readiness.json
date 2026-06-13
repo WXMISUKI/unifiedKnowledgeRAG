@@ -1,6 +1,6 @@
 {
   "id": "phase2-source-format-demand-readiness-v1",
-  "generated_at": "2026-06-05T02:20:53.480307+00:00",
+  "generated_at": "2026-06-13T13:10:48.435466+00:00",
   "status": "ready",
   "decision": "keep_markdown_baseline",
   "baseline_parser": "markdown",
@@ -14,25 +14,25 @@
   "contract_path": "docs\\operations\\source-format-demand\\phase2-parser-expansion-demand-contract.md",
   "source_binding_path": "docs\\integration\\source-bindings\\provider-source-bindings.json",
   "summary": {
-    "total_sources": 2,
-    "bindable_sources": 2,
-    "markdown_only_sources": 2,
+    "total_sources": 6,
+    "bindable_sources": 6,
+    "markdown_only_sources": 6,
     "non_markdown_sources": 0,
-    "parser_ready_documents": 2,
+    "parser_ready_documents": 6,
     "unsupported_documents": 0,
     "source_binding_status": "ready",
     "source_binding_ready": true,
     "source_status_counts": {
-      "ready": 2
+      "ready": 6
     },
     "recommended_action_counts": {
-      "bind_source_from_control_plane": 2
+      "bind_source_from_control_plane": 6
     },
     "supported_format_counts": {
-      "markdown": 2
+      "markdown": 6
     },
     "parser_status_counts": {
-      "ready": 2
+      "ready": 6
     },
     "format_expansion_demand_signal": false,
     "open_gate_count": 0
@@ -54,7 +54,7 @@
       "category": "source-binding",
       "path": "docs\\integration\\source-bindings\\provider-source-bindings.json",
       "status": "ready",
-      "summary": "status=ready; sources=2; parser_ready_documents=2; unsupported_documents=0; non_markdown_sources=0",
+      "summary": "status=ready; sources=6; parser_ready_documents=6; unsupported_documents=0; non_markdown_sources=0",
       "present": true,
       "required": true,
       "recommended_action": "no_action_required"

@@ -1,6 +1,6 @@
 {
   "id": "local-usable-run-loop-v1",
-  "generated_at": "2026-06-06T07:35:13.461006+00:00",
+  "generated_at": "2026-06-13T13:13:04.474894+00:00",
   "base_url": "http://127.0.0.1:8020",
   "decision": "go",
   "reason_code": "local_provider_usable",

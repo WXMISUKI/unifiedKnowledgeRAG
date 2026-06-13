@@ -3,7 +3,7 @@
 - Report: `phase11-source-binding-preview-smoke-v1`
 - Status: `ready`
 - Decision: `keep_source_binding_preview_only`
-- Generated At: `2026-06-05T02:20:53.603176+00:00`
+- Generated At: `2026-06-13T13:10:48.536609+00:00`
 
 ## Summary
 
@@ -19,4 +19,4 @@
 |---|---|---|---|---|
 | `source_binding_summary_ready` | `True` | `ready` | source_binding_status=ready | `no_action_required` |
 | `source_binding_policy_owner` | `True` | `ready` | source_binding_policy_owner=caller | `no_action_required` |
-| `bindable_source_count_positive` | `True` | `ready` | bindable_sources=2/2 | `no_action_required` |
+| `bindable_source_count_positive` | `True` | `ready` | bindable_sources=6/6 | `no_action_required` |

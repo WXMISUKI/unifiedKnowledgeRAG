@@ -3,7 +3,7 @@
 - Report: `phase2-source-format-demand-readiness-v1`
 - Status: `ready`
 - Decision: `keep_markdown_baseline`
-- Generated At: `2026-06-05T02:20:53.480307+00:00`
+- Generated At: `2026-06-13T13:10:48.435466+00:00`
 - Baseline Parser: `markdown`
 - Deferred Formats: `pdf, word, excel, ocr, table-structure`
 - Contract Doc: `docs\operations\source-format-demand\phase2-parser-expansion-demand-contract.md`
@@ -13,11 +13,11 @@
 
 | Metric | Value |
 |---|---|
-| Total Sources | `2` |
-| Bindable Sources | `2` |
-| Markdown-Only Sources | `2` |
+| Total Sources | `6` |
+| Bindable Sources | `6` |
+| Markdown-Only Sources | `6` |
 | Non-Markdown Sources | `0` |
-| Parser-Ready Documents | `2` |
+| Parser-Ready Documents | `6` |
 | Unsupported Documents | `0` |
 | Source Binding Ready | `True` |
 | Demand Signal | `False` |
@@ -28,7 +28,7 @@
 | Evidence | Category | Status | Summary |
 |---|---|---|---|
 | `phase2_parser_expansion_demand_contract` | `contract` | `ready` | contract_doc_present=True |
-| `source_binding_summary` | `source-binding` | `ready` | status=ready; sources=2; parser_ready_documents=2; unsupported_documents=0; non_markdown_sources=0 |
+| `source_binding_summary` | `source-binding` | `ready` | status=ready; sources=6; parser_ready_documents=6; unsupported_documents=0; non_markdown_sources=0 |
 
 ## Open Gates
 

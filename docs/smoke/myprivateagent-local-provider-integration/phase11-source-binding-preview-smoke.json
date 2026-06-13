@@ -1,6 +1,6 @@
 {
   "id": "phase11-source-binding-preview-smoke-v1",
-  "generated_at": "2026-06-05T02:20:53.603176+00:00",
+  "generated_at": "2026-06-13T13:10:48.536609+00:00",
   "status": "ready",
   "decision": "keep_source_binding_preview_only",
   "summary": {
@@ -29,7 +29,7 @@
       "id": "bindable_source_count_positive",
       "required": true,
       "status": "ready",
-      "summary": "bindable_sources=2/2",
+      "summary": "bindable_sources=6/6",
       "recommended_action": "no_action_required",
       "evidence_path": "docs\\integration\\source-bindings\\provider-source-bindings.json"
     }

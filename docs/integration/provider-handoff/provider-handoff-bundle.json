@@ -1,6 +1,6 @@
 {
   "id": "provider-handoff-bundle-v1",
-  "generated_at": "2026-06-05T02:20:54.408654+00:00",
+  "generated_at": "2026-06-13T13:10:48.563305+00:00",
   "status": "review",
   "provider": {
     "provider_id": "unifiedKnowledgeProvider",
@@ -142,7 +142,7 @@
       "present": true,
       "required": true,
       "status": "ready",
-      "summary": "status=ready; bindable_sources=2/2; source_statuses=ready:2; recommended_actions=bind_source_from_control_plane:2",
+      "summary": "status=ready; bindable_sources=6/6; source_statuses=ready:6; recommended_actions=bind_source_from_control_plane:6",
       "recommended_action": "no_action_required"
     },
     {

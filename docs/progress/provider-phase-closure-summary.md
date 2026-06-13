@@ -19,6 +19,20 @@ At the current stage, the default answer is:
 - Primary responsibility: source-ready retrieval evidence, citation-safe outputs, readiness metadata, and provider-owned diagnostics
 - Current default action: hold the current baseline rather than continue feature expansion
 
+## MyPrivateAgent Local Use Loop
+
+The local MyPrivateAgent provider-use closure is now documented at:
+
+`docs/integration/myprivateagent-provider-use-loop/myprivateagent-provider-use-loop.md`
+
+This closure confirms the provider can be used by MyPrivateAgent when the local service is already running and the primitive access checks are ready. It does not reopen provider feature expansion, promote retrieval backends, enable default chat grounding, execute GraphRAG, create source-to-agent bindings, or move MyPrivateAgent control-plane ownership into this repository.
+
+Important interpretation rule:
+
+- `local-usable-run-loop decision=go` means the local provider is usable for MyPrivateAgent-side verification.
+- `deployed-provider-smoke status=review` or `provider-handoff status=review` can still be correct when production deployment, model artifact, API key, Qdrant/BGE/pgvector, or optional promotion gates remain open.
+- That review posture is not a blocker for local MyPrivateAgent use as long as health, manifest, preflight, source binding summary, and local run-loop checks are ready.
+
 ## What Is Closed
 
 The current phase should be treated as closed across the following provider-side work:

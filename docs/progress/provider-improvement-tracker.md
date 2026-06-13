@@ -9,6 +9,7 @@
 
 ## Completed
 
+- MyPrivateAgent provider-use loop closure documented (`close-myprivateagent-provider-use-loop`), adding a concise local-use runbook, refreshing local run-loop / deployed smoke / handoff evidence, and clarifying that handoff or deployment `review` does not block local MyPrivateAgent use when primitive provider checks are ready.
 - Provider phase closure summary documented (`document-provider-phase-closure-summary`), freezing the current provider state as a deliberate hold-state with a single summary entrypoint for completed closures, frozen boundaries, reopen triggers, and next-direction guidance.
 - Caller trial outcome input contract documented (`document-caller-trial-outcome-input-contract`), defining the minimal live trial result schema, reusable example payload, and conservative Phase 25 parsing expectations so real caller feedback can re-enter the provider workstream without reopening provider feature expansion by default.
 - Caller trial feedback runbook documented (`document-caller-trial-feedback-runbook`), turning the post-closure sequence into a practical execution path from Phase 15/16 access review to caller-side outcome export and Phase 25 provider feedback consumption.
@@ -484,7 +485,7 @@
 
 ## Latest Refresh
 
-  - Run time: `2026-06-05T02:20:53.642220+00:00`
+  - Run time: `2026-06-13T13:10:48.569945+00:00`
 - Command: `python scripts/export_provider_handoff_refresh.py`
 - Refresh status: `review`
 - Step summary:
@@ -540,6 +541,15 @@
   - `phase16_myprivateagent_minimal_access_loop`: `ready`
   - `phase6_deployed_handoff_consistency_smoke`: `ready`
   - `phase8_live_url_smoke_consistency_check`: `ready`
+
+## MyPrivateAgent Provider Use Closure
+
+- Runbook: `docs/integration/myprivateagent-provider-use-loop/myprivateagent-provider-use-loop.md`
+- Local usable run-loop: `go`
+- Access-focused visibility: `ready`
+- Provider handoff refresh: `review`, with primitive MyPrivateAgent access checks ready and deployment/promotion review context still open
+- Deployed smoke: `review`, because provider handoff and deployment promotion context remain review-level
+- Interpretation: local MyPrivateAgent verification can proceed against `http://127.0.0.1:8020` while production deployment, backend promotion, GraphRAG, and source-to-agent binding remain separately gated.
 
 ## Current Gaps To Close
 

@@ -3,7 +3,7 @@
 - Report: `phase3-hybrid-fusion-threshold-calibration-v1`
 - Status: `review`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-05T02:20:53.501928+00:00`
+- Generated At: `2026-06-13T13:10:48.453257+00:00`
 
 ## Summary
 

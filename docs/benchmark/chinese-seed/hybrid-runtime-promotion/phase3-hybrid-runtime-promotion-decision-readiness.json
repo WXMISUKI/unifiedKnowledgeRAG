@@ -1,6 +1,6 @@
 {
   "id": "phase3-hybrid-runtime-promotion-decision-readiness-v1",
-  "generated_at": "2026-06-05T02:20:53.511627+00:00",
+  "generated_at": "2026-06-13T13:10:48.461116+00:00",
   "status": "review",
   "review_state": "review",
   "decision": "keep_runtime_defaults",

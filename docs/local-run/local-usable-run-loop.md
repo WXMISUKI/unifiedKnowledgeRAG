@@ -3,7 +3,7 @@
 - Report: `local-usable-run-loop-v1`
 - Decision: `go`
 - Reason: `local_provider_usable`
-- Generated At: `2026-06-06T07:35:13.461006+00:00`
+- Generated At: `2026-06-13T13:13:04.474894+00:00`
 - Base URL: `http://127.0.0.1:8020`
 - Query: `客户三天未发货能否退款？`
 - Source ID: `refund_policy_docs`

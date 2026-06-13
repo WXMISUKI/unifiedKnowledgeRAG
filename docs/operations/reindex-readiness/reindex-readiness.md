@@ -2,7 +2,7 @@
 
 - Report: `reindex-readiness-v1`
 - Status: `ready`
-- Generated At: `2026-06-05T02:20:53.454950+00:00`
+- Generated At: `2026-06-13T13:10:48.397862+00:00`
 - Retrieval Backend: `fixture`
 - Source Dir: `app\data\sources`
 - Index Dir: `app\data\indexes\llamaindex`
@@ -13,11 +13,14 @@
 |---|---|---|---|---|---|
 | `refund_policy_docs` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
 | `logistics_faq` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
+| `split_refund_policy_docs` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
+| `invoice_policy_faq` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
+| `source_template_example` | `present` | `ready` | `in_sync` | `none` | `reindex_optional` |
 
 ## Job Summary
 
-- Total latest logical jobs: `0`
-- Status counts: `{}`
+- Total latest logical jobs: `7`
+- Status counts: `{"completed": 7}`
 
 ## Operation Notes
 

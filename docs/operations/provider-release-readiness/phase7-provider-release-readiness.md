@@ -4,7 +4,7 @@
 - Status: `review`
 - Release State: `ready_for_local_handoff`
 - Decision: `keep_runtime_defaults`
-- Generated At: `2026-06-05T02:20:53.529797+00:00`
+- Generated At: `2026-06-13T13:10:48.476044+00:00`
 
 ## Summary
 
@@ -26,7 +26,7 @@
 | `phase7_provider_handoff_acceptance_contract` | `True` | `ready` | contract_present=true | `no_action_required` |
 | `provider_integration_probe` | `True` | `ready` | artifact_present=true; bindable=True | `no_action_required` |
 | `provider_contract_smoke` | `True` | `ready` | artifact_present=true; checks=9/9 | `no_action_required` |
-| `source_binding_summary` | `True` | `ready` | artifact_present=true; status=ready; bindable_sources=2/2 | `no_action_required` |
+| `source_binding_summary` | `True` | `ready` | artifact_present=true; status=ready; bindable_sources=6/6 | `no_action_required` |
 | `phase2_source_format_demand_readiness` | `False` | `ready` | artifact_present=true; status=ready | `no_action_required` |
 | `phase2_unsupported_format_negative_control_smoke` | `False` | `ready` | artifact_present=true; status=ready | `no_action_required` |
 | `phase3_hybrid_runtime_promotion_decision_readiness` | `False` | `review` | artifact_present=true; status=review | `review_evidence_notes` |

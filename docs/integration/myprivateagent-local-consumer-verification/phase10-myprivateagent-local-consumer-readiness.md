@@ -4,7 +4,7 @@
 - Status: `review`
 - Local Consumer State: `ready_for_local_consumer_probe_review`
 - Decision: `run_local_consumer_probe_before_myprivateagent_integration`
-- Generated At: `2026-06-05T02:20:53.546134+00:00`
+- Generated At: `2026-06-13T13:10:48.490381+00:00`
 
 ## Summary
 

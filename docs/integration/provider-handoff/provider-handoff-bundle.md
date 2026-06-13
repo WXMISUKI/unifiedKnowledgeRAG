@@ -3,7 +3,7 @@
 - Report: `provider-handoff-bundle-v1`
 - Status: `review`
 - Access Focused Visibility: `ready`
-- Generated At: `2026-06-05T02:20:54.408654+00:00`
+- Generated At: `2026-06-13T13:10:48.563305+00:00`
 - Provider: `unifiedKnowledgeProvider`
 - Contract: `knowledge-provider-contract-v1`
 - Manifest: `provider-integration-manifest-v1`
@@ -48,7 +48,7 @@
 | `provider_contract_smoke` | `contract` | `True` | `ready` | passed=True; checks=9/9 | `no_action_required` |
 | `deployment_readiness` | `operations` | `True` | `review` | status=review | `review_evidence_notes` |
 | `reindex_readiness` | `operations` | `True` | `ready` | status=ready | `no_action_required` |
-| `source_binding_summary` | `source-binding` | `True` | `ready` | status=ready; bindable_sources=2/2; source_statuses=ready:2; recommended_actions=bind_source_from_control_plane:2 | `no_action_required` |
+| `source_binding_summary` | `source-binding` | `True` | `ready` | status=ready; bindable_sources=6/6; source_statuses=ready:6; recommended_actions=bind_source_from_control_plane:6 | `no_action_required` |
 | `phase2_source_format_demand_readiness` | `ingestion-evidence` | `True` | `ready` | status=ready; decision=keep_markdown_baseline; demand_signal=False; unsupported_documents=0; non_markdown_sources=0; open_gate_count=0 | `no_action_required` |
 | `phase2_unsupported_format_negative_control_smoke` | `ingestion-smoke` | `True` | `ready` | status=ready; decision=keep_markdown_baseline; passed_checks=5/5; failed_checks=0; unsupported_documents=0; non_markdown_sources=0 | `no_action_required` |
 | `deployed_provider_smoke` | `deployed-integration` | `True` | `review` | status=review; base_url=http://127.0.0.1:8020; handoff_status=review | `review_evidence_notes` |
